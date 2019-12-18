@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SAM_Revit", "SAM_Revit", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Core.Grasshopper.Revit", "Grasshopper\SAM.Core.Grasshopper.Revit\SAM.Core.Grasshopper.Revit.csproj", "{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Geometry.Revit", "SAM_Revit\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj", "{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,12 @@ Global
 		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Debug2020|Any CPU.Build.0 = Debug2020|Any CPU
 		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Debug2020|Any CPU.ActiveCfg = Debug2020|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Debug2020|Any CPU.Build.0 = Debug2020|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +47,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7A976EE2-6C1E-4165-8B29-AFD946220556} = {B5F956DA-6EA3-4616-9A4F-6FDDC19C91D3}
 		{E31E5F4E-EAC1-4E48-A5F9-E4560896C2B3} = {DB49C52F-B595-47F1-A6C0-AA56B2D73541}
+		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE} = {B5F956DA-6EA3-4616-9A4F-6FDDC19C91D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53DA6348-71DE-42BF-B35A-7CC0DC6C030A}

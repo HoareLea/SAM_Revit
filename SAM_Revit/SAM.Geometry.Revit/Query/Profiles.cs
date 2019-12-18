@@ -27,6 +27,9 @@ namespace SAM.Geometry.Revit
             if (hostObject is Ceiling)
                 return Profiles_Ceiling((Ceiling)hostObject);
 
+            if (hostObject is Wall)
+                return Profiles_Wall((Wall)hostObject);
+
             return null;
         }
 

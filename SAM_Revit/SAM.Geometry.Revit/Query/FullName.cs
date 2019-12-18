@@ -14,7 +14,10 @@ namespace SAM.Geometry.Revit
     {
         public static string FullName(this Element element)
         {
-            return FullName(((ElementType)element.Document.GetElement(element.GetTypeId())).FamilyName, element.Name);
+            if (element is ElementType)
+                return FullName(((ElementType)element).FamilyName, element.Name);
+            else
+                return FullName(((ElementType)element.Document.GetElement(element.GetTypeId())).FamilyName, element.Name);
         }
 
         public static string FullName(string familyName, string familyTypeName)

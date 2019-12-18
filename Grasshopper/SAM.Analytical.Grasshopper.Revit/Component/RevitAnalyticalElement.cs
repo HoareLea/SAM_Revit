@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-using SAM.Core.Grasshopper.Revit.Properties;
+using Autodesk.Revit.DB;
 
-namespace SAM.Core.Grasshopper.Topologic
+using SAM.Analytical.Grasshopper.Revit.Properties;
+
+namespace SAM.Analytical.Grasshopper.Topologic
 {
-    public class TopologicFaces : GH_Component
+    public class RevitAnalyticalElement : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public TopologicFaces()
-          : base("TopologicFaces", "ToTopoFaces",
+        public RevitAnalyticalElement()
+          : base("RevitAnalyticalElement", "ToTopoFaces",
               "Convert Topologic CellComplex To Topologic Faces",
               "SAM", "Topologic")
         {
@@ -33,7 +34,7 @@ namespace SAM.Core.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("faces", "faces", "Topologic Faces", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("Panel", "panel", "SAM Analytical Panel", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -50,16 +51,23 @@ namespace SAM.Core.Grasshopper.Topologic
                 return;
             }
 
-            //CellComplex cellComplex = objectWrapper.Value as CellComplex;
-            //if(cellComplex == null)
-            //{
-            //    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-            //    return;
-            //}
+            dynamic obj = objectWrapper.Value;
 
-            //dataAccess.SetDataList(0, cellComplex.Faces);
+            
+
+            Document document = obj.Document as Document; 
+
+            ElementId aId = obj.Id as ElementId;
+
+            HostObject hostObject = document.GetElement(aId) as HostObject;
+            if(hostObject == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid Element");
+                return;
+            }
+
+            dataAccess.SetDataList(0, Analytical.Revit.Convert.ToSAM(hostObject));
             return;
-
         }
 
         /// <summary>
@@ -80,7 +88,7 @@ namespace SAM.Core.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("ba787b22-5355-4037-9d36-31c1dc8b385f"); }
+            get { return new Guid("d5b1cfe2-5951-4a42-a121-a476436cd867"); }
         }
     }
 }

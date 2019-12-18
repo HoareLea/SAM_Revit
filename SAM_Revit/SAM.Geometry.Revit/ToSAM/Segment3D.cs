@@ -15,7 +15,7 @@ namespace SAM.Geometry.Revit
     {
         public static Segment3D ToSAM(this Line line)
         {
-            return new Segment3D(line.GetEndPoint(0).ToSAM(), line.GetEndPoint(2).ToSAM());
+            return new Segment3D(line.GetEndPoint(0).ToSAM(), line.GetEndPoint(1).ToSAM());
         }
     }
 }

@@ -56,6 +56,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
@@ -70,11 +74,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ToSAM\PanelType.cs" />
+    <Compile Include="Query\BuiltInCategory.cs" />
+    <Compile Include="ToRevit\HostObjAttributes.cs" />
+    <Compile Include="ToSAM\Construction.cs" />
     <Compile Include="ToSAM\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj">
+      <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
+      <Name>SAM.Core.Revit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj">
       <Project>{33206e35-bc18-4ea3-9fb4-3473ef99f3be}</Project>
       <Name>SAM.Geometry.Revit</Name>

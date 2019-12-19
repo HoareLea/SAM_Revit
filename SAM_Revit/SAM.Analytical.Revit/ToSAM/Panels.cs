@@ -11,11 +11,11 @@ namespace SAM.Analytical.Revit
     {
         public static List<Panel> ToSAM(this HostObject hostObject)
         {
-            PanelType panelType = ((HostObjAttributes)hostObject.Document.GetElement(hostObject.GetTypeId())).ToSAM();
+            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(hostObject.GetTypeId())).ToSAM();
 
             List<Panel> result = new List<Panel>();
             foreach (IClosed3D profile in hostObject.Profiles())
-                result.Add(new Panel(hostObject.Name, panelType, profile));
+                result.Add(new Panel(hostObject.Name, construction, profile));
 
             return result;
         }

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}</ProjectGuid>
+    <ProjectGuid>{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM.Geometry.Revit</RootNamespace>
-    <AssemblyName>SAM.Geometry.Revit</AssemblyName>
+    <RootNamespace>SAM.Core.Revit</RootNamespace>
+    <AssemblyName>SAM.Core.Revit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -56,9 +56,6 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SAM.Geometry">
-      <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
-    </Reference>
     <Reference Include="SAM.Units">
       <HintPath>..\..\..\SAM\build\SAM.Units.dll</HintPath>
     </Reference>
@@ -73,20 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Query\FullName.cs" />
-    <Compile Include="Query\BottomProfiles.cs" />
-    <Compile Include="Query\TopProfiles.cs" />
-    <Compile Include="Query\Profiles.cs" />
-    <Compile Include="ToRevit\XYZ.cs" />
-    <Compile Include="ToRevit\UV.cs" />
-    <Compile Include="ToSAM\PolycurveLoop3Ds.cs" />
-    <Compile Include="ToSAM\PolycurveLoop3D.cs" />
-    <Compile Include="ToSAM\ICurve3D.cs" />
-    <Compile Include="ToSAM\Polyline3D.cs" />
-    <Compile Include="ToSAM\Triangle3Ds.cs" />
-    <Compile Include="ToSAM\Triangle3D.cs" />
-    <Compile Include="ToSAM\Segment3D.cs" />
-    <Compile Include="ToSAM\Point2D.cs" />
-    <Compile Include="ToSAM\Point3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

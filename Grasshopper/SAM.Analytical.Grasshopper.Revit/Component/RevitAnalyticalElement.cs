@@ -53,8 +53,6 @@ namespace SAM.Analytical.Grasshopper.Topologic
 
             dynamic obj = objectWrapper.Value;
 
-            
-
             Document document = obj.Document as Document; 
 
             ElementId aId = obj.Id as ElementId;

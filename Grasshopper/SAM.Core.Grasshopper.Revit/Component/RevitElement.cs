@@ -16,7 +16,7 @@ namespace SAM.Core.Grasshopper.Topologic
         public TopologicFaces()
           : base("TopologicFaces", "ToTopoFaces",
               "Convert Topologic CellComplex To Topologic Faces",
-              "SAM", "Topologic")
+              "SAM", "Revit")
         {
         }
 

@@ -15,9 +15,9 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitAnalyticalElement()
-          : base("RevitAnalyticalElement", "ToTopoFaces",
-              "Convert Topologic CellComplex To Topologic Faces",
-              "SAM", "Topologic")
+          : base("RevitAnalyticalElement", "ToSAMAnalytical",
+              "Convert Revit To SAM Analytical Panels",
+              "SAM", "Revit")
         {
         }
 
@@ -26,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_cellComplex", "_cellComplex", "Topologic CellComplex", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_RevitWalls", "_RevitWalls", "Revit Walls", GH_ParamAccess.item);
         }
 
         /// <summary>

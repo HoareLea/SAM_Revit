@@ -11,11 +11,18 @@ namespace SAM.Geometry.Revit
     {
         public static PolycurveLoop3D ToSAM(this CurveLoop curveLoop)
         {
-            Transform transform = Transform.Identity.ScaleBasis(Units.Convert.ToSI(1, Units.UnitType.Feet));
-
             List<ICurve3D> curves = new List<ICurve3D>();
             foreach (Curve curve_Revit in curveLoop)
-                curves.Add(curve_Revit.CreateTransformed(transform).ToSAM());
+                curves.Add(curve_Revit.ToSAM());
+
+            return new PolycurveLoop3D(curves);
+        }
+
+        public static PolycurveLoop3D ToSAM(this CurveArray curveArray)
+        {
+            List<ICurve3D> curves = new List<ICurve3D>();
+            foreach (Curve curve_Revit in curveArray)
+                curves.Add(curve_Revit.ToSAM());
 
             return new PolycurveLoop3D(curves);
         }

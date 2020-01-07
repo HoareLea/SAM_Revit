@@ -27,6 +27,10 @@ namespace SAM.Geometry.Revit
             if (hostObject is Ceiling)
                 return Profiles_Ceiling((Ceiling)hostObject);
 
+            List<IClosed3D> result = Profiles_FromSketch(hostObject);
+            if (result != null && result.Count > 0)
+                return result;
+
             if (hostObject is Wall)
                 return Profiles_Wall((Wall)hostObject);
 
@@ -113,6 +117,80 @@ namespace SAM.Geometry.Revit
         private static List<IClosed3D> Profiles_Ceiling(this Ceiling ceiling)
         {
             return BottomProfiles(ceiling);
+        }
+
+        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject)
+        {
+            Document document = hostObject.Document;
+
+            IEnumerable<ElementId> elementIDs = null;
+            using (Transaction transaction = new Transaction(document, "Temp"))
+            {
+                FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions().SetClearAfterRollback(true);
+
+                //IMPORTANT: have to be two separate transactions othewise HostObject become Invalid
+
+                transaction.Start();
+                try
+                {
+                    elementIDs = document.Delete(hostObject.Id);
+                }
+                catch
+                {
+                    elementIDs = null;
+                }
+
+                transaction.RollBack(failureHandlingOptions);
+
+                if(elementIDs != null && elementIDs.Count() > 0)
+                {
+                    transaction.Start();
+                    try
+                    {
+                        IList<ElementId> insertElementIDs = hostObject.FindInserts(true, true, true, true);
+                        if (insertElementIDs != null && insertElementIDs.Count > 0)
+                        {
+                            IEnumerable<ElementId> tempElementIDs = document.Delete(insertElementIDs);
+                            if (tempElementIDs != null && tempElementIDs.Count() != 0)
+                                elementIDs = elementIDs.ToList().FindAll(x => !tempElementIDs.Contains(x));
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    transaction.RollBack(failureHandlingOptions);
+                }
+            }
+
+            if (elementIDs == null || elementIDs.Count() == 0)
+                return null;
+
+            List<IClosed3D> result = new List<IClosed3D>();
+            foreach (ElementId id in elementIDs)
+            {
+                Element element = document.GetElement(id);
+                if (element == null)
+                    continue;
+
+                Sketch sketch = element as Sketch;
+                if (sketch == null)
+                    continue;
+
+                if (sketch.Profile == null)
+                    continue;
+
+                List<IClosed3D> closed3Ds = Convert.ToSAM(sketch);
+                if (closed3Ds == null)
+                    continue;
+
+                foreach (IClosed3D closed3D in closed3Ds)
+                    if (closed3D != null)
+                        result.Add(closed3D);
+            }
+
+            return result;
+
         }
 
         private static List<IClosed3D> Profiles(this Autodesk.Revit.DB.Face face)

@@ -9,7 +9,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static List<PolycurveLoop3D> ToSAM(this IEnumerable<CurveLoop> curveLoops, Transform transform = null)
+        public static List<PolycurveLoop3D> ToSAM(this IEnumerable<CurveLoop> curveLoops)
         {
             List<PolycurveLoop3D> result = new List<PolycurveLoop3D>();
             foreach (CurveLoop curveLoop in curveLoops)
@@ -18,9 +18,9 @@ namespace SAM.Geometry.Revit
             return result;
         }
 
-        public static List<PolycurveLoop3D> ToSAM_PolycurveLoop3Ds(this Autodesk.Revit.DB.Face face, Transform transform = null)
+        public static List<PolycurveLoop3D> ToSAM_PolycurveLoop3Ds(this Autodesk.Revit.DB.Face face)
         {
-            return ToSAM(face.GetEdgesAsCurveLoops(), transform);
+            return ToSAM(face.GetEdgesAsCurveLoops());
         }
     
         public static List<PolycurveLoop3D> ToSAM_PolycurveLoop3D(this Mesh mesh)

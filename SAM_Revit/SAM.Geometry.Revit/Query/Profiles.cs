@@ -47,26 +47,32 @@ namespace SAM.Geometry.Revit
                 LocationCurve locationCurve = wall.Location as LocationCurve;
                 if (locationCurve != null)
                 {
-                    ICurve3D curve = Convert.ToSAM(locationCurve);
-                    if (curve != null)
+                    ICurve3D curve3D_Location = Convert.ToSAM(locationCurve);
+
+                    IEnumerable<ICurve3D> curves = null;
+                    if(curve3D_Location is ISegmentable3D)
+                        curves = ((ISegmentable3D)curve3D_Location).GetSegments().Cast<ICurve3D>();
+                    else
+                        curves = new List<ICurve3D>() { curve3D_Location };
+
+                    double max = Units.Convert.ToSI(boundingBoxXYZ.Max.Z, Units.UnitType.Feet);
+                    Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), new Vector3D(0, 0, 1));
+
+                    double min = Units.Convert.ToSI(boundingBoxXYZ.Min.Z, Units.UnitType.Feet);
+                    Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), new Vector3D(0, 0, 1));
+
+                    result = new List<IClosed3D>();
+                    foreach (ICurve3D curve3D in curves)
                     {
-                        Spatial.Plane plane = null;
+                        if (curve3D == null)
+                            continue;
 
-                        double max = Units.Convert.ToSI(boundingBoxXYZ.Max.Z, Units.UnitType.Feet);
-                        plane = new Spatial.Plane(new Point3D(0, 0, max), new Vector3D(0, 0, 1));
-                        ICurve3D maxCurve = plane.Project(curve);
+                        ICurve3D maxCurve = plane_max.Project(curve3D);
+                        ICurve3D minCurve = plane_min.Project(curve3D);
 
-                        double min = Units.Convert.ToSI(boundingBoxXYZ.Min.Z, Units.UnitType.Feet);
-                        plane = new Spatial.Plane(new Point3D(0, 0, min), new Vector3D(0, 0, 1));
-                        ICurve3D minCurve = plane.Project(curve);
-
-                        Point3D point3D_1;
-                        Point3D point3D_2;
-                        Point3D point3D_3;
-
-                        point3D_1 = minCurve.GetEnd();
-                        point3D_2 = maxCurve.GetStart();
-                        point3D_3 = maxCurve.GetEnd();
+                        Point3D point3D_1 = minCurve.GetEnd();
+                        Point3D point3D_2 = maxCurve.GetStart();
+                        Point3D point3D_3 = maxCurve.GetEnd();
                         if (point3D_1.Distance(point3D_3) < point3D_1.Distance(point3D_2))
                         {
                             Point3D point_Temp = point3D_2;
@@ -79,10 +85,11 @@ namespace SAM.Geometry.Revit
                         Segment3D segment3D_1 = new Segment3D(point3D_1, point3D_2);
                         Segment3D segment3D_2 = new Segment3D(point3D_3, minCurve.GetStart());
 
-                        result = new List<IClosed3D>();
                         result.Add(new PolycurveLoop3D(new ICurve3D[] { minCurve, segment3D_1, maxCurve, segment3D_2 }));
-                        return result;
                     }
+
+                    if (result != null && result.Count > 0)
+                        return result;
                 }
             }
 

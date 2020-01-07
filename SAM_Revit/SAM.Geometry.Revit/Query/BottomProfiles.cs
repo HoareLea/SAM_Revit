@@ -17,7 +17,14 @@ namespace SAM.Geometry.Revit
             List<IClosed3D> result = new List<IClosed3D>();
             foreach (Reference reference in HostObjectUtils.GetBottomFaces(hostObject))
             {
-                Autodesk.Revit.DB.Face face = hostObject.GetGeometryObjectFromReference(reference) as Autodesk.Revit.DB.Face;
+                GeometryObject geometryObject = hostObject.GetGeometryObjectFromReference(reference);
+                if (geometryObject == null)
+                    continue;
+
+                Autodesk.Revit.DB.Face face = geometryObject as Autodesk.Revit.DB.Face;
+                if (face == null)
+                    continue;
+
                 result.AddRange(face.ToSAM_PolycurveLoop3Ds());
             }
 

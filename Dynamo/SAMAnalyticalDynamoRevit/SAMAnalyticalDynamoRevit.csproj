@@ -56,6 +56,10 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitNodes.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RevitServices"  Condition="'$(Configuration)' == 'Debug2020'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitServices.dll</HintPath>
+	  <Private>False</Private>
+	</Reference>
     <Reference Include="SAM.Analytical, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>

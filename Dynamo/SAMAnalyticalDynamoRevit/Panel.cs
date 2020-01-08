@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
+using RevitServices.Transactions;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -18,6 +19,8 @@ namespace SAMAnalyticalDynamoRevit
         /// </search>
         public static List<SAM.Analytical.Panel> FromElement(Revit.Elements.Element element)
         {
+            TransactionManager.Instance.ForceCloseTransaction();
+
             return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as HostObject);
         }
     }

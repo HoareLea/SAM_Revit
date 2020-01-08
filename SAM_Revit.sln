@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Analytical.Grasshopper.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAM.Core.Revit", "SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj", "{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMAnalyticalDynamoRevit", "Dynamo\SAMAnalyticalDynamoRevit\SAMAnalyticalDynamoRevit.csproj", "{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,12 @@ Global
 		{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}.Debug2020|Any CPU.Build.0 = Debug2020|Any CPU
 		{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Debug2020|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Debug2020|Any CPU.Build.0 = Debug|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +74,7 @@ Global
 		{33206E35-BC18-4EA3-9FB4-3473EF99F3BE} = {B5F956DA-6EA3-4616-9A4F-6FDDC19C91D3}
 		{751820CB-7E74-4CB7-92B2-D544FE1409AD} = {DB49C52F-B595-47F1-A6C0-AA56B2D73541}
 		{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2} = {B5F956DA-6EA3-4616-9A4F-6FDDC19C91D3}
+		{C0FC4B58-6EA4-47B0-B242-F4C053BB14C2} = {9D5C79FB-26B2-4CD9-9F14-C3946E5C987E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53DA6348-71DE-42BF-B35A-7CC0DC6C030A}

@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Query\BuiltInCategory.cs" />
+    <Compile Include="ToRevit\HostObject.cs" />
     <Compile Include="ToRevit\HostObjAttributes.cs" />
     <Compile Include="ToSAM\Construction.cs" />
     <Compile Include="ToSAM\Panels.cs" />

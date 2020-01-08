@@ -7,7 +7,7 @@ using Autodesk.Revit.DB;
 
 using SAM.Analytical.Grasshopper.Revit.Properties;
 
-namespace SAM.Analytical.Grasshopper.Topologic
+namespace SAM.Analytical.Grasshopper.Revit
 {
     public class RevitAnalyticalElement : GH_Component
     {
@@ -86,7 +86,7 @@ namespace SAM.Analytical.Grasshopper.Topologic
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("d5b1cfe2-5951-4a42-a121-a476436cd867"); }
+            get { return new Guid("9b809657-8de3-466e-b814-973b0677a37a"); }
         }
     }
 }

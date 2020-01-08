@@ -6,7 +6,7 @@ using Grasshopper.Kernel.Types;
 
 using SAM.Core.Grasshopper.Revit.Properties;
 
-namespace SAM.Core.Grasshopper.Topologic
+namespace SAM.Core.Grasshopper.Revit
 {
     public class TopologicFaces : GH_Component
     {

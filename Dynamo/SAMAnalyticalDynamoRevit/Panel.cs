@@ -10,11 +10,11 @@ namespace SAMAnalyticalDynamoRevit
     public static class Panel
     {
         /// <summary>
-        /// Extract Space Adjacency information for Panels
+        /// Create Panel from Revit Element
         /// </summary>
         /// <param name="element">Revit Element such as Wall, Floor, Roof</param>
         /// <search>
-        /// Topologic, SpaceAdjacency, Analytical Panel
+        /// FromElement, Analytical Panel
         /// </search>
         public static List<SAM.Analytical.Panel> FromElement(Revit.Elements.Element element)
         {

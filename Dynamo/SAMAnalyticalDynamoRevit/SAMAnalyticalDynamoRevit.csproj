@@ -33,6 +33,14 @@
     <DocumentationFile>..\build\SAMAnalyticalDynamoRevit.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SAM.Analytical, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,16 +63,6 @@
   <ItemGroup>
     <Folder Include="ToDynamo\" />
     <Folder Include="ToSAM\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SAM\SAM.Analytical\SAM.Analytical.csproj">
-      <Project>{b47bad06-8523-455e-acf8-4879d0286ec1}</Project>
-      <Name>SAM.Analytical</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SAM\SAM.Geometry\SAM.Geometry.csproj">
-      <Project>{4cf184fd-b48a-41fc-adbc-20218b44b03d}</Project>
-      <Name>SAM.Geometry</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

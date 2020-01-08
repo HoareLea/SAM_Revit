@@ -1,9 +1,6 @@
-﻿using Autodesk.Revit.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
+using Autodesk.Revit.DB;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -15,13 +12,13 @@ namespace SAMAnalyticalDynamoRevit
         /// <summary>
         /// Extract Space Adjacency information for Panels
         /// </summary>
-        /// <param name="hostObject">Revit HostObject such as Wall, Floor, Roof</param>
+        /// <param name="element">Revit Element such as Wall, Floor, Roof</param>
         /// <search>
         /// Topologic, SpaceAdjacency, Analytical Panel
         /// </search>
-        public static List<SAM.Analytical.Panel> FromHostObject(HostObject hostObject)
+        public static List<SAM.Analytical.Panel> FromElement(Revit.Elements.Element element)
         {
-            return SAM.Analytical.Revit.Convert.ToSAM(hostObject);
+            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as HostObject);
         }
     }
 }

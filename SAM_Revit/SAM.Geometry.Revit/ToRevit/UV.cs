@@ -15,7 +15,9 @@ namespace SAM.Geometry.Revit
     {
         public static UV ToRevit(this Point2D point2D)
         {
-            return new UV(point2D.X, point2D.Y);
+            double scale = Units.Convert.ToImperial(1, Units.UnitType.Meter);
+
+            return new UV(point2D.X * scale, point2D.Y * scale);
         }
     }
 }

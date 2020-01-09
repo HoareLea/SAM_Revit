@@ -56,10 +56,10 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitNodes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitServices"  Condition="'$(Configuration)' == 'Debug2020'">
+    <Reference Include="RevitServices" Condition="'$(Configuration)' == 'Debug2020'">
       <HintPath>C:\Program Files\Autodesk\Revit 2020\AddIns\DynamoForRevit\Revit\RevitServices.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SAM.Analytical, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
@@ -95,6 +95,10 @@
     <ProjectReference Include="..\..\SAM_Revit\SAM.Analytical.Revit\SAM.Analytical.Revit.csproj">
       <Project>{7a976ee2-6c1e-4165-8b29-afd946220556}</Project>
       <Name>SAM.Analytical.Revit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SAM_Revit\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj">
+      <Project>{33206e35-bc18-4ea3-9fb4-3473ef99f3be}</Project>
+      <Name>SAM.Geometry.Revit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

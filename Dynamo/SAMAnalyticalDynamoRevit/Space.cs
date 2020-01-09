@@ -1,9 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -17,9 +12,9 @@ namespace SAMAnalyticalDynamoRevit
         /// </summary>
         /// <param name="element">Revit SpatialElement</param>
         /// <search>
-        /// Topologic, SpaceAdjacency, Analytical Panel
+        /// FromRevit, SAM Analytical Space
         /// </search>
-        public static SAM.Analytical.Space FromElement(Revit.Elements.Element element)
+        public static SAM.Analytical.Space FromRevit(Revit.Elements.Element element)
         {
             return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as SpatialElement);
         }

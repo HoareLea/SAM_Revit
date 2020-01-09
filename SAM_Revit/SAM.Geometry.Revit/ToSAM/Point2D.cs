@@ -15,7 +15,9 @@ namespace SAM.Geometry.Revit
     {
         public static Point2D ToSAM(this UV uV)
         {
-            return new Point2D(uV.U, uV.V);
+            double scale = Units.Convert.ToSI(1, Units.UnitType.Feet);
+
+            return new Point2D(uV.U * scale, uV.V * scale);
         }
     }
 }

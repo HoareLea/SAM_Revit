@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 
@@ -12,23 +13,21 @@ namespace SAM.Analytical.Revit
         {
             HostObjAttributes aHostObjAttributes = document.ToRevit(panel.Construction, panel.PanelType);
 
+
+            HostObject result = null; 
+            if (aHostObjAttributes is WallType)
+            {
+                List<Curve> curveList = new List<Curve>();
+                foreach(Geometry.Spatial.Segment3D segment3D in panel.ToSegments())
+                    curveList.Add(segment3D.ToRevit());
+
+                result = Wall.Create(document, curveList, false);
+                result.ChangeTypeId(aHostObjAttributes.Id);
+
+                return result;
+            }
+
             throw new NotImplementedException();
-
-            //FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
-
-            //BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            //if (builtInCategory != BuiltInCategory.INVALID)
-            //    filteredElementCollector.OfCategory(builtInCategory);
-
-            //foreach(HostObjAttributes hostObjAttributes in filteredElementCollector)
-            //{
-            //    string name = Core.Revit.Query.FullName(hostObjAttributes);
-            //    if (name.Equals(construction.Name))
-            //        return hostObjAttributes;
-            //}
-
-
-            //return null;
         }
     }
 }

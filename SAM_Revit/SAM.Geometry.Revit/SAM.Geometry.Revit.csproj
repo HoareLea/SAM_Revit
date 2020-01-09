@@ -76,6 +76,7 @@
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\TopProfiles.cs" />
     <Compile Include="Query\Profiles.cs" />
+    <Compile Include="ToRevit\Line.cs" />
     <Compile Include="ToRevit\XYZ.cs" />
     <Compile Include="ToRevit\UV.cs" />
     <Compile Include="ToSAM\IClosed3Ds.cs" />

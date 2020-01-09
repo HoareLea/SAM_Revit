@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.Linq;
 using Autodesk.Revit.DB;
 
 using Revit.Elements;
@@ -20,9 +20,15 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// FromRevit, SAM Analytical Panel
         /// </search>
-        public static IEnumerable<SAM.Core.SAMObject> FromRevit(Revit.Elements.Element element)
+        public static IEnumerable<object> FromRevit(Revit.Elements.Element element)
         {
-            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement);
+            TransactionManager.Instance.ForceCloseTransaction();
+
+            IEnumerable<SAM.Core.SAMObject> sAMObjects = SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement);
+            if (sAMObjects == null)
+                return null;
+
+            return sAMObjects;
         }
 
         ///// <summary>

@@ -64,6 +64,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
@@ -78,19 +82,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\SAMObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Panel.cs" />
-    <Compile Include="Space.cs" />
+    <Compile Include="Component\Panel.cs" />
+    <Compile Include="Component\Space.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SAMAnalyticalDynamoRevit_DynamoCustomization.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ToDynamo\" />
-    <Folder Include="ToSAM\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Analytical.Revit\SAM.Analytical.Revit.csproj">
       <Project>{7a976ee2-6c1e-4165-8b29-afd946220556}</Project>

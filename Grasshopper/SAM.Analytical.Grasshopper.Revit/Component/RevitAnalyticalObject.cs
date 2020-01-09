@@ -66,27 +66,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            IEnumerable<Core.SAMObject> sAMObjects = null;
-            if (element is HostObject)
-            {
-                List<Panel> panels = Analytical.Revit.Convert.ToSAM((HostObject)element);
-                if (panels != null)
-                    sAMObjects = panels.Cast<Core.SAMObject>();
-            }
-            else if(element is HostObjAttributes)
-            {
-                Construction construction = Analytical.Revit.Convert.ToSAM((HostObjAttributes)element);
-                if (construction != null)
-                    sAMObjects = new List<Core.SAMObject>() { construction };
-            }
-            else if (element is SpatialElement)
-            {
-                Space space = Analytical.Revit.Convert.ToSAM((SpatialElement)element);
-                if (space != null)
-                    sAMObjects = new List<Core.SAMObject>() { space };
-            }
-
-            dataAccess.SetDataList(0, sAMObjects);
+            dataAccess.SetDataList(0, Analytical.Revit.Convert.ToSAM(element));
         }
 
         /// <summary>

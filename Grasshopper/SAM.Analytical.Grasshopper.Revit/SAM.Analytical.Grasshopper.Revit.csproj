@@ -94,7 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\RevitAnalyticalElement.cs" />
+    <Compile Include="Component\RevitAnalyticalObject.cs" />
     <Compile Include="Component\RevitCreateHostObject.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

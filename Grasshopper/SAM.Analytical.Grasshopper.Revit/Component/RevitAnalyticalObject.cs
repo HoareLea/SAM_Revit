@@ -6,17 +6,19 @@ using Grasshopper.Kernel.Types;
 using Autodesk.Revit.DB;
 
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAnalyticalElement : GH_Component
+    public class RevitAnalyticalObject : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitAnalyticalElement()
-          : base("RevitAnalyticalElement", "ToSAMAnalytical",
-              "Convert Revit To SAM Analytical Panels",
+        public RevitAnalyticalObject()
+          : base("RevitAnalyticalObject", "ToSAMAnalytical",
+              "Convert Revit To SAM Analytical Object",
               "SAM", "Revit")
         {
         }
@@ -26,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_RevitWalls", "_RevitWalls", "Revit Walls", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_RevitElement", "_RevitElement", "Revit Element", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -34,7 +36,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("Panel", "panel", "SAM Analytical Panel", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("AnalyticalObjects", "AnalyticalObjects", "SAM Analytical Objects", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -57,15 +59,34 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             ElementId aId = obj.Id as ElementId;
 
-            HostObject hostObject = document.GetElement(aId) as HostObject;
-            if(hostObject == null)
+            Element element = document.GetElement(aId);
+            if(element == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid Element");
                 return;
             }
 
-            dataAccess.SetDataList(0, Analytical.Revit.Convert.ToSAM(hostObject));
-            return;
+            IEnumerable<Core.SAMObject> sAMObjects = null;
+            if (element is HostObject)
+            {
+                List<Panel> panels = Analytical.Revit.Convert.ToSAM((HostObject)element);
+                if (panels != null)
+                    sAMObjects = panels.Cast<Core.SAMObject>();
+            }
+            else if(element is HostObjAttributes)
+            {
+                Construction construction = Analytical.Revit.Convert.ToSAM((HostObjAttributes)element);
+                if (construction != null)
+                    sAMObjects = new List<Core.SAMObject>() { construction };
+            }
+            else if (element is SpatialElement)
+            {
+                Space space = Analytical.Revit.Convert.ToSAM((SpatialElement)element);
+                if (space != null)
+                    sAMObjects = new List<Core.SAMObject>() { space };
+            }
+
+            dataAccess.SetDataList(0, sAMObjects);
         }
 
         /// <summary>

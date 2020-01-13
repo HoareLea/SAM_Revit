@@ -18,7 +18,7 @@ namespace SAM.Analytical.Revit
             if (aHostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
-                foreach(Geometry.Spatial.Segment3D segment3D in panel.ToSegments())
+                foreach(Geometry.Spatial.Segment3D segment3D in panel.ToPolycurveLoop().GetCurves())
                     curveList.Add(segment3D.ToRevit());
 
                 result = Wall.Create(document, curveList, false);

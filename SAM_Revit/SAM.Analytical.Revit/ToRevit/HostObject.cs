@@ -73,8 +73,8 @@ namespace SAM.Analytical.Revit
                 foreach (Geometry.Spatial.Segment3D segment3D in curve3Ds)
                     curveArray.Append(segment3D.ToRevit());
 
-                double elevation = panel.LowElevation();
-                Level level = document.HighLevel(elevation);
+                Level level = document.HighLevel(panel.LowElevation());
+                double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
 
                 ModelCurveArray modelCurveArray = new ModelCurveArray();
                 RoofBase roofBase = document.Create.NewFootPrintRoof(curveArray, level, aHostObjAttributes as RoofType, out modelCurveArray);
@@ -89,7 +89,7 @@ namespace SAM.Analytical.Revit
                 foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
                 {
                     Geometry.Spatial.Point3D point3D = curve3D.GetStart();
-                    if (Math.Abs(point3D.Z - elevation) > Geometry.Tolerance.MicroDistance)
+                    if (Math.Abs(point3D.Z - levelElevation) > Geometry.Tolerance.MicroDistance)
                         slabShapeEditor.DrawPoint(point3D.ToRevit());
                 }
 

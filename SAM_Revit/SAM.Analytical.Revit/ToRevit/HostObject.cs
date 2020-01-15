@@ -93,7 +93,7 @@ namespace SAM.Analytical.Revit
                         slabShapeEditor.DrawPoint(point3D.ToRevit());
                 }
 
-                return result;
+                return roofBase;
             }
 
             return null;

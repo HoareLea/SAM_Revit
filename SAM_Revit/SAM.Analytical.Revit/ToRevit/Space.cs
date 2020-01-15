@@ -11,7 +11,7 @@ namespace SAM.Analytical.Revit
         public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space, bool includePanels = true)
         {
             double lowElevation = Query.LowElevation(space);
-            if (!double.IsNaN(lowElevation))
+            if (double.IsNaN(lowElevation))
                 return null;
 
             Level level = SAM.Geometry.Revit.Query.LowLevel(document, lowElevation);

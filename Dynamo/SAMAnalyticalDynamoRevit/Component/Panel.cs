@@ -44,7 +44,10 @@ namespace SAMAnalyticalDynamoRevit
 
             TransactionManager.Instance.TransactionTaskDone();
 
-            return ElementWrapper.ToDSType(hostObject, true);
+            if (hostObject != null)
+                return ElementWrapper.ToDSType(hostObject, true);
+            else
+                return null;
         }
     }
 }

@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Query\FullName.cs" />
     <Compile Include="Query\BottomProfiles.cs" />
+    <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />
     <Compile Include="Query\TopProfiles.cs" />
     <Compile Include="Query\Profiles.cs" />

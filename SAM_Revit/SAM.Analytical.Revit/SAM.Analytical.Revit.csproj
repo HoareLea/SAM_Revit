@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />
     <Compile Include="ToRevit\HostObject.cs" />

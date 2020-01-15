@@ -20,8 +20,34 @@ namespace SAM.Analytical.Revit
                 foreach (Geometry.Spatial.Segment3D segment3D in panel.ToPolycurveLoop().GetCurves())
                     curveList.Add(segment3D.ToRevit());
 
-                result = Wall.Create(document, curveList, false);
-                result.ChangeTypeId(aHostObjAttributes.Id);
+                double lowElevation = panel.LowElevation();
+
+                Level level = document.LowLevel(lowElevation);
+                if (level == null)
+                    return null;
+
+                result = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false);
+
+                Parameter parameter = null;
+
+                parameter = result.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
+                if (parameter != null)
+                    parameter.Set(ElementId.InvalidElementId);
+
+                parameter = result.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
+                if (parameter != null)
+                {
+                    double height = UnitUtils.ConvertToInternalUnits((panel.HightElevation() - lowElevation), DisplayUnitType.DUT_METERS);
+                    parameter.Set(height);
+                }
+
+                double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
+                if (System.Math.Abs(lowElevation - levelElevation) > SAM.Geometry.Tolerance.MacroDistance)
+                {
+                    parameter = result.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
+                    if (parameter != null)
+                        parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
+                }
 
                 return result;
             }

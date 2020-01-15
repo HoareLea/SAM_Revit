@@ -77,6 +77,7 @@
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />
+    <Compile Include="ToRevit\Space.cs" />
     <Compile Include="ToRevit\HostObject.cs" />
     <Compile Include="ToRevit\HostObjAttributes.cs" />
     <Compile Include="ToSAM\Construction.cs" />

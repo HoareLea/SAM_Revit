@@ -1,4 +1,7 @@
 ﻿using Autodesk.Revit.DB;
+using Revit.Elements;
+using RevitServices.Persistence;
+using RevitServices.Transactions;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -17,6 +20,30 @@ namespace SAMAnalyticalDynamoRevit
         public static SAM.Analytical.Space FromRevit(Revit.Elements.Element element)
         {
             return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as SpatialElement);
+        }
+
+        /// <summary>
+        /// Creates Space from SAM Analytical Space
+        /// </summary>
+        /// <param name="space">SAM Analytical Space</param>
+        /// <param name="includePanels">Include panels in conversion</param>
+        /// <search>
+        /// ToRevit, SAM Analytical Space
+        /// </search>
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, bool includePanels = true)
+        {
+            Document document = DocumentManager.Instance.CurrentDBDocument;
+
+            TransactionManager.Instance.EnsureInTransaction(document);
+
+            Autodesk.Revit.DB.Element element = SAM.Analytical.Revit.Convert.ToRevit(document, space, includePanels);
+
+            TransactionManager.Instance.TransactionTaskDone();
+
+            if (element != null)
+                return ElementWrapper.ToDSType(element, true);
+            else
+                return null;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<IClosed3D> Profiles(this HostObject hostObject)
+        public static List<IClosed3D> Profiles(this HostObject hostObject, Transaction transaction = null)
         {
             if (hostObject == null || hostObject.Document == null)
                 return null;
@@ -27,7 +27,7 @@ namespace SAM.Geometry.Revit
             if (hostObject is Ceiling)
                 return Profiles_Ceiling((Ceiling)hostObject);
 
-            List<IClosed3D> result = Profiles_FromSketch(hostObject);
+            List<IClosed3D> result = Profiles_FromSketch(hostObject, transaction);
             if (result != null && result.Count > 0)
                 return result;
 
@@ -35,6 +35,23 @@ namespace SAM.Geometry.Revit
                 return Profiles_Wall((Wall)hostObject);
 
             return null;
+        }
+
+        private static List<IClosed3D> Profiles(this Autodesk.Revit.DB.Face face)
+        {
+            if (face is PlanarFace)
+                return face.ToSAM_PolycurveLoop3Ds().Cast<IClosed3D>().ToList();
+
+            return face.Triangulate().ToSAM_Triangle3Ds().Cast<IClosed3D>().ToList();
+        }
+
+        private static List<IClosed3D> Profiles(this IEnumerable<Autodesk.Revit.DB.Face> faces)
+        {
+            List<IClosed3D> result = new List<IClosed3D>();
+            foreach (Autodesk.Revit.DB.Face face in faces)
+                result.AddRange(face.Profiles());
+
+            return result;
         }
 
         public static List<IClosed3D> Profiles_Wall(this Wall wall)
@@ -50,7 +67,7 @@ namespace SAM.Geometry.Revit
                     ICurve3D curve3D_Location = Convert.ToSAM(locationCurve);
 
                     IEnumerable<ICurve3D> curves = null;
-                    if(curve3D_Location is ISegmentable3D)
+                    if (curve3D_Location is ISegmentable3D)
                         curves = ((ISegmentable3D)curve3D_Location).GetSegments().Cast<ICurve3D>();
                     else
                         curves = new List<ICurve3D>() { curve3D_Location };
@@ -126,61 +143,19 @@ namespace SAM.Geometry.Revit
             return BottomProfiles(ceiling);
         }
 
-        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject)
+        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject, Transaction transaction = null)
         {
             Document document = hostObject.Document;
 
-            IEnumerable<ElementId> elementIDs = null;
-            using (Transaction transaction = new Transaction(document, "Temp"))
-            {
-                FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions().SetClearAfterRollback(true);
+            IEnumerable<ElementId> elementIds = GetRelatedElementIds(hostObject, transaction, false);
 
-                //IMPORTANT: have to be two separate transactions othewise HostObject become Invalid
-
-                transaction.Start();
-                try
-                {
-                    elementIDs = document.Delete(hostObject.Id);
-                }
-                catch
-                {
-                    elementIDs = null;
-                }
-
-                transaction.RollBack(failureHandlingOptions);
-
-                if(elementIDs != null && elementIDs.Count() > 0)
-                {
-                    transaction.Start();
-                    try
-                    {
-                        IList<ElementId> insertElementIDs = hostObject.FindInserts(true, true, true, true);
-                        if (insertElementIDs != null && insertElementIDs.Count > 0)
-                        {
-                            IEnumerable<ElementId> tempElementIDs = document.Delete(insertElementIDs);
-                            if (tempElementIDs != null && tempElementIDs.Count() != 0)
-                                elementIDs = elementIDs.ToList().FindAll(x => !tempElementIDs.Contains(x));
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                    transaction.RollBack(failureHandlingOptions);
-                }
-            }
-
-            if (elementIDs == null || elementIDs.Count() == 0)
+            if (elementIds == null || elementIds.Count() == 0)
                 return null;
 
             List<IClosed3D> result = new List<IClosed3D>();
-            foreach (ElementId id in elementIDs)
+            foreach (ElementId id in elementIds)
             {
-                Element element = document.GetElement(id);
-                if (element == null)
-                    continue;
-
-                Sketch sketch = element as Sketch;
+                Sketch sketch = document.GetElement(id) as Sketch;
                 if (sketch == null)
                     continue;
 
@@ -200,21 +175,66 @@ namespace SAM.Geometry.Revit
 
         }
 
-        private static List<IClosed3D> Profiles(this Autodesk.Revit.DB.Face face)
+        private static IEnumerable<ElementId> GetRelatedElementIds(this Element element, Transaction transaction = null, bool IncludeInserts = true)
         {
-            if (face is PlanarFace)
-                return face.ToSAM_PolycurveLoop3Ds().Cast<IClosed3D>().ToList();
+            Document document = element.Document;
 
-            return face.Triangulate().ToSAM_Triangle3Ds().Cast<IClosed3D>().ToList();
-        }
+            IEnumerable<ElementId> elementIds = null;
 
-        private static List<IClosed3D> Profiles(this IEnumerable<Autodesk.Revit.DB.Face> faces)
-        {
-            List<IClosed3D> result = new List<IClosed3D>();
-            foreach (Autodesk.Revit.DB.Face face in faces)
-                result.AddRange(face.Profiles());
+            bool close = false;
+            if (transaction == null)
+            {
+                transaction = new Transaction(document, "Temp");
+                transaction.Start();
+                close = true;
+            }
 
-            return result;
+            using (SubTransaction subTrasaction = new SubTransaction(document))
+            {
+                
+                //IMPORTANT: have to be two separate transactions othewise HostObject become Invalid
+
+                subTrasaction.Start();
+
+                try
+                {
+                    elementIds = document.Delete(element.Id);
+                }
+                catch
+                {
+                    elementIds = null;
+                }
+
+                subTrasaction.RollBack();
+
+                if (IncludeInserts && element is HostObject && elementIds != null && elementIds.Count() > 0)
+                {
+                    subTrasaction.Start();
+                    try
+                    {
+                        IList<ElementId> insertElementIDs = ((HostObject)element).FindInserts(true, true, true, true);
+                        if (insertElementIDs != null && insertElementIDs.Count > 0)
+                        {
+                            IEnumerable<ElementId> elementIds_Temp = document.Delete(insertElementIDs);
+                            if (elementIds_Temp != null && elementIds_Temp.Count() != 0)
+                                elementIds = elementIds.ToList().FindAll(x => !elementIds_Temp.Contains(x));
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                    subTrasaction.RollBack();
+                }
+            }
+
+            if (close)
+            {
+                FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions().SetClearAfterRollback(true);
+                transaction.RollBack(failureHandlingOptions);
+            }
+
+            return elementIds;
         }
     }
 }

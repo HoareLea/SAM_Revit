@@ -24,8 +24,22 @@ namespace SAMAnalyticalDynamoRevit
         {
             TransactionManager.Instance.ForceCloseTransaction();
 
+            Document document = DocumentManager.Instance.CurrentDBDocument;
+
             return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as HostObject);
         }
+
+        public static List<SAM.Analytical.Panel> FromRevitLinkInstance(Revit.Elements.Element revitLinkInstance)
+        {
+            TransactionManager.Instance.ForceCloseTransaction();
+
+            RevitLinkInstance revitLinkInstance_Revit = revitLinkInstance.InternalElement as RevitLinkInstance;
+            if (revitLinkInstance_Revit == null)
+                return null;
+
+            return SAM.Analytical.Revit.Convert.ToSAM(revitLinkInstance_Revit);
+        }
+        
 
         /// <summary>
         /// Creates HostObject from SAM Analytical Panel
@@ -49,5 +63,7 @@ namespace SAMAnalyticalDynamoRevit
             else
                 return null;
         }
+
+        
     }
 }

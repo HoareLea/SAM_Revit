@@ -30,16 +30,5 @@ namespace SAMAnalyticalDynamoRevit
 
             return sAMObjects;
         }
-
-        ///// <summary>
-        ///// Creates HostObject from SAM Analytical Panel
-        ///// </summary>
-        ///// <param name="sAMObject">SAM Object</param>
-        ///// <search>
-        ///// ToRevit, SAM Analytical Panel
-        ///// </search>
-        //public static Revit.Elements.Element ToRevit(SAM.Core.SAMObject sAMObject)
-        //{
-        //}
     }
 }

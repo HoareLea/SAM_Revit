@@ -2,6 +2,7 @@
 using Revit.Elements;
 using RevitServices.Persistence;
 using RevitServices.Transactions;
+using System.Collections.Generic;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -44,6 +45,17 @@ namespace SAMAnalyticalDynamoRevit
                 return ElementWrapper.ToDSType(element, true);
             else
                 return null;
+        }
+
+        public static IEnumerable<SAM.Analytical.Space> FromRevitLinkInstance(Revit.Elements.Element revitLinkInstance, bool fromRooms = true)
+        {
+            TransactionManager.Instance.ForceCloseTransaction();
+
+            RevitLinkInstance revitLinkInstance_Revit = revitLinkInstance.InternalElement as RevitLinkInstance;
+            if (revitLinkInstance_Revit == null)
+                return null;
+
+            return SAM.Analytical.Revit.Convert.ToSAM_Spaces(revitLinkInstance_Revit, fromRooms);
         }
     }
 }

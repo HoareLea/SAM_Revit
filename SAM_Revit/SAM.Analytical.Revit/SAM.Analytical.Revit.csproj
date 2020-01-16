@@ -82,6 +82,7 @@
     <Compile Include="ToRevit\HostObjAttributes.cs" />
     <Compile Include="ToSAM\Construction.cs" />
     <Compile Include="ToSAM\SAMObjects.cs" />
+    <Compile Include="ToSAM\Spaces.cs" />
     <Compile Include="ToSAM\Space.cs" />
     <Compile Include="ToSAM\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

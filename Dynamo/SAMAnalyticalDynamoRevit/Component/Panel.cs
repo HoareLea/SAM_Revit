@@ -37,9 +37,8 @@ namespace SAMAnalyticalDynamoRevit
             if (revitLinkInstance_Revit == null)
                 return null;
 
-            return SAM.Analytical.Revit.Convert.ToSAM(revitLinkInstance_Revit);
+            return SAM.Analytical.Revit.Convert.ToSAM_Panels(revitLinkInstance_Revit);
         }
-        
 
         /// <summary>
         /// Creates HostObject from SAM Analytical Panel

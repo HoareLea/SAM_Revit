@@ -77,7 +77,7 @@ namespace SAM.Analytical.Revit
             return panels;
         }
 
-        public static List<Panel> ToSAM(this RevitLinkInstance revitLinkInstance)
+        public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance)
         {
             Document document_Source = revitLinkInstance.GetLinkDocument();
 

@@ -72,10 +72,10 @@ namespace SAM.Geometry.Revit
                     else
                         curves = new List<ICurve3D>() { curve3D_Location };
 
-                    double max = Units.Convert.ToSI(boundingBoxXYZ.Max.Z, Units.UnitType.Feet);
+                    double max = Units.Query.ToSI(boundingBoxXYZ.Max.Z, Units.UnitType.Feet);
                     Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), new Vector3D(0, 0, 1));
 
-                    double min = Units.Convert.ToSI(boundingBoxXYZ.Min.Z, Units.UnitType.Feet);
+                    double min = Units.Query.ToSI(boundingBoxXYZ.Min.Z, Units.UnitType.Feet);
                     Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), new Vector3D(0, 0, 1));
 
                     result = new List<IClosed3D>();

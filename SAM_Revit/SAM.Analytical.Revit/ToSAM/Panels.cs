@@ -15,7 +15,13 @@ namespace SAM.Analytical.Revit
 
             List<Panel> result = new List<Panel>();
             foreach (IClosed3D profile in hostObject.Profiles(transaction))
-                result.Add(new Panel(hostObject.Name, construction, profile));
+            {
+                Panel panel = new Panel(hostObject.Name, construction, profile);
+                Core.ParameterSet parameterSet = new Core.ParameterSet("Revit");
+                parameterSet.Add("ElementId", hostObject.Id.IntegerValue);
+                result.Add(panel);
+            }
+                
 
             return result;
         }

@@ -8,7 +8,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space, bool includePanels = true)
+        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space)
         {
             double lowElevation = Query.LowElevation(space);
             if (double.IsNaN(lowElevation))
@@ -18,16 +18,7 @@ namespace SAM.Analytical.Revit
             if (level == null)
                 return null;
 
-            if (includePanels && space.Panels != null)
-            {
-                foreach (Panel panel in space.Panels)
-                {
-                    HostObject hostObject = ToRevit(document, panel);
-                }
-            }
-
             return document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, DisplayUnitType.DUT_METERS), UnitUtils.ConvertToInternalUnits(space.Location.Y, DisplayUnitType.DUT_METERS)));
-
         }
     }
 }

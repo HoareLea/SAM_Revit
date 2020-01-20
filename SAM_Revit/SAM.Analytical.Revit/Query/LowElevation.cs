@@ -12,10 +12,6 @@ namespace SAM.Analytical.Revit
 
         public static double LowElevation(this Space space)
         {
-            List<Panel> panels = space.Panels;
-            if (panels != null && panels.Count > 0)
-                return LowElevation(panels);
-
             if (space.Location != null)
                 return space.Location.Z;
 

@@ -13,7 +13,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<IClosed3D> Profiles(this HostObject hostObject, Transaction transaction = null)
+        public static List<IClosed3D> Profiles(this HostObject hostObject)
         {
             if (hostObject == null || hostObject.Document == null)
                 return null;
@@ -27,36 +27,17 @@ namespace SAM.Geometry.Revit
             if (hostObject is Ceiling)
                 return Profiles_Ceiling((Ceiling)hostObject);
 
-            List<IClosed3D> result = Profiles_FromSketch(hostObject, transaction);
-            if (result != null && result.Count > 0)
-                return result;
-
             if (hostObject is Wall)
                 return Profiles_Wall((Wall)hostObject);
 
             return null;
         }
 
-        private static List<IClosed3D> Profiles(this Autodesk.Revit.DB.Face face)
-        {
-            if (face is PlanarFace)
-                return face.ToSAM_PolycurveLoop3Ds().Cast<IClosed3D>().ToList();
-
-            return face.Triangulate().ToSAM_Triangle3Ds().Cast<IClosed3D>().ToList();
-        }
-
-        private static List<IClosed3D> Profiles(this IEnumerable<Autodesk.Revit.DB.Face> faces)
-        {
-            List<IClosed3D> result = new List<IClosed3D>();
-            foreach (Autodesk.Revit.DB.Face face in faces)
-                result.AddRange(face.Profiles());
-
-            return result;
-        }
-
         public static List<IClosed3D> Profiles_Wall(this Wall wall)
         {
-            List<IClosed3D> result = null;
+            List<IClosed3D> result = Profiles_FromSketch(wall);
+            if (result != null && result.Count > 0)
+                return result;
 
             BoundingBoxXYZ boundingBoxXYZ = wall.get_BoundingBox(null);
             if (boundingBoxXYZ != null)
@@ -130,36 +111,64 @@ namespace SAM.Geometry.Revit
 
         private static List<IClosed3D> Profiles_Floor(this Floor floor)
         {
-            return TopProfiles(floor);
+            List<IClosed3D> closed3Ds = Profiles_FromSketch(floor);
+            if (closed3Ds == null || closed3Ds.Count() == 0)
+                closed3Ds = TopProfiles(floor);
+
+            return closed3Ds;
         }
 
         private static List<IClosed3D> Profiles_RoofBase(this RoofBase roofBase)
         {
-            return TopProfiles(roofBase);
+            List<IClosed3D> closed3Ds = Profiles_FromSketch(roofBase);
+            if(closed3Ds != null && closed3Ds.Count() > 0)
+            {
+                double offset = 0;
+
+                Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM);
+                if(parameter != null)
+                {
+                    offset = parameter.AsDouble();
+                    if (!double.IsNaN(offset))
+                        offset = UnitUtils.ConvertFromInternalUnits(offset, DisplayUnitType.DUT_METERS);
+                }
+                
+                if(offset != 0)
+                {
+                    Vector3D vector3D = new Vector3D(0, 0, offset);
+                    closed3Ds = closed3Ds.ConvertAll(x => (IClosed3D)x.GetMoved(vector3D));
+                }
+            }
+            else
+            {
+                closed3Ds = TopProfiles(roofBase);
+            }                
+
+            return closed3Ds;
         }
 
         private static List<IClosed3D> Profiles_Ceiling(this Ceiling ceiling)
         {
-            return BottomProfiles(ceiling);
+            List<IClosed3D> closed3Ds = Profiles_FromSketch(ceiling);
+            if (closed3Ds == null || closed3Ds.Count() == 0)
+                closed3Ds = BottomProfiles(ceiling);
+
+            return closed3Ds;
         }
 
-        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject, Transaction transaction = null)
+        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject)
         {
-            Document document = hostObject.Document;
-
-            IEnumerable<ElementId> elementIds = GetRelatedElementIds(hostObject, transaction, false);
-
+            IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
                 return null;
 
-            List<IClosed3D> result = new List<IClosed3D>();
-            foreach (ElementId id in elementIds)
-            {
-                Sketch sketch = document.GetElement(id) as Sketch;
-                if (sketch == null)
-                    continue;
+            Document document = hostObject.Document;
 
-                if (sketch.Profile == null)
+            List<IClosed3D> result = new List<IClosed3D>();
+            foreach (ElementId elementId in elementIds)
+            {
+                Sketch sketch = document.GetElement(elementId) as Sketch;
+                if (sketch == null)
                     continue;
 
                 List<IClosed3D> closed3Ds = Convert.ToSAM(sketch);
@@ -172,69 +181,6 @@ namespace SAM.Geometry.Revit
             }
 
             return result;
-
-        }
-
-        private static IEnumerable<ElementId> GetRelatedElementIds(this Element element, Transaction transaction = null, bool IncludeInserts = true)
-        {
-            Document document = element.Document;
-
-            IEnumerable<ElementId> elementIds = null;
-
-            bool close = false;
-            if (transaction == null)
-            {
-                transaction = new Transaction(document, "Temp");
-                transaction.Start();
-                close = true;
-            }
-
-            using (SubTransaction subTrasaction = new SubTransaction(document))
-            {
-                
-                //IMPORTANT: have to be two separate transactions othewise HostObject become Invalid
-
-                subTrasaction.Start();
-
-                try
-                {
-                    elementIds = document.Delete(element.Id);
-                }
-                catch
-                {
-                    elementIds = null;
-                }
-
-                subTrasaction.RollBack();
-
-                if (IncludeInserts && element is HostObject && elementIds != null && elementIds.Count() > 0)
-                {
-                    subTrasaction.Start();
-                    try
-                    {
-                        IList<ElementId> insertElementIDs = ((HostObject)element).FindInserts(true, true, true, true);
-                        if (insertElementIDs != null && insertElementIDs.Count > 0)
-                        {
-                            IEnumerable<ElementId> elementIds_Temp = document.Delete(insertElementIDs);
-                            if (elementIds_Temp != null && elementIds_Temp.Count() != 0)
-                                elementIds = elementIds.ToList().FindAll(x => !elementIds_Temp.Contains(x));
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                    subTrasaction.RollBack();
-                }
-            }
-
-            if (close)
-            {
-                FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions().SetClearAfterRollback(true);
-                transaction.RollBack(failureHandlingOptions);
-            }
-
-            return elementIds;
         }
     }
 }

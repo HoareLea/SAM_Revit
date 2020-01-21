@@ -111,49 +111,55 @@ namespace SAM.Geometry.Revit
 
         private static List<IClosed3D> Profiles_Floor(this Floor floor)
         {
-            List<IClosed3D> closed3Ds = Profiles_FromSketch(floor);
-            if (closed3Ds == null || closed3Ds.Count() == 0)
-                closed3Ds = TopProfiles(floor);
+            //List<IClosed3D> closed3Ds = Profiles_FromSketch(floor);
+            //if (closed3Ds == null || closed3Ds.Count() == 0)
+            //    closed3Ds = TopProfiles(floor);
 
-            return closed3Ds;
+            //return closed3Ds;
+
+            return TopProfiles(floor);
         }
 
         private static List<IClosed3D> Profiles_RoofBase(this RoofBase roofBase)
         {
-            List<IClosed3D> closed3Ds = Profiles_FromSketch(roofBase);
-            if(closed3Ds != null && closed3Ds.Count() > 0)
-            {
-                double offset = 0;
+        //    List<IClosed3D> closed3Ds = Profiles_FromSketch(roofBase);
+        //    if(closed3Ds != null && closed3Ds.Count() > 0)
+        //    {
+        //        double offset = 0;
 
-                Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM);
-                if(parameter != null)
-                {
-                    offset = parameter.AsDouble();
-                    if (!double.IsNaN(offset))
-                        offset = UnitUtils.ConvertFromInternalUnits(offset, DisplayUnitType.DUT_METERS);
-                }
+        //        Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM);
+        //        if(parameter != null)
+        //        {
+        //            offset = parameter.AsDouble();
+        //            if (!double.IsNaN(offset))
+        //                offset = UnitUtils.ConvertFromInternalUnits(offset, DisplayUnitType.DUT_METERS);
+        //        }
                 
-                if(offset != 0)
-                {
-                    Vector3D vector3D = new Vector3D(0, 0, offset);
-                    closed3Ds = closed3Ds.ConvertAll(x => (IClosed3D)x.GetMoved(vector3D));
-                }
-            }
-            else
-            {
-                closed3Ds = TopProfiles(roofBase);
-            }                
+        //        if(offset != 0)
+        //        {
+        //            Vector3D vector3D = new Vector3D(0, 0, offset);
+        //            closed3Ds = closed3Ds.ConvertAll(x => (IClosed3D)x.GetMoved(vector3D));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        closed3Ds = TopProfiles(roofBase);
+        //    }                
 
-            return closed3Ds;
+        //    return closed3Ds;
+
+            return TopProfiles(roofBase);
         }
 
         private static List<IClosed3D> Profiles_Ceiling(this Ceiling ceiling)
         {
-            List<IClosed3D> closed3Ds = Profiles_FromSketch(ceiling);
-            if (closed3Ds == null || closed3Ds.Count() == 0)
-                closed3Ds = BottomProfiles(ceiling);
+        //    List<IClosed3D> closed3Ds = Profiles_FromSketch(ceiling);
+        //    if (closed3Ds == null || closed3Ds.Count() == 0)
+        //        closed3Ds = BottomProfiles(ceiling);
 
-            return closed3Ds;
+        //    return closed3Ds;
+
+            return BottomProfiles(ceiling);
         }
 
         private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject)

@@ -17,8 +17,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitAnalyticalObject()
-          : base("RevitAnalyticalObject", "ToSAMAnalytical",
-              "Convert Revit To SAM Analytical Object",
+          : base("Revit.SAMAnalytical", "Revit.SAMAnalytical",
+              "Convert Revit To SAM Analytical Object ie. Panel, Space",
               "SAM", "Revit")
         {
         }
@@ -28,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_RevitElement", "_RevitElement", "Revit Element", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_RevitElement", "_RevitElement", "Revit Element instance", GH_ParamAccess.item);
         }
 
         /// <summary>

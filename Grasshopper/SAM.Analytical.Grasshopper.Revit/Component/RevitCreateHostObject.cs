@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitCreateHostObject()
-          : base("SAManalytical.Revit", "SAManalytical.Revit",
+          : base("SAMAnalytical.Revit", "SAManalytical.Revit",
               "Create Revit HostObject from SAM Analytical ie. Panel",
               "SAM", "Revit")
         {

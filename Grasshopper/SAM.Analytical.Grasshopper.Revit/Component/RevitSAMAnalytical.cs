@@ -11,12 +11,12 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAnalyticalObject : GH_Component
+    public class RevitSAMAnalytical : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitAnalyticalObject()
+        public RevitSAMAnalytical()
           : base("Revit.SAMAnalytical", "Revit.SAMAnalytical",
               "Convert Revit To SAM Analytical Object ie. Panel, Space",
               "SAM", "Revit")

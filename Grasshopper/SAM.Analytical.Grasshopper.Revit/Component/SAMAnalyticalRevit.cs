@@ -11,12 +11,12 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitCreateHostObject : GH_Component
+    public class SAMAnalyticalRevit : GH_Component
     {
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitCreateHostObject()
+        public SAMAnalyticalRevit()
           : base("SAMAnalytical.Revit", "SAManalytical.Revit",
               "Create Revit HostObject from SAM Analytical ie. Panel",
               "SAM", "Revit")

@@ -13,7 +13,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<IClosed3D> Profiles(this HostObject hostObject)
+        public static List<Spatial.Face> Profiles(this HostObject hostObject)
         {
             if (hostObject == null || hostObject.Document == null)
                 return null;
@@ -33,9 +33,9 @@ namespace SAM.Geometry.Revit
             return null;
         }
 
-        public static List<IClosed3D> Profiles_Wall(this Wall wall)
+        public static List<Spatial.Face> Profiles_Wall(this Wall wall)
         {
-            List<IClosed3D> result = Profiles_FromSketch(wall);
+            List<Spatial.Face> result = Profiles_FromSketch(wall);
             if (result != null && result.Count > 0)
                 return result;
 
@@ -53,13 +53,13 @@ namespace SAM.Geometry.Revit
                     else
                         curves = new List<ICurve3D>() { curve3D_Location };
 
-                    double max = Units.Query.ToSI(boundingBoxXYZ.Max.Z, Units.UnitType.Feet);
+                    double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
                     Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), new Vector3D(0, 0, 1));
 
-                    double min = Units.Query.ToSI(boundingBoxXYZ.Min.Z, Units.UnitType.Feet);
+                    double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
                     Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), new Vector3D(0, 0, 1));
 
-                    result = new List<IClosed3D>();
+                    result = new List<Spatial.Face>();
                     foreach (ICurve3D curve3D in curves)
                     {
                         if (curve3D == null)
@@ -80,10 +80,7 @@ namespace SAM.Geometry.Revit
                             point3D_3 = point_Temp;
                         }
 
-                        Segment3D segment3D_1 = new Segment3D(point3D_1, point3D_2);
-                        Segment3D segment3D_2 = new Segment3D(point3D_3, minCurve.GetStart());
-
-                        result.Add(new PolycurveLoop3D(new ICurve3D[] { minCurve, segment3D_1, maxCurve, segment3D_2 }));
+                        result.Add(new Spatial.Face(new Polygon3D(new Point3D[] { point3D_1, point3D_2, point3D_3, minCurve.GetStart() })));
                     }
 
                     if (result != null && result.Count > 0)
@@ -98,18 +95,18 @@ namespace SAM.Geometry.Revit
             if (curveLoops == null)
                 return null;
 
-            result = new List<IClosed3D>();
+            result = new List<Spatial.Face>();
             foreach (CurveLoop curveLoop in curveLoops)
             {
-                PolycurveLoop3D polycurveLoop3D = curveLoop.ToSAM();
-                if (polycurveLoop3D != null)
-                    result.Add(polycurveLoop3D);
+                Polygon3D polygon3D = curveLoop.ToSAM_Polygon3D();
+                if (polygon3D != null)
+                    result.Add(new Spatial.Face(polygon3D));
             }
 
             return result;
         }
 
-        private static List<IClosed3D> Profiles_Floor(this Floor floor)
+        private static List<Spatial.Face> Profiles_Floor(this Floor floor)
         {
             //List<IClosed3D> closed3Ds = Profiles_FromSketch(floor);
             //if (closed3Ds == null || closed3Ds.Count() == 0)
@@ -117,10 +114,15 @@ namespace SAM.Geometry.Revit
 
             //return closed3Ds;
 
-            return TopProfiles(floor);
+            List<Spatial.Face> faces = TopProfiles(floor);
+            
+
+            
+
+            return faces;
         }
 
-        private static List<IClosed3D> Profiles_RoofBase(this RoofBase roofBase)
+        private static List<Spatial.Face> Profiles_RoofBase(this RoofBase roofBase)
         {
         //    List<IClosed3D> closed3Ds = Profiles_FromSketch(roofBase);
         //    if(closed3Ds != null && closed3Ds.Count() > 0)
@@ -151,7 +153,7 @@ namespace SAM.Geometry.Revit
             return TopProfiles(roofBase);
         }
 
-        private static List<IClosed3D> Profiles_Ceiling(this Ceiling ceiling)
+        private static List<Spatial.Face> Profiles_Ceiling(this Ceiling ceiling)
         {
         //    List<IClosed3D> closed3Ds = Profiles_FromSketch(ceiling);
         //    if (closed3Ds == null || closed3Ds.Count() == 0)
@@ -162,7 +164,7 @@ namespace SAM.Geometry.Revit
             return BottomProfiles(ceiling);
         }
 
-        private static List<IClosed3D> Profiles_FromSketch(this HostObject hostObject)
+        private static List<Spatial.Face> Profiles_FromSketch(this HostObject hostObject)
         {
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
@@ -170,20 +172,20 @@ namespace SAM.Geometry.Revit
 
             Document document = hostObject.Document;
 
-            List<IClosed3D> result = new List<IClosed3D>();
+            List<Spatial.Face> result = new List<Spatial.Face>();
             foreach (ElementId elementId in elementIds)
             {
                 Sketch sketch = document.GetElement(elementId) as Sketch;
                 if (sketch == null)
                     continue;
 
-                List<IClosed3D> closed3Ds = Convert.ToSAM(sketch);
-                if (closed3Ds == null)
+                List<Spatial.Face> faces = Convert.ToSAM_Faces(sketch);
+                if (faces == null)
                     continue;
 
-                foreach (IClosed3D closed3D in closed3Ds)
-                    if (closed3D != null)
-                        result.Add(closed3D);
+                foreach (Spatial.Face face in faces)
+                    if (face != null)
+                        result.Add(face);
             }
 
             return result;

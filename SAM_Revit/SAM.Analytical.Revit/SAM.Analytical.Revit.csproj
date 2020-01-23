@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Query\HighElevation.cs" />
+    <Compile Include="Query\PanelType.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />
     <Compile Include="ToRevit\Space.cs" />

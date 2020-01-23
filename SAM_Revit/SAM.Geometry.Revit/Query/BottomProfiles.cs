@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using SAM.Geometry.Spatial;
+﻿using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
 
@@ -12,9 +6,9 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<IClosed3D> BottomProfiles(this HostObject hostObject)
+        public static List<Spatial.Face> BottomProfiles(this HostObject hostObject)
         {
-            List<IClosed3D> result = new List<IClosed3D>();
+            List<Spatial.Face> result = new List<Spatial.Face>();
             foreach (Reference reference in HostObjectUtils.GetBottomFaces(hostObject))
             {
                 GeometryObject geometryObject = hostObject.GetGeometryObjectFromReference(reference);
@@ -25,7 +19,7 @@ namespace SAM.Geometry.Revit
                 if (face == null)
                     continue;
 
-                result.AddRange(face.ToSAM_PolycurveLoop3Ds());
+                result.AddRange(face.ToSAM_Faces());
             }
 
             return result;

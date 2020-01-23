@@ -7,7 +7,7 @@ namespace SAM.Analytical.Revit
     {
         public static double LowElevation(this Panel panel)
         {
-            return panel.ToPolycurveLoop().GetBoundingBox().Min.Z;
+            return panel.GetBoundingBox().Min.Z;
         }
 
         public static double LowElevation(this Space space)

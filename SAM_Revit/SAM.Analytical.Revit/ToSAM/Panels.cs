@@ -13,10 +13,16 @@ namespace SAM.Analytical.Revit
         {
             Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(hostObject.GetTypeId())).ToSAM();
 
+
+            List<Boundary3D> boundary3Ds = null;
+            if (!Boundary3D.TryGetBoundary3Ds(hostObject.Profiles(), out boundary3Ds))
+                return null;
+
             List<Panel> result = new List<Panel>();
-            foreach (IClosed3D profile in hostObject.Profiles())
+
+            foreach (Boundary3D boundary3D in boundary3Ds)
             {
-                Panel panel = new Panel(hostObject.Name, construction, profile);
+                Panel panel = new Panel(construction, Query.PanelType(hostObject),  boundary3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
                 result.Add(panel);
             }

@@ -4,7 +4,7 @@
     {
         public static double HightElevation(this Panel panel)
         {
-            return panel.ToPolycurveLoop().GetBoundingBox().Max.Z;
+            return panel.GetBoundingBox().Max.Z;
         }
     }
 }

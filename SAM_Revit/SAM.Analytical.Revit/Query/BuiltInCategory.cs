@@ -12,23 +12,23 @@ namespace SAM.Analytical.Revit
         {
             switch (panelType)
             {
-                case PanelType.Roof:
+                case Analytical.PanelType.Roof:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Roofs;
-                case PanelType.Wall:
-                case PanelType.WallExternal:
-                case PanelType.WallInternal:
-                case PanelType.UndergroundWall:
-                case PanelType.CurtainWall:
+                case Analytical.PanelType.Wall:
+                case Analytical.PanelType.WallExternal:
+                case Analytical.PanelType.WallInternal:
+                case Analytical.PanelType.UndergroundWall:
+                case Analytical.PanelType.CurtainWall:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Walls;
-                case PanelType.Floor:
-                case PanelType.FloorExposed:
-                case PanelType.FloorInternal:
-                case PanelType.FloorRaised:
-                case PanelType.SlabOnGrade:
-                case PanelType.UndergroundSlab:
+                case Analytical.PanelType.Floor:
+                case Analytical.PanelType.FloorExposed:
+                case Analytical.PanelType.FloorInternal:
+                case Analytical.PanelType.FloorRaised:
+                case Analytical.PanelType.SlabOnGrade:
+                case Analytical.PanelType.UndergroundSlab:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Floors;
-                case PanelType.Ceiling:
-                case PanelType.UndergroundCeiling:
+                case Analytical.PanelType.Ceiling:
+                case Analytical.PanelType.UndergroundCeiling:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings;
             }
 

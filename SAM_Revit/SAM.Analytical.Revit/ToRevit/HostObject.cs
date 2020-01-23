@@ -11,14 +11,18 @@ namespace SAM.Analytical.Revit
     {
         public static HostObject ToRevit(this Document document, Panel panel)
         {
+            Geometry.Spatial.ICurvable3D curvable3D = panel.GetClosedPlanar3D() as Geometry.Spatial.ICurvable3D;
+            if (curvable3D == null)
+                return null;
+
             HostObjAttributes aHostObjAttributes = document.ToRevit(panel.Construction, panel.PanelType);
 
             HostObject result = null;
             if (aHostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
-                foreach (Geometry.Spatial.Segment3D segment3D in panel.ToPolycurveLoop().GetCurves())
-                    curveList.Add(segment3D.ToRevit());
+                foreach (Geometry.Spatial.ICurve3D curve3D in curvable3D.GetCurves())
+                    curveList.Add(curve3D.ToRevit_Line());
 
                 double lowElevation = panel.LowElevation();
 
@@ -54,8 +58,8 @@ namespace SAM.Analytical.Revit
             else if (aHostObjAttributes is FloorType)
             {
                 CurveArray curveArray = new CurveArray();
-                foreach (Geometry.Spatial.Segment3D segment3D in panel.ToPolycurveLoop().GetCurves())
-                    curveArray.Append(segment3D.ToRevit());
+                foreach (Geometry.Spatial.ICurve3D curve3D in curvable3D.GetCurves())
+                    curveArray.Append(curve3D.ToRevit_Line());
 
                 Level level = document.HighLevel(panel.LowElevation());
 
@@ -67,7 +71,7 @@ namespace SAM.Analytical.Revit
             }
             else if(aHostObjAttributes is RoofType)
             {
-                List<Geometry.Spatial.ICurve3D> curve3Ds = panel.ToPolycurveLoop().GetCurves();
+                List<Geometry.Spatial.ICurve3D> curve3Ds = curvable3D.GetCurves();
 
                 CurveArray curveArray = new CurveArray();
                 foreach (Geometry.Spatial.Segment3D segment3D in curve3Ds)

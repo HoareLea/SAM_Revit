@@ -28,8 +28,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Document", "Document", "Revit Document", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("Panels", "Pnls", "SAM Analytical ie. Panel", GH_ParamAccess.list);
+            inputParamManager.AddGenericParameter("_revitDocument", "_document", "Revit Document", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_panel", "_panel", "SAM Analytical ie. Panel", GH_ParamAccess.list);
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_RevitElement", "_RevitElement", "Revit Element instance", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_revitElement", "_revitElement", "Revit Element instance", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AnalyticalObjects", "AnalyticalObjects", "SAM Analytical Objects", GH_ParamAccess.list);
+            outputParamManager.AddGenericParameter("AnalyticalObject", "AnalyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
         }
 
         /// <summary>

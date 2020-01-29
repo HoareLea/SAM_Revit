@@ -61,6 +61,9 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
+      <HintPath>..\..\..\rhino.inside-revit\src\RhinoInside.Revit\bin\Debug 2020\RhinoInside.Revit.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
@@ -81,7 +84,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="RhinoCommon">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Rhino 6\System\rhinocommon.dll</HintPath>
+      <HintPath>$(Rhino7InstallDir)RhinoCommon.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GH_IO">
@@ -95,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitSAMAnalytical.cs" />
+    <Compile Include="Component\SAMAnalyticalRevit_Test.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

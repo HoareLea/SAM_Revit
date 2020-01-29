@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using Grasshopper.Kernel;
-using RhinoInside;
-using RhinoInside.Revit.GH;
 
 using Autodesk.Revit.DB;
 
@@ -16,7 +13,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 {
     public class SAMAnalyticalRevit_Test :  RhinoInside.Revit.GH.Components.ReconstructElementComponent
     {
-        private List<Wall> joinedWalls = new List<Wall>();
+        private List<Wall> walls = new List<Wall>();
 
         private static readonly FailureDefinitionId[] failureDefinitionIdsToFix = new FailureDefinitionId[]
         {
@@ -91,107 +88,22 @@ namespace SAM.Analytical.Grasshopper.Revit
             base.OnBeforeCommit(document, strTransactionName);
 
             // Reenable new joined walls
-            foreach (var wallToJoin in joinedWalls)
+            foreach (var wallToJoin in walls)
             {
                 WallUtils.AllowWallJoinAtEnd(wallToJoin, 0);
                 WallUtils.AllowWallJoinAtEnd(wallToJoin, 1);
             }
 
-            joinedWalls = new List<Wall>();
+            walls = new List<Wall>();
         }
 
-        private void ReconstructSAMAnalyticalRevit_Test(
-            Document doc, 
-            ref Wall element, 
-            
-            Rhino.Geometry.Curve curve, 
-            Optional<WallType> type,
-            Optional<Level> level,
-            [Optional] bool structural,
-            [Optional] double height,
-            [Optional] WallLocationLine locationLine,
-            [Optional] bool flipped,
-            [Optional, NickName("J")] bool allowJoins
-        )
+        private void ReconstructSAMAnalyticalRevit_Test(Document document, ref HostObject hostObject, Panel panel)
         {
-            var scaleFactor = 1.0 / RhinoInside.Revit.Revit.ModelUnits;
+            HostObject hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
 
-            SolveOptionalType(ref type, doc, ElementTypeGroup.WallType, nameof(type));
-
-            double axisMinZ = Math.Min(curve.PointAtStart.Z, curve.PointAtEnd.Z);
-            bool levelIsEmpty = SolveOptionalLevel(ref level, doc, curve, nameof(level));
-
-            height *= scaleFactor;
-            if (height < RhinoInside.Revit.Revit.VertexTolerance)
-                height = type.GetValueOrDefault()?.GetCompoundStructure()?.SampleHeight ?? LiteralLengthValue(6.0) / RhinoInside.Revit.Revit.ModelUnits;
-
-            // Axis
-            var levelPlane = new Rhino.Geometry.Plane(new Rhino.Geometry.Point3d(0.0, 0.0, level.Value.Elevation), Rhino.Geometry.Vector3d.ZAxis);
-            curve = Rhino.Geometry.Curve.ProjectToPlane(curve, levelPlane);
-
-            Curve centerLine = null;//curve.ToHost();
-
-            // LocationLine
-            if (locationLine != WallLocationLine.WallCenterline)
+            if (hostObject != null)
             {
-                double offsetDist = 0.0;
-                var compoundStructure = type.Value.GetCompoundStructure();
-                if (compoundStructure == null)
-                {
-                    switch (locationLine)
-                    {
-                        case WallLocationLine.WallCenterline:
-                        case WallLocationLine.CoreCenterline:
-                            break;
-                        case WallLocationLine.FinishFaceExterior:
-                        case WallLocationLine.CoreExterior:
-                            offsetDist = type.Value.Width / +2.0;
-                            break;
-                        case WallLocationLine.FinishFaceInterior:
-                        case WallLocationLine.CoreInterior:
-                            offsetDist = type.Value.Width / -2.0;
-                            break;
-                    }
-                }
-                else
-                {
-                    if (!compoundStructure.IsVerticallyHomogeneous())
-                        compoundStructure = CompoundStructure.CreateSimpleCompoundStructure(compoundStructure.GetLayers());
-
-                    offsetDist = compoundStructure.GetOffsetForLocationLine(locationLine);
-                }
-
-                if (offsetDist != 0.0)
-                    centerLine = centerLine.CreateOffset(flipped ? -offsetDist : offsetDist, XYZ.BasisZ);
-            }
-
-            // Type
-            ChangeElementTypeId(ref element, type.Value.Id);
-
-            Wall newWall = null;
-            if (element is Wall && ((Wall)element).Location is LocationCurve)
-            {
-                newWall = (Wall)element;
-                ((LocationCurve)newWall.Location).Curve = centerLine;
-            }
-            else
-            {
-                newWall = Wall.Create
-                (
-                  doc,
-                  centerLine,
-                  type.Value.Id,
-                  level.Value.Id,
-                  height,
-                  levelIsEmpty ? axisMinZ - level.Value.Elevation : 0.0,
-                  flipped,
-                  structural
-                );
-
-                // Walls are created with the last LocationLine used in the Revit editor!!
-                //newWall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set((int) WallLocationLine.WallCenterline);
-
-                var parametersMask = new BuiltInParameter[]
+                BuiltInParameter[] builtInParameters = new BuiltInParameter[]
                 {
                     BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM,
                     BuiltInParameter.ELEM_FAMILY_PARAM,
@@ -201,30 +113,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                     BuiltInParameter.WALL_BASE_OFFSET,
                     BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT,
                     BuiltInParameter.WALL_KEY_REF_PARAM
-                };
+                 };
 
-                ReplaceElement(ref element, newWall, parametersMask);
+                ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
             }
 
-            if (newWall != null)
-            {
-                newWall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).Set(level.Value.Id);
-                newWall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET).Set(levelIsEmpty ? axisMinZ - level.Value.Elevation : 0.0);
-                newWall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM).Set(height);
-                newWall.get_Parameter(BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT).Set(structural ? 1 : 0);
-                newWall.get_Parameter(BuiltInParameter.WALL_KEY_REF_PARAM).Set((int)locationLine);
-
-                if (newWall.Flipped != flipped)
-                    newWall.Flip();
-
-                // Setup joins in a last step
-                if (allowJoins) joinedWalls.Add(newWall);
-                else
-                {
-                    WallUtils.DisallowWallJoinAtEnd(newWall, 0);
-                    WallUtils.DisallowWallJoinAtEnd(newWall, 1);
-                }
-            }
+            if(hostObject_New is Wall)
+                walls.Add((Wall)hostObject_New);
         }
 
         /// <summary>

@@ -120,6 +120,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if(hostObject_New is Wall)
                 walls.Add((Wall)hostObject_New);
+
+            hostObject = hostObject_New;
         }
 
         /// <summary>

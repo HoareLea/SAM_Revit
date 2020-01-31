@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 
 using Autodesk.Revit.DB;
 
@@ -12,8 +11,18 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalRevit : GH_Component
+    public class SAMAnalyticalRevit :  RhinoInside.Revit.GH.Components.ReconstructElementComponent
     {
+        private List<Wall> walls = new List<Wall>();
+
+        private static readonly FailureDefinitionId[] failureDefinitionIdsToFix = new FailureDefinitionId[]
+        {
+            BuiltInFailures.CreationFailures.CannotDrawWallsError,
+            BuiltInFailures.JoinElementsFailures.CannotJoinElementsError,
+        };
+
+        protected override IEnumerable<FailureDefinitionId> FailureDefinitionIdsToFix => failureDefinitionIdsToFix;
+
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
@@ -25,70 +34,94 @@ namespace SAM.Analytical.Grasshopper.Revit
         }
 
         /// <summary>
-        /// Registers all the input parameters for this component.
-        /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
-        {
-            inputParamManager.AddGenericParameter("_revitDocument", "_document", "Revit Document", GH_ParamAccess.item);
-            inputParamManager.AddGenericParameter("_panel", "_panel", "SAM Analytical ie. Panel", GH_ParamAccess.list);
-        }
-
-        /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("HostObjects", "HostObjects", "HostObjects", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "HostObjects", "hso" ,"HostObjects", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
-        protected override void SolveInstance(IGH_DataAccess dataAccess)
+        protected override void OnAfterStart(Document document, string strTransactionName)
         {
-            GH_ObjectWrapper objectWrapper = null;
+            base.OnAfterStart(document, strTransactionName);
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            // Disable all previous walls joins
+            if (PreviousStructure is object)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                var unjoinedWalls = PreviousStructure.OfType<RhinoInside.Revit.GH.Types.Element>().
+                                    Select(x => document.GetElement(x)).
+                                    OfType<Wall>().
+                                    Where(x => x.Pinned).
+                                    Select
+                                    (
+                                      x => Tuple.Create
+                                      (
+                                        x,
+                                        (x.Location as LocationCurve).get_JoinType(0),
+                                        (x.Location as LocationCurve).get_JoinType(1)
+                                      )
+                                    ).
+                                    ToArray();
+
+                foreach (var unjoinedWall in unjoinedWalls)
+                {
+                    var location = unjoinedWall.Item1.Location as LocationCurve;
+                    if (WallUtils.IsWallJoinAllowedAtEnd(unjoinedWall.Item1, 0))
+                    {
+                        WallUtils.DisallowWallJoinAtEnd(unjoinedWall.Item1, 0);
+                        WallUtils.AllowWallJoinAtEnd(unjoinedWall.Item1, 0);
+                        location.set_JoinType(0, unjoinedWall.Item2);
+                    }
+
+                    if (WallUtils.IsWallJoinAllowedAtEnd(unjoinedWall.Item1, 1))
+                    {
+                        WallUtils.DisallowWallJoinAtEnd(unjoinedWall.Item1, 1);
+                        WallUtils.AllowWallJoinAtEnd(unjoinedWall.Item1, 1);
+                        location.set_JoinType(1, unjoinedWall.Item3);
+                    }
+                }
+            }
+        }
+
+        protected override void OnBeforeCommit(Document document, string strTransactionName)
+        {
+            base.OnBeforeCommit(document, strTransactionName);
+
+            // Reenable new joined walls
+            foreach (var wallToJoin in walls)
+            {
+                WallUtils.AllowWallJoinAtEnd(wallToJoin, 0);
+                WallUtils.AllowWallJoinAtEnd(wallToJoin, 1);
             }
 
-            Autodesk.Revit.DB.Document document = objectWrapper.Value as Autodesk.Revit.DB.Document;
-            if(document == null)
+            walls = new List<Wall>();
+        }
+
+        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel)
+        {
+            HostObject hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
+
+            if (hostObject != null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                BuiltInParameter[] builtInParameters = new BuiltInParameter[]
+                {
+                    BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM,
+                    BuiltInParameter.ELEM_FAMILY_PARAM,
+                    BuiltInParameter.ELEM_TYPE_PARAM,
+                    BuiltInParameter.WALL_BASE_CONSTRAINT,
+                    BuiltInParameter.WALL_USER_HEIGHT_PARAM,
+                    BuiltInParameter.WALL_BASE_OFFSET,
+                    BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT,
+                    BuiltInParameter.WALL_KEY_REF_PARAM
+                 };
+
+                ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
             }
 
-            List<GH_ObjectWrapper> objectWrapperList = new List<GH_ObjectWrapper>();
+            if(hostObject_New is Wall)
+                walls.Add((Wall)hostObject_New);
 
-            if (!dataAccess.GetDataList(1, objectWrapperList) || objectWrapperList == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
-            List<Panel> panelList = new List<Panel>();
-            foreach (GH_ObjectWrapper objectWrapper_Temp in objectWrapperList)
-            {
-                Panel panel = objectWrapper_Temp.Value as Panel;
-                if (panel != null)
-                    panelList.Add(panel);
-            }
-
-            Level aLevel = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().First();
-            Wall wall = null;
-            using (Transaction aTransaction = new Transaction(document, this.GetType().Name))
-            {
-                aTransaction.Start();
-                wall = Wall.Create(document, Line.CreateBound(new XYZ(0, 0, 0), new XYZ(10, 0, 0)), aLevel.Id, false);
-                aTransaction.Commit();
-            }
-
-            if (wall != null)
-                dataAccess.SetDataList(0, new List<object>() { wall });//{ RhinoInside.Revit.GH.Types.Element.FromElement(wall)});
+            hostObject = hostObject_New;
         }
 
         /// <summary>
@@ -109,7 +142,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("27b09cfd-97fc-44a2-b71e-bcfd6cf45890"); }
+            get { return new Guid("222e0a64-9514-47d3-98ac-72e95124841d"); }
         }
     }
 }

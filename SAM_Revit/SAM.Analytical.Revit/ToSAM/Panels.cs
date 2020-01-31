@@ -3,7 +3,6 @@ using System.Linq;
 using Autodesk.Revit.DB;
 
 using SAM.Geometry.Revit;
-using SAM.Geometry.Spatial;
 
 namespace SAM.Analytical.Revit
 {
@@ -14,15 +13,15 @@ namespace SAM.Analytical.Revit
             Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(hostObject.GetTypeId())).ToSAM();
 
 
-            List<Boundary3D> boundary3Ds = null;
-            if (!Boundary3D.TryGetBoundary3Ds(hostObject.Profiles(), out boundary3Ds))
+            List<PlanarBoundary3D> planarBoundary3Ds = null;
+            if (!PlanarBoundary3D.TryGetPlanarBoundary3Ds(hostObject.Profiles(), out planarBoundary3Ds))
                 return null;
 
             List<Panel> result = new List<Panel>();
 
-            foreach (Boundary3D boundary3D in boundary3Ds)
+            foreach (PlanarBoundary3D planarBoundary3D in planarBoundary3Ds)
             {
-                Panel panel = new Panel(construction, Query.PanelType(hostObject),  boundary3D);
+                Panel panel = new Panel(construction, Query.PanelType(hostObject),  planarBoundary3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
                 result.Add(panel);
             }

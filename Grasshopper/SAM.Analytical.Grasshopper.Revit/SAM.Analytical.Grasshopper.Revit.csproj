@@ -99,7 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitSAMAnalytical.cs" />
-    <Compile Include="Component\SAMAnalyticalRevit_Test.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

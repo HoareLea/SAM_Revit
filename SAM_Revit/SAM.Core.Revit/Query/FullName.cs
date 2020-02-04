@@ -14,10 +14,13 @@ namespace SAM.Core.Revit
 
         public static string FullName(string familyName, string familyTypeName)
         {
-            if (string.IsNullOrWhiteSpace(familyName) || string.IsNullOrWhiteSpace(familyTypeName))
+            if (string.IsNullOrWhiteSpace(familyTypeName))
                 return null;
 
-            return string.Format("{0}: {1}", familyName, familyTypeName);
+            if (!string.IsNullOrWhiteSpace(familyName))
+                return string.Format("{0}: {1}", familyName, familyTypeName);
+
+            return familyTypeName;
         }
     }
 }

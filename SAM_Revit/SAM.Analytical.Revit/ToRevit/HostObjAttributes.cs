@@ -19,28 +19,32 @@ namespace SAM.Analytical.Revit
             if (builtInCategory != BuiltInCategory.INVALID)
                 filteredElementCollector.OfCategory(builtInCategory);
 
+            string familyName_Source = null;
+            string typeName_Source = null;
+            if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(construction.Name, out familyName_Source, out typeName_Source))
+                return null;
+
+            HostObjAttributes hostObjAttributes_Default = null;
             foreach (HostObjAttributes hostObjAttributes in filteredElementCollector)
             {
-                string name = Core.Revit.Query.FullName(hostObjAttributes);
-                //if (string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(hostObjAttributes.Name))
-                //{
-                //    string familyName;
-                //    string typeName;
-                //    if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(construction.Name, out familyName, out typeName))
-                //        continue;
+                string fullName = Core.Revit.Query.FullName(hostObjAttributes);
 
-                //    if (string.IsNullOrWhiteSpace(typeName))
-                //        continue;
+                string familyName = null;
+                string typeName = null;
+                if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(fullName, out familyName, out typeName))
+                    continue;
 
-                //    if(typeName.Equals(construction.Name))
-                //        return hostObjAttributes;
-                //}
-
-                if (name != null && name.Equals(construction.Name))
+                if (fullName != null && fullName.Equals(construction.Name))
                     return hostObjAttributes;
+
+                if (!string.IsNullOrWhiteSpace(familyName) && !string.IsNullOrWhiteSpace(familyName_Source))
+                    continue;
+
+                if (typeName.Equals(typeName_Source))
+                    hostObjAttributes_Default = hostObjAttributes;
             }
 
-            return null;
+            return hostObjAttributes_Default;
         }
     }
 }

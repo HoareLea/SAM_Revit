@@ -45,7 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug2017\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -79,12 +79,8 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SAM.Core">
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="SAM.Units">
-      <HintPath>..\..\..\SAM\build\SAM.Units.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

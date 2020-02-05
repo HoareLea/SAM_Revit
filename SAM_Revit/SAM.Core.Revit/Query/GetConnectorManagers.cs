@@ -17,8 +17,9 @@ namespace SAM.Core.Revit
             {
                 foreach (Connector connector_Ref in connector.AllRefs)
                 {
-                    if (connector_Ref.Owner.Id != element.Id && !(connector_Ref.Owner is MEPSystem))
-                        result.Add(connector_Ref.ConnectorManager);
+                    if (connector_Ref.Owner.Id != element.Id && !(connector_Ref.Owner is MEPSystem) && !(connector_Ref.Owner is InsulationLiningBase))
+                        if (result.Find(x => x.Owner.Id == connector_Ref.ConnectorManager.Owner.Id) == null)
+                            result.Add(connector_Ref.ConnectorManager);
                 }
             }
 

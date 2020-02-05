@@ -36,6 +36,13 @@ namespace SAM.Core.Revit
                 return result;
             }
 
+            connectorManagerList.RemoveAll(x => x.Owner is InsulationLiningBase);
+            if (connectorManagerList == null || connectorManagerList.Count == 0)
+            {
+                result.Add(new List<ConnectorManager> { connectorManager });
+                return result;
+            }
+
             if (previousConnectorManager != null)
                 connectorManagerList.RemoveAll(x => x.Owner.Id == previousConnectorManager.Owner.Id);
 

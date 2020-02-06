@@ -19,5 +19,12 @@ namespace SAM.Geometry.Revit
 
             return new XYZ(point3D.X * scale, point3D.Y * scale, point3D.Z * scale);
         }
+
+        public static XYZ ToRevit(this Vector3D vector3D)
+        {
+            double scale = Units.Query.ToImperial(1, Units.UnitType.Meter);
+
+            return new XYZ(vector3D.X * scale, vector3D.Y * scale, vector3D.Z * scale);
+        }
     }
 }

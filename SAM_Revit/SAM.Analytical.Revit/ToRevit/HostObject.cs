@@ -29,8 +29,31 @@ namespace SAM.Analytical.Revit
                 Level level = document.LowLevel(lowElevation);
                 if (level == null)
                     return null;
+                
+                //result = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false);
 
-                result = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false);
+                //Flipping recognition
+
+
+                Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
+
+                //Get Normal from Panel
+                Geometry.Spatial.Vector3D vector3D_1 =  plane.Project(panel.PlanarBoundary3D.GetNormal());
+                vector3D_1 = vector3D_1.Unit;
+
+                ////Get vector from Wall Location Line
+                //Geometry.Spatial.Vector3D vector3D_2 = new Geometry.Spatial.Vector3D((result.Location as LocationCurve).Curve.GetEndPoint(0).ToSAM(), (result.Location as LocationCurve).Curve.GetEndPoint(1).ToSAM());
+                //vector3D_2 = plane.Project(vector3D_2);
+                //vector3D_2 = vector3D_2.Unit;
+
+                ////calculat angle betweem two vectors
+                //double angle = vector3D_1.Angle(vector3D_2);
+
+                XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
+
+                result = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false, vectorRevit);
+
+                //
 
                 Parameter parameter = null;
 

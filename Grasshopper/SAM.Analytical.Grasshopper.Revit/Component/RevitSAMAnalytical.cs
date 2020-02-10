@@ -85,7 +85,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             IEnumerable<Core.ISAMObject> sAMObjects = Analytical.Revit.Convert.ToSAM(element);
             if(sAMObjects == null || sAMObjects.Count() == 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert Element. ElementId: {0} ", element.Id.IntegerValue));
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name));
                 return;
             }
 

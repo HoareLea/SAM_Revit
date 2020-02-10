@@ -13,6 +13,16 @@ namespace SAM.Analytical.Grasshopper.Revit
 {
     public class SAMAnalyticalRevit :  RhinoInside.Revit.GH.Components.ReconstructElementComponent
     {
+        /// <summary>
+        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("222e0a64-9514-47d3-98ac-72e95124841d");
+
+        /// <summary>
+        /// Provides an Icon for the component.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
+
         private List<Wall> walls = new List<Wall>();
 
         private static readonly FailureDefinitionId[] failureDefinitionIdsToFix = new FailureDefinitionId[]
@@ -122,27 +132,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 walls.Add((Wall)hostObject_New);
 
             hostObject = hostObject_New;
-        }
-
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return Resources.SAM_Revit;
-            }
-        }
-
-        /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
-        /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("222e0a64-9514-47d3-98ac-72e95124841d"); }
         }
     }
 }

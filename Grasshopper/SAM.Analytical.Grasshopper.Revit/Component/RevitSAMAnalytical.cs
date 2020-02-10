@@ -39,6 +39,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddGenericParameter("_revitElement", "_revitElement", "Revit Element instance", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
             outputParamManager.AddGenericParameter("AnalyticalObject", "AnalyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
+            outputParamManager.AddTextParameter("Report", "Report", "Report", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -55,6 +57,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            bool run = false;
+            if (!dataAccess.GetData(0, ref run) || !run)
+                return;
+          
+
             GH_ObjectWrapper objectWrapper = null;
 
             if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
@@ -65,31 +72,44 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             dynamic obj = objectWrapper.Value;
 
-            Document document = obj.Document as Document; 
-
             ElementId aId = obj.Id as ElementId;
 
-            Element element = document.GetElement(aId);
+            string message = null;
+
+            Element element = (obj.Document as Document).GetElement(aId);
             if(element == null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid Element");
+                message = "Invalid Element";
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                dataAccess.SetData(1, message);
                 return;
             }
 
             if(element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue));
+                message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                dataAccess.SetData(1, message);
+
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 
             IEnumerable<Core.ISAMObject> sAMObjects = Analytical.Revit.Convert.ToSAM(element);
             if(sAMObjects == null || sAMObjects.Count() == 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name));
+                message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                dataAccess.SetData(1, message);
+
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 
             dataAccess.SetDataList(0, sAMObjects);
+            
+            message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
+            dataAccess.SetData(1, message);
         }
     }
 }

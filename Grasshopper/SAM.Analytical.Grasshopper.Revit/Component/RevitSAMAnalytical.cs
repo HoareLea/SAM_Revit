@@ -58,7 +58,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(0, ref run) || !run)
+            if (!dataAccess.GetData(1, ref run) || !run)
                 return;
           
 

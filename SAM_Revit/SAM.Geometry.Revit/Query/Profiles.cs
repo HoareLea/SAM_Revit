@@ -30,7 +30,38 @@ namespace SAM.Geometry.Revit
             if (hostObject is Wall)
                 return Profiles_Wall((Wall)hostObject);
 
+            if (hostObject is FaceWall)
+                return Profiles_FaceWall((FaceWall)hostObject);
+
             return null;
+        }
+
+        public static List<Spatial.Face> Profiles_FaceWall(this FaceWall faceWall)
+        {
+            GeometryElement geometryElement = faceWall.get_Geometry(new Options());
+            if (geometryElement == null)
+                return null;
+
+            List<Spatial.Face> result = new List<Spatial.Face>();
+            foreach (GeometryObject geometryObject in geometryElement)
+            {
+                Type aType = geometryObject.GetType();
+
+                if(geometryObject is Autodesk.Revit.DB.Face)
+                {
+
+                }
+                else if(geometryObject is Solid)
+                {
+
+                }
+                else if(geometryObject is Curve)
+                {
+
+                }
+            }
+
+            return result;
         }
 
         public static List<Spatial.Face> Profiles_Wall(this Wall wall)
@@ -117,8 +148,7 @@ namespace SAM.Geometry.Revit
             List<Spatial.Face> faces = TopProfiles(floor);
             
 
-            
-
+      
             return faces;
         }
 

@@ -14,6 +14,16 @@ namespace SAM.Analytical.Grasshopper.Revit
     public class RevitSAMAnalytical : GH_Component
     {
         /// <summary>
+        /// Gets the unique ID for this component. Do not change this ID after release.
+        /// </summary>
+        public override Guid ComponentGuid => new Guid("9b809657-8de3-466e-b814-973b0677a37a");
+
+        /// <summary>
+        /// Provides an Icon for the component.
+        /// </summary>
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
+
+        /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitSAMAnalytical()
@@ -66,28 +76,20 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            dataAccess.SetDataList(0, Analytical.Revit.Convert.ToSAM(element));
-        }
-
-        /// <summary>
-        /// Provides an Icon for the component.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
+            if(element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
-                //You can add image files to your project resources and access them like this:
-                // return Resources.IconForThisComponent;
-                return Resources.SAM_Revit;
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue));
+                return;
             }
-        }
 
-        /// <summary>
-        /// Gets the unique ID for this component. Do not change this ID after release.
-        /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("9b809657-8de3-466e-b814-973b0677a37a"); }
+            IEnumerable<Core.ISAMObject> sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+            if(sAMObjects == null || sAMObjects.Count() == 0)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cannot convert Element. ElementId: {0} ", element.Id.IntegerValue));
+                return;
+            }
+
+            dataAccess.SetDataList(0, sAMObjects);
         }
     }
 }

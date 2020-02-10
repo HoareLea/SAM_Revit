@@ -18,6 +18,9 @@ namespace SAM.Geometry.Revit
             if (hostObject == null || hostObject.Document == null)
                 return null;
 
+            if (hostObject is Wall)
+                return Profiles_Wall((Wall)hostObject);
+
             if (hostObject is Floor)
                 return Profiles_Floor((Floor)hostObject);
 
@@ -26,9 +29,6 @@ namespace SAM.Geometry.Revit
 
             if (hostObject is Ceiling)
                 return Profiles_Ceiling((Ceiling)hostObject);
-
-            if (hostObject is Wall)
-                return Profiles_Wall((Wall)hostObject);
 
             if (hostObject is FaceWall)
                 return Profiles_FaceWall((FaceWall)hostObject);
@@ -61,7 +61,7 @@ namespace SAM.Geometry.Revit
                 }
             }
 
-            return result;
+            return null;
         }
 
         public static List<Spatial.Face> Profiles_Wall(this Wall wall)

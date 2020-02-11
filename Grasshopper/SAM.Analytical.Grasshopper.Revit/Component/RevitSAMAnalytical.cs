@@ -82,6 +82,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 message = "Invalid Element";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
                 dataAccess.SetData(1, message);
+
                 return;
             }
 
@@ -91,7 +92,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
                 dataAccess.SetData(1, message);
 
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 
@@ -102,7 +102,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
                 dataAccess.SetData(1, message);
 
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 

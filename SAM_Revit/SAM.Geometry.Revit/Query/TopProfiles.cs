@@ -6,9 +6,9 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<Spatial.Face> TopProfiles(this HostObject hostObject)
+        public static List<Spatial.Face3D> TopProfiles(this HostObject hostObject)
         {
-            List<Spatial.Face> result = new List<Spatial.Face>();
+            List<Spatial.Face3D> result = new List<Spatial.Face3D>();
             foreach (Reference reference in HostObjectUtils.GetTopFaces(hostObject))
             {
                 GeometryObject geometryObject = hostObject.GetGeometryObjectFromReference(reference);

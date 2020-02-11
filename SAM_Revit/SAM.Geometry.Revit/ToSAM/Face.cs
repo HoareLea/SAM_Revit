@@ -9,9 +9,9 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static Spatial.Face ToSAM_Face(this CurveArray curveArray)
+        public static Spatial.Face3D ToSAM_Face(this CurveArray curveArray)
         {
-            return new Spatial.Face(curveArray.ToSAM_Polygon3D());
+            return new Spatial.Face3D(curveArray.ToSAM_Polygon3D());
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SAM.Analytical.Revit
     {
         public static HostObject ToRevit(this Document document, Panel panel)
         {
-            Geometry.Spatial.ICurvable3D curvable3D = panel.GetClosedPlanar3D() as Geometry.Spatial.ICurvable3D;
+            Geometry.Spatial.ICurvable3D curvable3D = panel.GetFace3D().GetExternalEdge() as Geometry.Spatial.ICurvable3D;
             if (curvable3D == null)
                 return null;
 

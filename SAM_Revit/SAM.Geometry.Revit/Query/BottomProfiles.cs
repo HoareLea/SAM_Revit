@@ -15,7 +15,7 @@ namespace SAM.Geometry.Revit
                 if (geometryObject == null)
                     continue;
 
-                Face face = geometryObject as Face;
+                Autodesk.Revit.DB.Face face = geometryObject as Autodesk.Revit.DB.Face;
                 if (face == null)
                     continue;
 

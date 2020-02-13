@@ -19,7 +19,7 @@ namespace SAM.Geometry.Revit
                 if (face == null)
                     continue;
 
-                result.AddRange(face.ToSAM_Faces());
+                result.Add(face.ToSAM());
             }
 
             return result;

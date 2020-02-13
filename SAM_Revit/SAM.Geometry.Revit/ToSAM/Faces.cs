@@ -9,9 +9,9 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static List<Face3D> ToSAM_Faces(this Autodesk.Revit.DB.Face face)
+        public static Face3D ToSAM(this Autodesk.Revit.DB.Face face)
         {
-            return face.ToSAM_Polygon3Ds().ConvertAll(x => new Face3D(x));
+            return Face3D.Create(face.ToSAM_Polygon3Ds());
         }
 
         public static List<Face3D> ToSAM_Faces(this Sketch sketch)

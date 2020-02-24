@@ -1,0 +1,80 @@
+﻿using System.Collections.Generic;
+
+using Autodesk.Revit.DB;
+
+using SAM.Geometry.Spatial;
+
+
+namespace SAM.Geometry.Revit
+{
+    public static partial class Convert
+    {
+        public static List<Face3D> ToSAM_Face3Ds(this Sketch sketch)
+        {
+            if (sketch == null || sketch.Profile == null)
+                return null;
+
+            List<Face3D> result = new List<Face3D>();
+            foreach (CurveArray curveArray in sketch.Profile)
+                result.Add(curveArray.ToSAM_Face3D());
+
+            return result;
+        }
+
+        public static List<Face3D> ToSAM_Face3Ds(this Element element)
+        {
+            Transform transform = null;
+            if (element is FamilyInstance)
+                transform = ((FamilyInstance)element).GetTotalTransform();
+
+            Options options = new Options();
+            options.ComputeReferences = false;
+            options.DetailLevel = ViewDetailLevel.Fine;
+
+            return ToSAM_Face3Ds(element.get_Geometry(options), transform);
+        }
+
+        public static List<Face3D> ToSAM_Face3Ds(this GeometryElement geometryElement, Transform transform = null)
+        {
+            if (geometryElement == null)
+                return null;
+
+            List<Face3D> result = new List<Face3D>();
+            foreach (GeometryObject geometryObject in geometryElement)
+            {
+                if (geometryObject is GeometryInstance)
+                {
+                    GeometryInstance geometryInstance = (GeometryInstance)geometryObject;
+
+                    Transform geometryTransform = geometryInstance.Transform;
+                    if (transform != null)
+                        geometryTransform = geometryTransform.Multiply(transform.Inverse);
+
+                    GeometryElement geometryElement_Temp = geometryInstance.GetInstanceGeometry(geometryTransform);
+                    if (geometryElement_Temp == null)
+                        continue;
+
+                    List<Face3D> face3Ds = ToSAM_Face3Ds(geometryElement_Temp);
+                    if (face3Ds != null && face3Ds.Count > 0)
+                        result.AddRange(face3Ds);
+                }
+                else if (geometryObject is Solid)
+                {
+                    Solid solid = (Solid)geometryObject;
+                    FaceArray faceArray = solid.Faces;
+                    if (faceArray == null)
+                        continue;
+
+                    foreach (Autodesk.Revit.DB.Face face in faceArray)
+                    {
+                        Face3D face3D = face.ToSAM();
+                        if (face3D != null)
+                            result.Add(face3D);
+                    }
+                }
+            }
+            return result;
+
+        }
+    }
+}

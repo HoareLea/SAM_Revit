@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Autodesk.Revit.DB;
 
 using SAM.Geometry.Revit;
@@ -20,6 +21,47 @@ namespace SAM.Analytical.Revit
             {
                 Panel panel = new Panel(construction, Query.PanelType(hostObject), face3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
+
+                IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new LogicalOrFilter(new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors)));
+                if(elementIds != null && elementIds.Count() > 0)
+                {
+                    Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
+
+                    foreach (ElementId elementId in elementIds)
+                    {
+                        FamilyInstance familyInstance = hostObject.Document.GetElement(elementId) as FamilyInstance;
+                        if (familyInstance != null)
+                            continue;
+
+                        ApertureType apertureType = familyInstance.ApertureType();
+
+                        List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
+                        if (face3Ds_Dependent == null)
+                            continue;
+
+                        List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
+                        foreach(Geometry.Spatial.Face3D face3D_Dependent in face3Ds_Dependent)
+                        {
+                            Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D_Dependent.GetExternalEdge();
+                            if(closedPlanar3D is Geometry.Spatial.ICurvable3D)
+                            {
+                                List<Geometry.Spatial.ICurve3D> curve3Ds = ((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves();
+                                foreach(Geometry.Spatial.ICurve3D curve3D in curve3Ds)
+                                {
+                                    Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
+                                    point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+                                    point2Ds.Add(plane.Convert(curve3D_Temp.GetEnd()));
+                                }
+                            }
+                        }
+
+                        Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
+                        
+
+                        Aperture aperture = Modify.AddAperture(panel, familyInstance.ApertureType(), plane.Convert(rectangle2D));
+                    }
+                }
+
                 result.Add(panel);
             }
 

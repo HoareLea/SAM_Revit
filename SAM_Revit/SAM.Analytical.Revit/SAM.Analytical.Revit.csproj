@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Query\HighElevation.cs" />
+    <Compile Include="Query\ApertureType.cs" />
     <Compile Include="Query\PanelType.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />

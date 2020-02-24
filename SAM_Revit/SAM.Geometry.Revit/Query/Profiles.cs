@@ -209,7 +209,7 @@ namespace SAM.Geometry.Revit
                 if (sketch == null)
                     continue;
 
-                List<Face3D> face3Ds = Convert.ToSAM_Faces(sketch);
+                List<Face3D> face3Ds = Convert.ToSAM_Face3Ds(sketch);
                 if (face3Ds == null)
                     continue;
 

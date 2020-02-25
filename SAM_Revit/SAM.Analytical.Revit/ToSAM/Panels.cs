@@ -22,9 +22,24 @@ namespace SAM.Analytical.Revit
                 Panel panel = new Panel(construction, Query.PanelType(hostObject), face3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
-                LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors), new ElementCategoryFilter(BuiltInCategory.OST_CurtainWallPanels) });
+                //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors), new ElementCategoryFilter(BuiltInCategory.OST_CurtainWallPanels) });
+                LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
 
                 IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
+
+                if(hostObject is Wall)
+                {
+                    List<Autodesk.Revit.DB.Panel> panels = Query.Panels((Wall)hostObject);
+                    if(panels != null && panels.Count > 0)
+                    {
+                        List<ElementId> elementIds_Temp =  panels.ConvertAll(x => x.Id);
+                        if (elementIds != null && elementIds.Count() > 0)
+                            elementIds_Temp.AddRange(elementIds);
+
+                        elementIds = elementIds_Temp;
+                    }
+                }
+
                 if(elementIds != null && elementIds.Count() > 0)
                 {
                     Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
@@ -33,6 +48,9 @@ namespace SAM.Analytical.Revit
                     {
                         Element element = hostObject.Document.GetElement(elementId);
                         if (element == null)
+                            continue;
+
+                        if (!(element is FamilyInstance))
                             continue;
 
                         List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(element);

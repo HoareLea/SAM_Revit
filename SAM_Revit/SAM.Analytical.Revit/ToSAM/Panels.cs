@@ -22,18 +22,20 @@ namespace SAM.Analytical.Revit
                 Panel panel = new Panel(construction, Query.PanelType(hostObject), face3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
-                IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new LogicalOrFilter(new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors)));
+                LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors), new ElementCategoryFilter(BuiltInCategory.OST_CurtainWallPanels) });
+
+                IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
                 if(elementIds != null && elementIds.Count() > 0)
                 {
                     Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
 
                     foreach (ElementId elementId in elementIds)
                     {
-                        FamilyInstance familyInstance = hostObject.Document.GetElement(elementId) as FamilyInstance;
-                        if (familyInstance == null)
+                        Element element = hostObject.Document.GetElement(elementId);
+                        if (element == null)
                             continue;
 
-                        List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
+                        List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(element);
                         if (face3Ds_Dependent == null || face3Ds_Dependent.Count == 0)
                             continue;
 
@@ -55,9 +57,9 @@ namespace SAM.Analytical.Revit
 
                         Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
 
-                        Aperture aperture = Modify.AddAperture(panel, familyInstance.FullName(), familyInstance.ApertureType(), plane.Convert(rectangle2D));
+                        Aperture aperture = Modify.AddAperture(panel, element.FullName(), element.ApertureType(), plane.Convert(rectangle2D));
                         if(aperture != null)
-                            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
+                            aperture.Add(Core.Revit.Query.ParameterSet(element));
                     }
                 }
 

@@ -59,6 +59,8 @@ namespace SAM.Analytical.Revit
                         
 
                         Aperture aperture = Modify.AddAperture(panel, familyInstance.ApertureType(), plane.Convert(rectangle2D));
+                        if(aperture != null)
+                            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
                     }
                 }
 

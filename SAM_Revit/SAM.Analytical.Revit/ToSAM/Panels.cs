@@ -30,7 +30,7 @@ namespace SAM.Analytical.Revit
                     foreach (ElementId elementId in elementIds)
                     {
                         FamilyInstance familyInstance = hostObject.Document.GetElement(elementId) as FamilyInstance;
-                        if (familyInstance != null)
+                        if (familyInstance == null)
                             continue;
 
                         ApertureType apertureType = familyInstance.ApertureType();

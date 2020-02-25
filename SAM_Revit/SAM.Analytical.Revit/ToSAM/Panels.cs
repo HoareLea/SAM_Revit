@@ -33,8 +33,6 @@ namespace SAM.Analytical.Revit
                         if (familyInstance == null)
                             continue;
 
-                        ApertureType apertureType = familyInstance.ApertureType();
-
                         List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
                         if (face3Ds_Dependent == null || face3Ds_Dependent.Count == 0)
                             continue;
@@ -56,9 +54,8 @@ namespace SAM.Analytical.Revit
                         }
 
                         Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
-                        
 
-                        Aperture aperture = Modify.AddAperture(panel, familyInstance.ApertureType(), plane.Convert(rectangle2D));
+                        Aperture aperture = Modify.AddAperture(panel, familyInstance.FullName(), familyInstance.ApertureType(), plane.Convert(rectangle2D));
                         if(aperture != null)
                             aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
                     }

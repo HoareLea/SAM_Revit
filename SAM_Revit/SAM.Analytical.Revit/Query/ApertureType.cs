@@ -1,6 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -11,6 +9,7 @@ namespace SAM.Analytical.Revit
             switch((BuiltInCategory)element.Category.Id.IntegerValue)
             {
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Windows:
+                case Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels:
                     return Analytical.ApertureType.Window;
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Doors:
                     return Analytical.ApertureType.Door;

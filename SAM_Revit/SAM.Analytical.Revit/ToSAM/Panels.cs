@@ -36,7 +36,7 @@ namespace SAM.Analytical.Revit
                         ApertureType apertureType = familyInstance.ApertureType();
 
                         List<Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
-                        if (face3Ds_Dependent == null)
+                        if (face3Ds_Dependent == null || face3Ds_Dependent.Count == 0)
                             continue;
 
                         List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();

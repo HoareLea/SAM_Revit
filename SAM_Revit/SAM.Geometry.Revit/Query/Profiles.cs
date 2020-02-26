@@ -139,58 +139,54 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_Floor(this Floor floor)
         {
-            //List<IClosed3D> closed3Ds = Profiles_FromSketch(floor);
-            //if (closed3Ds == null || closed3Ds.Count() == 0)
-            //    closed3Ds = TopProfiles(floor);
-
-            //return closed3Ds;
-
-            List<Face3D> face3Ds = TopProfiles(floor);
-            
-
-      
+            List<Face3D> face3Ds = TopProfiles(floor);      
             return face3Ds;
         }
 
-        private static List<Spatial.Face3D> Profiles_RoofBase(this RoofBase roofBase)
+        private static List<Face3D> Profiles_RoofBase(this RoofBase roofBase)
         {
-        //    List<IClosed3D> closed3Ds = Profiles_FromSketch(roofBase);
-        //    if(closed3Ds != null && closed3Ds.Count() > 0)
-        //    {
-        //        double offset = 0;
+            List<Face3D> face3Ds = TopProfiles(roofBase);
 
-        //        Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM);
-        //        if(parameter != null)
-        //        {
-        //            offset = parameter.AsDouble();
-        //            if (!double.IsNaN(offset))
-        //                offset = UnitUtils.ConvertFromInternalUnits(offset, DisplayUnitType.DUT_METERS);
-        //        }
-                
-        //        if(offset != 0)
-        //        {
-        //            Vector3D vector3D = new Vector3D(0, 0, offset);
-        //            closed3Ds = closed3Ds.ConvertAll(x => (IClosed3D)x.GetMoved(vector3D));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        closed3Ds = TopProfiles(roofBase);
-        //    }                
+            IEnumerable<ElementId> elementIds = roofBase.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Windows));
+            if (elementIds == null || elementIds.Count() == 0)
+                return face3Ds;
 
-        //    return closed3Ds;
+            foreach(ElementId elementId in elementIds)
+            {
+                Element element = roofBase.Document.GetElement(elementId);
+                if (element == null)
+                    continue;
 
-            return TopProfiles(roofBase);
+                BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
+                Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
+                foreach(Face3D face3D in face3Ds)
+                {
+                    List<Planar.IClosed2D> internalEdges = face3D.InternalEdges;
+                    if (internalEdges == null || internalEdges.Count == 0)
+                        continue;
+
+                    Spatial.Plane plane = face3D.GetPlane();
+
+                    Point3D point3D_Projected = plane.Project(point3D);
+                    Planar.Point2D point2D = plane.Convert(point3D_Projected);
+
+                    for(int i=0; i < internalEdges.Count; i++)
+                    {
+                        Planar.IClosed2D internalEdge = internalEdges[i];
+                        if(internalEdge.Inside(point2D))
+                        {
+                            face3D.RemoveInternalEdge(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return face3Ds;
         }
 
         private static List<Face3D> Profiles_Ceiling(this Ceiling ceiling)
         {
-        //    List<IClosed3D> closed3Ds = Profiles_FromSketch(ceiling);
-        //    if (closed3Ds == null || closed3Ds.Count() == 0)
-        //        closed3Ds = BottomProfiles(ceiling);
-
-        //    return closed3Ds;
-
             return BottomProfiles(ceiling);
         }
 

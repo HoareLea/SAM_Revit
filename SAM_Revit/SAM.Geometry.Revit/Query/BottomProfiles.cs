@@ -19,7 +19,11 @@ namespace SAM.Geometry.Revit
                 if (face == null)
                     continue;
 
-                result.Add(face.ToSAM());
+                Spatial.Face3D face3D = face.ToSAM();
+                if (face3D == null)
+                    continue;
+
+                result.Add(face3D);
             }
 
             return result;

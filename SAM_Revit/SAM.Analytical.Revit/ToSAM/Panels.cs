@@ -19,6 +19,9 @@ namespace SAM.Analytical.Revit
 
             foreach (Geometry.Spatial.Face3D face3D in face3Ds)
             {
+                if (face3D == null)
+                    continue;
+
                 Panel panel = new Panel(construction, Query.PanelType(hostObject), face3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 

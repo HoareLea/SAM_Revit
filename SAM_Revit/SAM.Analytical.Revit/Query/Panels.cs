@@ -23,6 +23,8 @@ namespace SAM.Analytical.Revit
             foreach(ElementId elementId in elementIds)
             {
                 Autodesk.Revit.DB.Panel panel = wall.Document.GetElement(elementId) as Autodesk.Revit.DB.Panel;
+                if (panel == null)
+                    continue;
                 
                 ElementId elementId_Host = panel.FindHostPanel();
                 if (elementId_Host == null || elementId_Host == ElementId.InvalidElementId)

@@ -62,6 +62,9 @@ namespace SAM.Analytical.Revit
                             continue;
 
                         BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
+                        if (boundingBoxXYZ == null)
+                            continue;
+
                         Geometry.Spatial.Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
 
                         Geometry.Spatial.Face3D face3D_Closets = Geometry.Spatial.Query.Closest(face3Ds, point3D);

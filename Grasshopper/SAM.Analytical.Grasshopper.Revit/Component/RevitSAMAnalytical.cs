@@ -94,8 +94,18 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 return;
             }
-
-            IEnumerable<Core.ISAMObject> sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+            IEnumerable<Core.ISAMObject> sAMObjects = null;
+            if (element is RevitLinkInstance)
+            {
+                List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels((RevitLinkInstance)element);
+                if (panels != null)
+                    sAMObjects = panels.Cast<Core.ISAMObject>();
+            }
+            else
+            {
+                sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+            }
+            
             if(sAMObjects == null || sAMObjects.Count() == 0)
             {
                 message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);

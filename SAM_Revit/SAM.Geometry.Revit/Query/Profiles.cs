@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using SAM.Geometry.Spatial;
 
@@ -13,7 +11,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<Spatial.Face3D> Profiles(this HostObject hostObject)
+        public static List<Face3D> Profiles(this HostObject hostObject)
         {
             if (hostObject == null || hostObject.Document == null)
                 return null;
@@ -36,7 +34,7 @@ namespace SAM.Geometry.Revit
             return null;
         }
 
-        public static List<Spatial.Face3D> Profiles_FaceWall(this FaceWall faceWall)
+        public static List<Face3D> Profiles_FaceWall(this FaceWall faceWall)
         {
             GeometryElement geometryElement = faceWall.get_Geometry(new Options());
             if (geometryElement == null)

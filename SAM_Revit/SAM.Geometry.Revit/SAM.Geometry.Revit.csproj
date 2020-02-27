@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Query\BoundingBox3D.cs" />
+    <Compile Include="Query\Location.cs" />
     <Compile Include="Query\FullName.cs" />
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\LowLevel.cs" />

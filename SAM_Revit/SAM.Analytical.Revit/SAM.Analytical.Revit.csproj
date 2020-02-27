@@ -86,6 +86,8 @@
     <Compile Include="ToRevit\Space.cs" />
     <Compile Include="ToRevit\HostObject.cs" />
     <Compile Include="ToRevit\HostObjAttributes.cs" />
+    <Compile Include="ToSAM\Aperture.cs" />
+    <Compile Include="ToSAM\ApertureConstruction.cs" />
     <Compile Include="ToSAM\Construction.cs" />
     <Compile Include="ToSAM\SAMObjects.cs" />
     <Compile Include="ToSAM\Spaces.cs" />

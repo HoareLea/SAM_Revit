@@ -61,41 +61,9 @@ namespace SAM.Analytical.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
-                        if (boundingBoxXYZ == null)
-                            continue;
-
-                        Geometry.Spatial.Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
-
-                        Geometry.Spatial.Face3D face3D_Closets = Geometry.Spatial.Query.Closest(face3Ds, point3D);
-                        if (face3D_Closets != face3D)
-                            continue;
-
-                        List <Geometry.Spatial.Face3D> face3Ds_Dependent = Geometry.Revit.Convert.ToSAM_Face3Ds(element);
-                        if (face3Ds_Dependent == null || face3Ds_Dependent.Count == 0)
-                            continue;
-
-                        List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
-                        foreach (Geometry.Spatial.Face3D face3D_Dependent in face3Ds_Dependent)
-                        {
-                            Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D_Dependent.GetExternalEdge();
-                            if (closedPlanar3D is Geometry.Spatial.ICurvable3D)
-                            {
-                                List<Geometry.Spatial.ICurve3D> curve3Ds = ((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves();
-                                foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
-                                {
-                                    Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
-                                    point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
-                                    point2Ds.Add(plane.Convert(curve3D_Temp.GetEnd()));
-                                }
-                            }
-                        }
-
-                        Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
-
-                        Aperture aperture = Modify.AddAperture(panel, element.FullName(), element.ApertureType(), plane.Convert(rectangle2D));
-                        if (aperture != null)
-                            aperture.Add(Core.Revit.Query.ParameterSet(element));
+                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane);
+                        if(panel.AddAperture(aperture))
+                            aperture.Add(Core.Revit.Query.ParameterSet(element));                            
                     }
                 }
 

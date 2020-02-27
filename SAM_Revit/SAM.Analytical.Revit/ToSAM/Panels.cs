@@ -11,7 +11,14 @@ namespace SAM.Analytical.Revit
     {
         public static List<Panel> ToSAM(this HostObject hostObject)
         {
-            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(hostObject.GetTypeId())).ToSAM();
+            if (hostObject == null)
+                return null;
+
+            ElementId elementId_Type = hostObject.GetTypeId();
+            if (elementId_Type == null || elementId_Type == ElementId.InvalidElementId)
+                return null;
+            
+            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
 
             List<Geometry.Spatial.Face3D> face3Ds = hostObject.Profiles();
 

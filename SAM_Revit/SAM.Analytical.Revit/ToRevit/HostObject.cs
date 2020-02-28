@@ -71,6 +71,10 @@ namespace SAM.Analytical.Revit
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
                 }
 
+                List<Aperture> apertures = panel.Apertures;
+                if (apertures != null)
+                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
+
                 return result;
             }
             else if (aHostObjAttributes is FloorType)
@@ -102,6 +106,10 @@ namespace SAM.Analytical.Revit
                 //        Opening opening = document.Create.NewOpening(result, curveArray, true);
                 //    }
                 //}
+
+                List<Aperture> apertures = panel.Apertures;
+                if (apertures != null)
+                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
 
                 return result;
 
@@ -142,6 +150,10 @@ namespace SAM.Analytical.Revit
                     if (Math.Abs(xYZ.Z - levelElevation) > Geometry.Tolerance.MicroDistance)
                         slabShapeEditor.DrawPoint(xYZ);
                 }
+
+                List<Aperture> apertures = panel.Apertures;
+                if (apertures != null)
+                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
 
                 return roofBase;
             }

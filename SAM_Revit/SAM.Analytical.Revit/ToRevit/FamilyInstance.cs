@@ -15,7 +15,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             string fullName = null;
-            if(aperture.ApertureConstruction != null)
+            if (aperture.ApertureConstruction != null)
                 fullName = aperture.ApertureConstruction.Name;
 
             if (string.IsNullOrWhiteSpace(fullName))
@@ -33,6 +33,10 @@ namespace SAM.Analytical.Revit
             if (point3D_Location == null)
                 return null;
 
+            Level level = Geometry.Revit.Query.LowLevel(document, point3D_Location.Z);
+            if (level == null)
+                return null;
+
             List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>().ToList();
             if (familySymbols == null || familySymbols.Count == 0)
                 return null;
@@ -46,8 +50,7 @@ namespace SAM.Analytical.Revit
             if (familySymbols.Count == 0)
                 return null;
 
-           FamilyInstance familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-            return familyInstance;
+            return document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
         }
     }
 }

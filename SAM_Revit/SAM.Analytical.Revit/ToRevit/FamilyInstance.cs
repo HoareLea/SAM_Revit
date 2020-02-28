@@ -33,7 +33,7 @@ namespace SAM.Analytical.Revit
             if (point3D_Location == null)
                 return null;
 
-            Level level = Geometry.Revit.Query.LowLevel(document, point3D_Location.Z);
+            Level level = level = Geometry.Revit.Query.LowLevel(document, point3D_Location.Z);
             if (level == null)
                 return null;
 

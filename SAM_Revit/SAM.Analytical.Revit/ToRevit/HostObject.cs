@@ -17,7 +17,6 @@ namespace SAM.Analytical.Revit
 
             HostObjAttributes aHostObjAttributes = document.ToRevit(panel.Construction, panel.PanelType);
 
-            HostObject result = null;
             if (aHostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
@@ -48,15 +47,15 @@ namespace SAM.Analytical.Revit
 
                 XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
 
-                result = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false, vectorRevit);
+                Wall wall = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false, vectorRevit);
 
                 Parameter parameter = null;
 
-                parameter = result.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
+                parameter = wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
                 if (parameter != null)
                     parameter.Set(ElementId.InvalidElementId);
 
-                parameter = result.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
+                parameter = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null)
                 {
                     double height = UnitUtils.ConvertToInternalUnits((panel.HightElevation() - lowElevation), DisplayUnitType.DUT_METERS);
@@ -66,16 +65,16 @@ namespace SAM.Analytical.Revit
                 double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
                 if (System.Math.Abs(lowElevation - levelElevation) > SAM.Geometry.Tolerance.MacroDistance)
                 {
-                    parameter = result.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
+                    parameter = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
                     if (parameter != null)
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
                 }
 
                 List<Aperture> apertures = panel.Apertures;
                 if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
+                    apertures.ForEach(x => Convert.ToRevit(document, x, wall));
 
-                return result;
+                return wall;
             }
             else if (aHostObjAttributes is FloorType)
             {
@@ -89,8 +88,8 @@ namespace SAM.Analytical.Revit
 
                 Level level = document.HighLevel(panel.LowElevation());
 
-                result = document.Create.NewFloor(curveArray, aHostObjAttributes as FloorType, level, false);
-                result.ChangeTypeId(aHostObjAttributes.Id);
+                Floor floor = document.Create.NewFloor(curveArray, aHostObjAttributes as FloorType, level, false);
+                floor.ChangeTypeId(aHostObjAttributes.Id);
 
                 //TODO: solve issue with transaction and openings
                 //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
@@ -109,9 +108,9 @@ namespace SAM.Analytical.Revit
 
                 List<Aperture> apertures = panel.Apertures;
                 if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
+                    apertures.ForEach(x => Convert.ToRevit(document, x, floor));
 
-                return result;
+                return floor;
 
             }
             else if(aHostObjAttributes is RoofType)
@@ -153,7 +152,7 @@ namespace SAM.Analytical.Revit
 
                 List<Aperture> apertures = panel.Apertures;
                 if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, result));
+                    apertures.ForEach(x => Convert.ToRevit(document, x, roofBase));
 
                 return roofBase;
             }

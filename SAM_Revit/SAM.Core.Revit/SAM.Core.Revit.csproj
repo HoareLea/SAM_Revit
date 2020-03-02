@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Query\IntegerId.cs" />
     <Compile Include="Query\GetConnectorManagers.cs" />
     <Compile Include="Query\GetBranches.cs" />
     <Compile Include="Query\TryGetFamilyNameAndTypeName.cs" />

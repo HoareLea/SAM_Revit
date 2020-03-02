@@ -11,7 +11,7 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalRevit :  RhinoInside.Revit.GH.Components.ReconstructElementComponent
+    public class SAMAnalyticalRevit : RhinoInside.Revit.GH.Components.ReconstructElementComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

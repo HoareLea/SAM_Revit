@@ -107,6 +107,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             walls = new List<Wall>();
         }
 
+        public override void OnCommitted(Document document, string strTransactionName)
+        {
+            base.OnCommitted(document, strTransactionName);
+        }
+
         private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel)
         {
             HostObject hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);

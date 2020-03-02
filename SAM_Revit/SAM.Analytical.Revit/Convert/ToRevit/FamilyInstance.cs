@@ -53,7 +53,8 @@ namespace SAM.Analytical.Revit
 
             FamilyInstance familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
             if (familyInstance != null)
-                Core.Revit.Modify.UpdateParameters(aperture.GetParameterSet(Assembly.GetExecutingAssembly()), familyInstance);
+                Core.Revit.Modify.UpdateParameters(aperture, familyInstance);
+                
 
             return familyInstance;
         

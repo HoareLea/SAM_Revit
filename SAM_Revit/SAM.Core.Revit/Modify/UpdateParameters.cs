@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Autodesk.Revit.DB;
+using System.Reflection;
 
 namespace SAM.Core.Revit
 {
@@ -24,6 +25,14 @@ namespace SAM.Core.Revit
             }
 
             return true;
+        }
+
+        public static bool UpdateParameters(this SAMObject sAMObject, Element element, IEnumerable<string> parameterNames_Excluded = null)
+        {
+            if (sAMObject == null || element == null)
+                return false;
+
+            return UpdateParameters(sAMObject.GetParameterSet(element.GetType()?.Assembly), element, parameterNames_Excluded);
         }
     }
 }

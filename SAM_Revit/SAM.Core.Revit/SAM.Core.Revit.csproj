@@ -95,6 +95,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert\ToRevit.cs" />
+    <Compile Include="Convert\ToSI.cs" />
+    <Compile Include="Modify\UpdateParameter.cs" />
+    <Compile Include="Modify\UpdateParameters.cs" />
     <Compile Include="Query\IntegerId.cs" />
     <Compile Include="Query\GetConnectorManagers.cs" />
     <Compile Include="Query\GetBranches.cs" />
@@ -102,12 +106,11 @@
     <Compile Include="Query\ParameterSet.cs" />
     <Compile Include="Query\FullName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToRevit\ElementId.cs" />
-    <Compile Include="ToSAM\IntegerId.cs" />
+    <Compile Include="Convert\ToRevit\ElementId.cs" />
+    <Compile Include="Convert\ToSAM\IntegerId.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />
-    <Folder Include="Modify\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -43,7 +43,10 @@ namespace SAM.Analytical.Revit
 
             Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
 
-            return new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
+            Aperture aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
+            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
+
+            return aperture;
         }
     }
 }

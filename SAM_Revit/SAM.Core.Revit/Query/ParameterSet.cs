@@ -1,6 +1,5 @@
-﻿
-using Autodesk.Revit.DB;
-using System.Collections.Generic;
+﻿using Autodesk.Revit.DB;
+
 
 namespace SAM.Core.Revit
 {
@@ -18,7 +17,7 @@ namespace SAM.Core.Revit
                 switch(parameter.StorageType)
                 {
                     case StorageType.Double:
-                        parameterSet.Add(parameter.Definition.Name, parameter.AsDouble());
+                        parameterSet.Add(parameter.Definition.Name, Convert.ToSI(parameter.AsDouble(), parameter.Definition.ParameterType));
                         break;
                     case StorageType.Integer:
                         parameterSet.Add(parameter.Definition.Name, parameter.AsInteger());

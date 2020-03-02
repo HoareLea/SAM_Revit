@@ -2,9 +2,6 @@
 using System.Linq;
 using Autodesk.Revit.DB;
 
-using SAM.Geometry.Revit;
-using SAM.Geometry.Spatial;
-
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert

@@ -14,7 +14,10 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null)
                 return null;
 
-            return new ApertureConstruction(familyInstance.FullName(), familyInstance.ApertureType());
+            ApertureConstruction apertureConstruction = new ApertureConstruction(familyInstance.FullName(), familyInstance.ApertureType());
+            apertureConstruction.Add(Core.Revit.Query.ParameterSet(familyInstance));
+
+            return apertureConstruction; 
         }
     }
 }

@@ -9,9 +9,7 @@ namespace SAM.Geometry.Revit
     {
         public static Point3D ToSAM(this XYZ XYZ)
         {
-            double scale = Units.Query.ToSI(1, Units.UnitType.Feet);
-
-            return new Point3D(XYZ.X * scale, XYZ.Y * scale, XYZ.Z * scale);
+            return new Point3D(XYZ.X * factor_FromFeetToMeter, XYZ.Y * factor_FromFeetToMeter, XYZ.Z * factor_FromFeetToMeter);
         }
     }
 }

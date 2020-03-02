@@ -62,8 +62,7 @@ namespace SAM.Analytical.Revit
                             continue;
 
                         Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane);
-                        if(panel.AddAperture(aperture))
-                            aperture.Add(Core.Revit.Query.ParameterSet(element));                            
+                        panel.AddAperture(aperture);                                  
                     }
                 }
 

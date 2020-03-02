@@ -83,17 +83,17 @@
     <Compile Include="Query\PanelType.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />
-    <Compile Include="ToRevit\FamilyInstance.cs" />
-    <Compile Include="ToRevit\Space.cs" />
-    <Compile Include="ToRevit\HostObject.cs" />
-    <Compile Include="ToRevit\HostObjAttributes.cs" />
-    <Compile Include="ToSAM\Aperture.cs" />
-    <Compile Include="ToSAM\ApertureConstruction.cs" />
-    <Compile Include="ToSAM\Construction.cs" />
-    <Compile Include="ToSAM\SAMObjects.cs" />
-    <Compile Include="ToSAM\Spaces.cs" />
-    <Compile Include="ToSAM\Space.cs" />
-    <Compile Include="ToSAM\Panels.cs" />
+    <Compile Include="Convert\ToRevit\FamilyInstance.cs" />
+    <Compile Include="Convert\ToRevit\Space.cs" />
+    <Compile Include="Convert\ToRevit\HostObject.cs" />
+    <Compile Include="Convert\ToRevit\HostObjAttributes.cs" />
+    <Compile Include="Convert\ToSAM\Aperture.cs" />
+    <Compile Include="Convert\ToSAM\ApertureConstruction.cs" />
+    <Compile Include="Convert\ToSAM\Construction.cs" />
+    <Compile Include="Convert\ToSAM\SAMObjects.cs" />
+    <Compile Include="Convert\ToSAM\Spaces.cs" />
+    <Compile Include="Convert\ToSAM\Space.cs" />
+    <Compile Include="Convert\ToSAM\Panels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

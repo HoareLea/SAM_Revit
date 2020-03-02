@@ -13,11 +13,9 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static UV ToRevit(this Point2D point2D)
+        public static Point2D ToSAM(this UV uV)
         {
-            double scale = Units.Query.ToImperial(1, Units.UnitType.Meter);
-
-            return new UV(point2D.X * scale, point2D.Y * scale);
+            return new Point2D(uV.U * factor_FromFeetToMeter, uV.V * factor_FromFeetToMeter);
         }
     }
 }

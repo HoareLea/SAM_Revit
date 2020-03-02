@@ -2,7 +2,7 @@
 
 namespace SAM.Core.Revit
 {
-    public static partial class Query
+    public static partial class Modify
     {
         public static bool UpdateParameter(this Parameter parameter, object value)
         {

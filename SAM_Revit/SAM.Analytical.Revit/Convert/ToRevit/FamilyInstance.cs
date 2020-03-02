@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 using Autodesk.Revit.DB;
 
@@ -50,7 +51,12 @@ namespace SAM.Analytical.Revit
             if (familySymbols.Count == 0)
                 return null;
 
-            return document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            FamilyInstance familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            if (familyInstance != null)
+                Core.Revit.Modify.UpdateParameters(aperture.GetParameterSet(Assembly.GetExecutingAssembly()), familyInstance);
+
+            return familyInstance;
+        
         }
     }
 }

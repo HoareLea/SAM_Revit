@@ -1,11 +1,14 @@
-﻿using Autodesk.Revit.DB;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Autodesk.Revit.DB;
 
 
 namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static ParameterSet ParameterSet(this Element element)
+        public static ParameterSet ParameterSet(this Element element, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (element == null)
                 return null;
@@ -14,7 +17,10 @@ namespace SAM.Core.Revit
             parameterSet.Add("ElementId", element.Id.IntegerValue);
             foreach(Parameter parameter in element.Parameters)
             {
-                switch(parameter.StorageType)
+                if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(parameter.Definition.Name))
+                    continue;
+
+                switch (parameter.StorageType)
                 {
                     case StorageType.Double:
                         parameterSet.Add(parameter.Definition.Name, Convert.ToSI(parameter.AsDouble(), parameter.Definition.ParameterType));

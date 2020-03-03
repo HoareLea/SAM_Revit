@@ -109,5 +109,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj">
+      <Project>{44356aa4-67fe-4c4f-bf7d-8404ca7bcee1}</Project>
+      <Name>SAM.Units.Revit</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7875201B-420B-42D1-9F8F-0F7BDEDB8DA2}</ProjectGuid>
+    <ProjectGuid>{44356AA4-67FE-4C4F-BF7D-8404CA7BCEE1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM.Core.Revit</RootNamespace>
-    <AssemblyName>SAM.Core.Revit</AssemblyName>
+    <RootNamespace>SAM.Units.Revit</RootNamespace>
+    <AssemblyName>SAM.Units.Revit</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -82,9 +82,6 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SAM.Core">
-      <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -95,29 +92,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modify\UpdateParameter.cs" />
-    <Compile Include="Modify\UpdateParameters.cs" />
-    <Compile Include="Query\IntegerId.cs" />
-    <Compile Include="Query\GetConnectorManagers.cs" />
-    <Compile Include="Query\GetBranches.cs" />
-    <Compile Include="Query\TryGetFamilyNameAndTypeName.cs" />
-    <Compile Include="Query\ParameterSet.cs" />
-    <Compile Include="Query\FullName.cs" />
+    <Compile Include="Convert\ToRevit.cs" />
+    <Compile Include="Convert\ToSI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Convert\ToRevit\ElementId.cs" />
-    <Compile Include="Convert\ToSAM\IntegerId.cs" />
+    <Compile Include="Query\Factor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />
+    <Folder Include="Modify\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj">
-      <Project>{44356aa4-67fe-4c4f-bf7d-8404ca7bcee1}</Project>
-      <Name>SAM.Units.Revit</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -175,7 +175,7 @@ namespace SAM.Core.Revit
                 return true;
             }
 
-            value_Temp = Convert.ToRevit(value_Temp, parameter.Definition.ParameterType);
+            value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.ParameterType);
 
             if (double.IsNaN(value_Temp))
                 return false;

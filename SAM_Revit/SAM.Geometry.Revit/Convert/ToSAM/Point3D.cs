@@ -9,7 +9,7 @@ namespace SAM.Geometry.Revit
     {
         public static Point3D ToSAM(this XYZ XYZ)
         {
-            return new Point3D(XYZ.X * factor_FromFeetToMeter, XYZ.Y * factor_FromFeetToMeter, XYZ.Z * factor_FromFeetToMeter);
+            return new Point3D(XYZ.X * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Y * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Z * Units.Revit.Query.Factor_FromFeetToMeter);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace SAM.Core.Revit
                 switch (parameter.StorageType)
                 {
                     case StorageType.Double:
-                        parameterSet.Add(parameter.Definition.Name, Convert.ToSI(parameter.AsDouble(), parameter.Definition.ParameterType));
+                        parameterSet.Add(parameter.Definition.Name, Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.ParameterType));
                         break;
                     case StorageType.Integer:
                         parameterSet.Add(parameter.Definition.Name, parameter.AsInteger());

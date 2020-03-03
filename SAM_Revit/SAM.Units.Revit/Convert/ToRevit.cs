@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Autodesk.Revit.DB;
 
 
-namespace SAM.Core.Revit
+namespace SAM.Units.Revit
 {
     public static partial class Convert
     {

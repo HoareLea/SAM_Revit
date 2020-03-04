@@ -42,7 +42,7 @@ namespace SAM.Analytical.Revit
                 Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
 
                 //Get Normal from Panel
-                Geometry.Spatial.Vector3D vector3D_1 =  plane.Project(panel.PlanarBoundary3D.GetNormal());
+                Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.GetNormal());
                 vector3D_1 = vector3D_1.Unit;
 
                 XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
@@ -88,32 +88,39 @@ namespace SAM.Analytical.Revit
 
                 Level level = document.HighLevel(panel.LowElevation());
 
+
                 Floor floor = document.Create.NewFloor(curveArray, aHostObjAttributes as FloorType, level, false);
-                floor.ChangeTypeId(aHostObjAttributes.Id);
 
-                //TODO: solve issue with transaction and openings
-                //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
-                //List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdges();
-                //if(closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
-                //{
-                //    foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
-                //    {
-                //        curveArray = new CurveArray();
-                //        foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
-                //            curveArray.Append(line);
+                if (floor != null)
+                {
+                    floor.ChangeTypeId(aHostObjAttributes.Id);
 
-                //        Opening opening = document.Create.NewOpening(result, curveArray, true);
-                //    }
-                //}
+                    List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdges();
+                    if (closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
+                    {
+                        //Requires to be regenerated before inserting openings
+                        //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
+                        document.Regenerate();
 
-                List<Aperture> apertures = panel.Apertures;
-                if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, floor));
+                        foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
+                        {
+                            curveArray = new CurveArray();
+                            foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
+                                curveArray.Append(line);
+
+                            Opening opening = document.Create.NewOpening(floor, curveArray, true);
+                        }
+                    }
+
+                    List<Aperture> apertures = panel.Apertures;
+                    if (apertures != null)
+                        apertures.ForEach(x => Convert.ToRevit(document, x, floor));
+                }
 
                 return floor;
 
             }
-            else if(aHostObjAttributes is RoofType)
+            else if (aHostObjAttributes is RoofType)
             {
                 CurveArray curveArray = new CurveArray();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())

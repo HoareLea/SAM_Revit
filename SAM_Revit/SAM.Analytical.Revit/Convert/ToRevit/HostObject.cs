@@ -63,7 +63,7 @@ namespace SAM.Analytical.Revit
                 }
 
                 double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-                if (System.Math.Abs(lowElevation - levelElevation) > SAM.Geometry.Tolerance.MacroDistance)
+                if (System.Math.Abs(lowElevation - levelElevation) > Core.Tolerance.MacroDistance)
                 {
                     parameter = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
                     if (parameter != null)
@@ -153,7 +153,7 @@ namespace SAM.Analytical.Revit
                 foreach (Curve curve in curveArray)
                 {
                     XYZ xYZ = curve.GetEndPoint(0);
-                    if (Math.Abs(xYZ.Z - levelElevation) > Geometry.Tolerance.MicroDistance)
+                    if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
                         slabShapeEditor.DrawPoint(xYZ);
                 }
 

@@ -22,7 +22,7 @@ namespace SAM.Geometry.Revit
 
             double levelElevation = UnitUtils.ConvertFromInternalUnits(levels.First().Elevation, DisplayUnitType.DUT_METERS);
 
-            if (Math.Abs(elevation - levelElevation) <  Tolerance.MacroDistance)
+            if (Math.Abs(elevation - levelElevation) <  Core.Tolerance.MacroDistance)
                 return levels.First();
 
 

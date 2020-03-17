@@ -50,7 +50,14 @@ namespace SAM.Analytical.Revit
             if (familySymbols.Count == 0)
                 return null;
 
-            FamilyInstance familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbols.First(), hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            FamilySymbol familySymbol = familySymbols.First();
+            if (familySymbol == null)
+                return null;
+
+            if (!familySymbol.IsActive)
+                familySymbol.Activate();
+
+            FamilyInstance familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
             if (familyInstance != null)
             {
                 Core.Revit.Modify.Values(aperture, familyInstance);

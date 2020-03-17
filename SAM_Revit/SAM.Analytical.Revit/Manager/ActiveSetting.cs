@@ -39,6 +39,10 @@ namespace SAM.Analytical.Revit
             //Instance Parameters
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetWidth", "SAM_BuildingElementWidth"));
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetHeight", "SAM_BuildingElementHeight"));
+            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("Guid", "Comments"));
+            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 01"));
+            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 02"));
+            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 03"));
             //Type Parameters
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementAir")); //bool
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementColor")); //string or color

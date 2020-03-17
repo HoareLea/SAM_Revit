@@ -4,7 +4,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool UpdateParameter(this Parameter parameter, object value)
+        public static bool Value(this Parameter parameter, object value)
         {
             if (parameter == null || parameter.IsReadOnly)
                 return false;
@@ -12,22 +12,46 @@ namespace SAM.Core.Revit
             switch(parameter.StorageType)
             {
                 case StorageType.Double:
-                    return UpdateParameter_Double(parameter, value);
+                    return Value_Double(parameter, value);
                 case StorageType.ElementId:
-                    return UpdateParameter_ElementId(parameter, value);
+                    return Value_ElementId(parameter, value);
                 case StorageType.Integer:
-                    return UpdateParameter_Integer(parameter, value);
+                    return Value_Integer(parameter, value);
                 case StorageType.None:
-                    return UpdateParameter_None(parameter, value);
+                    return Value_None(parameter, value);
                 case StorageType.String:
-                    return UpdateParameter_String(parameter, value);
+                    return Value_String(parameter, value);
             }
 
             return false;
         }
 
+        public static bool Value(this SAMRelation sAMRelation, SAMObject sAMObject, Element element)
+        {
+            if (sAMRelation == null || sAMObject == null || element == null)
+                return false;
 
-        private static bool UpdateParameter_String(this Parameter parameter, object value)
+            string name_Object = sAMRelation.Object as string;
+            if (string.IsNullOrEmpty(name_Object))
+                return false;
+
+            string name_RelatedObject = sAMRelation.RelatedObject as string;
+            if (string.IsNullOrEmpty(name_RelatedObject))
+                return false;
+
+            Parameter parameter = element.LookupParameter(name_RelatedObject);
+            if (parameter == null)
+                return false;
+
+            object value;
+            if (!Core.Query.TryGetValue(sAMObject, name_Object, out value))
+                return false;
+
+            return Value(parameter, value);         
+        }
+
+
+        private static bool Value_String(this Parameter parameter, object value)
         {
             if (parameter == null)
                 return false;
@@ -49,12 +73,12 @@ namespace SAM.Core.Revit
             return true;
         }
 
-        private static bool UpdateParameter_None(this Parameter parameter, object value)
+        private static bool Value_None(this Parameter parameter, object value)
         {
             return false;
         }
 
-        private static bool UpdateParameter_Integer(this Parameter parameter, object value)
+        private static bool Value_Integer(this Parameter parameter, object value)
         {
             if (parameter == null || value == null)
                 return false;
@@ -112,7 +136,7 @@ namespace SAM.Core.Revit
             return false;
         }
 
-        private static bool UpdateParameter_ElementId(this Parameter parameter, object value)
+        private static bool Value_ElementId(this Parameter parameter, object value)
         {
             if (parameter == null)
                 return false;
@@ -146,7 +170,7 @@ namespace SAM.Core.Revit
             return false;
         }
 
-        private static bool UpdateParameter_Double(this Parameter parameter, object value)
+        private static bool Value_Double(this Parameter parameter, object value)
         {
             if (parameter == null || value == null)
                 return false;

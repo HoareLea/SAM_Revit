@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
 
-using Autodesk.Revit.DB;
-
-using SAM.Geometry.Revit;
 
 namespace SAM.Analytical.Revit
 {

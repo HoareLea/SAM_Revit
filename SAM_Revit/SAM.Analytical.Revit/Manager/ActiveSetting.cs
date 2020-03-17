@@ -7,13 +7,31 @@ using SAM.Core;
 
 namespace SAM.Analytical.Revit
 {
-    public static partial class Query
-    {
-        public static Setting DefaultSetting()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+    public static partial class ActiveSetting
+    {       
+        private static Setting setting = Load();
 
-            Setting result = new Setting(assembly);
+        private static Setting Load()
+        {
+            Setting setting = ActiveManager.GetSetting(Assembly.GetExecutingAssembly());
+            if (setting == null)
+                setting = GetDefault();
+            
+            return setting;
+        }
+        
+
+        public static Setting Setting
+        {
+            get
+            {
+                return setting;
+            }
+        }
+
+        public static Setting GetDefault()
+        {
+            Setting result = new Setting(Assembly.GetExecutingAssembly());
 
             SAMRelationCluster sAMRelationCluster = new SAMRelationCluster();
 
@@ -34,7 +52,7 @@ namespace SAM.Analytical.Revit
             //sAMRelationCluster.Add(typeof(Panel), typeof(Wall), new SAMRelation("GetWidth", "SAM_BuildingElementWidth"));
             //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("", ""));
 
-            result.Add("Parameter Map", sAMRelationCluster);
+            result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, sAMRelationCluster);
             return result;
         }
     }

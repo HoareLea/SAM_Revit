@@ -8,7 +8,7 @@ namespace SAM.Core.Revit
         public static class Name
         {
             public const string ParameterMap = "Parameter Map";
-            public const string ParameterName_Simplified = "ParameterName_Simplified";
+            public const string ParameterName_FullyConverted = "ParameterName_FullyConverted";
         }
 
         private static Setting setting = Load();
@@ -35,7 +35,7 @@ namespace SAM.Core.Revit
         {
             Setting setting = new Setting(Assembly.GetExecutingAssembly());
 
-            setting.Add(Name.ParameterName_Simplified, "SAM_IsValidEditable");
+            setting.Add(Name.ParameterName_FullyConverted, "SAM_IsValidEditable");
 
             return setting;
         }

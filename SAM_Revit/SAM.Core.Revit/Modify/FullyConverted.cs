@@ -4,7 +4,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool Simplified(this Autodesk.Revit.DB.Element element, bool simplified)
+        public static bool FullyConverted(this Autodesk.Revit.DB.Element element, bool fullyConverted)
         {
             if (element == null)
                 return false;
@@ -15,7 +15,7 @@ namespace SAM.Core.Revit
             if (!setting.TryGetValue(ActiveSetting.Name.ParameterName_Simplified, out name))
                 return false;
 
-            return Value(element.LookupParameter(name), simplified);
+            return Value(element.LookupParameter(name), fullyConverted);
         }
     }
 }

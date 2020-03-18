@@ -112,8 +112,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             base.OnCommitted(document, strTransactionName);
         }
 
-        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel)
+        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, bool _run = false)
         {
+            if (!_run)
+                return;
+            
             HostObject hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
 
             if (hostObject != null)

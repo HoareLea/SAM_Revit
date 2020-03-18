@@ -68,11 +68,11 @@ namespace SAM.Analytical.Revit
             {
                 Core.Revit.Modify.Values(aperture, familyInstance);
                 Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
-                bool fullyConverted = false;
-                if (!SAM.Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
-                    fullyConverted = true;
+                bool simplified = false;
+                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
+                    simplified = true;
 
-                Core.Revit.Modify.FullyConverted(familyInstance, fullyConverted);
+                Core.Revit.Modify.Simplified(familyInstance, simplified);
             }
                 
                 

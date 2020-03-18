@@ -35,7 +35,7 @@ namespace SAM.Core.Revit
         {
             Setting setting = new Setting(Assembly.GetExecutingAssembly());
 
-            setting.Add(Name.ParameterName_Simplified, "SAM_ValidEditable");
+            setting.Add(Name.ParameterName_Simplified, "SAM_IsValidEditable");
 
             return setting;
         }

@@ -60,27 +60,17 @@ namespace SAM.Core.Revit
             if (sAMObject == null || element == null)
                 return false;
 
-            Assembly assembly;
-
-            assembly = element.GetType()?.Assembly;
-            if (assembly != null)
+            ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
+            if (parameterSet != null)
             {
-                ParameterSet parameterSet = sAMObject.GetParameterSet(assembly);
-                if (parameterSet != null)
-                {
-                    if (!Values(parameterSet, element, parameterNames_Excluded))
-                        return false;
-                }
-            }
-
-            assembly = Assembly.GetExecutingAssembly();
-            if (assembly != null)
-            {
-                Setting setting = ActiveSetting.Setting;
-
-                if (!Values(setting, sAMObject, element))
+                if (!Values(parameterSet, element, parameterNames_Excluded))
                     return false;
             }
+
+            Setting setting = ActiveSetting.Setting;
+
+            if (!Values(setting, sAMObject, element))
+                return false;
 
             return true;
         }

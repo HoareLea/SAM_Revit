@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Modify\Simplified.cs" />
     <Compile Include="Modify\Value.cs" />
     <Compile Include="Modify\Values.cs" />
     <Compile Include="Query\IntegerId.cs" />

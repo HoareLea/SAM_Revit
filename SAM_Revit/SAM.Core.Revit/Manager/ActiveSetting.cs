@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
+
 
 namespace SAM.Core.Revit
 {
@@ -12,6 +8,7 @@ namespace SAM.Core.Revit
         public static class Name
         {
             public const string ParameterMap = "Parameter Map";
+            public const string ParameterName_Simplified = "ParameterName_Simplified";
         }
 
         private static Setting setting = Load();
@@ -36,7 +33,11 @@ namespace SAM.Core.Revit
 
         public static Setting GetDefault()
         {
-            return new Setting(Assembly.GetExecutingAssembly());
+            Setting setting = new Setting(Assembly.GetExecutingAssembly());
+
+            setting.Add(Name.ParameterName_Simplified, "SAM_ValidEditable");
+
+            return setting;
         }
     }
 }

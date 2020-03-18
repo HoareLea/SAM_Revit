@@ -43,6 +43,8 @@ namespace SAM.Analytical.Revit
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 01"));
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 02"));
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 03"));
+            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("ToJObject", "SAM_JSON"));  //string
+            //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("IsRectangular", "SAM_IsValidEditable"));  //bool
             //Type Parameters
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementAir")); //bool
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementColor")); //string or color
@@ -50,6 +52,8 @@ namespace SAM.Analytical.Revit
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementGround")); //bool
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementInternalShadows")); //bool
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementTransparent")); //bool
+
+
 
 
             //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetHeight", "SAM_BuildingElementHeight"));

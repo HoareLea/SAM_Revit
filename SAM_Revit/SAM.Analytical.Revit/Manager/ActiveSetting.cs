@@ -8,7 +8,12 @@ using SAM.Core;
 namespace SAM.Analytical.Revit
 {
     public static partial class ActiveSetting
-    {       
+    {
+        public static class Name
+        {
+            //public const string Construction_Undefined = "Construction_Undefined";
+        }
+
         private static Setting setting = Load();
 
         private static Setting Load()
@@ -52,14 +57,8 @@ namespace SAM.Analytical.Revit
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementInternalShadows")); //bool
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementTransparent")); //bool
 
-
-
-
-            //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetHeight", "SAM_BuildingElementHeight"));
-            //sAMRelationCluster.Add(typeof(Panel), typeof(Wall), new SAMRelation("GetWidth", "SAM_BuildingElementWidth"));
-            //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("", ""));
-
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, sAMRelationCluster);
+
             return result;
         }
     }

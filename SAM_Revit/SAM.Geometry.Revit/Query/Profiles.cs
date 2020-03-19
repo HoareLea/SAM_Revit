@@ -88,7 +88,7 @@ namespace SAM.Geometry.Revit
                     double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
                     Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), new Vector3D(0, 0, 1));
 
-                    result = new List<Spatial.Face3D>();
+                    result = new List<Face3D>();
                     foreach (ICurve3D curve3D in curves)
                     {
                         if (curve3D == null)

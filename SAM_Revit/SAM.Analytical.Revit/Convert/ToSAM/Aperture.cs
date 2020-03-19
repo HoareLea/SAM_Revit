@@ -10,6 +10,15 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null || plane == null)
                 return null;
 
+            Aperture aperture = null;
+
+            if (Core.Revit.Query.Simplified(familyInstance))
+            {
+                aperture = Core.Revit.Query.IJSAMObject<Aperture>(familyInstance);
+                if (aperture != null)
+                    return aperture;
+            }
+
             ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
             if (apertureConstruction == null)
                 return null;
@@ -43,7 +52,7 @@ namespace SAM.Analytical.Revit
 
             Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
 
-            Aperture aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
+            aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
             aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             return aperture;

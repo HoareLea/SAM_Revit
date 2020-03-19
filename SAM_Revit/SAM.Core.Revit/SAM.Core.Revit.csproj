@@ -103,8 +103,10 @@
     <Compile Include="Query\IntegerId.cs" />
     <Compile Include="Query\GetConnectorManagers.cs" />
     <Compile Include="Query\GetBranches.cs" />
+    <Compile Include="Query\IJSAMObject.cs" />
     <Compile Include="Query\JObject.cs" />
     <Compile Include="Query\Json.cs" />
+    <Compile Include="Query\Simplified.cs" />
     <Compile Include="Query\TryGetFamilyNameAndTypeName.cs" />
     <Compile Include="Query\ParameterSet.cs" />
     <Compile Include="Query\FullName.cs" />

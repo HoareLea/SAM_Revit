@@ -43,7 +43,6 @@ namespace SAM.Analytical.Revit
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 01"));
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 02"));
             sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 03"));
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("ToJObject", "SAM_JSON"));  //string
             //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("IsRectangular", "SAM_IsNotValidEditable"));  //bool
             //Type Parameters
             sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementAir")); //bool

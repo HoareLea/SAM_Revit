@@ -9,6 +9,7 @@ namespace SAM.Core.Revit
         {
             public const string ParameterMap = "Parameter Map";
             public const string ParameterName_Simplified = "ParameterName_Simplified";
+            public const string ParameterName_Json = "ParameterName_Json";
         }
 
         private static Setting setting = Load();
@@ -36,6 +37,7 @@ namespace SAM.Core.Revit
             Setting setting = new Setting(Assembly.GetExecutingAssembly());
 
             setting.Add(Name.ParameterName_Simplified, "SAM_IsNotValidEditable");
+            setting.Add(Name.ParameterName_Json, "SAM_JSON");
 
             return setting;
         }

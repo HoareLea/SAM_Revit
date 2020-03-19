@@ -153,7 +153,7 @@ namespace SAM.Analytical.Revit
                 foreach (Curve curve in curveArray)
                 {
                     XYZ xYZ = curve.GetEndPoint(0);
-                    if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
+                    //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
                         slabShapeEditor.DrawPoint(xYZ);
                 }
 

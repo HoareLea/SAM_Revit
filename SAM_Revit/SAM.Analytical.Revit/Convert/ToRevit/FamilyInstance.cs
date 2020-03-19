@@ -72,10 +72,9 @@ namespace SAM.Analytical.Revit
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
                     simplified = true;
 
-                Core.Revit.Modify.Simplified(familyInstance, simplified);
+                if (Core.Revit.Modify.Simplified(familyInstance, simplified))
+                    Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
             }
-                
-                
 
             return familyInstance;
         

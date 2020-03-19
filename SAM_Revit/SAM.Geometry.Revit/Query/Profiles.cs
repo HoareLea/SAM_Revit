@@ -64,7 +64,7 @@ namespace SAM.Geometry.Revit
 
         public static List<Face3D> Profiles_Wall(this Wall wall)
         {
-            List<Spatial.Face3D> result = Profiles_FromSketch(wall);
+            List<Face3D> result = Profiles_FromSketch(wall);
             if (result != null && result.Count > 0)
                 return result;
 
@@ -109,7 +109,11 @@ namespace SAM.Geometry.Revit
                             point3D_3 = point_Temp;
                         }
 
-                        result.Add(new Face3D(new Polygon3D(new Point3D[] { point3D_1, point3D_2, point3D_3, minCurve.GetStart() })));
+                        List<Point3D> point3Ds = new List<Point3D>() { minCurve.GetStart(), point3D_3, point3D_2, point3D_1 };
+                        if (wall.Flipped)
+                            point3Ds.Reverse();
+
+                        result.Add(new Face3D(new Polygon3D(point3Ds)));
                     }
 
                     if (result != null && result.Count > 0)
@@ -124,12 +128,12 @@ namespace SAM.Geometry.Revit
             if (curveLoops == null)
                 return null;
 
-            result = new List<Spatial.Face3D>();
+            result = new List<Face3D>();
             foreach (CurveLoop curveLoop in curveLoops)
             {
                 Polygon3D polygon3D = curveLoop.ToSAM_Polygon3D();
                 if (polygon3D != null)
-                    result.Add(new Spatial.Face3D(polygon3D));
+                    result.Add(new Face3D(polygon3D));
             }
 
             return result;

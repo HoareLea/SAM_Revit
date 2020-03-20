@@ -5,7 +5,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, Geometry.Spatial.Plane plane)
+        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, Geometry.Spatial.Plane plane, PanelType panelType)
         {
             if (familyInstance == null || plane == null)
                 return null;
@@ -21,7 +21,7 @@ namespace SAM.Analytical.Revit
 
             ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
             if (apertureConstruction == null)
-                return null;
+                apertureConstruction = Analytical.Query.ApertureConstruction(panelType, familyInstance.ApertureType()); //Default Aperture Construction
 
             Geometry.Spatial.Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
             if (point3D_Location == null)

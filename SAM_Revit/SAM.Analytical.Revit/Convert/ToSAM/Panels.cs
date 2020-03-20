@@ -17,8 +17,11 @@ namespace SAM.Analytical.Revit
             ElementId elementId_Type = hostObject.GetTypeId();
             if (elementId_Type == null || elementId_Type == ElementId.InvalidElementId)
                 return null;
-            
+
+            PanelType panelType = Query.PanelType(hostObject);
             Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+            if (construction == null)
+                construction = Analytical.Query.Construction(panelType); //Default Construction
 
             List<Geometry.Spatial.Face3D> face3Ds = hostObject.Profiles();
 
@@ -45,7 +48,7 @@ namespace SAM.Analytical.Revit
                 if (face3D == null)
                     continue;
 
-                Panel panel = new Panel(construction, Query.PanelType(hostObject), face3D);
+                Panel panel = new Panel(construction, panelType, face3D);
                 panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
                 if (elementIds != null && elementIds.Count() > 0)
@@ -61,7 +64,7 @@ namespace SAM.Analytical.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane);
+                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane, panelType);
                         panel.AddAperture(aperture);                                  
                     }
                 }

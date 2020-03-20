@@ -14,19 +14,15 @@ namespace SAM.Analytical.Revit
             if (aperture == null || document == null)
                 return null;
 
-            string fullName = null;
-            if (aperture.ApertureConstruction != null)
-                fullName = aperture.ApertureConstruction.Name;
-
-            if (string.IsNullOrWhiteSpace(fullName))
-                fullName = aperture.Name;
-
-            if (string.IsNullOrWhiteSpace(fullName))
+            ApertureConstruction apertureConstruction = aperture.ApertureConstruction;
+            if (apertureConstruction == null)
                 return null;
 
-            string familyName;
-            string familyTypeName;
-            if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(fullName, out familyName, out familyTypeName))
+            FamilySymbol familySymbol = Convert.ToRevit(document, apertureConstruction);
+            if (familySymbol == null)
+                familySymbol = Convert.ToRevit(document, Analytical.Query.ApertureConstruction(apertureConstruction.ApertureType, true)); //Default Aperture Construction
+
+            if (familySymbol == null)
                 return null;
 
             Geometry.Spatial.Point3D point3D_Location = aperture.PlanarBoundary3D?.Plane?.Origin;
@@ -36,26 +32,6 @@ namespace SAM.Analytical.Revit
             Level level = level = Geometry.Revit.Query.LowLevel(document, point3D_Location.Z);
             if (level == null)
                 return null;
-
-            List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>().ToList();
-            if (familySymbols == null || familySymbols.Count == 0)
-                return null;
-
-            familySymbols.RemoveAll(x => string.IsNullOrWhiteSpace(x.Name) || !x.Name.Equals(familyTypeName));
-            if (!string.IsNullOrWhiteSpace(familyName))
-                familySymbols.RemoveAll(x => string.IsNullOrWhiteSpace(x.FamilyName) || !x.FamilyName.Equals(familyName));
-
-            familySymbols.RemoveAll(x => x.Family == null && x.Family.FamilyPlacementType != FamilyPlacementType.OneLevelBasedHosted);
-
-            if (familySymbols.Count == 0)
-                return null;
-
-            FamilySymbol familySymbol = familySymbols.First();
-            if (familySymbol == null)
-                return null;
-
-            if (!familySymbol.IsActive)
-                familySymbol.Activate();
 
             FamilyInstance familyInstance;
             if(hostObject is RoofBase)

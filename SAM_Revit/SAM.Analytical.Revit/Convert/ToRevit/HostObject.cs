@@ -15,9 +15,13 @@ namespace SAM.Analytical.Revit
             if (face3D == null)
                 return null;
 
-            HostObjAttributes aHostObjAttributes = document.ToRevit(panel.Construction, panel.PanelType);
+            PanelType panelType = panel.PanelType;
 
-            if (aHostObjAttributes is WallType)
+            HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType);
+            if (hostObjAttributes == null)
+                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType); //Default Construction
+
+            if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
@@ -47,7 +51,7 @@ namespace SAM.Analytical.Revit
 
                 XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
 
-                Wall wall = Wall.Create(document, curveList, aHostObjAttributes.Id, level.Id, false, vectorRevit);
+                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, vectorRevit);
 
                 Parameter parameter = null;
 
@@ -76,7 +80,7 @@ namespace SAM.Analytical.Revit
 
                 return wall;
             }
-            else if (aHostObjAttributes is FloorType)
+            else if (hostObjAttributes is FloorType)
             {
                 Geometry.Spatial.IClosedPlanar3D closedPlanar3D_External = face3D.GetExternalEdge();
                 if (!(closedPlanar3D_External is Geometry.Spatial.ICurvable3D))
@@ -89,11 +93,11 @@ namespace SAM.Analytical.Revit
                 Level level = document.HighLevel(panel.LowElevation());
 
 
-                Floor floor = document.Create.NewFloor(curveArray, aHostObjAttributes as FloorType, level, false);
+                Floor floor = document.Create.NewFloor(curveArray, hostObjAttributes as FloorType, level, false);
 
                 if (floor != null)
                 {
-                    floor.ChangeTypeId(aHostObjAttributes.Id);
+                    floor.ChangeTypeId(hostObjAttributes.Id);
 
                     List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdges();
                     if (closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
@@ -120,7 +124,7 @@ namespace SAM.Analytical.Revit
                 return floor;
 
             }
-            else if (aHostObjAttributes is RoofType)
+            else if (hostObjAttributes is RoofType)
             {
                 CurveArray curveArray = new CurveArray();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
@@ -141,7 +145,7 @@ namespace SAM.Analytical.Revit
                 double levelElevation = level.Elevation;
 
                 ModelCurveArray modelCurveArray = new ModelCurveArray();
-                RoofBase roofBase = document.Create.NewFootPrintRoof(curveArray, level, aHostObjAttributes as RoofType, out modelCurveArray);
+                RoofBase roofBase = document.Create.NewFootPrintRoof(curveArray, level, hostObjAttributes as RoofType, out modelCurveArray);
 
                 Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_UPTO_LEVEL_PARAM);
                 if (parameter != null)

@@ -105,7 +105,12 @@ namespace SAM.Analytical.Revit
                         continue;
 
                     foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
+                    {
                         curveArray_Sloped.Append(curve3D.ToRevit_Line());
+
+                        plane.Project()
+                    }
+                        
 
                 }
                 //foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_External).GetCurves()).ConvertAll(x => x.ToRevit_Line()))

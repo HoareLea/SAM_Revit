@@ -46,7 +46,7 @@ namespace SAM.Analytical.Revit
                 Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
 
                 //Get Normal from Panel
-                Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.GetNormal());
+                Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.Normal);
                 vector3D_1 = vector3D_1.Unit;
 
                 XYZ vectorRevit = vector3D_1.ToRevit().Normalize();

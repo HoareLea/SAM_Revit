@@ -86,14 +86,35 @@ namespace SAM.Analytical.Revit
                 if (!(closedPlanar3D_External is Geometry.Spatial.ICurvable3D))
                     return null;
 
-                CurveArray curveArray = new CurveArray();
-                foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_External).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
-                    curveArray.Append(line);
+                double elevation = panel.LowElevation();
+                Level level = document.HighLevel(elevation);
 
-                Level level = document.HighLevel(panel.LowElevation());
+                Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Geometry.Spatial.Point3D(0, 0, elevation), Geometry.Spatial.Vector3D.BaseZ);
+                
+                CurveArray curveArray_Sloped = new CurveArray();
+                CurveArray curveArray_Plane = new CurveArray();
 
 
-                Floor floor = document.Create.NewFloor(curveArray, hostObjAttributes as FloorType, level, false);
+                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
+                {
+                    if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
+                        continue;
+
+                    List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
+                    if (curve3Ds == null || curve3Ds.Count == 0)
+                        continue;
+
+                    foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
+                        curveArray_Sloped.Append(curve3D.ToRevit_Line());
+
+                }
+                //foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_External).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
+                //    curveArray_Sloped.Append(line);
+
+                
+
+
+                Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
 
                 if (floor != null)
                 {
@@ -108,11 +129,11 @@ namespace SAM.Analytical.Revit
 
                         foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
                         {
-                            curveArray = new CurveArray();
+                            curveArray_Sloped = new CurveArray();
                             foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
-                                curveArray.Append(line);
+                                curveArray_Sloped.Append(line);
 
-                            Opening opening = document.Create.NewOpening(floor, curveArray, true);
+                            Opening opening = document.Create.NewOpening(floor, curveArray_Sloped, true);
                         }
                     }
 
@@ -126,7 +147,7 @@ namespace SAM.Analytical.Revit
                     SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
                     slabShapeEditor.ResetSlabShape();
 
-                    foreach (Curve curve in curveArray)
+                    foreach (Curve curve in curveArray_Sloped)
                     {
                         XYZ xYZ = curve.GetEndPoint(0);
                         slabShapeEditor.DrawPoint(xYZ);

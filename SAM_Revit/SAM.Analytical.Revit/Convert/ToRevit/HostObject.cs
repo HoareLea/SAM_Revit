@@ -121,6 +121,18 @@ namespace SAM.Analytical.Revit
                         apertures.ForEach(x => Convert.ToRevit(document, x, floor));
                 }
 
+                if(floor != null)
+                {
+                    SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
+                    slabShapeEditor.ResetSlabShape();
+
+                    foreach (Curve curve in curveArray)
+                    {
+                        XYZ xYZ = curve.GetEndPoint(0);
+                        slabShapeEditor.DrawPoint(xYZ);
+                    }
+                }
+
                 return floor;
 
             }

@@ -93,8 +93,6 @@ namespace SAM.Analytical.Revit
                 
                 CurveArray curveArray_Sloped = new CurveArray();
                 CurveArray curveArray_Plane = new CurveArray();
-
-
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
                 {
                     if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
@@ -108,10 +106,12 @@ namespace SAM.Analytical.Revit
                     {
                         curveArray_Sloped.Append(curve3D.ToRevit_Line());
 
-                        plane.Project()
-                    }
-                        
+                        Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
+                        if (curve3D_Temp == null)
+                            continue;
 
+                        curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
+                    }
                 }
                 //foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_External).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
                 //    curveArray_Sloped.Append(line);

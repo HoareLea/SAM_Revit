@@ -149,6 +149,8 @@ namespace SAM.Analytical.Revit
 
                 if(floor != null)
                 {
+                    document.Regenerate();
+
                     SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
                     slabShapeEditor.ResetSlabShape();
 

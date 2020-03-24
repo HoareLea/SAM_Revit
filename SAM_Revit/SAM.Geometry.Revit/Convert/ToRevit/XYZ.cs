@@ -14,9 +14,12 @@ namespace SAM.Geometry.Revit
             return new XYZ(point3D.X * Units.Revit.Query.Factor_FromMeterToFeet, point3D.Y * Units.Revit.Query.Factor_FromMeterToFeet, point3D.Z * Units.Revit.Query.Factor_FromMeterToFeet);
         }
 
-        public static XYZ ToRevit(this Vector3D vector3D)
+        public static XYZ ToRevit(this Vector3D vector3D, bool convertUnits)
         {
-            return new XYZ(vector3D.X * Units.Revit.Query.Factor_FromMeterToFeet, vector3D.Y * Units.Revit.Query.Factor_FromMeterToFeet, vector3D.Z * Units.Revit.Query.Factor_FromMeterToFeet);
+            if (convertUnits)
+                return new XYZ(vector3D.X * Units.Revit.Query.Factor_FromMeterToFeet, vector3D.Y * Units.Revit.Query.Factor_FromMeterToFeet, vector3D.Z * Units.Revit.Query.Factor_FromMeterToFeet);
+            else
+                return new XYZ(vector3D.X, vector3D.Y, vector3D.Z);
         }
     }
 }

@@ -54,6 +54,8 @@ namespace SAM.Analytical.Revit
                 Geometry.Spatial.Vector3D normal = panel.PlanarBoundary3D.Normal;
 
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, normal.ToRevit());
+                if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D()))
+                    wall.Flip();
 
                 Parameter parameter = null;
 

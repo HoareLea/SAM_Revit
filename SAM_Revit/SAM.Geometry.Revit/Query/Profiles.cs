@@ -64,7 +64,10 @@ namespace SAM.Geometry.Revit
 
         public static List<Face3D> Profiles_Wall(this Wall wall)
         {
-            List<Face3D> result = Profiles_FromSketch(wall);
+            if (wall == null)
+                return null;
+
+            List<Face3D> result = Profiles_FromSketch(wall, !wall.Flipped);
             if (result != null && result.Count > 0)
                 return result;
 
@@ -192,7 +195,7 @@ namespace SAM.Geometry.Revit
             return BottomProfiles(ceiling);
         }
 
-        private static List<Face3D> Profiles_FromSketch(this HostObject hostObject)
+        private static List<Face3D> Profiles_FromSketch(this HostObject hostObject, bool flip = false)
         {
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
@@ -207,7 +210,7 @@ namespace SAM.Geometry.Revit
                 if (sketch == null)
                     continue;
 
-                List<Face3D> face3Ds = Convert.ToSAM_Face3Ds(sketch);
+                List<Face3D> face3Ds = Convert.ToSAM_Face3Ds(sketch, flip);
                 if (face3Ds == null)
                     continue;
 

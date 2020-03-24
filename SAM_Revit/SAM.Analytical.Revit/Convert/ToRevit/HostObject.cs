@@ -43,15 +43,17 @@ namespace SAM.Analytical.Revit
 
                 //Flipping recognition
 
-                Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
+                //Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
 
-                //Get Normal from Panel
-                Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.Normal);
-                vector3D_1 = vector3D_1.Unit;
+                ////Get Normal from Panel
+                //Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.Normal);
+                //vector3D_1 = vector3D_1.Unit;
 
-                XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
+                //XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
 
-                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, vectorRevit);
+                Geometry.Spatial.Vector3D normal = panel.PlanarBoundary3D.Normal;
+
+                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, normal.ToRevit());
 
                 Parameter parameter = null;
 

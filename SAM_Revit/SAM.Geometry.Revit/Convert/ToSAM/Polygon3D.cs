@@ -22,7 +22,7 @@ namespace SAM.Geometry.Revit
             if (point3Ds.Count < 3)
                 return null;
 
-            return new Polygon3D(point3Ds);
+            return Spatial.Create.Polygon3D(point3Ds);
         }
 
         public static Polygon3D ToSAM_Polygon3D(this CurveArray curveArray)
@@ -31,7 +31,7 @@ namespace SAM.Geometry.Revit
             foreach (Curve curve in curveArray)
                 point3Ds.Add(curve.ToSAM().GetStart());
 
-            return new Polygon3D(point3Ds);
+            return Spatial.Create.Polygon3D(point3Ds);
         }
     }
 }

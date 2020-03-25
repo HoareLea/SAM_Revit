@@ -93,34 +93,28 @@ namespace SAM.Analytical.Revit
                 Level level = document.HighLevel(elevation);
 
                 Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Geometry.Spatial.Point3D(0, 0, elevation), Geometry.Spatial.Vector3D.BaseZ);
-                
+
                 CurveArray curveArray_Sloped = new CurveArray();
                 CurveArray curveArray_Plane = new CurveArray();
-                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
+
+                Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge();
+                if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
+                    return null;
+
+                List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
+                if (curve3Ds == null || curve3Ds.Count == 0)
+                    return null;
+
+                foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
                 {
-                    if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
+                    curveArray_Sloped.Append(curve3D.ToRevit_Line());
+
+                    Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
+                    if (curve3D_Temp == null)
                         continue;
 
-                    List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
-                    if (curve3Ds == null || curve3Ds.Count == 0)
-                        continue;
-
-                    foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
-                    {
-                        curveArray_Sloped.Append(curve3D.ToRevit_Line());
-
-                        Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
-                        if (curve3D_Temp == null)
-                            continue;
-
-                        curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
-                    }
+                    curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
                 }
-                //foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_External).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
-                //    curveArray_Sloped.Append(line);
-
-                
-
 
                 Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
 
@@ -137,11 +131,19 @@ namespace SAM.Analytical.Revit
 
                         foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
                         {
-                            curveArray_Sloped = new CurveArray();
-                            foreach (Line line in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()).ConvertAll(x => x.ToRevit_Line()))
-                                curveArray_Sloped.Append(line);
+                            curveArray_Plane = new CurveArray();
+                            foreach(Geometry.Spatial.ICurve3D curve3D in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()))
+                            {
+                                curveArray_Sloped.Append(curve3D.ToRevit_Line());
 
-                            Opening opening = document.Create.NewOpening(floor, curveArray_Sloped, true);
+                                Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
+                                if (curve3D_Temp == null)
+                                    continue;
+
+                                curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
+                            }
+
+                            Opening opening = document.Create.NewOpening(floor, curveArray_Plane, true);
                         }
                     }
 
@@ -150,7 +152,7 @@ namespace SAM.Analytical.Revit
                         apertures.ForEach(x => Convert.ToRevit(document, x, floor));
                 }
 
-                if(floor != null)
+                if (floor != null)
                 {
                     document.Regenerate();
 
@@ -201,7 +203,7 @@ namespace SAM.Analytical.Revit
                 {
                     XYZ xYZ = curve.GetEndPoint(0);
                     //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
-                        slabShapeEditor.DrawPoint(xYZ);
+                    slabShapeEditor.DrawPoint(xYZ);
                 }
 
                 List<Aperture> apertures = panel.Apertures;

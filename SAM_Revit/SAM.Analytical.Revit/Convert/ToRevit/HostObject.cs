@@ -51,12 +51,10 @@ namespace SAM.Analytical.Revit
 
                 //XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
 
-                Geometry.Spatial.Vector3D normal = panel.Normal;
-
-                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, normal.ToRevit(false));
-                document.Regenerate();
-                if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D(false), Core.Tolerance.MicroDistance))
-                    wall.Flip();
+                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
+                //document.Regenerate();
+                //if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D(false), Core.Tolerance.MicroDistance))
+                //    wall.Flip();
 
                 Parameter parameter = null;
 

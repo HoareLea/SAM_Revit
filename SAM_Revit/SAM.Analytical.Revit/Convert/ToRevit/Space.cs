@@ -11,11 +11,15 @@ namespace SAM.Analytical.Revit
             if (double.IsNaN(lowElevation))
                 return null;
 
-            Level level = SAM.Geometry.Revit.Query.LowLevel(document, lowElevation);
+            Level level = Geometry.Revit.Query.LowLevel(document, lowElevation);
             if (level == null)
                 return null;
 
-            return document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, DisplayUnitType.DUT_METERS), UnitUtils.ConvertToInternalUnits(space.Location.Y, DisplayUnitType.DUT_METERS)));
+            Autodesk.Revit.DB.Mechanical.Space result = document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, DisplayUnitType.DUT_METERS), UnitUtils.ConvertToInternalUnits(space.Location.Y, DisplayUnitType.DUT_METERS)));
+
+            result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
+
+            return result;
         }
     }
 }

@@ -17,7 +17,13 @@ namespace SAM.Analytical.Revit
 
             Autodesk.Revit.DB.Mechanical.Space result = document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, DisplayUnitType.DUT_METERS), UnitUtils.ConvertToInternalUnits(space.Location.Y, DisplayUnitType.DUT_METERS)));
 
+            if (result == null)
+                return null;
+
             result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
+
+            Core.Revit.Modify.Values(space, result);
+            Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);
 
             return result;
         }

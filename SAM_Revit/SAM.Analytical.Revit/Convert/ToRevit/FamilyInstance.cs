@@ -34,26 +34,28 @@ namespace SAM.Analytical.Revit
                 return null;
 
             FamilyInstance familyInstance;
-            if(hostObject is RoofBase)
+            if (hostObject is RoofBase)
                 familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, aperture.Plane.BaseX.ToRevit(false), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
             else
                 familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-            
-            
+
+
             if (familyInstance != null)
             {
                 Core.Revit.Modify.Values(aperture, familyInstance);
                 Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
+
                 bool simplified = false;
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
                     simplified = true;
 
-                if (Core.Revit.Modify.Simplified(familyInstance, simplified))
+                Core.Revit.Modify.Simplified(familyInstance, simplified);
+                if (simplified)
                     Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
             }
 
             return familyInstance;
-        
+
         }
     }
 }

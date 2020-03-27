@@ -29,7 +29,7 @@ namespace SAM.Analytical.Revit
 
             point3D_Location = plane.Project(point3D_Location);
 
-            Geometry.Spatial.Plane plane_Location = Geometry.Spatial.Create.Plane(point3D_Location, plane.Normal);
+            Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, plane.Normal);
 
             List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
             if (face3Ds == null || face3Ds.Count == 0)

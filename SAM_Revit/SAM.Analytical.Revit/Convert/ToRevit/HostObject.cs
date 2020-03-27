@@ -53,7 +53,7 @@ namespace SAM.Analytical.Revit
 
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
                 //document.Regenerate();
-                //if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D(false), Core.Tolerance.MicroDistance))
+                //if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D(false), Core.Tolerance.Distance))
                 //    wall.Flip();
 
                 Parameter parameter = null;

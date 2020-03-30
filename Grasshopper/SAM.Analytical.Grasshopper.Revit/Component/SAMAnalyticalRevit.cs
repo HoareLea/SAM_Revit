@@ -116,8 +116,27 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             if (!_run)
                 return;
-            
-            HostObject hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
+
+            if (panel == null)
+                return;
+
+            string name = panel.Name;
+            Guid guid = panel.Guid;
+
+            HostObject hostObject_New = null;
+
+            try
+            {
+                hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
+            }
+            catch(Exception exception)
+            {
+                string message = string.Format("Cannot convert element. Panel Name: {0}, Panel Guid: {1}, Exception Message: {2}", name, guid, exception.Message);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+            }
+
+            if (hostObject_New == null)
+                return;
 
             if (hostObject != null)
             {

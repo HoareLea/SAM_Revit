@@ -25,6 +25,8 @@ namespace SAM.Analytical.Revit
             Core.Revit.Modify.Values(space, result);
             Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);
 
+            Core.Revit.Modify.Json(result, space.ToJObject()?.ToString());
+
             return result;
         }
     }

@@ -39,23 +39,20 @@ namespace SAM.Analytical.Revit
             else
                 familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
 
+            if (familyInstance == null)
+                return null;
 
-            if (familyInstance != null)
-            {
-                Core.Revit.Modify.Values(aperture, familyInstance);
-                Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
+            Core.Revit.Modify.Values(aperture, familyInstance);
+            Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
 
-                bool simplified = false;
-                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
-                    simplified = true;
+            bool simplified = false;
+            if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
+                simplified = true;
 
-                Core.Revit.Modify.Simplified(familyInstance, simplified);
-                if (simplified)
-                    Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
-            }
+            Core.Revit.Modify.Simplified(familyInstance, simplified);
+            Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
 
             return familyInstance;
-
         }
     }
 }

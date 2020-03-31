@@ -21,6 +21,8 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes == null)
                 hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType); //Default Construction
 
+            HostObject result = null;
+
             if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
@@ -41,20 +43,7 @@ namespace SAM.Analytical.Revit
                 if (level == null)
                     return null;
 
-                //Flipping recognition
-
-                //Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.Base;
-
-                ////Get Normal from Panel
-                //Geometry.Spatial.Vector3D vector3D_1 = plane.Project(panel.PlanarBoundary3D.Normal);
-                //vector3D_1 = vector3D_1.Unit;
-
-                //XYZ vectorRevit = vector3D_1.ToRevit().Normalize();
-
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
-                //document.Regenerate();
-                //if (!normal.AlmostEqual(wall.Orientation.ToSAM_Vector3D(false), Core.Tolerance.Distance))
-                //    wall.Flip();
 
                 Parameter parameter = null;
 
@@ -70,18 +59,14 @@ namespace SAM.Analytical.Revit
                 }
 
                 double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-                if (System.Math.Abs(lowElevation - levelElevation) > Core.Tolerance.MacroDistance)
+                if (Math.Abs(lowElevation - levelElevation) > Core.Tolerance.MacroDistance)
                 {
                     parameter = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
                     if (parameter != null)
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
                 }
 
-                List<Aperture> apertures = panel.Apertures;
-                if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, wall));
-
-                return wall;
+                result = wall;
             }
             else if (hostObjAttributes is FloorType)
             {
@@ -132,7 +117,7 @@ namespace SAM.Analytical.Revit
                         foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
                         {
                             curveArray_Plane = new CurveArray();
-                            foreach(Geometry.Spatial.ICurve3D curve3D in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()))
+                            foreach (Geometry.Spatial.ICurve3D curve3D in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()))
                             {
                                 curveArray_Sloped.Append(curve3D.ToRevit_Line());
 
@@ -146,10 +131,6 @@ namespace SAM.Analytical.Revit
                             Opening opening = document.Create.NewOpening(floor, curveArray_Plane, true);
                         }
                     }
-
-                    List<Aperture> apertures = panel.Apertures;
-                    if (apertures != null)
-                        apertures.ForEach(x => Convert.ToRevit(document, x, floor));
                 }
 
                 if (floor != null)
@@ -166,7 +147,7 @@ namespace SAM.Analytical.Revit
                     }
                 }
 
-                return floor;
+                result = floor;
 
             }
             else if (hostObjAttributes is RoofType)
@@ -206,14 +187,22 @@ namespace SAM.Analytical.Revit
                     slabShapeEditor.DrawPoint(xYZ);
                 }
 
-                List<Aperture> apertures = panel.Apertures;
-                if (apertures != null)
-                    apertures.ForEach(x => Convert.ToRevit(document, x, roofBase));
-
-                return roofBase;
+                result = roofBase;
             }
 
-            return null;
+            if (result == null)
+                return null;
+
+            List<Aperture> apertures = panel.Apertures;
+            if (apertures != null)
+                apertures.ForEach(x => Convert.ToRevit(document, x, result));
+
+            Core.Revit.Modify.Values(panel, result);
+            Core.Revit.Modify.Values(ActiveSetting.Setting, panel, result);
+
+            Core.Revit.Modify.Json(result, panel.ToJObject()?.ToString());
+
+            return result;
         }
     }
 }

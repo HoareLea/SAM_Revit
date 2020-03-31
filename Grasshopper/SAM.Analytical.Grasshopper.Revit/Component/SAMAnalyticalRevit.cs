@@ -126,6 +126,12 @@ namespace SAM.Analytical.Grasshopper.Revit
             string name = panel.Name;
             Guid guid = panel.Guid;
 
+            if(!convertSettings.ConvertParameters && !convertSettings.ConvertGeometry)
+            {
+                string message = string.Format("Invalid Convert Settings");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+            }
+
             HostObject hostObject_New = null;
 
             try

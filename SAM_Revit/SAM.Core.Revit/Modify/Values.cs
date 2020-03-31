@@ -22,7 +22,12 @@ namespace SAM.Core.Revit
                 if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(name))
                     continue;
 
-                Value(element.LookupParameter(name), parameterSet.ToObject(name));
+                IEnumerable<Parameter> parameters = element.GetParameters(name);
+                if (parameters == null || parameters.Count() == 0)
+                    continue;
+
+                foreach(Parameter parameter in parameters)     
+                    Value(parameter, parameterSet.ToObject(name));                   
             }
 
             return true;

@@ -15,7 +15,7 @@ namespace SAM.Core.Revit
             
             ParameterSet parameterSet = new ParameterSet(element.GetType()?.Assembly);
             parameterSet.Add("ElementId", element.Id.IntegerValue);
-            foreach(Parameter parameter in element.Parameters)
+            foreach(Parameter parameter in element.ParametersMap)
             {
                 if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(parameter.Definition.Name))
                     continue;

@@ -9,7 +9,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static HostObject ToRevit(this Document document, Panel panel)
+        public static HostObject ToRevit(this Document document, Panel panel, Core.Revit.ConvertSettings convertSettings)
         {
             Geometry.Spatial.Face3D face3D = panel.GetFace3D();
             if (face3D == null)
@@ -17,9 +17,9 @@ namespace SAM.Analytical.Revit
 
             PanelType panelType = panel.PanelType;
 
-            HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType);
+            HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType); //Default Construction
+                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction
 
             HostObject result = null;
             BuiltInParameter[] builtInParameters = null;
@@ -198,12 +198,15 @@ namespace SAM.Analytical.Revit
 
             List<Aperture> apertures = panel.Apertures;
             if (apertures != null)
-                apertures.ForEach(x => Convert.ToRevit(document, x, result));
+                apertures.ForEach(x => Convert.ToRevit(document, x, result, convertSettings));
 
-            Core.Revit.Modify.Values(panel, result, builtInParameters);
-            Core.Revit.Modify.Values(ActiveSetting.Setting, panel, result);
+            if(convertSettings.ConvertParameters)
+            {
+                Core.Revit.Modify.Values(panel, result, builtInParameters);
+                Core.Revit.Modify.Values(ActiveSetting.Setting, panel, result);
 
-            Core.Revit.Modify.Json(result, panel.ToJObject()?.ToString());
+                Core.Revit.Modify.Json(result, panel.ToJObject()?.ToString());
+            }
 
             return result;
         }

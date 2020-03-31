@@ -27,6 +27,30 @@ namespace SAM.Core.Revit
             convertType = convertSettings.convertType;
         }
 
+        public bool ConvertGeometry
+        {
+            get
+            {
+                return convertGeometry;
+            }
+        }
+
+        public bool ConvertParameters
+        {
+            get
+            {
+                return convertParameters;
+            }
+        }
+
+        public ConvertType ConvertType
+        {
+            get
+            {
+                return convertType;
+            }
+        }
+
         public bool FromJObject(JObject jObject)
         {
             if (jObject == null)

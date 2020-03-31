@@ -9,7 +9,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static FamilyInstance ToRevit(this Document document, Aperture aperture, HostObject hostObject)
+        public static FamilyInstance ToRevit(this Document document, Aperture aperture, HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
         {
             if (aperture == null || document == null)
                 return null;
@@ -18,9 +18,9 @@ namespace SAM.Analytical.Revit
             if (apertureConstruction == null)
                 return null;
 
-            FamilySymbol familySymbol = Convert.ToRevit(document, apertureConstruction);
+            FamilySymbol familySymbol = Convert.ToRevit(document, apertureConstruction, convertSettings);
             if (familySymbol == null)
-                familySymbol = Convert.ToRevit(document, Analytical.Query.ApertureConstruction(apertureConstruction.ApertureType, true)); //Default Aperture Construction
+                familySymbol = Convert.ToRevit(document, Analytical.Query.ApertureConstruction(apertureConstruction.ApertureType, true), convertSettings); //Default Aperture Construction
 
             if (familySymbol == null)
                 return null;
@@ -42,15 +42,18 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null)
                 return null;
 
-            Core.Revit.Modify.Values(aperture, familyInstance, new BuiltInParameter[] {BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM,  BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
-            Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
+            if(convertSettings.ConvertParameters)
+            {
+                Core.Revit.Modify.Values(aperture, familyInstance, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
+                Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
 
-            bool simplified = false;
-            if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
-                simplified = true;
+                bool simplified = false;
+                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
+                    simplified = true;
 
-            Core.Revit.Modify.Simplified(familyInstance, simplified);
-            Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
+                Core.Revit.Modify.Simplified(familyInstance, simplified);
+                Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
+            }
 
             return familyInstance;
         }

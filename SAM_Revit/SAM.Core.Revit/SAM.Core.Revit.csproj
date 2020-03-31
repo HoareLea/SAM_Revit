@@ -101,6 +101,7 @@
     <Compile Include="Modify\Simplified.cs" />
     <Compile Include="Modify\Value.cs" />
     <Compile Include="Modify\Values.cs" />
+    <Compile Include="Query\ConvertSettings.cs" />
     <Compile Include="Query\IntegerId.cs" />
     <Compile Include="Query\GetConnectorManagers.cs" />
     <Compile Include="Query\GetBranches.cs" />

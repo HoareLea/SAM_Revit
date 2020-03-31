@@ -41,13 +41,16 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// ToRevit, SAM Analytical Panel
         /// </search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, SAM.Core.Revit.ConvertSettings convertSettings = null)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
             
             TransactionManager.Instance.EnsureInTransaction(document);
 
-            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel);
+            if (convertSettings == null)
+                convertSettings = SAM.Core.Revit.Query.ConvertSettings();
+
+            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
 
             TransactionManager.Instance.TransactionTaskDone();
 

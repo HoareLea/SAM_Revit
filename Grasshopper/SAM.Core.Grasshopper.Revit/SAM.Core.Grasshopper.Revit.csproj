@@ -62,6 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Core.Grasshopper">
+      <HintPath>..\..\..\SAM\build\SAM.Core.Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
@@ -88,6 +91,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\GooConvertSettings.cs" />
+    <Compile Include="Component\SAMCoreConvertSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -105,8 +110,12 @@
     <None Include="packages.config" />
     <None Include="Resources\SAM_Small.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Component\" />
+    <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj">
+      <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
+      <Name>SAM.Core.Revit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

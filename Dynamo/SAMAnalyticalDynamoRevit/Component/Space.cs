@@ -31,13 +31,13 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// ToRevit, SAM Analytical Space
         /// </search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, SAM.Core.Revit.ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
 
             TransactionManager.Instance.EnsureInTransaction(document);
 
-            Autodesk.Revit.DB.Element element = SAM.Analytical.Revit.Convert.ToRevit(document, space);
+            Autodesk.Revit.DB.Element element = SAM.Analytical.Revit.Convert.ToRevit(document, space, convertSettings);
 
             TransactionManager.Instance.TransactionTaskDone();
 

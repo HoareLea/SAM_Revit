@@ -5,7 +5,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static HostObjAttributes ToRevit(this Document document, Construction construction, PanelType panelType)
+        public static HostObjAttributes ToRevit(this Document document, Construction construction, PanelType panelType, Core.Revit.ConvertSettings convertSettings)
         {
             if (construction == null)
                 return null;

@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static FamilySymbol ToRevit(this Document document, ApertureConstruction apertureConstruction)
+        public static FamilySymbol ToRevit(this Document document, ApertureConstruction apertureConstruction, Core.Revit.ConvertSettings convertSettings)
         {
             if (apertureConstruction == null)
                 return null;

@@ -5,7 +5,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space)
+        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space, Core.Revit.ConvertSettings convertSettings)
         {
             double lowElevation = Query.LowElevation(space);
             if (double.IsNaN(lowElevation))
@@ -22,10 +22,13 @@ namespace SAM.Analytical.Revit
 
             result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
 
-            Core.Revit.Modify.Values(space, result);
-            Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);
+            if(convertSettings.ConvertParameters)
+            {
+                Core.Revit.Modify.Values(space, result);
+                Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);
 
-            Core.Revit.Modify.Json(result, space.ToJObject()?.ToString());
+                Core.Revit.Modify.Json(result, space.ToJObject()?.ToString());
+            }
 
             return result;
         }

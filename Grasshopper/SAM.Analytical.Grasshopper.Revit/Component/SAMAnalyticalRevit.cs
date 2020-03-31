@@ -112,13 +112,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             base.OnCommitted(document, strTransactionName);
         }
 
-        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, bool _run = false)
+        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, Core.Revit.ConvertSettings convertSettings = null, bool _run = false)
         {
             if (!_run)
                 return;
 
             if (panel == null)
                 return;
+
+            if (convertSettings == null)
+                convertSettings = Core.Revit.Query.ConvertSettings();
 
             string name = panel.Name;
             Guid guid = panel.Guid;
@@ -127,7 +130,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             try
             {
-                hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel);
+                hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
             }
             catch(Exception exception)
             {

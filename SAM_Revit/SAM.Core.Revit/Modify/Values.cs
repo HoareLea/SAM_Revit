@@ -33,6 +33,37 @@ namespace SAM.Core.Revit
             return true;
         }
 
+        public static bool Values(this ParameterSet parameterSet, Element element, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
+        {
+            if (parameterSet == null || element == null)
+                return false;
+
+            List<int> Ids = null;
+            if (builtInParameters_Excluded != null)
+                Ids = builtInParameters_Excluded.ToList().ConvertAll(x => (int)x);
+
+            foreach (string name in parameterSet.Names)
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                IEnumerable<Parameter> parameters = element.GetParameters(name);
+                if (parameters == null || parameters.Count() == 0)
+                    continue;
+
+                foreach (Parameter parameter in parameters)
+                {
+                    if (Ids != null && Ids.Contains(parameter.Id.IntegerValue))
+                        continue;
+
+                    Value(parameter, parameterSet.ToObject(name));
+                }
+                    
+            }
+
+            return true;
+        }
+        
         public static bool Values(this Setting setting, SAMObject sAMObject, Element element)
         {
             if (element == null)
@@ -69,6 +100,26 @@ namespace SAM.Core.Revit
             if (parameterSet != null)
             {
                 if (!Values(parameterSet, element, parameterNames_Excluded))
+                    return false;
+            }
+
+            Setting setting = ActiveSetting.Setting;
+
+            if (!Values(setting, sAMObject, element))
+                return false;
+
+            return true;
+        }
+
+        public static bool Values(this SAMObject sAMObject, Element element, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
+        {
+            if (sAMObject == null || element == null)
+                return false;
+
+            ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
+            if (parameterSet != null)
+            {
+                if (!Values(parameterSet, element, builtInParameters_Excluded))
                     return false;
             }
 

@@ -22,7 +22,7 @@ namespace SAM.Analytical.Revit
                 hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType); //Default Construction
 
             HostObject result = null;
-
+            BuiltInParameter[] builtInParameters = null;
             if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
@@ -66,6 +66,7 @@ namespace SAM.Analytical.Revit
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
                 }
 
+                builtInParameters = new BuiltInParameter[] { BuiltInParameter.WALL_BASE_CONSTRAINT, BuiltInParameter.WALL_BASE_OFFSET, BuiltInParameter.WALL_HEIGHT_TYPE, BuiltInParameter.WALL_USER_HEIGHT_PARAM };
                 result = wall;
             }
             else if (hostObjAttributes is FloorType)
@@ -147,6 +148,7 @@ namespace SAM.Analytical.Revit
                     }
                 }
 
+                builtInParameters = new BuiltInParameter[] { BuiltInParameter.LEVEL_PARAM };
                 result = floor;
 
             }
@@ -187,6 +189,7 @@ namespace SAM.Analytical.Revit
                     slabShapeEditor.DrawPoint(xYZ);
                 }
 
+                builtInParameters = new BuiltInParameter[] { BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM, BuiltInParameter.ROOF_BASE_LEVEL_PARAM, BuiltInParameter.ROOF_UPTO_LEVEL_PARAM };
                 result = roofBase;
             }
 
@@ -197,7 +200,7 @@ namespace SAM.Analytical.Revit
             if (apertures != null)
                 apertures.ForEach(x => Convert.ToRevit(document, x, result));
 
-            Core.Revit.Modify.Values(panel, result);
+            Core.Revit.Modify.Values(panel, result, builtInParameters);
             Core.Revit.Modify.Values(ActiveSetting.Setting, panel, result);
 
             Core.Revit.Modify.Json(result, panel.ToJObject()?.ToString());

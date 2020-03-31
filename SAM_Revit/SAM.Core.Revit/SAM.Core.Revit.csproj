@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ConvertSettings.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\Json.cs" />
     <Compile Include="Modify\Simplified.cs" />
@@ -114,9 +115,7 @@
     <Compile Include="Convert\ToRevit\ElementId.cs" />
     <Compile Include="Convert\ToSAM\IntegerId.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

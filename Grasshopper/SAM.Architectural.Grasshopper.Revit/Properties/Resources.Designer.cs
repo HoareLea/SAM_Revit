@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SAM.Core.Grasshopper.Revit.Properties {
+namespace SAM.Architectural.Grasshopper.Revit.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SAM.Core.Grasshopper.Revit.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SAM.Core.Grasshopper.Revit.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SAM.Architectural.Grasshopper.Revit.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace SAM.Core.Grasshopper.Revit.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SAM_Small {
+        internal static System.Drawing.Bitmap SAM_Architectural {
             get {
-                object obj = ResourceManager.GetObject("SAM_Small", resourceCulture);
+                object obj = ResourceManager.GetObject("SAM_Architectural", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

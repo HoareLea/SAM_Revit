@@ -5,10 +5,10 @@ using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 
-using SAM.Core.Grasshopper.Revit.Properties;
+using SAM.Architectural.Grasshopper.Revit.Properties;
 
 
-namespace SAM.Core.Grasshopper.Revit
+namespace SAM.Architectural.Grasshopper.Revit
 {
     public class SAMArchitecturalLevelInformation : GH_Component
     {
@@ -20,7 +20,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Resources.SAM_Small;
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Architectural;
 
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.

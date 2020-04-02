@@ -37,7 +37,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "Level", "L", "New Level", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("Level", "L", "New Level", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "HighLevel", "High Level", "Revit High Level", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("HighLevel", "High Level", "Revit High Level", GH_ParamAccess.item);
             outputParamManager.AddNumberParameter("HighElevation", "HighElevation", "High Elevation", GH_ParamAccess.item);
 
             outputParamManager.AddNumberParameter("Elevation", "Elevation", "SAM Architectural Level Elevation", GH_ParamAccess.item);
 
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "LowLevel", "LowLevel", "Revit Low Level", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("LowLevel", "LowLevel", "Revit Low Level", GH_ParamAccess.item);
             outputParamManager.AddNumberParameter("LowElevation", "LowElevation", "Low Elevation", GH_ParamAccess.item);
         }
 

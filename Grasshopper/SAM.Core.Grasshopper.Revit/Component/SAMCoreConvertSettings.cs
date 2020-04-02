@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
-using Grasshopper.Kernel.Types;
+
 using SAM.Core.Grasshopper.Revit.Properties;
-using SAM.Geometry.Spatial;
 
 namespace SAM.Core.Grasshopper.Revit
 {
@@ -39,10 +35,6 @@ namespace SAM.Core.Grasshopper.Revit
         {
             inputParamManager.AddBooleanParameter("_convertGeometry_", "_convertGeometry_", "Convert Geometry", GH_ParamAccess.item, true);
             inputParamManager.AddBooleanParameter("_convertParameters_", "_convertParameters_", "Convert Parameters", GH_ParamAccess.item, true);
-            int index = inputParamManager.AddGenericParameter("_convertType_", "_convertType_", "Convert Type", GH_ParamAccess.item);
-
-            Param_GenericObject genericObjectParameter = (Param_GenericObject)inputParamManager[index];
-            genericObjectParameter.PersistentData.Append(new GH_ObjectWrapper(ConvertType.New.ToString()));
         }
 
         /// <summary>
@@ -73,19 +65,7 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-            ConvertType convertType = ConvertType.Undefined;
-
-            GH_ObjectWrapper objectWrapper = null;
-            dataAccess.GetData(1, ref objectWrapper);
-            if (objectWrapper != null)
-            {
-                if (objectWrapper.Value is GH_String)
-                    convertType = Query.ConvertType(((GH_String)objectWrapper.Value).Value);
-                else
-                    convertType = Query.ConvertType(objectWrapper.Value);
-            }
-
-            dataAccess.SetData(0, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters, convertType)));
+            dataAccess.SetData(0, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters)));
         }
     }
 }

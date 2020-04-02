@@ -6,7 +6,7 @@ namespace SAM.Core.Revit
     {
         public static ConvertSettings ConvertSettings()
         {
-            return new ConvertSettings(true, true, ConvertType.New);
+            return new ConvertSettings(true, true);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
 
         private List<Wall> walls = new List<Wall>();
+        private bool run = false;
 
         private static readonly FailureDefinitionId[] failureDefinitionIdsToFix = new FailureDefinitionId[]
         {
@@ -53,6 +54,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
         protected override void OnAfterStart(Document document, string strTransactionName)
         {
+            if (!run)
+                return;
+            
             base.OnAfterStart(document, strTransactionName);
 
             // Disable all previous walls joins
@@ -95,6 +99,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
         protected override void OnBeforeCommit(Document document, string strTransactionName)
         {
+            if (!run)
+                return;
+            
             base.OnBeforeCommit(document, strTransactionName);
 
             // Reenable new joined walls
@@ -109,12 +116,18 @@ namespace SAM.Analytical.Grasshopper.Revit
 
         public override void OnCommitted(Document document, string strTransactionName)
         {
+            if (!run)
+                return;
+            
             base.OnCommitted(document, strTransactionName);
         }
 
         private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, Core.Revit.ConvertSettings convertSettings = null, bool _run = false)
         {
-            if (!_run)
+
+            run = _run;
+            
+            if (!run)
                 return;
 
             if (panel == null)

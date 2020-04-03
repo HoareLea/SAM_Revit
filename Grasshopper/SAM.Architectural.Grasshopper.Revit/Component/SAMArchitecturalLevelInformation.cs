@@ -114,10 +114,10 @@ namespace SAM.Architectural.Grasshopper.Revit
                 elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, DisplayUnitType.DUT_METERS);
             
             dataAccess.SetData(0, level_High);
-            dataAccess.SetData(1, elevation_High);
-            dataAccess.SetData(2, UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS));
+            dataAccess.SetData(1, new GH_Number(elevation_High));
+            dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS)));
             dataAccess.SetData(3, level_Low);
-            dataAccess.SetData(4, elevation_Low);
+            dataAccess.SetData(4, new GH_Number(elevation_Low));
         }
     }
 }

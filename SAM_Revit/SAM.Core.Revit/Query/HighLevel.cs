@@ -18,11 +18,9 @@ namespace SAM.Core.Revit
             if (level.Elevation > levels.First().Elevation)
                 return null;
 
-
-
             for (int i = 1; i < levels.Count; i++)
             {
-                if(level.Elevation <= levels[i].Elevation)
+                if(level.Elevation >= levels[i].Elevation)
                 {
                     if (i == 0)
                         return null;

@@ -19,7 +19,7 @@ namespace SAM.Core.Revit
                 return null;
 
             for (int i = 1; i < levels.Count; i++)
-                if(level.Elevation >= levels[i].Elevation)
+                if(level.Elevation <= levels[i].Elevation)
                     return levels[i - 1];
 
             return levels[0];

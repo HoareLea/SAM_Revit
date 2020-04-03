@@ -68,12 +68,33 @@ namespace SAM.Architectural.Grasshopper.Revit
                 return;
             }
 
+            Level level = null;
+
             dynamic obj = objectWrapper.Value;
+            if(obj is GH_Integer)
+            {
+                Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+                if(document == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Revit Document");
+                    return;
+                }
 
-            ElementId aId = obj.Id as ElementId;
-            Document document = obj.Document as Document;
+                ElementId elementId = new ElementId(((GH_Integer)obj).Value);
+                if(elementId == null || elementId == ElementId.InvalidElementId)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Element");
+                    return;
+                }
+                level = document.GetElement(elementId) as Level;
 
-            Level level = document.GetElement(aId) as Level;
+            }
+
+            if(level == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Level");
+                return;
+            }
 
             if(level == null)
             {

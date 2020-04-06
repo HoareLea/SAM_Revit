@@ -107,7 +107,6 @@ namespace SAM.Architectural.Grasshopper.Revit
             if (level_High != null)
                 elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, DisplayUnitType.DUT_METERS);
 
-
             Level level_Low = Core.Revit.Query.LowLevel(level);
             double elevation_Low = double.NaN;
             if (level_Low != null)

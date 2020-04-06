@@ -109,6 +109,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />
     <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />

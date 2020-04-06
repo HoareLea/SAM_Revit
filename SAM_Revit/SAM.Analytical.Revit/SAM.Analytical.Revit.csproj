@@ -80,6 +80,7 @@
     <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\Duplicate.cs" />
+    <Compile Include="Query\FilteredElementCollector.cs" />
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\ApertureType.cs" />
     <Compile Include="Query\Panels.cs" />

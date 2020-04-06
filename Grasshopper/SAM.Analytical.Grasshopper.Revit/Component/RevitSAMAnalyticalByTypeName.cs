@@ -74,8 +74,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Type type = Type.GetType(typeName);
-            if(type == null)
+            Type type = Type.GetType(string.Format("{0},{1}", "SAM.Analytical." + typeName, "SAM.Analytical"));
+            if (type == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

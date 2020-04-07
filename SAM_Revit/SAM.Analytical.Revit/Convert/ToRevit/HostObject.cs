@@ -19,7 +19,14 @@ namespace SAM.Analytical.Revit
 
             HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction
+            {
+                ElementType elementType = Modify.Duplicate(document, Analytical.Query.Construction(panelType), panelType, panel.Construction.Name);
+                if (elementType == null)
+                    hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction
+                else
+                    hostObjAttributes = elementType as HostObjAttributes;
+            }
+                
 
             HostObject result = null;
             BuiltInParameter[] builtInParameters = null;

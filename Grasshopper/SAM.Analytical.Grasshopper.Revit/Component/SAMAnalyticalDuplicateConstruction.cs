@@ -73,7 +73,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            dataAccess.SetData(0, Analytical.Revit.Modify.Duplicate(document, panel.Construction, panel.PanelType ,name));
+            dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name));
         }
     }
 }

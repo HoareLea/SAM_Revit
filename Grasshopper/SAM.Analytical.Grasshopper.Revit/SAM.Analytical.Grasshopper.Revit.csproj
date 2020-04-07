@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />
+    <Compile Include="Component\SAMAnalyticalUpdateConstruction.cs" />
     <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />

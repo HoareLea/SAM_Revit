@@ -175,9 +175,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 string name_destination = null;
                 string name_default = null;
+                string name_source = null;
                 for (int i = 0; i < delimitedFileTable.Count; i++)
                 {
-                    string name_source = null;
                     if (!delimitedFileTable.TryGetValue(i, index_Source, out name_source))
                         continue;
 
@@ -209,9 +209,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                     construction_New = new Construction(construction, name_destination);
 
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(document, construction_New, panel.PanelType, convertSettings);
-                if(hostObjAttributes == null)
+                if (hostObjAttributes == null)
                 {
-                    if(string.IsNullOrWhiteSpace(name_default))
+                    if (string.IsNullOrWhiteSpace(name_default))
                     {
                         Construction construction_Default = Query.Construction(panel.PanelType);
                         if (construction_Default != null)
@@ -222,7 +222,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                         continue;
 
                     hostObjAttributes = Analytical.Revit.Modify.DuplicateByConstruction(document, name_default, panel.PanelType, construction_New) as HostObjAttributes;
-                    
+                    if (hostObjAttributes == null)
+                    {
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for panel ({2}). Element Type Name for: {0}, could not be assinged from {1}", name, name_default, panel.PanelType));
+                        continue;
+                    }
                 }
                 elementTypes_Result.Add(hostObjAttributes);
                 panels_Result.Add(new Panel(panel, construction_New));

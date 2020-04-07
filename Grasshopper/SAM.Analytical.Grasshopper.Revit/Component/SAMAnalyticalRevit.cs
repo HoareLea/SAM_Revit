@@ -154,7 +154,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             catch(Exception exception)
             {
                 string message = string.Format("Cannot convert element. Panel Name: {0}, Panel Guid: {1}, Exception Message: {2}", name, guid, exception.Message);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
             }
 
             if (hostObject_New == null)
@@ -175,6 +175,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                  };
 
                 ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
+
+                if (Core.Revit.Query.FullName(hostObject).Equals(panel.Construction.Name))
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Defult type used for panel {0}", panel.Guid));
             }
 
             if (hostObject_New is Wall)

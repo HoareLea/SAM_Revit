@@ -43,7 +43,7 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// ToRevit, SAM Analytical Panel
         /// </search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, [DefaultArgument("SAMAnalyticalDynamoRevit.Panel.GetNull()")] SAM.Core.Revit.ConvertSettings convertSettings = null)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, [DefaultArgument("SAMAnalyticalDynamoRevit.Panel.GetNull()")] SAM.Core.Revit.ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
             
@@ -63,7 +63,7 @@ namespace SAMAnalyticalDynamoRevit
         }
 
         [IsVisibleInDynamoLibrary(false)]
-        private static object GetNull()
+        public  static object GetNull()
         {
             return null;
         }

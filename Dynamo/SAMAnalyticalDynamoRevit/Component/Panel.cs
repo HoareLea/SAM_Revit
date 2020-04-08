@@ -43,14 +43,11 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// ToRevit, SAM Analytical Panel
         /// </search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, [DefaultArgument("SAMAnalyticalDynamoRevit.Panel.GetNull()")] SAM.Core.Revit.ConvertSettings convertSettings)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, SAM.Core.Revit.ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
             
             TransactionManager.Instance.EnsureInTransaction(document);
-
-            if (convertSettings == null)
-                convertSettings = SAM.Core.Revit.Query.ConvertSettings();
 
             HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
 
@@ -62,10 +59,30 @@ namespace SAMAnalyticalDynamoRevit
                 return null;
         }
 
-        [IsVisibleInDynamoLibrary(false)]
-        public  static object GetNull()
+
+        /// <summary>
+        /// Creates HostObject from SAM Analytical Panel
+        /// </summary>
+        /// <param name="panel">SAM Analytical Panel</param>
+        /// <search>
+        /// ToRevit, SAM Analytical Panel
+        /// </search>
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel)
         {
-            return null;
+            Document document = DocumentManager.Instance.CurrentDBDocument;
+
+            TransactionManager.Instance.EnsureInTransaction(document);
+
+            SAM.Core.Revit.ConvertSettings convertSettings = SAM.Core.Revit.Query.ConvertSettings();
+
+            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
+
+            TransactionManager.Instance.TransactionTaskDone();
+
+            if (hostObject != null)
+                return ElementWrapper.ToDSType(hostObject, true);
+            else
+                return null;
         }
     }
 }

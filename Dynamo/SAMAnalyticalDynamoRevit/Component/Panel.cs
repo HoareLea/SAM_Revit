@@ -6,6 +6,8 @@ using Revit.Elements;
 using RevitServices.Persistence;
 using RevitServices.Transactions;
 
+using Autodesk.DesignScript.Runtime;
+
 namespace SAMAnalyticalDynamoRevit
 {
     /// <summary>
@@ -41,7 +43,7 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>
         /// ToRevit, SAM Analytical Panel
         /// </search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, SAM.Core.Revit.ConvertSettings convertSettings = null)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, [DefaultArgument("SAMAnalyticalDynamoRevit.Panel.GetNull()")] SAM.Core.Revit.ConvertSettings convertSettings = null)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
             
@@ -60,6 +62,10 @@ namespace SAMAnalyticalDynamoRevit
                 return null;
         }
 
-        
+        [IsVisibleInDynamoLibrary(false)]
+        private static object GetNull()
+        {
+            return null;
+        }
     }
 }

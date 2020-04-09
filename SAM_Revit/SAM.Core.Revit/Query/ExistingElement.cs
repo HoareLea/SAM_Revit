@@ -9,16 +9,8 @@ namespace SAM.Core.Revit
             if (document == null || sAMObject == null)
                 return null;
 
-            ParameterSet parameterSet = sAMObject.GetParameterSet(document.GetType().Assembly);
-            if (parameterSet == null)
-                return null;
-
-            int id = parameterSet.ToInt("ElementId");
-            if (id == -1)
-                return null;
-
-            ElementId elementId = new ElementId(id);
-            if (elementId == ElementId.InvalidElementId)
+            ElementId elementId = sAMObject.ElementId();
+            if (elementId == Autodesk.Revit.DB.ElementId.InvalidElementId)
                 return null;
 
             return document.GetElement(elementId);

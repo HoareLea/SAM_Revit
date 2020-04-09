@@ -13,7 +13,7 @@ namespace SAM.Core.Revit
             if (element == null)
                 return null;
             
-            ParameterSet parameterSet = new ParameterSet(element.GetType()?.Assembly);
+            ParameterSet parameterSet = new ParameterSet(typeof(Element)?.Assembly);
             parameterSet.Add("ElementId", element.Id.IntegerValue);
             foreach(Parameter parameter in element.ParametersMap)
             {

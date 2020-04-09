@@ -9,7 +9,7 @@ namespace SAM.Core.Revit
             if (sAMObject == null)
                 return null;
 
-            ParameterSet parameterSet = sAMObject.GetParameterSet(typeof(Document).GetType().Assembly);
+            ParameterSet parameterSet = sAMObject.GetParameterSet(typeof(Element).Assembly);
             if (parameterSet == null)
                 return null;
 

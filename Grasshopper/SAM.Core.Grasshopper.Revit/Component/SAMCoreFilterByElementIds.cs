@@ -66,7 +66,18 @@ namespace SAM.Core.Grasshopper.Revit
             List<SAMObject> sAMObjects = new List<SAMObject>();
             foreach(GH_ObjectWrapper objectWrapper in objectWrapperList)
             {
-                SAMObject sAMObject = objectWrapper.Value as SAMObject;
+                if (objectWrapper == null || objectWrapper.Value == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Null SAMObject");
+                    continue;
+                }
+
+                SAMObject sAMObject = null;
+                if (objectWrapper.Value is SAMObject)
+                    sAMObject = objectWrapper.Value as SAMObject;
+                else if(objectWrapper.Value is IGH_Goo)
+                    sAMObject = (objectWrapper.Value as dynamic).Value as SAMObject;
+                
                 if (sAMObject == null)
                     continue;
 
@@ -85,6 +96,12 @@ namespace SAM.Core.Grasshopper.Revit
             HashSet<Autodesk.Revit.DB.ElementId> elementIds = new HashSet<Autodesk.Revit.DB.ElementId>();
             foreach (GH_ObjectWrapper objectWrapper in objectWrapperList)
             {
+                if(objectWrapper == null || objectWrapper.Value == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Null ElementId");
+                    continue;
+                }
+                
                 if(objectWrapper.Value is int)
                     elementIds.Add(new Autodesk.Revit.DB.ElementId((int)objectWrapper.Value));
                 else if(objectWrapper.Value is GH_Integer)

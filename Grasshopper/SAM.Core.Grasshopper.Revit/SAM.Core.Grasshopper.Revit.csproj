@@ -59,6 +59,19 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2020'">
+      <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>

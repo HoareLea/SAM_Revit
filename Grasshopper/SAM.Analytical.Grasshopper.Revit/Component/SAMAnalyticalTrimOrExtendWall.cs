@@ -37,7 +37,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "_walls", "_walls", "Revit Walls", GH_ParamAccess.list);
             inputParamManager.AddNumberParameter("_maxDistance_", "_maxDistance_", "Maximal Distance to Adjust walls", GH_ParamAccess.item, 0.5);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>

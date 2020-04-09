@@ -128,7 +128,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             foreach (Element element in elementList)
             {
                 IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element);
-                if (sAMObjects_Temp != null || sAMObjects_Temp.Count() > 0)
+                if (sAMObjects_Temp != null && sAMObjects_Temp.Count() > 0)
                 {
                     sAMObjects.AddRange(sAMObjects_Temp);
                     message += "\n" + string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);

@@ -25,8 +25,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalTrimOrExtendWall()
           : base("SAMAnalytical.TrimOrExtendWall", "SAMAnalytical.TrimOrExtendWall",
-              "Trim Or Extend Uncennected Revit Wall",
-              "SAM", "Analytical")
+              "Trim Or Extend Unconnected Revit Walls",
+              "SAM", "Revit")
         {
         }
 
@@ -35,8 +35,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "_walls", "_walls", "Revit Walls", GH_ParamAccess.list);
-            inputParamManager.AddNumberParameter("_maxDistance_", "_maxDistance_", "Maximal Distance to Adjust walls", GH_ParamAccess.item, 0.5);
+            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "_walls", "_walls", "Revit Host Walls", GH_ParamAccess.list);
+            inputParamManager.AddNumberParameter("_maxDistance_", "_maxDistance_", "Maximum Distance to Adjust walls", GH_ParamAccess.item, 0.5);
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 

@@ -103,13 +103,23 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
             else
             {
-                sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+                try
+                {
+                    sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+                }
+                catch(Exception exception)
+                {
+                    message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+                    dataAccess.SetData(1, message);
+                }
+                
             }
             
             if(sAMObjects == null || sAMObjects.Count() == 0)
             {
                 message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 dataAccess.SetData(1, message);
 
                 return;

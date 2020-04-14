@@ -123,9 +123,7 @@ namespace SAM.Analytical.Revit
                     locationCurve.Curve = line;
 
                     result.Add(tuple.Item1);
-                }
-
-                
+                }                
             }
 
             return result;

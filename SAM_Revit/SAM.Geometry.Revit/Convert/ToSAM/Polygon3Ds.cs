@@ -2,7 +2,7 @@
 using System.Linq;
 
 using Autodesk.Revit.DB;
-
+using SAM.Core;
 using SAM.Geometry.Spatial;
 
 
@@ -25,7 +25,19 @@ namespace SAM.Geometry.Revit
             
             List<Polygon3D> polygon3Ds = new List<Polygon3D>();
             foreach (CurveLoop curveLoop in curveLoops)
-                polygon3Ds.Add(ToSAM_Polygon3D(curveLoop));
+            {
+                Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop);
+                if(!Spatial.Query.SelfIntersect(polygon3D))
+                {
+                    polygon3Ds.Add(polygon3D);
+                    continue;
+                }
+
+                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon2Ds(polygon3D);
+                if (polygon3Ds_Intersection != null)
+                    polygon3Ds.AddRange(polygon3Ds_Intersection);
+            }
+                
 
             return polygon3Ds;
         }

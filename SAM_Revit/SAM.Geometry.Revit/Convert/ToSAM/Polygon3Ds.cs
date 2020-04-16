@@ -28,15 +28,15 @@ namespace SAM.Geometry.Revit
             {
                 Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop);
                 polygon3Ds.Add(polygon3D);
-                //if (!Spatial.Query.SelfIntersect(polygon3D))
-                //{
-                //    polygon3Ds.Add(polygon3D);
-                //    continue;
-                //}
+                if (!Spatial.Query.SelfIntersect(polygon3D))
+                {
+                    polygon3Ds.Add(polygon3D);
+                    continue;
+                }
 
-                //List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D);
-                //if (polygon3Ds_Intersection != null)
-                //    polygon3Ds.AddRange(polygon3Ds_Intersection);
+                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D);
+                if (polygon3Ds_Intersection != null)
+                    polygon3Ds.AddRange(polygon3Ds_Intersection);
             }
 
             return polygon3Ds;

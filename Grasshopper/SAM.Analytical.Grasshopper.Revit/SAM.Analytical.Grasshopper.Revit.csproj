@@ -67,11 +67,11 @@
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2020'">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>

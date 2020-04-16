@@ -23,7 +23,7 @@ namespace SAM.Geometry.Revit
 
         public static Face3D ToSAM(this Autodesk.Revit.DB.Face face)
         {
-            return Face3D.Create(face.ToSAM_Polygon3Ds());
+            return Face3D.Create(face.ToSAM_Polygon3Ds(), true);
         }
     }
 }

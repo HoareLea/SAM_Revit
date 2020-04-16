@@ -36,9 +36,19 @@ namespace SAM.Geometry.Revit
 
                 List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D);
                 if (polygon3Ds_Intersection != null)
+                {
+                    if(polygon3Ds_Intersection.Count > 1)
+                    {
+                        double Test = 0;
+                    }
+                    
                     polygon3Ds.AddRange(polygon3Ds_Intersection);
+                }
                 else
+                {
                     polygon3Ds.Add(polygon3D);
+                }
+                    
             }
 
             return polygon3Ds;

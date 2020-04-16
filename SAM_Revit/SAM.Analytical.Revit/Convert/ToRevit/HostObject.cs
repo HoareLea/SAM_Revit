@@ -207,8 +207,8 @@ namespace SAM.Analytical.Revit
 
                 Core.Revit.Modify.Json(result, panel.ToJObject()?.ToString());
             }
-
-            System.IO.File.AppendAllText(@"C:\Users\DengusiakM\Desktop\SAM\2020-04-16 floorbug\LOG.txt", string.Format("{0}\t{1}\t{2}\n", DateTime.Now.ToString(), panel.Guid, panel.Name));
+            //TODO: Implement proper log
+            //System.IO.File.AppendAllText(@"C:\Users\DengusiakM\Desktop\SAM\2020-04-16 floorbug\LOG.txt", string.Format("{0}\t{1}\t{2}\n", DateTime.Now.ToString(), panel.Guid, panel.Name));
 
             return result;
         }

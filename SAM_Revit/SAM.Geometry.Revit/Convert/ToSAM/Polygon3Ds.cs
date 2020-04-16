@@ -33,7 +33,7 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon2Ds(polygon3D);
+                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D);
                 if (polygon3Ds_Intersection != null)
                     polygon3Ds.AddRange(polygon3Ds_Intersection);
             }

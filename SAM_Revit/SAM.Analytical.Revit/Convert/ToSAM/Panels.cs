@@ -32,7 +32,7 @@ namespace SAM.Analytical.Revit
 
             if (hostObject is Wall)
             {
-                List<Autodesk.Revit.DB.Panel> panels = Query.Panels((Wall)hostObject);
+                List<Autodesk.Revit.DB.Panel> panels = Create.Panels((Wall)hostObject);
                 if (panels != null && panels.Count > 0)
                 {
                     List<ElementId> elementIds_Temp = panels.ConvertAll(x => x.Id);

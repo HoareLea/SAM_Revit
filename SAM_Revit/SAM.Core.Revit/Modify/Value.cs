@@ -96,8 +96,9 @@ namespace SAM.Core.Revit
                     if (WorksetId.InvalidWorksetId == worksetId)
                         return false;
 
+                    //TODO: Double check if workset is valid!
                     Workset workset = worksetTable.GetWorkset(worksetId);
-                    if (workset == null)
+                    if (workset == null || workset.Kind != WorksetKind.UserWorkset)
                         return false;
                 }
 

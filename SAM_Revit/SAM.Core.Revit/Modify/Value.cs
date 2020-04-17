@@ -84,7 +84,23 @@ namespace SAM.Core.Revit
                 return false;
 
             if (value is int)
-            {
+            {   
+                //Check if parameter is Workset parameter -> If Workset parameter then change only if Workset with Id exists
+                if (parameter.Id.IntegerValue == (int)BuiltInParameter.ELEM_PARTITION_PARAM)
+                {
+                    WorksetTable worksetTable = parameter.Element?.Document?.GetWorksetTable();
+                    if (worksetTable == null)
+                        return false;
+
+                    WorksetId worksetId = new WorksetId((int)value);
+                    if (WorksetId.InvalidWorksetId == worksetId)
+                        return false;
+
+                    Workset workset = worksetTable.GetWorkset(worksetId);
+                    if (workset == null)
+                        return false;
+                }
+
                 parameter.Set((int)value);
                 return true;
             }
@@ -94,21 +110,7 @@ namespace SAM.Core.Revit
                 int @int;
                 if (int.TryParse(value_Temp, out @int))
                 {
-                    //Check if parameter is Workset parameter -> If Workset parameter then change only if Workset with Id exists
-                    if(parameter.Id.IntegerValue == (int)BuiltInParameter.ELEM_PARTITION_PARAM)
-                    {
-                        WorksetTable worksetTable = parameter.Element?.Document?.GetWorksetTable();
-                        if (worksetTable == null)
-                            return false;
 
-                        WorksetId worksetId = new WorksetId(@int);
-                        if (WorksetId.InvalidWorksetId == worksetId)
-                            return false;
-
-                        Workset workset = worksetTable.GetWorkset(worksetId);
-                        if (workset == null)
-                            return false;
-                    }
                     
                     parameter.Set(@int);
                     return true;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Autodesk.Revit.DB;
@@ -78,69 +79,80 @@ namespace SAM.Analytical.Revit
             if (solid == null)
                 return null;
 
-            List<Panel> result = new List<Panel>();
-
+            List<Tuple<Face, LinkElementId, SubfaceType>> tuples = new List<Tuple<Face, LinkElementId, SubfaceType>>();
             foreach (Face face in solid.Faces)
             {
                 IList<SpatialElementBoundarySubface> spatialElementBoundarySubfaces = spatialElementGeometryResults.GetBoundaryFaceInfo(face);
+                if(spatialElementBoundarySubfaces == null || spatialElementBoundarySubfaces.Count == 0)
+                {
+                    tuples.Add(new Tuple<Face, LinkElementId, SubfaceType>(face, null, SubfaceType.Side));
+                    continue;
+                }
+
                 foreach (SpatialElementBoundarySubface spatialElementBoundarySubface in spatialElementBoundarySubfaces)
                 {
                     if (spatialElementBoundarySubface == null)
                         continue;
 
                     Face face_Subface = spatialElementBoundarySubface.GetSubface();
-
-                    Geometry.Spatial.Face3D face3D = Geometry.Revit.Convert.ToSAM(face_Subface);
-                    if (face3D == null)
-                        continue;
-
-                    PanelType panelType = PanelType.Undefined;
-                    Construction construction = null;
-
                     LinkElementId linkElementId = spatialElementBoundarySubface.SpatialBoundaryElement;
-                    if(linkElementId != null)
-                    {
-                        Element element = Core.Revit.Query.Element(spatialElement.Document, linkElementId);
-                        if(element != null)
-                        {
-                            HostObject hostObject = element as HostObject;
-                            if(hostObject != null)
-                            {
-                                panelType = Query.PanelType(hostObject);
 
-                                ElementId elementId_Type = hostObject.GetTypeId();
-                                if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
-                                    construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
-
-
-                            }
-                        }
-                    }
-
-                    if(panelType == PanelType.Undefined)
-                        panelType = Analytical.Query.PanelType(face3D.GetPlane()?.Normal);
-
-                    if(panelType == PanelType.Undefined)
-                    {
-                        switch (spatialElementBoundarySubface.SubfaceType)
-                        {
-                            case SubfaceType.Bottom:
-                                panelType = PanelType.Floor;
-                                break;
-                            case SubfaceType.Top:
-                                panelType = PanelType.Roof;
-                                break;
-                            case SubfaceType.Side:
-                                panelType = PanelType.Wall;
-                                break;
-                        }
-                    }
-
-                    if (construction == null)
-                        construction = Analytical.Query.Construction(panelType); //Default Construction
-
-                    result.Add(new Panel(construction, panelType, face3D));
+                    tuples.Add(new Tuple<Face, LinkElementId, SubfaceType>(face_Subface, linkElementId, spatialElementBoundarySubface.SubfaceType));
                 }
+            }
+
+            List<Panel> result = new List<Panel>();
+            foreach (Tuple<Face, LinkElementId, SubfaceType> tuple in tuples)
+            {
+                Geometry.Spatial.Face3D face3D = Geometry.Revit.Convert.ToSAM(tuple.Item1);
+                if (face3D == null)
+                    continue;
+
+                PanelType panelType = PanelType.Undefined;
+                Construction construction = null;
+
+                if (tuple.Item2 != null)
+                {
+                    Element element = Core.Revit.Query.Element(spatialElement.Document, tuple.Item2);
+                    if (element != null)
+                    {
+                        HostObject hostObject = element as HostObject;
+                        if (hostObject != null)
+                        {
+                            panelType = Query.PanelType(hostObject);
+
+                            ElementId elementId_Type = hostObject.GetTypeId();
+                            if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
+                                construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+
+
+                        }
+                    }
+                }
+
+                if (panelType == PanelType.Undefined)
+                    panelType = Analytical.Query.PanelType(face3D.GetPlane()?.Normal);
+
+                if (panelType == PanelType.Undefined)
+                {
+                    switch (tuple.Item3)
+                    {
+                        case SubfaceType.Bottom:
+                            panelType = PanelType.Floor;
+                            break;
+                        case SubfaceType.Top:
+                            panelType = PanelType.Roof;
+                            break;
+                        case SubfaceType.Side:
+                            panelType = PanelType.Wall;
+                            break;
+                    }
+                }
+
+                if (construction == null)
+                    construction = Analytical.Query.Construction(panelType); //Default Construction
+
+                result.Add(new Panel(construction, panelType, face3D));
             }
 
             return result;

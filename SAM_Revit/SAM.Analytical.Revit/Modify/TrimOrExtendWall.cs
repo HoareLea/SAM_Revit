@@ -106,6 +106,9 @@ namespace SAM.Analytical.Revit
                     if (segment2D[0] == tuple.Item2[0] && segment2D[1] == tuple.Item2[1])
                         continue;
 
+                    if (segment2D.GetLength() < Core.Tolerance.MacroDistance)
+                        continue;
+
                     tupleList_Result.Add(new Tuple<Wall, Segment2D>(tuple.Item1, segment2D));
                 }
 

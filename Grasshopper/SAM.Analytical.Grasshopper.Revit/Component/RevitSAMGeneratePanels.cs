@@ -86,6 +86,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            if(space.Location == null)
+            {
+                message = string.Format("Cannot generate Panels. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+                return;
+            }
+
             List<Panel> panels = Analytical.Revit.Create.Panels(space);
             if (panels == null || panels.Count == 0)
             {

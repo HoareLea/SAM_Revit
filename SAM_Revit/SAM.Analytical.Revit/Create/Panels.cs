@@ -94,7 +94,8 @@ namespace SAM.Analytical.Revit
                     if (spatialElementBoundarySubface == null)
                         continue;
 
-                    Face face_Subface = spatialElementBoundarySubface.GetSubface();
+                    //Face face_Subface = spatialElementBoundarySubface.GetSubface();
+                    Face face_Subface = spatialElementBoundarySubface.GetSpatialElementFace();
                     LinkElementId linkElementId = spatialElementBoundarySubface.SpatialBoundaryElement;
 
                     tuples.Add(new Tuple<Face, LinkElementId, SubfaceType>(face_Subface, linkElementId, spatialElementBoundarySubface.SubfaceType));

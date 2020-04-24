@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using Grasshopper.Kernel;
@@ -22,8 +21,6 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// Provides an Icon for the component.
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
-
-        private bool run = false;
 
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.

@@ -108,14 +108,21 @@ namespace SAM.Analytical.Revit
                             if (k == -1)
                                 continue;
 
-                            segment2D_Intersection.Adjust(tuple_Intersection.Item1);
+                            if(segment2D_Intersection[0].Distance(tuple_Intersection.Item1) < maxDistance || segment2D_Intersection[1].Distance(tuple_Intersection.Item1) < maxDistance)
+                            {
+                                segment2D_Intersection.Adjust(tuple_Intersection.Item1);
+                                tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tupleList[j].Item1, segment2D_Intersection, tupleList[j].Item3.FindAll(x => x != segment2D_Intersection.GetEndIndex(tuple_Intersection.Item1)), true);
+                            }
+                                
                             segment2D.Adjust(tuple_Intersection.Item1);
-
-                            tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Intersection, tuple.Item3, true);
                             tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D, tuple.Item3.FindAll(x => x != index), true);
+                            
                             updated = true;
                             break;
                         }
+
+                        if (updated)
+                            break;
                     }
                 }
 

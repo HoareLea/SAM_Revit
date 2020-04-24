@@ -7,7 +7,7 @@ using Grasshopper.Kernel;
 using Autodesk.Revit.DB;
 
 using SAM.Analytical.Grasshopper.Revit.Properties;
-
+using SAM.Core.Revit;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -56,7 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             if (!run)
                 return;
-            
+
             base.OnAfterStart(document, strTransactionName);
 
             // Disable all previous walls joins
@@ -122,9 +122,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             base.OnCommitted(document, strTransactionName);
         }
 
-        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, Core.Revit.ConvertSettings convertSettings = null, bool _run = false)
+        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, ConvertSettings convertSettings = null, bool _run = false)
         {
-
             run = _run;
             
             if (!run)
@@ -146,6 +145,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             HostObject hostObject_New = null;
+
+            if(convertSettings.RemoveExisting)
+            {
+                ElementId elementId = panel.ElementId();
+                if (elementId != null && elementId != ElementId.InvalidElementId)
+                    document.Delete(elementId);
+            }
 
             try
             {

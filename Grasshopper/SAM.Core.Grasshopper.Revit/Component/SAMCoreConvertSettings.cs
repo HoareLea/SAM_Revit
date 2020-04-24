@@ -35,6 +35,7 @@ namespace SAM.Core.Grasshopper.Revit
         {
             inputParamManager.AddBooleanParameter("_convertGeometry_", "_convertGeometry_", "Convert Geometry", GH_ParamAccess.item, true);
             inputParamManager.AddBooleanParameter("_convertParameters_", "_convertParameters_", "Convert Parameters", GH_ParamAccess.item, true);
+            inputParamManager.AddBooleanParameter("_removeExisting_", "_removeExisting_", "Remove existing Revit element if exists before conversion ", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -65,7 +66,14 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-            dataAccess.SetData(0, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters)));
+            bool removeExisting = true;
+            if (!dataAccess.GetData(2, ref removeExisting))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            dataAccess.SetData(0, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters, removeExisting)));
         }
     }
 }

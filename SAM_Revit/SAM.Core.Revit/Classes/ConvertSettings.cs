@@ -11,17 +11,20 @@ namespace SAM.Core.Revit
     {
         private bool convertGeometry;
         private bool convertParameters;
+        private bool removeExisting;
 
-        public ConvertSettings(bool convertGeometry, bool convertParameters)
+        public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting)
         {
             this.convertGeometry = convertGeometry;
             this.convertParameters = convertParameters;
+            this.removeExisting = removeExisting;
         }
 
         public ConvertSettings(ConvertSettings convertSettings)
         {
             convertGeometry = convertSettings.convertGeometry;
             convertParameters = convertSettings.convertParameters;
+            removeExisting = convertSettings.removeExisting;
         }
 
         public bool ConvertGeometry
@@ -40,6 +43,14 @@ namespace SAM.Core.Revit
             }
         }
 
+        public bool RemoveExisting
+        {
+            get
+            {
+                return removeExisting;
+            }
+        }
+
         public bool FromJObject(JObject jObject)
         {
             if (jObject == null)
@@ -47,6 +58,7 @@ namespace SAM.Core.Revit
 
             convertGeometry = jObject.Value<bool>("ConvertGeometry");
             convertParameters = jObject.Value<bool>("ConvertParameters");
+            removeExisting = jObject.Value<bool>("RemoveExisting");
             return true;
         }
 
@@ -56,6 +68,7 @@ namespace SAM.Core.Revit
             jObject.Add("_type", Core.Query.FullTypeName(this));
             jObject.Add("ConvertGeometry", convertGeometry);
             jObject.Add("ConvertParameters", convertParameters);
+            jObject.Add("RemoveExisting", removeExisting);
 
             return jObject;
         }

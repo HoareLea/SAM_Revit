@@ -55,7 +55,7 @@ namespace SAM.Analytical.Revit
                     if (elementArray == null || elementArray.Size == 0)
                         indexes.Add(1);
 
-                    if (indexes.Count > 0)
+                    //if (indexes.Count > 0)
                         tupleList.Add(new Tuple<Wall, Segment2D, List<int>, bool>(keyValuePair_Wall.Key, keyValuePair_Wall.Value, indexes, false));
                 }
 
@@ -64,63 +64,58 @@ namespace SAM.Analytical.Revit
                 while (updated)
                 {
                     updated = false;
-                    for (int i = 0; i < tupleList.Count; i++)
+                    List<Tuple<Wall, Segment2D, List<int>, bool>> tupleList_Unconnected = tupleList.FindAll(x => x.Item3 != null && x.Item3.Count > 0);
+                    for (int i = 0; i < tupleList_Unconnected.Count; i++)
                     {
-                        Tuple<Wall, Segment2D, List<int>, bool> tuple = tupleList[i];
+                        Tuple<Wall, Segment2D, List<int>, bool> tuple = tupleList_Unconnected[i];
 
-                        Vector2D direction = tuple.Item2.Direction;
-                        Vector2D direction_Negated = direction.GetNegated();
+                        List<Tuple<Wall, Segment2D, List<int>, bool>> tupleList_Temp = new List<Tuple<Wall, Segment2D, List<int>, bool>>(tupleList);
+                        tupleList_Temp.Remove(tuple);
 
-                        Segment2D segment2D = new Segment2D(tuple.Item2);
+                        Segment2D segment2D = tuple.Item2;
+                        List<Tuple<Point2D, Segment2D>> tupleList_Intersection = new List<Tuple<Point2D, Segment2D>>();
+                        foreach (Segment2D segment2D_Temp in tupleList_Temp.ConvertAll(x => x.Item2))
+                        {
+                            Point2D point2D_Intersection = segment2D_Temp.Intersection(segment2D, false, tolerance);
+                            if (point2D_Intersection == null)
+                                continue;
+
+                            double distance = segment2D.Distance(point2D_Intersection);
+
+                            if (distance <= maxDistance)
+                                tupleList_Intersection.Add(new Tuple<Point2D, Segment2D>(point2D_Intersection, segment2D_Temp));
+                        }
+
+                        if (tupleList_Intersection.Count == 0)
+                            continue;
 
                         foreach (int index in tuple.Item3)
                         {
-                            Vector2D vector2D_1 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction, tupleList.ConvertAll(x => x.Item2));
-                            if (vector2D_1 != null && vector2D_1.Length > maxDistance)
-                                vector2D_1 = null;
+                            Point2D point2D = segment2D[index];
 
-                            Vector2D vector2D_2 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction_Negated, tupleList.ConvertAll(x => x.Item2));
-                            if (vector2D_2 != null && vector2D_2.Length > maxDistance)
-                                vector2D_2 = null;
-
-                            if (vector2D_1 == null && vector2D_2 == null)
+                            tupleList_Intersection.Sort((x, y) => x.Item1.Distance(point2D).CompareTo(y.Item1.Distance(point2D)));
+                            Tuple<Point2D, Segment2D> tuple_Intersection = tupleList_Intersection.Find(x => x.Item1.Distance(point2D) < maxDistance);
+                            if (tuple_Intersection == null)
                                 continue;
 
-                            Vector2D vector2D;
-                            if (vector2D_1 == null)
-                            {
-                                vector2D = vector2D_2;
-                            }
-                            else if (vector2D_2 == null)
-                            {
-                                vector2D = vector2D_1;
-                            }
-                            else
-                            {
-                                if (vector2D_1.Length < vector2D_2.Length)
-                                    vector2D = vector2D_1;
-                                else
-                                    vector2D = vector2D_2;
-                            }
+                            Segment2D segment2D_Intersection = tuple_Intersection.Item2;
 
-                            if (index == 0)
-                                segment2D = new Segment2D(segment2D[0].GetMoved(vector2D), segment2D[1]);
-                            else
-                                segment2D = new Segment2D(segment2D[0], segment2D[1].GetMoved(vector2D));
+                            int j = tupleList.FindIndex(x => x.Item2 == segment2D_Intersection);
+                            if (j == -1)
+                                continue;
+
+                            int k = tupleList.FindIndex(x => x.Item2 == segment2D);
+                            if (k == -1)
+                                continue;
+
+                            segment2D_Intersection.Adjust(tuple_Intersection.Item1);
+                            segment2D.Adjust(tuple_Intersection.Item1);
+
+                            tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Intersection, tuple.Item3, true);
+                            tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D, tuple.Item3.FindAll(x => x != index), true);
+                            updated = true;
+                            break;
                         }
-
-                        if (segment2D[0] == tuple.Item2[0] && segment2D[1] == tuple.Item2[1])
-                            continue;
-
-                        if (segment2D.GetLength() < tolerance)
-                            continue;
-
-                        if (segment2D.AlmostSimilar(tuple.Item2, tolerance))
-                            continue;
-
-                        tupleList[i] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D, tuple.Item3, true);
-                        updated = true;
-                        break;
                     }
                 }
 

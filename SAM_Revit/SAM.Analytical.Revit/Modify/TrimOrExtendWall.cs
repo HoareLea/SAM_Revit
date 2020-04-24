@@ -75,11 +75,11 @@ namespace SAM.Analytical.Revit
 
                         foreach (int index in tuple.Item3)
                         {
-                            Vector2D vector2D_1 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction, segment2Ds);
+                            Vector2D vector2D_1 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction, tupleList.ConvertAll(x => x.Item2));
                             if (vector2D_1 != null && vector2D_1.Length > maxDistance)
                                 vector2D_1 = null;
 
-                            Vector2D vector2D_2 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction_Negated, segment2Ds);
+                            Vector2D vector2D_2 = Geometry.Planar.Query.TraceFirst(tuple.Item2[index], direction_Negated, tupleList.ConvertAll(x => x.Item2));
                             if (vector2D_2 != null && vector2D_2.Length > maxDistance)
                                 vector2D_2 = null;
 

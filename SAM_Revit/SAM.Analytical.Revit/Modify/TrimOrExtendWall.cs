@@ -130,7 +130,7 @@ namespace SAM.Analytical.Revit
                             if (segment2D_Temp.AlmostSimilar(segment2D))
                                 continue;
 
-                            tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D, tuple.Item3.FindAll(x => x != index), true);
+                            tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Temp, tuple.Item3.FindAll(x => x != index), true);
                             
                             updated = true;
                             break;

@@ -115,13 +115,21 @@ namespace SAM.Analytical.Revit
                             if (k == -1)
                                 continue;
 
-                            if(segment2D_Intersection[0].Distance(tuple_Intersection.Item1) < maxDistance || segment2D_Intersection[1].Distance(tuple_Intersection.Item1) < maxDistance)
+                            Segment2D segment2D_Temp;
+
+                            if (segment2D_Intersection[0].Distance(tuple_Intersection.Item1) < maxDistance || segment2D_Intersection[1].Distance(tuple_Intersection.Item1) < maxDistance)
                             {
-                                segment2D_Intersection.Adjust(tuple_Intersection.Item1);
-                                tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tupleList[j].Item1, segment2D_Intersection, tupleList[j].Item3.FindAll(x => x != segment2D_Intersection.GetEndIndex(tuple_Intersection.Item1)), true);
+                                segment2D_Temp = new Segment2D(segment2D_Intersection);
+                                segment2D_Temp.Adjust(tuple_Intersection.Item1);
+                                if (!segment2D_Temp.AlmostSimilar(segment2D_Intersection) && segment2D_Temp.GetLength() > segment2D_Intersection.GetLength())
+                                    tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tupleList[j].Item1, segment2D_Temp, tupleList[j].Item3.FindAll(x => x != segment2D_Temp.GetEndIndex(tuple_Intersection.Item1)), true);
                             }
-                                
-                            segment2D.Adjust(tuple_Intersection.Item1);
+
+                            segment2D_Temp = new Segment2D(segment2D);
+                            segment2D_Temp.Adjust(tuple_Intersection.Item1);
+                            if (segment2D_Temp.AlmostSimilar(segment2D))
+                                continue;
+
                             tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D, tuple.Item3.FindAll(x => x != index), true);
                             
                             updated = true;
@@ -139,14 +147,21 @@ namespace SAM.Analytical.Revit
                 foreach (Tuple<Wall, Segment2D, List<int>, bool> tuple in tupleList)
                 {
                     Wall wall = tuple.Item1;
-                    
+                    if (!wall.IsValidObject)
+                        continue;
+
+                    Segment2D segment2D = tuple.Item2;
+                    if (segment2D.GetLength() < tolerance)
+                    {
+                        wall.Document.Delete(wall.Id);
+                        continue;
+                    }
+
                     LocationCurve locationCurve = wall.Location as LocationCurve;
 
                     JoinType[] joinTypes = new JoinType[] { locationCurve.get_JoinType(0), locationCurve.get_JoinType(1) };
                     WallUtils.DisallowWallJoinAtEnd(wall, 0);
                     WallUtils.DisallowWallJoinAtEnd(wall, 1);
-
-                    Segment2D segment2D = tuple.Item2;
 
                     Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, keyValuePair.Key), new Point3D(segment2D[1].X, segment2D[1].Y, keyValuePair.Key));
 

@@ -80,10 +80,17 @@ namespace SAM.Analytical.Revit
                             if (point2D_Intersection == null)
                                 continue;
 
-                            double distance = segment2D.Distance(point2D_Intersection);
+                            double distance;
 
-                            if (distance <= maxDistance)
-                                tupleList_Intersection.Add(new Tuple<Point2D, Segment2D>(point2D_Intersection, segment2D_Temp));
+                            distance = segment2D.Distance(point2D_Intersection);
+                            if (distance > maxDistance)
+                                continue;
+
+                            distance = segment2D_Temp.Distance(point2D_Intersection);
+                            if (distance > maxDistance)
+                                continue;
+
+                            tupleList_Intersection.Add(new Tuple<Point2D, Segment2D>(point2D_Intersection, segment2D_Temp));
                         }
 
                         if (tupleList_Intersection.Count == 0)
@@ -131,7 +138,13 @@ namespace SAM.Analytical.Revit
                 //Updating Revit Walls
                 foreach (Tuple<Wall, Segment2D, List<int>, bool> tuple in tupleList)
                 {
-                    LocationCurve locationCurve = tuple.Item1.Location as LocationCurve;
+                    Wall wall = tuple.Item1;
+                    
+                    LocationCurve locationCurve = wall.Location as LocationCurve;
+
+                    JoinType[] joinTypes = new JoinType[] { locationCurve.get_JoinType(0), locationCurve.get_JoinType(1) };
+                    WallUtils.DisallowWallJoinAtEnd(wall, 0);
+                    WallUtils.DisallowWallJoinAtEnd(wall, 1);
 
                     Segment2D segment2D = tuple.Item2;
 
@@ -140,6 +153,12 @@ namespace SAM.Analytical.Revit
                     Line line = Geometry.Revit.Convert.ToRevit(segment3D);
 
                     locationCurve.Curve = line;
+
+                    WallUtils.AllowWallJoinAtEnd(wall, 0);
+                    locationCurve.set_JoinType(0, joinTypes[0]);
+
+                    WallUtils.AllowWallJoinAtEnd(wall, 1);
+                    locationCurve.set_JoinType(1, joinTypes[1]);
 
                     result.Add(tuple.Item1);
                 }

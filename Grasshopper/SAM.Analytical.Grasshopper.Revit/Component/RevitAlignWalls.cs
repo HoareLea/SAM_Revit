@@ -15,7 +15,7 @@ using SAM.Geometry.Revit;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAlignWalls : GH_Component
+    public class RevitAlignWalls : RhinoInside.Revit.GH.Components.TransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -56,11 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "Walls", "Walls", "Revit Walls", GH_ParamAccess.list);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
-        protected override void SolveInstance(IGH_DataAccess dataAccess)
+        protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
             if (!dataAccess.GetData(3, ref run) || !run)
@@ -132,7 +128,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Point3D(0, 0, elevation), Vector3D.BaseZ);
 
             List<Segment2D> segment2Ds = new List<Segment2D>();
-            foreach(ElementId elementId in elementIds_Reference)
+            foreach (ElementId elementId in elementIds_Reference)
             {
                 LocationCurve locationCurve = document.GetElement(elementId).Location as LocationCurve;
                 ISegmentable3D segmentable3D = locationCurve.ToSAM() as ISegmentable3D;
@@ -183,7 +179,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 LocationCurve locationCurve = wall.Location as LocationCurve;
 
-                double z = locationCurve.Curve.GetEndPoint(0).Z;
+                double z = UnitUtils.ConvertFromInternalUnits(locationCurve.Curve.GetEndPoint(0).Z, DisplayUnitType.DUT_METERS);
 
                 Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, z), new Point3D(segment2D[1].X, segment2D[1].Y, z));
 

@@ -185,21 +185,11 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 double z = locationCurve.Curve.GetEndPoint(0).Z;
 
-                JoinType[] joinTypes = new JoinType[] { locationCurve.get_JoinType(0), locationCurve.get_JoinType(1) };
-                WallUtils.DisallowWallJoinAtEnd(wall, 0);
-                WallUtils.DisallowWallJoinAtEnd(wall, 1);
-
                 Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, z), new Point3D(segment2D[1].X, segment2D[1].Y, z));
 
                 Line line = Geometry.Revit.Convert.ToRevit(segment3D);
 
                 locationCurve.Curve = line;
-
-                WallUtils.AllowWallJoinAtEnd(wall, 0);
-                locationCurve.set_JoinType(0, joinTypes[0]);
-
-                WallUtils.AllowWallJoinAtEnd(wall, 1);
-                locationCurve.set_JoinType(1, joinTypes[1]);
 
                 result.Add(wall);
             }

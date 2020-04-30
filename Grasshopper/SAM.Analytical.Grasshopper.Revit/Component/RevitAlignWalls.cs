@@ -217,6 +217,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         subTransaction.Commit();
                     }
                 }
+                result.Add(wall);
             }
 
             dataAccess.SetDataList(0, result);

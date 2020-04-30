@@ -93,6 +93,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            if(space.Volume < Core.Tolerance.MacroDistance)
+            {
+                message = string.Format("Space cannot be converted because it has no volume. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+                return;
+            }
+
             List<Panel> panels = Analytical.Revit.Create.Panels(space);
             if (panels == null || panels.Count == 0)
             {

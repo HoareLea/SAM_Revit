@@ -111,6 +111,7 @@ namespace SAM.Analytical.Revit
 
                 PanelType panelType = PanelType.Undefined;
                 Construction construction = null;
+                Panel panel = null;
 
                 if (tuple.Item2 != null)
                 {
@@ -120,13 +121,25 @@ namespace SAM.Analytical.Revit
                         HostObject hostObject = element as HostObject;
                         if (hostObject != null)
                         {
-                            panelType = Query.PanelType(hostObject);
+                            List<Panel> panels = hostObject.ToSAM();
+                            if (panels != null && panels.Count > 0)
+                                panel = panels[0];
 
-                            ElementId elementId_Type = hostObject.GetTypeId();
-                            if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
-                                construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+                            if(panel != null)
+                            {
+                                panelType = panel.PanelType;
+                                construction = panel.Construction;
+                            }
 
+                            if (panelType == PanelType.Undefined)
+                                panelType = Query.PanelType(hostObject);
 
+                            if(construction == null)
+                            {
+                                ElementId elementId_Type = hostObject.GetTypeId();
+                                if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
+                                    construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+                            }
                         }
                     }
                 }
@@ -153,7 +166,16 @@ namespace SAM.Analytical.Revit
                 if (construction == null)
                     construction = Analytical.Query.Construction(panelType); //Default Construction
 
-                result.Add(new Panel(construction, panelType, face3D));
+                if(panel == null)
+                {
+                    panel = new Panel(construction, panelType, face3D);
+                }
+                else
+                {
+                    panel = new Panel(panel.Guid, panel, face3D);
+                }
+
+                result.Add(panel);
             }
 
             return result;

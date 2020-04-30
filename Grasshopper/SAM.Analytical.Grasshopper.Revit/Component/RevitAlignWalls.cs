@@ -15,7 +15,7 @@ using SAM.Geometry.Revit;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAlignWalls : GH_Component
+    public class RevitAlignWalls : RhinoInside.Revit.GH.Components.TransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -56,7 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "Walls", "Walls", "Revit Walls", GH_ParamAccess.list);
         }
 
-        protected override void SolveInstance(IGH_DataAccess dataAccess)
+        protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
             if (!dataAccess.GetData(3, ref run) || !run)
@@ -178,6 +178,18 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Segment2D segment2D = keyValuePair.Key;
 
+                bool pinned = wall.Pinned;
+
+                if(wall.Pinned)
+                {
+                    using (SubTransaction subTransaction = new SubTransaction(document))
+                    {
+                        subTransaction.Start();
+                        wall.Pinned = false;
+                        subTransaction.Commit();
+                    }
+                }
+
                 LocationCurve locationCurve = wall.Location as LocationCurve;
 
                 double z = UnitUtils.ConvertFromInternalUnits(locationCurve.Curve.GetEndPoint(0).Z, DisplayUnitType.DUT_METERS);
@@ -186,27 +198,25 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Line line = Geometry.Revit.Convert.ToRevit(segment3D);
 
-                try
+                using (SubTransaction subTransaction = new SubTransaction(document))
                 {
-                    using (Transaction transaction = new Transaction(document, "Align Walls"))
+                    subTransaction.Start();
+
+                    document.Regenerate();
+                    locationCurve.Curve = line;
+                    
+                    subTransaction.Commit();
+                }
+
+                if (wall.Pinned != pinned)
+                {
+                    using (SubTransaction subTransaction = new SubTransaction(document))
                     {
-                        transaction.Start();
-
-                        locationCurve.Curve = line;
-
-                        TransactionStatus transactionStatus = transaction.Commit();
-
-                        if (transactionStatus == TransactionStatus.Committed)
-                            result.Add(wall);
+                        subTransaction.Start();
+                        wall.Pinned = pinned;
+                        subTransaction.Commit();
                     }
                 }
-                catch(Exception exception)
-                {
-                    string message = exception.Message;
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                }
-
-
             }
 
             dataAccess.SetDataList(0, result);

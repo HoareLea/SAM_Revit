@@ -150,7 +150,12 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 ElementId elementId = panel.ElementId();
                 if (elementId != null && elementId != ElementId.InvalidElementId)
-                    document.Delete(elementId);
+                {
+                    Element element = document.GetElement(elementId) as HostObject;
+                    if (element != null)
+                        document.Delete(elementId);
+                }
+                    
             }
 
             try
@@ -166,25 +171,25 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (hostObject_New == null)
                 return;
 
-            if (hostObject != null)
-            {
-                BuiltInParameter[] builtInParameters = new BuiltInParameter[]
-                {
-                    BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM,
-                    BuiltInParameter.ELEM_FAMILY_PARAM,
-                    BuiltInParameter.ELEM_TYPE_PARAM,
-                    BuiltInParameter.WALL_BASE_CONSTRAINT,
-                    BuiltInParameter.WALL_USER_HEIGHT_PARAM,
-                    BuiltInParameter.WALL_BASE_OFFSET,
-                    BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT,
-                    BuiltInParameter.WALL_KEY_REF_PARAM
-                 };
+            //if (hostObject != null)
+            //{
+            //    BuiltInParameter[] builtInParameters = new BuiltInParameter[]
+            //    {
+            //        BuiltInParameter.ELEM_FAMILY_AND_TYPE_PARAM,
+            //        BuiltInParameter.ELEM_FAMILY_PARAM,
+            //        BuiltInParameter.ELEM_TYPE_PARAM,
+            //        BuiltInParameter.WALL_BASE_CONSTRAINT,
+            //        BuiltInParameter.WALL_USER_HEIGHT_PARAM,
+            //        BuiltInParameter.WALL_BASE_OFFSET,
+            //        BuiltInParameter.WALL_STRUCTURAL_SIGNIFICANT,
+            //        BuiltInParameter.WALL_KEY_REF_PARAM
+            //     };
 
-                ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
+            //    ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
 
-                if (Core.Revit.Query.FullName(hostObject).Equals(panel.Construction.Name))
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Defult type used for panel {0}", panel.Guid));
-            }
+            //    if (Core.Revit.Query.FullName(hostObject).Equals(panel.Construction.Name))
+            //        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Defult type used for panel {0}", panel.Guid));
+            //}
 
             if (hostObject_New is Wall)
                 walls.Add((Wall)hostObject_New);

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
-
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -35,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             int index;
-            
+
             inputParamManager.AddParameter(new GooPanelParam(), "_panels_", "_panels_", "SAM Analytical Panels", GH_ParamAccess.list);
             index = inputParamManager.AddParameter(new GooConstructionParam(), "constructions_", "constructions_", "SAM Analytical Contructions", GH_ParamAccess.list);
             inputParamManager[index].Optional = true;

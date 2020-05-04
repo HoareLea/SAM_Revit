@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.DB;
 
-
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert

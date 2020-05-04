@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.DB;
 
-
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert
@@ -11,7 +10,6 @@ namespace SAM.Analytical.Revit
             construction.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
 
             return construction;
-
         }
     }
 }

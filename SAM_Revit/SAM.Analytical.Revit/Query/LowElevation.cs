@@ -24,10 +24,10 @@ namespace SAM.Analytical.Revit
                 return double.NaN;
 
             double result = double.MaxValue;
-            foreach(Panel panel in panels)
+            foreach (Panel panel in panels)
             {
                 double value = panel.GetBoundingBox().Min.Z;
-                if(value < result)
+                if (value < result)
                     result = value;
             }
 

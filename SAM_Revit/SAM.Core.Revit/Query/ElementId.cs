@@ -18,6 +18,6 @@ namespace SAM.Core.Revit
                 return null;
 
             return new ElementId(id);
-         }
+        }
     }
 }

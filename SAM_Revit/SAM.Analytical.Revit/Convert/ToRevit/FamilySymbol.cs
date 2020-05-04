@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 using System.Linq;
-
-using Autodesk.Revit.DB;
 
 namespace SAM.Analytical.Revit
 {
@@ -11,7 +10,7 @@ namespace SAM.Analytical.Revit
         {
             if (apertureConstruction == null)
                 return null;
-            
+
             string fullName = apertureConstruction.Name;
 
             string familyName;

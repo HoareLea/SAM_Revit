@@ -39,7 +39,7 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null)
                 return null;
 
-            if(convertSettings.ConvertParameters)
+            if (convertSettings.ConvertParameters)
             {
                 Core.Revit.Modify.Values(aperture, familyInstance, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
                 Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);

@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
-
+using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {
@@ -15,7 +12,7 @@ namespace SAM.Geometry.Revit
             foreach (Curve curve in curveLoop)
             {
                 ICurve3D curve3D = curve.ToSAM();
-                if(curve3D is ISegmentable3D)
+                if (curve3D is ISegmentable3D)
                     ((ISegmentable3D)curve3D).GetSegments().ForEach(x => point3Ds.Add(x.GetStart()));
             }
 

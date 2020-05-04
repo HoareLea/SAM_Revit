@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Revit;
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -19,7 +17,7 @@ namespace SAM.Analytical.Revit
 
             HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction             
+                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction
 
             HostObject result = null;
             BuiltInParameter[] builtInParameters = null;
@@ -150,7 +148,6 @@ namespace SAM.Analytical.Revit
 
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.LEVEL_PARAM };
                 result = floor;
-
             }
             else if (hostObjAttributes is RoofType)
             {
@@ -166,7 +163,6 @@ namespace SAM.Analytical.Revit
 
                     foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
                         curveArray.Append(curve3D.ToRevit_Line());
-
                 }
 
                 Level level = document.HighLevel(panel.LowElevation());
@@ -200,7 +196,7 @@ namespace SAM.Analytical.Revit
             if (apertures != null)
                 apertures.ForEach(x => Convert.ToRevit(document, x, result, convertSettings));
 
-            if(convertSettings.ConvertParameters)
+            if (convertSettings.ConvertParameters)
             {
                 Core.Revit.Modify.Values(panel, result, builtInParameters);
                 Core.Revit.Modify.Values(ActiveSetting.Setting, panel, result);

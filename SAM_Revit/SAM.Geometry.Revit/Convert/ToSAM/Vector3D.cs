@@ -1,7 +1,5 @@
-﻿using SAM.Geometry.Spatial;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
+using SAM.Geometry.Spatial;
 
 namespace SAM.Geometry.Revit
 {
@@ -14,7 +12,6 @@ namespace SAM.Geometry.Revit
                 return new Vector3D(XYZ.X * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Y * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Z * Units.Revit.Query.Factor_FromFeetToMeter);
             else
                 return new Vector3D(XYZ.X, XYZ.Y, XYZ.Z);
-
         }
     }
 }

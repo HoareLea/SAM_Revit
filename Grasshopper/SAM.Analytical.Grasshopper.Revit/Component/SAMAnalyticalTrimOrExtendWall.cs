@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Grasshopper.Kernel;
+using SAM.Analytical.Grasshopper.Revit.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Grasshopper.Kernel;
-using SAM.Analytical.Grasshopper.Revit.Properties;
-using SAM.Geometry.Planar;
-using SAM.Geometry.Spatial;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {

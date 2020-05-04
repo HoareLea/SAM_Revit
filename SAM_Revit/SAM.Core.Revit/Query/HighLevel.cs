@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 using System.Linq;
-using Autodesk.Revit.DB;
 
 namespace SAM.Core.Revit
 {
@@ -20,7 +20,7 @@ namespace SAM.Core.Revit
 
             for (int i = 1; i < levels.Count; i++)
             {
-                if(level.Elevation >= levels[i].Elevation)
+                if (level.Elevation >= levels[i].Elevation)
                 {
                     if (i == 0)
                         return null;

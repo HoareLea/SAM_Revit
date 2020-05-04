@@ -15,7 +15,7 @@ namespace SAM.Core.Revit
                 elementType = (ElementType)element.Document.GetElement(element.GetTypeId());
 
             string familyName = null;
-            if(elementType != null)
+            if (elementType != null)
             {
                 Parameter parameter = elementType.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM);
                 if (parameter != null)
@@ -32,8 +32,6 @@ namespace SAM.Core.Revit
         {
             if (string.IsNullOrWhiteSpace(familyTypeName))
                 return null;
-
-
 
             if (!string.IsNullOrWhiteSpace(familyName) && !familyName.Equals("Rebuild curves and surfaces\nRebuild"))
                 return string.Format("{0}: {1}", familyName, familyTypeName);

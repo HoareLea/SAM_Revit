@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Revit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -49,7 +46,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "HostObjects", "hso" ,"HostObjects", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "HostObjects", "hso", "HostObjects", GH_ParamAccess.item);
         }
 
         protected override void OnAfterStart(Document document, string strTransactionName)
@@ -101,7 +98,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             if (!run)
                 return;
-            
+
             base.OnBeforeCommit(document, strTransactionName);
 
             // Reenable new joined walls
@@ -118,14 +115,14 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             if (!run)
                 return;
-            
+
             base.OnCommitted(document, strTransactionName);
         }
 
         private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, ConvertSettings convertSettings = null, bool _run = false)
         {
             run = _run;
-            
+
             if (!run)
                 return;
 
@@ -138,7 +135,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             string name = panel.Name;
             Guid guid = panel.Guid;
 
-            if(!convertSettings.ConvertParameters && !convertSettings.ConvertGeometry)
+            if (!convertSettings.ConvertParameters && !convertSettings.ConvertGeometry)
             {
                 string message = string.Format("Invalid Convert Settings");
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
@@ -146,7 +143,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             HostObject hostObject_New = null;
 
-            if(convertSettings.RemoveExisting)
+            if (convertSettings.RemoveExisting)
             {
                 ElementId elementId = panel.ElementId();
                 if (elementId != null && elementId != ElementId.InvalidElementId)
@@ -155,14 +152,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                     if (element != null)
                         document.Delete(elementId);
                 }
-                    
             }
 
             try
             {
                 hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 string message = string.Format("Cannot convert element. Panel Name: {0}, Panel Guid: {1}, Exception Message: {2}", name, guid, exception.Message);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
@@ -185,7 +181,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             //        BuiltInParameter.WALL_KEY_REF_PARAM
             //     };
 
-            //    ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
+            // ReplaceElement(ref hostObject, hostObject_New, builtInParameters);
 
             //    if (Core.Revit.Query.FullName(hostObject).Equals(panel.Construction.Name))
             //        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Defult type used for panel {0}", panel.Guid));

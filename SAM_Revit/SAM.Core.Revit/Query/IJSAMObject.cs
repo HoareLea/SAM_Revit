@@ -5,7 +5,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static T IJSAMObject<T>(this Element element) where T: IJSAMObject
+        public static T IJSAMObject<T>(this Element element) where T : IJSAMObject
         {
             if (element == null)
                 return default;

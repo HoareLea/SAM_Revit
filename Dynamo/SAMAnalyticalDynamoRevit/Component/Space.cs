@@ -12,12 +12,10 @@ namespace SAMAnalyticalDynamoRevit
     public static class Space
     {
         /// <summary>
-        /// Creates SAM Analytical Space from Revit 
+        /// Creates SAM Analytical Space from Revit
         /// </summary>
         /// <param name="element">Revit SpatialElement</param>
-        /// <search>
-        /// FromRevit, SAM Analytical Space
-        /// </search>
+        /// <search>FromRevit, SAM Analytical Space</search>
         public static SAM.Analytical.Space FromRevit(Revit.Elements.Element element)
         {
             return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as SpatialElement);
@@ -28,9 +26,7 @@ namespace SAMAnalyticalDynamoRevit
         /// </summary>
         /// <param name="space">SAM Analytical Space</param>
         /// <param name="includePanels">Include panels in conversion</param>
-        /// <search>
-        /// ToRevit, SAM Analytical Space
-        /// </search>
+        /// <search>ToRevit, SAM Analytical Space</search>
         public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, SAM.Core.Revit.ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;

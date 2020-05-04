@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB;
-
-using Revit.Elements;
-using RevitServices.Persistence;
-using RevitServices.Transactions;
+﻿using RevitServices.Transactions;
+using System.Collections.Generic;
 
 namespace SAMAnalyticalDynamoRevit
 {
@@ -17,9 +12,7 @@ namespace SAMAnalyticalDynamoRevit
         /// Creates Panel from Revit Element
         /// </summary>
         /// <param name="element">Revit Element</param>
-        /// <search>
-        /// FromRevit, SAM Analytical Panel
-        /// </search>
+        /// <search>FromRevit, SAM Analytical Panel</search>
         public static IEnumerable<object> FromRevit(Revit.Elements.Element element)
         {
             TransactionManager.Instance.ForceCloseTransaction();

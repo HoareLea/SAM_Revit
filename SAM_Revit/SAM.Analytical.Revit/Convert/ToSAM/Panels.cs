@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Revit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -65,7 +63,7 @@ namespace SAM.Analytical.Revit
                             continue;
 
                         Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane, panelType);
-                        panel.AddAperture(aperture);                                  
+                        panel.AddAperture(aperture);
                     }
                 }
 
@@ -88,7 +86,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             List<Panel> result = new List<Panel>();
-            foreach(HostObject hostObject in hostObjects)
+            foreach (HostObject hostObject in hostObjects)
             {
                 List<Panel> panelList = hostObject.ToSAM();
                 if (panelList != null && panelList.Count > 0)

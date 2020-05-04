@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
-
-using Autodesk.Revit.DB;
-
+using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {

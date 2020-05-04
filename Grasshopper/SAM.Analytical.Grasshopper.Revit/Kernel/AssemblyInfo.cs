@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Grasshopper.Kernel;
+using System;
 using System.Drawing;
-
-using Grasshopper.Kernel;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -14,6 +13,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return "SAM";
             }
         }
+
         public override Bitmap Icon
         {
             get
@@ -31,6 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return Properties.Resources.SAM_Revit; ;
             }
         }
+
         public override string Description
         {
             get
@@ -39,6 +40,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return "SAM.Analytical.Grasshopper.Revit Toolkit, please explore";
             }
         }
+
         public override Guid Id
         {
             get
@@ -55,6 +57,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return "Michal Dengusiak & Jakub Ziolkowski at Hoare Lea";
             }
         }
+
         public override string AuthorContact
         {
             get

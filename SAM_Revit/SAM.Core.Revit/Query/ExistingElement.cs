@@ -14,7 +14,6 @@ namespace SAM.Core.Revit
                 return null;
 
             return document.GetElement(elementId);
-
         }
     }
 }

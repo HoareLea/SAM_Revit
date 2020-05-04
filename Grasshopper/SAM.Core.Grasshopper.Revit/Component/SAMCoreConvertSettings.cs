@@ -1,8 +1,6 @@
-﻿using System;
-
-using Grasshopper.Kernel;
-
+﻿using Grasshopper.Kernel;
 using SAM.Core.Grasshopper.Revit.Properties;
+using System;
 
 namespace SAM.Core.Grasshopper.Revit
 {
@@ -49,7 +47,9 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool convertGeometry = true;

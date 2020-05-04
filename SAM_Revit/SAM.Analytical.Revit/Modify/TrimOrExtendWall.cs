@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Spatial;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -56,7 +54,7 @@ namespace SAM.Analytical.Revit
                         indexes.Add(1);
 
                     //if (indexes.Count > 0)
-                        tupleList.Add(new Tuple<Wall, Segment2D, List<int>, bool>(keyValuePair_Wall.Key, keyValuePair_Wall.Value, indexes, false));
+                    tupleList.Add(new Tuple<Wall, Segment2D, List<int>, bool>(keyValuePair_Wall.Key, keyValuePair_Wall.Value, indexes, false));
                 }
 
                 //Seeking for walls to be extended/trimmed
@@ -131,7 +129,7 @@ namespace SAM.Analytical.Revit
                                 continue;
 
                             tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Temp, tuple.Item3.FindAll(x => x != index), true);
-                            
+
                             updated = true;
                             break;
                         }
@@ -177,7 +175,6 @@ namespace SAM.Analytical.Revit
 
                     result.Add(tuple.Item1);
                 }
-                
             }
 
             return result;

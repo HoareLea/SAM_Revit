@@ -17,7 +17,7 @@ namespace SAM.Core.Revit
             parameterSet.Add("Name", Query.FullName(element));
 
             string categoryName = null;
-            if(element is Family)
+            if (element is Family)
                 categoryName = ((Family)element).FamilyCategory?.Name;
             else
                 categoryName = element.Category?.Name;

@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.IFC;
+using SAM.Geometry.Spatial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using SAM.Geometry.Spatial;
-
-using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.IFC;
 
 namespace SAM.Geometry.Revit
 {
@@ -45,17 +43,14 @@ namespace SAM.Geometry.Revit
             {
                 Type aType = geometryObject.GetType();
 
-                if(geometryObject is Autodesk.Revit.DB.Face)
+                if (geometryObject is Autodesk.Revit.DB.Face)
                 {
-
                 }
-                else if(geometryObject is Solid)
+                else if (geometryObject is Solid)
                 {
-
                 }
-                else if(geometryObject is Curve)
+                else if (geometryObject is Curve)
                 {
-
                 }
             }
 
@@ -144,7 +139,7 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_Floor(this Floor floor)
         {
-            List<Face3D> face3Ds = TopProfiles(floor);      
+            List<Face3D> face3Ds = TopProfiles(floor);
             return face3Ds;
         }
 
@@ -156,7 +151,7 @@ namespace SAM.Geometry.Revit
             if (elementIds == null || elementIds.Count() == 0)
                 return face3Ds;
 
-            foreach(ElementId elementId in elementIds)
+            foreach (ElementId elementId in elementIds)
             {
                 Element element = roofBase.Document.GetElement(elementId);
                 if (element == null)
@@ -164,7 +159,7 @@ namespace SAM.Geometry.Revit
 
                 BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
                 Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
-                foreach(Face3D face3D in face3Ds)
+                foreach (Face3D face3D in face3Ds)
                 {
                     List<Planar.IClosed2D> internalEdges = face3D.InternalEdges;
                     if (internalEdges == null || internalEdges.Count == 0)
@@ -175,10 +170,10 @@ namespace SAM.Geometry.Revit
                     Point3D point3D_Projected = plane.Project(point3D);
                     Planar.Point2D point2D = plane.Convert(point3D_Projected);
 
-                    for(int i=0; i < internalEdges.Count; i++)
+                    for (int i = 0; i < internalEdges.Count; i++)
                     {
                         Planar.IClosed2D internalEdge = internalEdges[i];
-                        if(internalEdge.Inside(point2D))
+                        if (internalEdge.Inside(point2D))
                         {
                             face3D.RemoveInternalEdge(i);
                             break;

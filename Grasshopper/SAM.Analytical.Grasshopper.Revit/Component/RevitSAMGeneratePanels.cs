@@ -1,14 +1,9 @@
-﻿using System;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using Autodesk.Revit.DB.Mechanical;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -56,13 +51,14 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
             if (!dataAccess.GetData(1, ref run) || !run)
                 return;
-          
 
             GH_ObjectWrapper objectWrapper = null;
 
@@ -79,21 +75,21 @@ namespace SAM.Analytical.Grasshopper.Revit
             string message = null;
 
             Autodesk.Revit.DB.Mechanical.Space space = (obj.Document as Document).GetElement(aId) as Autodesk.Revit.DB.Mechanical.Space;
-            if(space == null)
+            if (space == null)
             {
                 message = "Invalid Element";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
                 return;
             }
 
-            if(space.Location == null)
+            if (space.Location == null)
             {
                 message = string.Format("Cannot generate Panels. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 
-            if(space.Volume < Core.Tolerance.MacroDistance)
+            if (space.Volume < Core.Tolerance.MacroDistance)
             {
                 message = string.Format("Space cannot be converted because it has no volume. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);

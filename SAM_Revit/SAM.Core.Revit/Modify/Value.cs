@@ -9,16 +9,20 @@ namespace SAM.Core.Revit
             if (parameter == null || parameter.IsReadOnly)
                 return false;
 
-            switch(parameter.StorageType)
+            switch (parameter.StorageType)
             {
                 case StorageType.Double:
                     return Value_Double(parameter, value);
+
                 case StorageType.ElementId:
                     return Value_ElementId(parameter, value);
+
                 case StorageType.Integer:
                     return Value_Integer(parameter, value);
+
                 case StorageType.None:
                     return Value_None(parameter, value);
+
                 case StorageType.String:
                     return Value_String(parameter, value);
             }
@@ -47,9 +51,8 @@ namespace SAM.Core.Revit
             if (!Core.Query.TryGetValue(sAMObject, name_Object, out value))
                 return false;
 
-            return Value(parameter, value);         
+            return Value(parameter, value);
         }
-
 
         private static bool Value_String(this Parameter parameter, object value)
         {
@@ -84,7 +87,7 @@ namespace SAM.Core.Revit
                 return false;
 
             if (value is int)
-            {   
+            {
                 //Check if parameter is Workset parameter -> If Workset parameter then change only if Workset with Id exists
                 if (parameter.Id.IntegerValue == (int)BuiltInParameter.ELEM_PARTITION_PARAM)
                 {
@@ -111,8 +114,6 @@ namespace SAM.Core.Revit
                 int @int;
                 if (int.TryParse(value_Temp, out @int))
                 {
-
-                    
                     parameter.Set(@int);
                     return true;
                 }
@@ -136,7 +137,6 @@ namespace SAM.Core.Revit
 
                     return false;
                 }
-
             }
             else if (value is bool)
             {
@@ -166,17 +166,17 @@ namespace SAM.Core.Revit
                 parameter.Set(ElementId.InvalidElementId);
                 return true;
             }
-            else if(value is IntegerId)
+            else if (value is IntegerId)
             {
                 parameter.Set(((IntegerId)value).ToRevit());
                 return true;
             }
-            else if(value is int)
+            else if (value is int)
             {
                 parameter.Set(new ElementId((int)value));
                 return true;
             }
-            else if(value is string)
+            else if (value is string)
             {
                 string value_Temp = (string)value;
                 int @int;
@@ -196,16 +196,16 @@ namespace SAM.Core.Revit
                 return false;
 
             double value_Temp = double.NaN;
-            if(value is string)
+            if (value is string)
             {
                 if (!double.TryParse((string)value, out value_Temp))
                     return false;
             }
-            else if(value is double)
+            else if (value is double)
             {
                 value_Temp = (double)value;
             }
-            else if(value is int)
+            else if (value is int)
             {
                 value_Temp = System.Convert.ToDouble(value);
             }
@@ -226,7 +226,6 @@ namespace SAM.Core.Revit
 
             parameter.Set(value_Temp);
             return true;
-            
         }
     }
 }

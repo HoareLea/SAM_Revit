@@ -2,7 +2,6 @@
 
 using SAM.Geometry.Planar;
 
-
 namespace SAM.Geometry.Revit
 {
     public static partial class Convert

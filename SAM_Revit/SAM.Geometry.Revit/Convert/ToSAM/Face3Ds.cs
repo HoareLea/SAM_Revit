@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
-
+using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {
@@ -74,7 +71,6 @@ namespace SAM.Geometry.Revit
                 }
             }
             return result;
-
         }
     }
 }

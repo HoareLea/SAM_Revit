@@ -1,9 +1,6 @@
-﻿using System.Reflection;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Core;
-
+using System.Reflection;
 
 namespace SAM.Analytical.Revit
 {
@@ -21,10 +18,9 @@ namespace SAM.Analytical.Revit
             Setting setting = ActiveManager.GetSetting(Assembly.GetExecutingAssembly());
             if (setting == null)
                 setting = GetDefault();
-            
+
             return setting;
         }
-        
 
         public static Setting Setting
         {

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 
-
 namespace SAM.Core.Revit
 {
     public static partial class ActiveSetting
@@ -19,10 +18,9 @@ namespace SAM.Core.Revit
             Setting setting = ActiveManager.GetSetting(Assembly.GetExecutingAssembly());
             if (setting == null)
                 setting = GetDefault();
-            
+
             return setting;
         }
-        
 
         public static Setting Setting
         {

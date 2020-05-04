@@ -1,6 +1,4 @@
-﻿using Autodesk.Revit.DB;
-
-namespace SAM.Core.Revit
+﻿namespace SAM.Core.Revit
 {
     public static partial class Query
     {
@@ -8,16 +6,16 @@ namespace SAM.Core.Revit
         {
             familyName = null;
             typeName = null;
-            
+
             if (string.IsNullOrWhiteSpace(fullName))
                 return false;
 
             string[] values = fullName.Split(':');
-            if(values.Length == 1)
+            if (values.Length == 1)
             {
                 typeName = values[0].Trim();
             }
-            else if(values.Length == 2)
+            else if (values.Length == 2)
             {
                 familyName = values[0].Trim();
                 typeName = values[1].Trim();

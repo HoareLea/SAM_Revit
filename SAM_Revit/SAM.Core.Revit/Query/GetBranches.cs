@@ -72,6 +72,5 @@ namespace SAM.Core.Revit
 
             return result;
         }
-
     }
 }

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
-
-using Autodesk.Revit.DB;
 
 namespace SAM.Geometry.Revit
 {
@@ -16,7 +9,7 @@ namespace SAM.Geometry.Revit
         {
             if (element == null)
                 return null;
-            
+
             if (element.Location is LocationPoint)
                 return ((LocationPoint)element.Location).Point.ToSAM();
 

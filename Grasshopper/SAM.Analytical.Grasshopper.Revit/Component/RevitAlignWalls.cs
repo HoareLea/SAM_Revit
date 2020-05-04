@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Revit;
-using SAM.Geometry.Spatial;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
-
+using SAM.Geometry.Spatial;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -119,7 +115,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                     if (Math.Abs(min - referenceElevation) < Core.Tolerance.Distance || (min - Core.Tolerance.Distance < referenceElevation && max - Core.Tolerance.Distance > referenceElevation))
                         panels_Reference.Add(panel);
                 }
-
             }
 
             IEnumerable<ElementId> elementIds = panels.ConvertAll(x => x.ElementId()).Distinct();
@@ -180,7 +175,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 bool pinned = wall.Pinned;
 
-                if(wall.Pinned)
+                if (wall.Pinned)
                 {
                     using (SubTransaction subTransaction = new SubTransaction(document))
                     {
@@ -204,7 +199,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                     document.Regenerate();
                     locationCurve.Curve = line;
-                    
+
                     subTransaction.Commit();
                 }
 

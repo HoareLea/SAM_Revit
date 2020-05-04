@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Grasshopper.Kernel;
+﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Core.Grasshopper.Revit.Properties;
+using System;
+using System.Collections.Generic;
 
 namespace SAM.Core.Grasshopper.Revit
 {
@@ -49,7 +49,9 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             List<GH_ObjectWrapper> objectWrapperList;
@@ -64,7 +66,7 @@ namespace SAM.Core.Grasshopper.Revit
             }
 
             List<SAMObject> sAMObjects = new List<SAMObject>();
-            foreach(GH_ObjectWrapper objectWrapper in objectWrapperList)
+            foreach (GH_ObjectWrapper objectWrapper in objectWrapperList)
             {
                 if (objectWrapper == null || objectWrapper.Value == null)
                 {
@@ -75,9 +77,9 @@ namespace SAM.Core.Grasshopper.Revit
                 SAMObject sAMObject = null;
                 if (objectWrapper.Value is SAMObject)
                     sAMObject = objectWrapper.Value as SAMObject;
-                else if(objectWrapper.Value is IGH_Goo)
+                else if (objectWrapper.Value is IGH_Goo)
                     sAMObject = (objectWrapper.Value as dynamic).Value as SAMObject;
-                
+
                 if (sAMObject == null)
                     continue;
 
@@ -96,23 +98,23 @@ namespace SAM.Core.Grasshopper.Revit
             HashSet<Autodesk.Revit.DB.ElementId> elementIds = new HashSet<Autodesk.Revit.DB.ElementId>();
             foreach (GH_ObjectWrapper objectWrapper in objectWrapperList)
             {
-                if(objectWrapper == null || objectWrapper.Value == null)
+                if (objectWrapper == null || objectWrapper.Value == null)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Null ElementId");
                     continue;
                 }
-                
-                if(objectWrapper.Value is int)
+
+                if (objectWrapper.Value is int)
                     elementIds.Add(new Autodesk.Revit.DB.ElementId((int)objectWrapper.Value));
-                else if(objectWrapper.Value is GH_Integer)
+                else if (objectWrapper.Value is GH_Integer)
                     elementIds.Add(new Autodesk.Revit.DB.ElementId(((GH_Integer)objectWrapper.Value).Value));
-                else if(objectWrapper.Value is string)
+                else if (objectWrapper.Value is string)
                 {
                     int value;
-                    if(int.TryParse((string)objectWrapper.Value, out value))
+                    if (int.TryParse((string)objectWrapper.Value, out value))
                         elementIds.Add(new Autodesk.Revit.DB.ElementId(value));
                 }
-                else if(objectWrapper.Value is GH_Number)
+                else if (objectWrapper.Value is GH_Number)
                 {
                     elementIds.Add(new Autodesk.Revit.DB.ElementId((int)((GH_Number)objectWrapper.Value).Value));
                 }

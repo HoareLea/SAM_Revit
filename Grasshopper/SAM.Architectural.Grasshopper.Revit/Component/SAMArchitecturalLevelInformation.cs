@@ -1,12 +1,8 @@
-﻿using System;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
 using SAM.Architectural.Grasshopper.Revit.Properties;
-
+using System;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
@@ -57,7 +53,9 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             GH_ObjectWrapper objectWrapper = null;
@@ -78,30 +76,29 @@ namespace SAM.Architectural.Grasshopper.Revit
             }
 
             dynamic obj = objectWrapper.Value;
-            if(obj is GH_Integer)
+            if (obj is GH_Integer)
             {
                 ElementId elementId = new ElementId(((GH_Integer)obj).Value);
-                if(elementId == null || elementId == ElementId.InvalidElementId)
+                if (elementId == null || elementId == ElementId.InvalidElementId)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Element");
                     return;
                 }
                 level = document.GetElement(elementId) as Level;
-
             }
-            else if(obj.GetType().GetProperty("Id") != null)
+            else if (obj.GetType().GetProperty("Id") != null)
             {
                 ElementId aId = obj.Id as ElementId;
                 level = document.GetElement(aId) as Level;
             }
 
-            if(level == null)
+            if (level == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Level");
                 return;
             }
 
-            if(level == null)
+            if (level == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -116,7 +113,7 @@ namespace SAM.Architectural.Grasshopper.Revit
             double elevation_Low = double.NaN;
             if (level_Low != null)
                 elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, DisplayUnitType.DUT_METERS);
-            
+
             dataAccess.SetData(0, level_High);
             dataAccess.SetData(1, new GH_Number(elevation_High));
             dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS)));

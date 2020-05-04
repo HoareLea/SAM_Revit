@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.DB;
 
-
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert
@@ -22,7 +21,7 @@ namespace SAM.Analytical.Revit
 
             result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
 
-            if(convertSettings.ConvertParameters)
+            if (convertSettings.ConvertParameters)
             {
                 Core.Revit.Modify.Values(space, result);
                 Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);

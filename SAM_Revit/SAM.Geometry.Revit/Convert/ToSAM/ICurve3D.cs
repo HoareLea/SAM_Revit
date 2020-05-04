@@ -1,7 +1,5 @@
-﻿using SAM.Geometry.Spatial;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
+using SAM.Geometry.Spatial;
 
 namespace SAM.Geometry.Revit
 {
@@ -14,7 +12,8 @@ namespace SAM.Geometry.Revit
 
         public static ICurve3D ToSAM(this Curve curve)
         {
-           // Curve curve_Transformed = curve.CreateTransformed(Transform.Identity.ScaleBasis(Units.Convert.ToSI(1, Units.UnitType.Feet)));
+            // Curve curve_Transformed =
+            // curve.CreateTransformed(Transform.Identity.ScaleBasis(Units.Convert.ToSI(1, Units.UnitType.Feet)));
 
             if (curve is Line)
                 return ((Line)curve).ToSAM();

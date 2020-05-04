@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
-
+﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
-
+using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {
@@ -22,7 +19,7 @@ namespace SAM.Geometry.Revit
         {
             return ToSAM(face.GetEdgesAsCurveLoops());
         }
-    
+
         public static List<PolycurveLoop3D> ToSAM_PolycurveLoop3D(this Mesh mesh)
         {
             List<PolycurveLoop3D> result = new List<PolycurveLoop3D>();

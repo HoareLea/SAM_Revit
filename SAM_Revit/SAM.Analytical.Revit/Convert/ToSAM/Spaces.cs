@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert
@@ -21,7 +20,7 @@ namespace SAM.Analytical.Revit
             IEnumerable<SpatialElement> spatialElements = new FilteredElementCollector(document_Source).OfCategory(builtInCategory).Cast<SpatialElement>();
 
             List<Space> spaces = new List<Space>();
-            foreach(SpatialElement spatialElement in spatialElements)
+            foreach (SpatialElement spatialElement in spatialElements)
             {
                 Space space = ToSAM(spatialElement);
                 if (space != null)

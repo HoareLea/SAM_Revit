@@ -1,11 +1,8 @@
-﻿using System;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,13 +51,14 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
             if (!dataAccess.GetData(1, ref run) || !run)
                 return;
-          
 
             GH_ObjectWrapper objectWrapper = null;
 
@@ -77,7 +75,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             string message = null;
 
             Element element = (obj.Document as Document).GetElement(aId);
-            if(element == null)
+            if (element == null)
             {
                 message = "Invalid Element";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
@@ -86,7 +84,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            if(element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
+            if (element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
                 message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
@@ -107,16 +105,15 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     sAMObjects = Analytical.Revit.Convert.ToSAM(element);
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                     dataAccess.SetData(1, message);
                 }
-                
             }
-            
-            if(sAMObjects == null || sAMObjects.Count() == 0)
+
+            if (sAMObjects == null || sAMObjects.Count() == 0)
             {
                 message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
@@ -126,7 +123,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             dataAccess.SetDataList(0, sAMObjects);
-            
+
             message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
             dataAccess.SetData(1, message);
         }

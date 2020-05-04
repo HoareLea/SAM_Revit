@@ -1,11 +1,8 @@
-﻿using System;
-
+﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-
-using Autodesk.Revit.DB;
-
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -39,7 +36,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             int index;
-            
+
             inputParamManager.AddTextParameter("_typeName_", "_typeName_", "Type Name", GH_ParamAccess.item, "Panel");
 
             index = inputParamManager.AddGenericParameter("revitLinkInstance_", "revitLinkInstance_", "RevitLinkInstance", GH_ParamAccess.item);
@@ -60,7 +57,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// This is the method that actually does the work.
         /// </summary>
-        /// <param name="dataAccess">The DA object is used to retrieve from inputs and store in outputs.</param>
+        /// <param name="dataAccess">
+        /// The DA object is used to retrieve from inputs and store in outputs.
+        /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
@@ -93,7 +92,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             GH_ObjectWrapper objectWrapper = null;
 
             dataAccess.GetData(1, ref objectWrapper);
-            if(objectWrapper != null)
+            if (objectWrapper != null)
             {
                 dynamic obj = objectWrapper.Value;
 
@@ -114,7 +113,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             FilteredElementCollector filteredElementCollector = Analytical.Revit.Query.FilteredElementCollector(document, type);
-            if(filteredElementCollector == null)
+            if (filteredElementCollector == null)
             {
                 message = "Could not create proper FilteredElementCollector";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);

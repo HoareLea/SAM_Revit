@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 using System.Linq;
-
-using Autodesk.Revit.DB;
-
 
 namespace SAM.Analytical.Revit
 {
@@ -22,7 +20,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             ElementType elementType = elementTypes.Find(x => x.Name.Equals(construction_New.Name));
-            if(elementType == null)
+            if (elementType == null)
             {
                 ElementType elementType_ToBeDuplicated = elementTypes.Find(x => x.Name.Equals(name_Old));
                 if (elementType_ToBeDuplicated == null)

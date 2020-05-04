@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using Autodesk.Revit.DB;
 using System.Collections.Generic;
-
-using Autodesk.Revit.DB;
-
+using System.Linq;
 
 namespace SAM.Core.Revit
 {
@@ -14,7 +11,7 @@ namespace SAM.Core.Revit
             if (parameterSet == null || element == null)
                 return false;
 
-            foreach(string name in parameterSet.Names)
+            foreach (string name in parameterSet.Names)
             {
                 if (string.IsNullOrWhiteSpace(name))
                     continue;
@@ -26,8 +23,8 @@ namespace SAM.Core.Revit
                 if (parameters == null || parameters.Count() == 0)
                     continue;
 
-                foreach(Parameter parameter in parameters)     
-                    Value(parameter, parameterSet.ToObject(name));                   
+                foreach (Parameter parameter in parameters)
+                    Value(parameter, parameterSet.ToObject(name));
             }
 
             return true;
@@ -58,12 +55,11 @@ namespace SAM.Core.Revit
 
                     Value(parameter, parameterSet.ToObject(name));
                 }
-                    
             }
 
             return true;
         }
-        
+
         public static bool Values(this Setting setting, SAMObject sAMObject, Element element)
         {
             if (element == null)

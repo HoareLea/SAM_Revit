@@ -13,7 +13,6 @@ namespace SAM.Core.Grasshopper.Revit
         public GooConvertSettings()
             : base()
         {
-
         }
 
         public GooConvertSettings(ConvertSettings convertSettings)
@@ -103,7 +102,6 @@ namespace SAM.Core.Grasshopper.Revit
         public GooConvertSettingsParam()
             : base(typeof(GooConvertSettings).Name, typeof(GooConvertSettings).Name, typeof(GooConvertSettings).FullName.Replace(".", " "), "Params", "SAM")
         {
-
         }
 
         protected override GH_GetterResult Prompt_Plural(ref List<GooConvertSettings> values)

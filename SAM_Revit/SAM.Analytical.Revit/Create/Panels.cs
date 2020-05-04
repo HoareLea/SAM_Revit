@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Autodesk.Revit.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Autodesk.Revit.DB;
-
 
 namespace SAM.Analytical.Revit
 {
@@ -60,7 +58,7 @@ namespace SAM.Analytical.Revit
         {
             if (spatialElement == null || spatialElementBoundaryOptions == null)
                 return null;
-            
+
             SpatialElementGeometryCalculator spatialElementGeometryCalculator = new SpatialElementGeometryCalculator(spatialElement.Document, spatialElementBoundaryOptions);
 
             return Panels(spatialElement, spatialElementGeometryCalculator);
@@ -83,7 +81,7 @@ namespace SAM.Analytical.Revit
             foreach (Face face in solid.Faces)
             {
                 IList<SpatialElementBoundarySubface> spatialElementBoundarySubfaces = spatialElementGeometryResults.GetBoundaryFaceInfo(face);
-                if(spatialElementBoundarySubfaces == null || spatialElementBoundarySubfaces.Count == 0)
+                if (spatialElementBoundarySubfaces == null || spatialElementBoundarySubfaces.Count == 0)
                 {
                     tuples.Add(new Tuple<Face, LinkElementId, SubfaceType>(face, null, SubfaceType.Side));
                     continue;
@@ -125,7 +123,7 @@ namespace SAM.Analytical.Revit
                             if (panels != null && panels.Count > 0)
                                 panel = panels[0];
 
-                            if(panel != null)
+                            if (panel != null)
                             {
                                 panelType = panel.PanelType;
                                 construction = panel.Construction;
@@ -134,7 +132,7 @@ namespace SAM.Analytical.Revit
                             if (panelType == PanelType.Undefined)
                                 panelType = Query.PanelType(hostObject);
 
-                            if(construction == null)
+                            if (construction == null)
                             {
                                 ElementId elementId_Type = hostObject.GetTypeId();
                                 if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
@@ -154,9 +152,11 @@ namespace SAM.Analytical.Revit
                         case SubfaceType.Bottom:
                             panelType = PanelType.Floor;
                             break;
+
                         case SubfaceType.Top:
                             panelType = PanelType.Roof;
                             break;
+
                         case SubfaceType.Side:
                             panelType = PanelType.Wall;
                             break;
@@ -166,7 +166,7 @@ namespace SAM.Analytical.Revit
                 if (construction == null)
                     construction = Analytical.Query.Construction(panelType); //Default Construction
 
-                if(panel == null)
+                if (panel == null)
                 {
                     panel = new Panel(construction, panelType, face3D);
                 }
@@ -180,6 +180,5 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
-
     }
 }

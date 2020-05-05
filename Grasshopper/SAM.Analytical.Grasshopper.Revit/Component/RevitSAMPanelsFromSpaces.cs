@@ -34,7 +34,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_space", "_space", "Revit Space instance", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_space", "_space", "Revit Space Instance", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_merge_", "_merge_", "Merge Coplanar Panels", GH_ParamAccess.item, true);
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -57,7 +58,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            if (!dataAccess.GetData(2, ref run) || !run)
+                return;
+
+            bool merge = true;
+            if (!dataAccess.GetData(1, ref merge))
                 return;
 
             GH_ObjectWrapper objectWrapper = null;
@@ -105,6 +110,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             panels.RemoveAll(x => x == null);
+
+            if (merge)
+                panels = Query.MergeCoplanarPanels(panels, Core.Tolerance.MacroDistance);
 
             dataAccess.SetDataList(0, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Wall));
             dataAccess.SetDataList(1, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Floor));

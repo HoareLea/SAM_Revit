@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMGeneratePanels : GH_Component
+    public class RevitSAMPanelsFromSpaces : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -22,9 +22,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitSAMGeneratePanels()
-          : base("Revit.GeneratePanels", "Revit.GeneratePanels",
-              "Generates Panels based on Space Geometry",
+        public RevitSAMPanelsFromSpaces()
+          : base("Revit.PanelsFromSpaces", "Revit.PanelsFromSpaces",
+              "Query Panels based on Space Geometry",
               "SAM", "Revit")
         {
         }

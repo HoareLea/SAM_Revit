@@ -123,7 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitAlignWalls.cs" />
-    <Compile Include="Component\RevitSAMGeneratePanels.cs" />
+    <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />
     <Compile Include="Component\SAMAnalyticalUpdateConstruction.cs" />

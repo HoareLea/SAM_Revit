@@ -79,6 +79,7 @@
     </Reference>
     <Reference Include="RhinoInside, Version=1.0.1.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\..\packages\Rhino.Inside.0.2.0\lib\net45\RhinoInside.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
       <SpecificVersion>False</SpecificVersion>

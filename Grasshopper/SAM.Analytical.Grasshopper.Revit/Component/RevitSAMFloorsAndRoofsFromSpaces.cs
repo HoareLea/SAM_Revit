@@ -128,7 +128,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     continue;
                 }
 
-                HostObject hostObject = document.GetElement(aId) as HostObject;
+                HostObject hostObject = document.GetElement(elementId) as HostObject;
                 if(hostObject == null)
                 {
                     panels_Temp.Add(panel);
@@ -161,9 +161,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (merge)
                 panels = Query.MergeCoplanarPanels(panels, Core.Tolerance.MacroDistance, ref redundantPanels);
 
-            dataAccess.SetDataList(1, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
-            dataAccess.SetDataList(2, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Roof));
-            dataAccess.SetDataList(3, redundantPanels);
+            dataAccess.SetDataList(0, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
+            dataAccess.SetDataList(1, panels.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Roof));
+            dataAccess.SetDataList(2, redundantPanels);
         }
     }
 }

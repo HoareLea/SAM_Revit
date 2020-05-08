@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitAlignWalls.cs" />
+    <Compile Include="Component\RevitSAMFloorsAndRoofsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />

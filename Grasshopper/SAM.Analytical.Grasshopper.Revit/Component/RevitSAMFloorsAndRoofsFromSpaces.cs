@@ -115,21 +115,21 @@ namespace SAM.Analytical.Grasshopper.Revit
             panels.RemoveAll(x => x == null);
 
             List<Panel> panels_Temp = new List<Panel>();
-            foreach(Panel panel in panels)
+            foreach (Panel panel in panels)
             {
                 PanelGroup panelGroup = Query.PanelGroup(panel.PanelType);
                 if (panelGroup != PanelGroup.Floor && panelGroup != PanelGroup.Roof)
                     continue;
 
                 ElementId elementId = panel.ElementId();
-                if(elementId == null || elementId == ElementId.InvalidElementId)
+                if (elementId == null || elementId == ElementId.InvalidElementId)
                 {
                     panels_Temp.Add(panel);
                     continue;
                 }
 
                 HostObject hostObject = document.GetElement(elementId) as HostObject;
-                if(hostObject == null)
+                if (hostObject == null)
                 {
                     panels_Temp.Add(panel);
                     continue;
@@ -138,14 +138,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
 
                 List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Query.Profiles(hostObject);
-                if(face3Ds == null || face3Ds.Count == 0)
+                if (face3Ds == null || face3Ds.Count == 0)
                 {
                     panels_Temp.Add(panel);
                     continue;
                 }
 
                 Geometry.Spatial.Plane plane_Face3D = face3Ds.Find(x => plane.Coplanar(x.GetPlane()))?.GetPlane();
-                if(plane_Face3D == null)
+                if (plane_Face3D == null)
                 {
                     panels_Temp.Add(panel);
                     continue;

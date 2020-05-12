@@ -5,9 +5,7 @@ using Grasshopper.Kernel.Data;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
 using SAM.Core.Revit;
-using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
-using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +73,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             List<Panel> panels = new List<Panel>();
-            foreach(HostObject hostObject in hostObjects)
+            foreach (HostObject hostObject in hostObjects)
             {
                 if (!(hostObject is Wall))
                     continue;
@@ -90,7 +88,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             Dictionary<ElementId, HashSet<ElementId>> dictionary = new Dictionary<ElementId, HashSet<ElementId>>();
-            for(int i=0; i < panels.Count; i++)
+            for (int i = 0; i < panels.Count; i++)
             {
                 Panel panel = panels[i];
                 List<Panel> panels_Overlap = panelsList_Overlap[i];
@@ -100,7 +98,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     continue;
 
                 HashSet<ElementId> elementIds = null;
-                if(!dictionary.TryGetValue(elementId, out elementIds))
+                if (!dictionary.TryGetValue(elementId, out elementIds))
                 {
                     elementIds = new HashSet<ElementId>();
                     dictionary.Add(elementId, elementIds);
@@ -115,13 +113,25 @@ namespace SAM.Analytical.Grasshopper.Revit
             foreach (KeyValuePair<ElementId, HashSet<ElementId>> keyValuePair in dictionary)
             {
                 walls.Add(document.GetElement(keyValuePair.Key) as Wall);
-                
+
                 GH_Path path = new GH_Path(count);
-                List<Wall> walls_Overlap = keyValuePair.Value.ToList().ConvertAll(x => document.GetElement(keyValuePair.Key) as Wall);
+                if (keyValuePair.Value == null)
+                {
+                    dataTree_Walls.Add(null, path);
+                    continue;
+                }
+
+                keyValuePair.Value.Remove(keyValuePair.Key);
+                if (keyValuePair.Value.Count == 0)
+                {
+                    dataTree_Walls.Add(null, path);
+                    continue;
+                }
+
+                List<Wall> walls_Overlap = keyValuePair.Value.ToList().ConvertAll(x => document.GetElement(x) as Wall);
                 walls_Overlap.Sort((x, y) => (y.Location as LocationCurve).Curve.Length.CompareTo((x.Location as LocationCurve).Curve.Length));
                 walls_Overlap.ForEach(x => dataTree_Walls.Add(x, path));
                 count++;
-
             }
 
             dataAccess.SetDataList(0, walls);

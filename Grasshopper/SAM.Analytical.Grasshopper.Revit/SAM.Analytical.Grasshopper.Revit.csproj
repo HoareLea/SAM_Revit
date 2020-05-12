@@ -125,6 +125,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />
     <Compile Include="Component\RevitSAMFloorsAndRoofsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />

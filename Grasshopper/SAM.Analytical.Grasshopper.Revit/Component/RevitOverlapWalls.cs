@@ -115,18 +115,18 @@ namespace SAM.Analytical.Grasshopper.Revit
                 walls.Add(document.GetElement(keyValuePair.Key) as Wall);
 
                 GH_Path path = new GH_Path(count);
-                if (keyValuePair.Value == null)
-                {
-                    dataTree_Walls.Add(null, path);
-                    continue;
-                }
+                //if (keyValuePair.Value == null)
+                //{
+                //    dataTree_Walls.Add(null, path);
+                //    continue;
+                //}
 
                 keyValuePair.Value.Remove(keyValuePair.Key);
-                if (keyValuePair.Value.Count == 0)
-                {
-                    dataTree_Walls.Add(null, path);
-                    continue;
-                }
+                //if (keyValuePair.Value.Count == 0)
+                //{
+                //    dataTree_Walls.Add(null, path);
+                //    continue;
+                //}
 
                 List<Wall> walls_Overlap = keyValuePair.Value.ToList().ConvertAll(x => document.GetElement(x) as Wall);
                 walls_Overlap.Sort((x, y) => (y.Location as LocationCurve).Curve.Length.CompareTo((x.Location as LocationCurve).Curve.Length));

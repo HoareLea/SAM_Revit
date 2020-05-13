@@ -174,9 +174,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
             }
 
-
-            
-
             //if (hostObject != null)
             //{
             //    BuiltInParameter[] builtInParameters = new BuiltInParameter[]

@@ -55,34 +55,52 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             List<GH_ObjectWrapper> objectWrappers = new List<GH_ObjectWrapper>();
-            if(!dataAccess.GetDataList(0, objectWrappers))
+            if (!dataAccess.GetDataList(0, objectWrappers))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             List<ElementId> elementIds = new List<ElementId>();
-            foreach(GH_ObjectWrapper objectWrapper in objectWrappers)
+            foreach (GH_ObjectWrapper objectWrapper in objectWrappers)
             {
-                if(objectWrapper.Value is int)
+                if (objectWrapper == null)
+                    continue;
+
+                object value = null;
+
+                System.Reflection.PropertyInfo propertyInfo = objectWrapper.Value.GetType().GetProperty("Id");
+                if (propertyInfo != null)
+                    value = propertyInfo.GetValue(objectWrapper.Value);
+                else if(objectWrapper.Value is IGH_Goo)
+                    value = (objectWrapper.Value as dynamic).Value;
+                else
+                    value = objectWrapper.Value;
+                    
+
+                if (value is int)
                 {
-                    elementIds.Add(new ElementId((int)objectWrapper.Value));
+                    elementIds.Add(new ElementId((int)value));
                 }
-                else if (objectWrapper.Value is double)
+                else if (value is double)
                 {
-                    elementIds.Add(new ElementId(System.Convert.ToInt32(objectWrapper.Value)));
+                    elementIds.Add(new ElementId(System.Convert.ToInt32(value)));
                 }
-                else if(objectWrapper.Value is string)
+                else if (value is string)
                 {
-                    int value;
-                    if (!int.TryParse((string)objectWrapper.Value, out value))
+                    int @int;
+                    if (!int.TryParse((string)value, out @int))
                         continue;
 
-                    elementIds.Add(new ElementId((int)objectWrapper.Value));
+                    elementIds.Add(new ElementId(@int));
                 }
-                else if (objectWrapper.Value is SAMObject)
+                else if (value is SAMObject)
                 {
-                    elementIds.Add(Core.Revit.Query.ElementId((SAMObject)objectWrapper.Value));
+                    elementIds.Add(Core.Revit.Query.ElementId((SAMObject)value));
+                }
+                else if (value is ElementId)
+                {
+                    elementIds.Add((ElementId)value);
                 }
             }
 

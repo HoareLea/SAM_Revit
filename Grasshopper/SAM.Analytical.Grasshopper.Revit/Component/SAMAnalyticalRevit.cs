@@ -168,9 +168,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             Construction construction = panel.Construction;
-            if (construction != null && !hostObject_New.Name.Equals(construction.Name))
+            if (construction != null && !string.IsNullOrWhiteSpace(construction.Name) && !construction.Name.Equals(hostObject_New.FullName()))
             {
-                string message = string.Format("Panel Construction and Revit Element Type mismatch. Panel Guid: {0} Construction Name: {1}, Revit Element Id: {2}", panel.Guid, construction.Name, hostObject_New.Id.IntegerValue);
+                string message = string.Format("Revit Element Type is missing - Panel Guid: {0} Construction Name: {1}, Revit Element Id: {2}", panel.Guid, construction.Name, hostObject_New.Id.IntegerValue);
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
             }
 

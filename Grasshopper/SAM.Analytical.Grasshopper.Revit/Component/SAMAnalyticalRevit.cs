@@ -167,6 +167,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (hostObject_New == null)
                 return;
 
+            Construction construction = panel.Construction;
+            if (construction != null && !hostObject_New.Name.Equals(construction.Name))
+            {
+                string message = string.Format("Panel Construction and Revit Element Type mismatch. Panel Guid: {0} Construction Name: {1}, Revit Element Id: {2}", panel.Guid, construction.Name, hostObject_New.Id.IntegerValue);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+            }
+
+
+            
+
             //if (hostObject != null)
             //{
             //    BuiltInParameter[] builtInParameters = new BuiltInParameter[]

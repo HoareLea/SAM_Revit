@@ -113,6 +113,15 @@ namespace SAM.Analytical.Revit
                             if (k == -1)
                                 continue;
 
+                            //TODO: Double Check if works (added 2020.05.14)
+                            if ((index == 0 && segment2D[1].AlmostEquals(tuple_Intersection.Item1)) || (index == 1 && segment2D[0].AlmostEquals(tuple_Intersection.Item1)))
+                            {
+                                tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, new Segment2D(tuple_Intersection.Item1, tuple_Intersection.Item1), tuple.Item3.FindAll(x => x != index), true);
+
+                                updated = true;
+                                break;
+                            }
+
                             Segment2D segment2D_Temp;
 
                             if (segment2D_Intersection[0].Distance(tuple_Intersection.Item1) < maxDistance || segment2D_Intersection[1].Distance(tuple_Intersection.Item1) < maxDistance)

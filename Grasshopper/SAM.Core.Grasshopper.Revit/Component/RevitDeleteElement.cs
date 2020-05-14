@@ -72,11 +72,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                 System.Reflection.PropertyInfo propertyInfo = objectWrapper.Value.GetType().GetProperty("Id");
                 if (propertyInfo != null)
                     value = propertyInfo.GetValue(objectWrapper.Value);
-                else if(objectWrapper.Value is IGH_Goo)
+                else if (objectWrapper.Value is IGH_Goo)
                     value = (objectWrapper.Value as dynamic).Value;
                 else
                     value = objectWrapper.Value;
-                    
 
                 if (value is int)
                 {

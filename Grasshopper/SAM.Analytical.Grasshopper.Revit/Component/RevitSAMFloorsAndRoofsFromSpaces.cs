@@ -117,7 +117,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Panel> panels_Temp = new List<Panel>();
             foreach (Panel panel in panels)
             {
-                PanelGroup panelGroup = Query.PanelGroup(panel.PanelType);
+                PanelGroup panelGroup = Analytical.Query.PanelGroup(panel.PanelType);
                 if (panelGroup != PanelGroup.Floor && panelGroup != PanelGroup.Roof)
                     continue;
 
@@ -159,10 +159,10 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Panel> redundantPanels = new List<Panel>();
             if (merge)
-                panels_Temp = Query.MergeCoplanarPanels(panels_Temp, Core.Tolerance.MacroDistance, ref redundantPanels);
+                panels_Temp = Analytical.Query.MergeCoplanarPanels(panels_Temp, Core.Tolerance.MacroDistance, ref redundantPanels);
 
-            dataAccess.SetDataList(0, panels_Temp.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
-            dataAccess.SetDataList(1, panels_Temp.FindAll(x => Query.PanelGroup(x.PanelType) == PanelGroup.Roof));
+            dataAccess.SetDataList(0, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
+            dataAccess.SetDataList(1, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Roof));
             dataAccess.SetDataList(2, redundantPanels);
         }
     }

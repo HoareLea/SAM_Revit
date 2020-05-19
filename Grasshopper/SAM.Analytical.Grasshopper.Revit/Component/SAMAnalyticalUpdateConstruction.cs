@@ -206,7 +206,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     if (string.IsNullOrWhiteSpace(name_default))
                     {
-                        Construction construction_Default = Query.Construction(panel.PanelType);
+                        Construction construction_Default = Analytical.Query.Construction(panel.PanelType);
                         if (construction_Default != null)
                             name_default = construction_Default.Name;
                     }

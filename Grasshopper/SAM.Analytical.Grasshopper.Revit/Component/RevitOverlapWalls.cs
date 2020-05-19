@@ -83,7 +83,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     panels.AddRange(panels_Temp);
             }
 
-            List<List<Panel>> panelsList_Overlap = Query.OverlapPanels(panels);
+            List<List<Panel>> panelsList_Overlap = Analytical.Query.OverlapPanels(panels);
             if (panelsList_Overlap == null || panelsList_Overlap.Count == 0 || panels.Count != panelsList_Overlap.Count)
                 return;
 

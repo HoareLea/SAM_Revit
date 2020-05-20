@@ -49,7 +49,7 @@ namespace SAM.Analytical.Revit
 
             SpatialElementBoundaryOptions spatialElementBoundaryOptions = new SpatialElementBoundaryOptions();
             spatialElementBoundaryOptions.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center;
-            spatialElementBoundaryOptions.StoreFreeBoundaryFaces = false;
+            spatialElementBoundaryOptions.StoreFreeBoundaryFaces = true;
 
             return Panels(spatialElement, spatialElementBoundaryOptions);
         }

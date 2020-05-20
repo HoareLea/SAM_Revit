@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
     {
         public static Construction ToSAM(this HostObjAttributes hostObjAttributes)
         {
-            Construction construction = new Construction(SAM.Core.Revit.Query.FullName(hostObjAttributes));
+            Construction construction = new Construction(hostObjAttributes.Name);
             construction.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
 
             return construction;

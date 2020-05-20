@@ -34,26 +34,26 @@ namespace SAM.Analytical.Revit
         {
             Setting result = new Setting(Assembly.GetExecutingAssembly());
 
-            SAMRelationCluster sAMRelationCluster = new SAMRelationCluster();
+            MapCluster mapCluster = new MapCluster();
 
             //Aperture
             //Instance Parameters
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetWidth", "SAM_BuildingElementWidth"));
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("GetHeight", "SAM_BuildingElementHeight"));
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("Guid", "_Filter Comments 03"));  //to be repalced for SAM_GUID
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 01"));
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 02"));
-            sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation(null, "_Filter Comments 03"));
-            //sAMRelationCluster.Add(typeof(Aperture), typeof(FamilyInstance), new SAMRelation("IsRectangular", "SAM_IsNotValidEditable"));  //bool
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "GetWidth", "SAM_BuildingElementWidth");
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "GetHeight", "SAM_BuildingElementHeight");
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "Guid", "_Filter Comments 03");  //to be repalced for SAM_GUID
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), null, "_Filter Comments 01");
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), null, "_Filter Comments 02");
+            mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), null, "_Filter Comments 03");
+            //mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "IsRectangular", "SAM_IsNotValidEditable");  //bool
             //Type Parameters
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementAir")); //bool
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementColor")); //string or color
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementDesciription")); //string
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementGround")); //bool
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementInternalShadows")); //bool
-            sAMRelationCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), new SAMRelation(null, "SAM_BuildingElementTransparent")); //bool
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementAir"); //bool
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementColor"); //string or color
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementDesciription"); //string
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementGround"); //bool
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementInternalShadows"); //bool
+            mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementTransparent"); //bool
 
-            result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, sAMRelationCluster);
+            result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
 
             return result;
         }

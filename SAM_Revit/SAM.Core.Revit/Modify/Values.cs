@@ -65,21 +65,16 @@ namespace SAM.Core.Revit
             if (element == null)
                 return false;
 
-            SAMRelationCluster sAMRelationCluster;
-            if (setting.TryGetValue(ActiveSetting.Name.ParameterMap, out sAMRelationCluster))
+            MapCluster mapCluster;
+            if (setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster))
             {
-                if (sAMRelationCluster != null)
+                if (mapCluster != null)
                 {
-                    List<SAMRelation> sAMRelations = sAMRelationCluster.GetSAMRelations(sAMObject.GetType(), element.GetType());
-                    if (sAMRelations != null || sAMRelations.Count > 0)
+                    List<string> names = mapCluster.GetNames(sAMObject.GetType(), element.GetType());
+                    if (names != null || names.Count > 0)
                     {
-                        foreach (SAMRelation sAMRelation in sAMRelations)
-                        {
-                            if (sAMRelation == null)
-                                continue;
-
-                            Value(sAMRelation, sAMObject, element);
-                        }
+                        foreach (string name in names)
+                            Value(sAMObject, element, name, mapCluster.GetName(sAMObject.GetType(), element.GetType(), name));
                     }
                 }
             }

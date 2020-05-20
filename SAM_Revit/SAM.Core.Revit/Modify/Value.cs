@@ -30,25 +30,17 @@ namespace SAM.Core.Revit
             return false;
         }
 
-        public static bool Value(this SAMRelation sAMRelation, SAMObject sAMObject, Element element)
+        public static bool Value(this SAMObject sAMObject, Element element, string parameterName_SAMObject, string parameterName_Element)
         {
-            if (sAMRelation == null || sAMObject == null || element == null)
+            if (string.IsNullOrWhiteSpace(parameterName_SAMObject) || string.IsNullOrWhiteSpace(parameterName_Element) || sAMObject == null || element == null)
                 return false;
 
-            string name_Object = sAMRelation.Object as string;
-            if (string.IsNullOrEmpty(name_Object))
-                return false;
-
-            string name_RelatedObject = sAMRelation.RelatedObject as string;
-            if (string.IsNullOrEmpty(name_RelatedObject))
-                return false;
-
-            Parameter parameter = element.LookupParameter(name_RelatedObject);
+            Parameter parameter = element.LookupParameter(parameterName_Element);
             if (parameter == null)
                 return false;
 
             object value;
-            if (!Core.Query.TryGetValue(sAMObject, name_Object, out value))
+            if (!Core.Query.TryGetValue(sAMObject, parameterName_SAMObject, out value))
                 return false;
 
             return Value(parameter, value);

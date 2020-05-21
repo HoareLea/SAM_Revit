@@ -11,6 +11,8 @@ namespace SAM.Geometry.Revit
             List<Point3D> point3Ds = new List<Point3D>();
             foreach (Curve curve in curveLoop)
             {
+                //TODO: Wrong if Revit returns curveLoop for which curves are not oriented!!
+                
                 ICurve3D curve3D = curve.ToSAM();
                 if (curve3D is ISegmentable3D)
                     ((ISegmentable3D)curve3D).GetSegments().ForEach(x => point3Ds.Add(x.GetStart()));

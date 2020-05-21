@@ -6,6 +6,11 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
+        public static List<Face3D> ToSAM(this Autodesk.Revit.DB.Face face)
+        {
+            return Spatial.Create.Face3Ds(face.ToSAM_Polygon3Ds(), false);
+        }
+
         public static List<Face3D> ToSAM_Face3Ds(this Sketch sketch, bool flip = false)
         {
             if (sketch == null || sketch.Profile == null)
@@ -64,9 +69,9 @@ namespace SAM.Geometry.Revit
 
                     foreach (Autodesk.Revit.DB.Face face in faceArray)
                     {
-                        Face3D face3D = face.ToSAM();
-                        if (face3D != null)
-                            result.Add(face3D);
+                        List<Face3D> face3Ds = face.ToSAM();
+                        if (face3Ds != null && face3Ds.Count != 0)
+                            result.AddRange(face3Ds);
                     }
                 }
             }

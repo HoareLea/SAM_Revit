@@ -103,79 +103,82 @@ namespace SAM.Analytical.Revit
             List<Panel> result = new List<Panel>();
             foreach (Tuple<Face, LinkElementId, SubfaceType> tuple in tuples)
             {
-                Geometry.Spatial.Face3D face3D = Geometry.Revit.Convert.ToSAM(tuple.Item1);
-                if (face3D == null)
+                List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Convert.ToSAM(tuple.Item1);
+                if (face3Ds == null || face3Ds.Count == 0)
                     continue;
 
-                PanelType panelType = PanelType.Undefined;
-                Construction construction = null;
-                Panel panel = null;
-
-                if (tuple.Item2 != null)
+                foreach(Geometry.Spatial.Face3D face3D in face3Ds)
                 {
-                    Element element = Core.Revit.Query.Element(spatialElement.Document, tuple.Item2);
-                    if (element != null)
+                    PanelType panelType = PanelType.Undefined;
+                    Construction construction = null;
+                    Panel panel = null;
+
+                    if (tuple.Item2 != null)
                     {
-                        HostObject hostObject = element as HostObject;
-                        if (hostObject != null)
+                        Element element = Core.Revit.Query.Element(spatialElement.Document, tuple.Item2);
+                        if (element != null)
                         {
-                            List<Panel> panels = hostObject.ToSAM();
-                            if (panels != null && panels.Count > 0)
-                                panel = panels[0];
-
-                            if (panel != null)
+                            HostObject hostObject = element as HostObject;
+                            if (hostObject != null)
                             {
-                                panelType = panel.PanelType;
-                                construction = panel.Construction;
-                            }
+                                List<Panel> panels = hostObject.ToSAM();
+                                if (panels != null && panels.Count > 0)
+                                    panel = panels[0];
 
-                            if (panelType == PanelType.Undefined)
-                                panelType = Query.PanelType(hostObject);
+                                if (panel != null)
+                                {
+                                    panelType = panel.PanelType;
+                                    construction = panel.Construction;
+                                }
 
-                            if (construction == null)
-                            {
-                                ElementId elementId_Type = hostObject.GetTypeId();
-                                if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
-                                    construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+                                if (panelType == PanelType.Undefined)
+                                    panelType = Query.PanelType(hostObject);
+
+                                if (construction == null)
+                                {
+                                    ElementId elementId_Type = hostObject.GetTypeId();
+                                    if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
+                                        construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+                                }
                             }
                         }
                     }
-                }
 
-                if (panelType == PanelType.Undefined)
-                    panelType = Analytical.Query.PanelType(face3D.GetPlane()?.Normal);
+                    if (panelType == PanelType.Undefined)
+                        panelType = Analytical.Query.PanelType(face3D.GetPlane()?.Normal);
 
-                if (panelType == PanelType.Undefined)
-                {
-                    switch (tuple.Item3)
+                    if (panelType == PanelType.Undefined)
                     {
-                        case SubfaceType.Bottom:
-                            panelType = PanelType.Floor;
-                            break;
+                        switch (tuple.Item3)
+                        {
+                            case SubfaceType.Bottom:
+                                panelType = PanelType.Floor;
+                                break;
 
-                        case SubfaceType.Top:
-                            panelType = PanelType.Roof;
-                            break;
+                            case SubfaceType.Top:
+                                panelType = PanelType.Roof;
+                                break;
 
-                        case SubfaceType.Side:
-                            panelType = PanelType.Wall;
-                            break;
+                            case SubfaceType.Side:
+                                panelType = PanelType.Wall;
+                                break;
+                        }
                     }
-                }
 
-                if (construction == null)
-                    construction = Analytical.Query.Construction(panelType); //Default Construction
+                    if (construction == null)
+                        construction = Analytical.Query.Construction(panelType); //Default Construction
 
-                if (panel == null)
-                {
-                    panel = new Panel(construction, panelType, face3D);
-                }
-                else
-                {
-                    panel = new Panel(panel.Guid, panel, face3D);
-                }
+                    if (panel == null)
+                    {
+                        panel = new Panel(construction, panelType, face3D);
+                    }
+                    else
+                    {
+                        panel = new Panel(panel.Guid, panel, face3D);
+                    }
 
-                result.Add(panel);
+                    result.Add(panel);
+                }
             }
 
             return result;

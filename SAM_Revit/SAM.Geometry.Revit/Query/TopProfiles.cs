@@ -18,11 +18,11 @@ namespace SAM.Geometry.Revit
                 if (face == null)
                     continue;
 
-                Spatial.Face3D face3D = face.ToSAM();
-                if (face3D == null)
+                List<Spatial.Face3D> face3Ds = face.ToSAM();
+                if (face3Ds == null || face3Ds.Count == 0)
                     continue;
 
-                result.Add(face3D);
+                result.AddRange(face3Ds);
             }
 
             return result;

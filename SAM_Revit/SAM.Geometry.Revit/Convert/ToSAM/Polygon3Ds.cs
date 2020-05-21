@@ -15,7 +15,7 @@ namespace SAM.Geometry.Revit
             return ToSAM_Polygon3Ds(face.GetEdgesAsCurveLoops());
         }
 
-        public static List<Polygon3D> ToSAM_Polygon3Ds(this IEnumerable<CurveLoop> curveLoops)
+        public static List<Polygon3D> ToSAM_Polygon3Ds(this IEnumerable<CurveLoop> curveLoops, double tolerance = Core.Tolerance.MicroDistance)
         {
             if (curveLoops == null || curveLoops.Count() == 0)
                 return null;
@@ -23,28 +23,13 @@ namespace SAM.Geometry.Revit
             List<Polygon3D> polygon3Ds = new List<Polygon3D>();
             foreach (CurveLoop curveLoop in curveLoops)
             {
-                Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop);
-                //polygon3Ds.Add(polygon3D);
-                //if (!Spatial.Query.SelfIntersect(polygon3D))
-                //{
-                //    polygon3Ds.Add(polygon3D);
-                //    continue;
-                //}
+                Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop, tolerance);
 
-                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D);
+                List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D, tolerance);
                 if (polygon3Ds_Intersection != null)
-                {
-                    if (polygon3Ds_Intersection.Count > 1)
-                    {
-                        double Test = 0;
-                    }
-
                     polygon3Ds.AddRange(polygon3Ds_Intersection);
-                }
                 else
-                {
                     polygon3Ds.Add(polygon3D);
-                }
             }
 
             return polygon3Ds;

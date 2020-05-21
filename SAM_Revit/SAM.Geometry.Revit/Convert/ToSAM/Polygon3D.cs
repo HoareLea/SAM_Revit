@@ -6,7 +6,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static Polygon3D ToSAM_Polygon3D(this CurveLoop curveLoop, double tolerance = Core.Tolerance.MicroDistance)
+        public static Polygon3D ToSAM_Polygon3D(this CurveLoop curveLoop, double tolerance = Core.Tolerance.Distance)
         {
             List<Segment3D> segment3Ds = new List<Segment3D>();
             foreach (Curve curve in curveLoop)
@@ -31,7 +31,7 @@ namespace SAM.Geometry.Revit
 
             bool oriented = true;
             for(int i=0; i < count; i++)
-                if(segment3Ds[i][1] != segment3Ds[i + 1][0])
+                if(segment3Ds[i][1].Distance(segment3Ds[i + 1][0]) > tolerance)
                 {
                     oriented = false;
                     break;

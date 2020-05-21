@@ -15,7 +15,7 @@ namespace SAM.Geometry.Revit
             return ToSAM_Polygon3Ds(face.GetEdgesAsCurveLoops());
         }
 
-        public static List<Polygon3D> ToSAM_Polygon3Ds(this IEnumerable<CurveLoop> curveLoops, double tolerance = Core.Tolerance.MicroDistance)
+        public static List<Polygon3D> ToSAM_Polygon3Ds(this IEnumerable<CurveLoop> curveLoops, double tolerance = Core.Tolerance.Distance)
         {
             if (curveLoops == null || curveLoops.Count() == 0)
                 return null;

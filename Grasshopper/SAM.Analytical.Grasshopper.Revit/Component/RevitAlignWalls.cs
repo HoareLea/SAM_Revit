@@ -120,7 +120,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             IEnumerable<ElementId> elementIds = panels.ConvertAll(x => x.ElementId()).Distinct();
             IEnumerable<ElementId> elementIds_Reference = panels_Reference.ConvertAll(x => x.ElementId()).Distinct();
 
-            Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Point3D(0, 0, elevation), Vector3D.BaseZ);
+            Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Point3D(0, 0, elevation), Vector3D.WorldZ);
 
             List<Segment2D> segment2Ds = new List<Segment2D>();
             foreach (ElementId elementId in elementIds_Reference)

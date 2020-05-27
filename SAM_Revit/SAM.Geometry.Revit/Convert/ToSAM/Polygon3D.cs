@@ -1,6 +1,8 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Geometry.Planar;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Geometry.Revit
 {
@@ -45,8 +47,8 @@ namespace SAM.Geometry.Revit
             List<Point3D> point3Ds = new List<Point3D>();
             foreach(Segment3D segment3D in segment3Ds)
             {
-                Modify.Add(point3Ds, segment3D.GetStart(), tolerance);
-                Modify.Add(point3Ds, segment3D.GetEnd(), tolerance);
+                Spatial.Modify.Add(point3Ds, segment3D.GetStart(), tolerance);
+                Spatial.Modify.Add(point3Ds, segment3D.GetEnd(), tolerance);
             }
 
             if (point3Ds == null || point3Ds.Count < 3)
@@ -62,7 +64,26 @@ namespace SAM.Geometry.Revit
 
             List<Planar.Polygon2D> polygon2Ds = Planar.Create.Polygon2Ds(segment2Ds, tolerance);
             if (polygon2Ds == null || polygon2Ds.Count == 0)
-                return null;
+            {
+                //Extra case for situation where segment2Ds does not are not properly sorted
+                List<Planar.Point2D> point2Ds = new List<Planar.Point2D>();
+                List<Planar.Segment2D> segment2Ds_Temp = new List<Planar.Segment2D>(segment2Ds);
+                point2Ds.Add(segment2Ds_Temp[0][0]);
+                point2Ds.Add(segment2Ds_Temp[0][1]);
+                segment2Ds_Temp.RemoveAt(0);
+                while (segment2Ds_Temp.Count > 0)
+                {
+                    Point2D point2D = point2Ds.Last();
+                    segment2Ds_Temp.SortByDistance(point2D);
+                    Segment2D segment2D = segment2Ds_Temp[0];
+                    if (segment2D[0].Distance(point2D) > segment2D[1].Distance(point2D))
+                        point2Ds.Add(segment2D[0]);
+                    else
+                        point2Ds.Add(segment2D[1]);
+                    segment2Ds_Temp.RemoveAt(0);
+                }
+                return plane.Convert(new Polygon2D(point2Ds));
+            }
 
             if (polygon2Ds.Count > 1)
                 polygon2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));

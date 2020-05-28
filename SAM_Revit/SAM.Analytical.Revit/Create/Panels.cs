@@ -127,8 +127,12 @@ namespace SAM.Analytical.Revit
 
                                 if (panel != null)
                                 {
-                                    panelType = panel.PanelType;
                                     construction = panel.Construction;
+                                    panelType = Analytical.Query.PanelType(construction?.Name);
+
+                                    if (panelType == PanelType.Undefined)
+                                        panelType = panel.PanelType;
+                                    
                                 }
 
                                 if (panelType == PanelType.Undefined)

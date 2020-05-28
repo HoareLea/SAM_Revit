@@ -21,6 +21,10 @@ namespace SAM.Analytical.Revit
             if (construction == null)
                 construction = Analytical.Query.Construction(panelType); //Default Construction
 
+            PanelType panelType_Temp = Analytical.Query.PanelType(construction?.Name);
+            if (panelType_Temp != PanelType.Undefined)
+                panelType = panelType_Temp;
+
             List<Geometry.Spatial.Face3D> face3Ds = hostObject.Profiles();
 
             List<Panel> result = new List<Panel>();

@@ -32,8 +32,8 @@ namespace SAM.Geometry.Revit
             segment3Ds.Add(segment3Ds[0]);
 
             bool oriented = true;
-            for(int i=0; i < count; i++)
-                if(segment3Ds[i][1].Distance(segment3Ds[i + 1][0]) > tolerance)
+            for (int i = 0; i < count; i++)
+                if (segment3Ds[i][1].Distance(segment3Ds[i + 1][0]) > tolerance)
                 {
                     oriented = false;
                     break;
@@ -45,7 +45,7 @@ namespace SAM.Geometry.Revit
                 return Spatial.Create.Polygon3D(segment3Ds.ConvertAll(x => x.GetStart()));
 
             List<Point3D> point3Ds = new List<Point3D>();
-            foreach(Segment3D segment3D in segment3Ds)
+            foreach (Segment3D segment3D in segment3Ds)
             {
                 Spatial.Modify.Add(point3Ds, segment3D.GetStart(), tolerance);
                 Spatial.Modify.Add(point3Ds, segment3D.GetEnd(), tolerance);

@@ -189,7 +189,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 double z = UnitUtils.ConvertFromInternalUnits(locationCurve.Curve.GetEndPoint(0).Z, DisplayUnitType.DUT_METERS);
 
-                Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, z), new Point3D(segment2D[1].X, segment2D[1].Y, z));
+                //Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, z), new Point3D(segment2D[1].X, segment2D[1].Y, z));
+                Segment3D segment3D = plane.Convert(segment2D);
 
                 Line line = Geometry.Revit.Convert.ToRevit(segment3D);
 

@@ -1,12 +1,22 @@
-﻿using SAM.Core;
+﻿using Autodesk.Revit.DB;
+using SAM.Core;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
     public static partial class Query
     {
-        public static PanelType PanelType(this Autodesk.Revit.DB.HostObject hostObject)
+        public static PanelType PanelType(this HostObject hostObject)
         {
-            switch ((Autodesk.Revit.DB.BuiltInCategory)hostObject.Category.Id.IntegerValue)
+            if (hostObject == null)
+                return Analytical.PanelType.Undefined;
+
+            PanelType panelType = PanelType(hostObject?.Document?.GetElement(hostObject.GetTypeId()) as HostObjAttributes);
+            if (panelType != Analytical.PanelType.Undefined)
+                return panelType;
+
+            switch ((BuiltInCategory)hostObject.Category.Id.IntegerValue)
             {
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Walls:
                     return Analytical.PanelType.Wall;
@@ -19,6 +29,36 @@ namespace SAM.Analytical.Revit
             }
 
             return Analytical.PanelType.Undefined;
+        }
+
+        public static PanelType PanelType(this HostObjAttributes hostObjAttributes)
+        {
+            if (hostObjAttributes == null)
+                return Analytical.PanelType.Undefined;
+
+            string parameterName_PanelType = Query.ParameterName_PanelType();
+            if (!string.IsNullOrWhiteSpace(parameterName_PanelType))
+            {
+                IEnumerable<Parameter> parameters = hostObjAttributes.GetParameters(parameterName_PanelType);
+                if(parameters != null && parameters.Count() > 0)
+                {
+                    foreach(Parameter parameter in parameters)
+                    {
+                        if(parameter != null && parameter.HasValue && parameter.StorageType == StorageType.String)
+                        {
+                            string text = parameter.AsString();
+                            if(!string.IsNullOrWhiteSpace(text))
+                            {
+                                PanelType result = Analytical.Query.PanelType(text);
+                                if (result != Analytical.PanelType.Undefined)
+                                    return result;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Analytical.Query.PanelType(hostObjAttributes.Name);
         }
 
         public static PanelType PanelType(this Construction construction)

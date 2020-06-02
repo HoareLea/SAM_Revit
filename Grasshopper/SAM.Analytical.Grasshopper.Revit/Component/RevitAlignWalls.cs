@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Analytical.Revit;
 using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
@@ -122,15 +123,27 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Point3D(0, 0, elevation), Vector3D.WorldZ);
 
-            List<Segment2D> segment2Ds = new List<Segment2D>();
+            Dictionary<Segment2D, HostObjAttributes> dictionary_Reference = new Dictionary<Segment2D, HostObjAttributes>();
             foreach (ElementId elementId in elementIds_Reference)
             {
-                LocationCurve locationCurve = document.GetElement(elementId).Location as LocationCurve;
+                Element element = document.GetElement(elementId);
+                if (element == null)
+                    continue;
+
+                HostObjAttributes hostObjAttributes = document.GetElement(element.GetTypeId()) as HostObjAttributes;
+                if (hostObjAttributes == null)
+                    continue;
+
+                LocationCurve locationCurve = element.Location as LocationCurve;
                 ISegmentable3D segmentable3D = locationCurve.ToSAM() as ISegmentable3D;
                 if (segmentable3D == null)
                     continue;
 
-                segment2Ds.AddRange(segmentable3D.GetSegments().ConvertAll(x => plane.Convert(plane.Project(x))));
+                List<Segment3D> segment3Ds = segmentable3D.GetSegments();
+                if (segment3Ds == null || segment3Ds.Count == 0)
+                    continue;
+
+                segment3Ds.ForEach(x => dictionary_Reference[plane.Convert(x)] = hostObjAttributes);
             }
 
             Dictionary<Segment2D, ElementId> dictionary = new Dictionary<Segment2D, ElementId>();
@@ -145,21 +158,60 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             Dictionary<Segment2D, ElementId> dictionary_Result = new Dictionary<Segment2D, ElementId>();
-            foreach (Segment2D segment2D in segment2Ds)
+            foreach (KeyValuePair<Segment2D, ElementId> keyValuePair in dictionary)
             {
-                List<Segment2D> segment2Ds_Temp = dictionary.Keys.ToList().FindAll(x => x.Colinear(segment2D) && x.Distance(segment2D) <= maxDistance && x.Distance(segment2D) > Core.Tolerance.MacroDistance);
+                Segment2D segment2D = keyValuePair.Key;
+
+                List<Segment2D> segment2Ds_Temp = dictionary_Reference.Keys.ToList().FindAll(x => x.Colinear(segment2D) && x.Distance(segment2D) <= maxDistance && x.Distance(segment2D) > Core.Tolerance.MacroDistance);
                 if (segment2Ds_Temp == null || segment2Ds_Temp.Count == 0)
                     continue;
 
-                foreach (Segment2D segment2D_Temp in segment2Ds_Temp)
-                {
-                    Segment2D segment2D_Project = segment2D.Project(segment2D_Temp);
-                    if (segment2D_Project == null)
-                        continue;
+                Element element = document.GetElement(keyValuePair.Value);
+                if (element == null)
+                    continue;
 
-                    dictionary_Result[segment2D_Project] = dictionary[segment2D_Temp];
-                    dictionary.Remove(segment2D_Temp);
+                HostObjAttributes hostObjAttributes = document.GetElement(element.GetTypeId()) as HostObjAttributes;
+                if (hostObjAttributes == null)
+                    continue;
+
+                Segment2D segment2D_Reference = null;
+
+                foreach(Segment2D segment2D_Temp in segment2Ds_Temp)
+                {
+                    HostObjAttributes hostObjAttributes_Temp = dictionary_Reference[segment2D_Temp];
+                    if(hostObjAttributes.Name.Equals(hostObjAttributes_Temp.Name))
+                    {
+                        segment2D_Reference = segment2D_Temp;
+                        break;
+                    }
                 }
+
+                if(segment2D_Reference == null)
+                {
+                    PanelType panelType = Analytical.Revit.Query.PanelType(hostObjAttributes); 
+                    if(panelType != PanelType.Undefined)
+                    {
+                        foreach (Segment2D segment2D_Temp in segment2Ds_Temp)
+                        {
+                            HostObjAttributes hostObjAttributes_Temp = dictionary_Reference[segment2D_Temp];
+                            PanelType panelType_Temp = Analytical.Revit.Query.PanelType(hostObjAttributes_Temp);
+                            if(panelType_Temp == panelType)
+                            {
+                                segment2D_Reference = segment2D_Temp;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (segment2D_Reference == null)
+                    segment2D_Reference = segment2Ds_Temp.First();
+
+                Segment2D segment2D_Project = segment2D_Reference.Project(segment2D);
+                if (segment2D_Project == null)
+                    continue;
+
+                dictionary_Result[segment2D_Project] = dictionary[segment2D];
             }
 
             List<HostObject> result = new List<HostObject>();

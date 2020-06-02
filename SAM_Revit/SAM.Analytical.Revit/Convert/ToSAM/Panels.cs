@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core;
 using SAM.Geometry.Revit;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace SAM.Analytical.Revit
             if (construction == null)
                 construction = Analytical.Query.Construction(panelType); //Default Construction
 
-            PanelType panelType_Temp = Analytical.Query.PanelType(construction?.Name);
+            PanelType panelType_Temp = Query.PanelType(construction);
             if (panelType_Temp != PanelType.Undefined)
                 panelType = panelType_Temp;
 

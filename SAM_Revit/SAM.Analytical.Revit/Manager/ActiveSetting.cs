@@ -9,6 +9,7 @@ namespace SAM.Analytical.Revit
         public static class Name
         {
             //public const string Construction_Undefined = "Construction_Undefined";
+            public const string ParameterName_PanelType = "ParameterName_PanelType";
         }
 
         private static Setting setting = Load();
@@ -54,6 +55,8 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementTransparent"); //bool
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
+
+            result.Add(Name.ParameterName_PanelType, "SAM_BuildingElementType");
 
             return result;
         }

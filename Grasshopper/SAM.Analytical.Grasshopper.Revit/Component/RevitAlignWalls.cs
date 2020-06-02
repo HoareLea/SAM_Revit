@@ -174,6 +174,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 if (hostObjAttributes == null)
                     continue;
 
+                segment2Ds_Temp.Sort((x, y) => segment2D.Distance(x).CompareTo(segment2D.Distance(y)));
+
                 Segment2D segment2D_Reference = null;
 
                 foreach(Segment2D segment2D_Temp in segment2Ds_Temp)
@@ -186,20 +188,31 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                 }
 
-                if(segment2D_Reference == null)
+                if (segment2D_Reference == null)
                 {
-                    PanelType panelType = Analytical.Revit.Query.PanelType(hostObjAttributes); 
-                    if(panelType != PanelType.Undefined)
+                    HashSet<PanelType> panelTypes = new HashSet<PanelType>();
+                    panelTypes.Add(Analytical.Revit.Query.PanelType(hostObjAttributes));
+                    switch(panelTypes.First())
                     {
-                        foreach (Segment2D segment2D_Temp in segment2Ds_Temp)
+                        case PanelType.CurtainWall:
+                            panelTypes.Add(PanelType.WallExternal);
+                            break;
+                        case PanelType.UndergroundWall:
+                            panelTypes.Add(PanelType.WallExternal);
+                            break;
+                        case PanelType.Undefined:
+                            panelTypes.Add(PanelType.WallInternal);
+                            break;
+                    }
+
+                    foreach (Segment2D segment2D_Temp in segment2Ds_Temp)
+                    {
+                        HostObjAttributes hostObjAttributes_Temp = dictionary_Reference[segment2D_Temp];
+                        PanelType panelType_Temp = Analytical.Revit.Query.PanelType(hostObjAttributes_Temp);
+                        if (panelTypes.Contains(panelType_Temp))
                         {
-                            HostObjAttributes hostObjAttributes_Temp = dictionary_Reference[segment2D_Temp];
-                            PanelType panelType_Temp = Analytical.Revit.Query.PanelType(hostObjAttributes_Temp);
-                            if(panelType_Temp == panelType)
-                            {
-                                segment2D_Reference = segment2D_Temp;
-                                break;
-                            }
+                            segment2D_Reference = segment2D_Temp;
+                            break;
                         }
                     }
                 }
@@ -237,21 +250,15 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                 }
 
-                LocationCurve locationCurve = wall.Location as LocationCurve;
-
-                double z = UnitUtils.ConvertFromInternalUnits(locationCurve.Curve.GetEndPoint(0).Z, DisplayUnitType.DUT_METERS);
-
-                //Segment3D segment3D = new Segment3D(new Point3D(segment2D[0].X, segment2D[0].Y, z), new Point3D(segment2D[1].X, segment2D[1].Y, z));
                 Segment3D segment3D = plane.Convert(segment2D);
-
-                Line line = Geometry.Revit.Convert.ToRevit(segment3D);
+                LocationCurve locationCurve = wall.Location as LocationCurve;
 
                 using (SubTransaction subTransaction = new SubTransaction(document))
                 {
                     subTransaction.Start();
 
                     document.Regenerate();
-                    locationCurve.Curve = line;
+                    locationCurve.Curve = Geometry.Revit.Convert.ToRevit(segment3D);
 
                     subTransaction.Commit();
                 }

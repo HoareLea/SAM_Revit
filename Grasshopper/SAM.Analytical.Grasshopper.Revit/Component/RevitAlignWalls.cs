@@ -162,7 +162,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 Segment2D segment2D = keyValuePair.Key;
 
-                List<Segment2D> segment2Ds_Temp = dictionary_Reference.Keys.ToList().FindAll(x => x.Colinear(segment2D) && x.Distance(segment2D) <= maxDistance && x.Distance(segment2D) > Core.Tolerance.MacroDistance);
+                List<Segment2D> segment2Ds_Temp = dictionary_Reference.Keys.ToList().FindAll(x => x.Colinear(segment2D) && x.Distance(segment2D) <= maxDistance + Core.Tolerance.MacroDistance && x.Distance(segment2D) > Core.Tolerance.MacroDistance);
                 if (segment2Ds_Temp == null || segment2Ds_Temp.Count == 0)
                     continue;
 

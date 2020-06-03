@@ -31,11 +31,12 @@ namespace SAM.Analytical.Revit
             point3D_Location = plane.Project(point3D_Location);
 
             Geometry.Spatial.Vector3D normal = plane.Normal;
-            Geometry.Spatial.Vector3D axisX = plane.AxisX;
-            if (familyInstance.FacingFlipped)
-                normal.Negate();
+            Geometry.Spatial.Vector3D axisX = plane.AxisX;             
             if (familyInstance.HandFlipped)
                 axisX.Negate();
+
+            if (familyInstance.FacingFlipped)
+                normal.Negate();
 
             Geometry.Spatial.Vector3D axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
 

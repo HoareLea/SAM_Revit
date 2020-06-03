@@ -81,7 +81,7 @@ namespace SAM.Analytical.Revit
                     double factor_Height = height / boundingBox2D.Height;
                     double factor_Width = width / boundingBox2D.Width;
 
-                    point2Ds.ConvertAll(x => new Point2D(x.X * factor_Width, x.Y * factor_Height));
+                    point2Ds = point2Ds.ConvertAll(x => new Point2D(x.X * factor_Width, x.Y * factor_Height));
                 }
             }
 

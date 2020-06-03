@@ -18,7 +18,19 @@ namespace SAM.Analytical.Revit
             if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(fullName, out familyName, out familyTypeName))
                 return null;
 
-            List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>().ToList();
+            List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>();
+            BuiltInCategory builtInCategory = apertureConstruction.BuiltInCategory();
+            if(builtInCategory == BuiltInCategory.INVALID)
+            {
+                builtInCategories.Add(Query.BuiltInCategory(ApertureType.Door));
+                builtInCategories.Add(Query.BuiltInCategory(ApertureType.Window));
+            }
+            else
+            {
+                builtInCategories.Add(builtInCategory);
+            }
+
+            List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).WherePasses(new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter))).Cast<FamilySymbol>().ToList();
             if (familySymbols == null || familySymbols.Count == 0)
                 return null;
 

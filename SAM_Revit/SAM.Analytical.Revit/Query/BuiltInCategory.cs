@@ -33,5 +33,26 @@ namespace SAM.Analytical.Revit
 
             return Autodesk.Revit.DB.BuiltInCategory.INVALID;
         }
+
+        public static BuiltInCategory BuiltInCategory(this ApertureConstruction apertureConstruction)
+        {
+            if (apertureConstruction == null)
+                return Autodesk.Revit.DB.BuiltInCategory.INVALID;
+
+            return BuiltInCategory(apertureConstruction.ApertureType);
+        }
+
+        public static BuiltInCategory BuiltInCategory(this ApertureType apertureType)
+        {
+            switch(apertureType)
+            {
+                case Analytical.ApertureType.Door:
+                    return Autodesk.Revit.DB.BuiltInCategory.OST_Doors;
+                case Analytical.ApertureType.Window:
+                    return Autodesk.Revit.DB.BuiltInCategory.OST_Windows;
+            }
+
+            return Autodesk.Revit.DB.BuiltInCategory.INVALID;
+        }
     }
 }

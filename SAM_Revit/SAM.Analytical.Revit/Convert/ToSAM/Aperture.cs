@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Geometry.Planar;
 using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
@@ -29,7 +30,16 @@ namespace SAM.Analytical.Revit
 
             point3D_Location = plane.Project(point3D_Location);
 
-            Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, plane.AxisX, plane.AxisY);
+            Geometry.Spatial.Vector3D normal = plane.Normal;
+            Geometry.Spatial.Vector3D axisX = plane.AxisX;
+            if (familyInstance.FacingFlipped)
+                normal.Negate();
+            if (familyInstance.HandFlipped)
+                axisX.Negate();
+
+            Geometry.Spatial.Vector3D axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
+
+            Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, axisX, axisY);
             //Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, plane.normal);
 
             List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
@@ -51,7 +61,31 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Point2D.GetRectangle2D(point2Ds);
+            if (point2Ds == null || point2Ds.Count == 0)
+                return null;
+
+            //TODO: Working on SAM Families (requested by Michal)
+
+            string parameterName_Height = Query.ParameterName_ApertureHeight();
+            string parameterName_Width = Query.ParameterName_BuildingElementWidth();
+            if (!string.IsNullOrWhiteSpace(parameterName_Height) && !string.IsNullOrWhiteSpace(parameterName_Width))
+            {
+                Parameter parameter_Height = familyInstance.LookupParameter(parameterName_Height);
+                Parameter parameter_Width = familyInstance.LookupParameter(parameterName_Width);
+                if (parameter_Height != null && parameter_Width != null && parameter_Height.HasValue && parameter_Width.HasValue && parameter_Height.StorageType == StorageType.Double && parameter_Width.StorageType == StorageType.Double)
+                {
+                    double height = UnitUtils.ConvertFromInternalUnits(parameter_Height.AsDouble(), DisplayUnitType.DUT_METERS);
+                    double width = UnitUtils.ConvertFromInternalUnits(parameter_Width.AsDouble(), DisplayUnitType.DUT_METERS);
+
+                    BoundingBox2D boundingBox2D = new BoundingBox2D(point2Ds);
+                    double factor_Height = height / boundingBox2D.Height;
+                    double factor_Width = width / boundingBox2D.Width;
+
+                    point2Ds.ConvertAll(x => new Point2D(x.X * factor_Width, x.Y * factor_Height));
+                }
+            }
+
+            Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
             aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
             aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));

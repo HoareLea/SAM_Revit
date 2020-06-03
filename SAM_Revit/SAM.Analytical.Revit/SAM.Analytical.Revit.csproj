@@ -103,6 +103,8 @@
     <Compile Include="Query\FilteredElementCollector.cs" />
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\ApertureType.cs" />
+    <Compile Include="Query\ParameterName_ApertureHeight.cs" />
+    <Compile Include="Query\ParameterName_ApertureWidth.cs" />
     <Compile Include="Query\ParameterName_PanelType.cs" />
     <Compile Include="Query\PanelType.cs" />
     <Compile Include="Query\LowElevation.cs" />

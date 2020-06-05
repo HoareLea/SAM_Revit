@@ -29,12 +29,14 @@ namespace SAM.Analytical.Revit
             if (point3D_Location == null)
                 return null;
 
-            Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(true);
-            Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(true);
+            Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+            Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
 
             Geometry.Spatial.Vector3D axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
 
             Geometry.Spatial.Plane plane = Geometry.Spatial.Create.Plane(point3D_Location, axisX, axisY);
+            if (!plane.Normal.SameHalf(normal))
+                plane.FlipZ(false);
 
             List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
             if (face3Ds == null || face3Ds.Count == 0)

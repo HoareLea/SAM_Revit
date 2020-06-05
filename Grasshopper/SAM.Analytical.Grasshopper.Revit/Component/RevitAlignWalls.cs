@@ -178,10 +178,10 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Segment2D segment2D_Reference = null;
 
-                foreach(Segment2D segment2D_Temp in segment2Ds_Temp)
+                foreach (Segment2D segment2D_Temp in segment2Ds_Temp)
                 {
                     HostObjAttributes hostObjAttributes_Temp = dictionary_Reference[segment2D_Temp];
-                    if(hostObjAttributes.Name.Equals(hostObjAttributes_Temp.Name))
+                    if (hostObjAttributes.Name.Equals(hostObjAttributes_Temp.Name))
                     {
                         segment2D_Reference = segment2D_Temp;
                         break;
@@ -192,14 +192,16 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     HashSet<PanelType> panelTypes = new HashSet<PanelType>();
                     panelTypes.Add(Analytical.Revit.Query.PanelType(hostObjAttributes));
-                    switch(panelTypes.First())
+                    switch (panelTypes.First())
                     {
                         case PanelType.CurtainWall:
                             panelTypes.Add(PanelType.WallExternal);
                             break;
+
                         case PanelType.UndergroundWall:
                             panelTypes.Add(PanelType.WallExternal);
                             break;
+
                         case PanelType.Undefined:
                             panelTypes.Add(PanelType.WallInternal);
                             break;

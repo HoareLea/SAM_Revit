@@ -39,18 +39,18 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null)
                 return null;
 
-            document.Regenerate();
-
-            if(familyInstance.CanFlipHand)
+            if (familyInstance.CanFlipHand)
             {
-                Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(true);
+                document.Regenerate();
+                Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
                 if (!axisX.SameHalf(aperture.Plane.AxisX))
                     familyInstance.flipHand();
             }
 
             if (familyInstance.CanFlipFacing)
             {
-                Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(true);
+                document.Regenerate(); // this is needed to get flip correctly pushed to revit
+                Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
                 if (!normal.SameHalf(aperture.Plane.Normal))
                     familyInstance.flipFacing();
             }

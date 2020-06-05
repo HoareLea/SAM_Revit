@@ -107,7 +107,7 @@ namespace SAM.Analytical.Revit
                 if (face3Ds == null || face3Ds.Count == 0)
                     continue;
 
-                foreach(Geometry.Spatial.Face3D face3D in face3Ds)
+                foreach (Geometry.Spatial.Face3D face3D in face3Ds)
                 {
                     PanelType panelType = PanelType.Undefined;
                     Construction construction = null;
@@ -132,7 +132,6 @@ namespace SAM.Analytical.Revit
 
                                     if (panelType == PanelType.Undefined)
                                         panelType = panel.PanelType;
-                                    
                                 }
 
                                 if (panelType == PanelType.Undefined)

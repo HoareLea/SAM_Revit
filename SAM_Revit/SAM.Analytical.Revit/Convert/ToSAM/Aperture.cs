@@ -1,14 +1,15 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Planar;
+using SAM.Geometry.Revit;
 using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, Geometry.Spatial.Plane plane, PanelType panelType)
+        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, PanelType panelType)
         {
-            if (familyInstance == null || plane == null)
+            if (familyInstance == null)
                 return null;
 
             Aperture aperture = null;
@@ -28,26 +29,18 @@ namespace SAM.Analytical.Revit
             if (point3D_Location == null)
                 return null;
 
-            point3D_Location = plane.Project(point3D_Location);
-
-            Geometry.Spatial.Vector3D normal = plane.Normal;
-            Geometry.Spatial.Vector3D axisX = plane.AxisX;             
-            if (familyInstance.HandFlipped)
-                axisX.Negate();
-
-            if (familyInstance.FacingFlipped)
-                normal.Negate();
+            Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(true);
+            Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(true);
 
             Geometry.Spatial.Vector3D axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
 
-            Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, axisX, axisY);
-            //Geometry.Spatial.Plane plane_Location = new Geometry.Spatial.Plane(point3D_Location, plane.normal);
+            Geometry.Spatial.Plane plane = Geometry.Spatial.Create.Plane(point3D_Location, axisX, axisY);
 
             List<Geometry.Spatial.Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
             if (face3Ds == null || face3Ds.Count == 0)
                 return null;
 
-            List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
+            List<Point2D> point2Ds = new List<Point2D>();
             foreach (Geometry.Spatial.Face3D face3D_Temp in face3Ds)
             {
                 Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge();
@@ -56,8 +49,8 @@ namespace SAM.Analytical.Revit
                     List<Geometry.Spatial.ICurve3D> curve3Ds = ((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves();
                     foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
                     {
-                        Geometry.Spatial.ICurve3D curve3D_Temp = plane_Location.Project(curve3D);
-                        point2Ds.Add(plane_Location.Convert(curve3D_Temp.GetStart()));
+                        Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
+                        point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
                     }
                 }
             }
@@ -88,7 +81,7 @@ namespace SAM.Analytical.Revit
 
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
-            aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane_Location, rectangle2D));
+            aperture = new Aperture(apertureConstruction, new Geometry.Spatial.Face3D(plane, rectangle2D));
             aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             return aperture;

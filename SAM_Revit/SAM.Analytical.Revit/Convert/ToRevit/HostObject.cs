@@ -206,7 +206,7 @@ namespace SAM.Analytical.Revit
                     bool flipHand = !plane_Panel.AxisX.SameHalf(plane_Aperture.AxisX);
                     bool flipFacing = !plane_Panel.Normal.SameHalf(plane_Aperture.Normal);
                     
-                    FamilyInstance failyInstance_Aperture = ToRevit(document, aperture, result, convertSettings, flipHand, flipFacing);
+                    FamilyInstance failyInstance_Aperture = ToRevit(document, aperture, result, convertSettings);
                 }
             }
 

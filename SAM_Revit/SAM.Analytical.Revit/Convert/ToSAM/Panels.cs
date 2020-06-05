@@ -56,7 +56,7 @@ namespace SAM.Analytical.Revit
 
                 if (elementIds != null && elementIds.Count() > 0)
                 {
-                    Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
+                    //Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
 
                     foreach (ElementId elementId in elementIds)
                     {
@@ -67,7 +67,7 @@ namespace SAM.Analytical.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, plane, panelType);
+                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, panelType);
                         panel.AddAperture(aperture);
                     }
                 }

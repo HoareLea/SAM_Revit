@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static FamilyInstance ToRevit(this Document document, Aperture aperture, HostObject hostObject, Core.Revit.ConvertSettings convertSettings, bool flipHand = false, bool flipFacing = false)
+        public static FamilyInstance ToRevit(this Document document, Aperture aperture, HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
         {
             if (aperture == null || document == null)
                 return null;
@@ -39,11 +39,21 @@ namespace SAM.Analytical.Revit
             if (familyInstance == null)
                 return null;
 
-            if (flipFacing)
-                familyInstance.flipFacing();
+            document.Regenerate();
 
-            if (flipHand)
-                familyInstance.flipHand();
+            if(familyInstance.CanFlipHand)
+            {
+                Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(true);
+                if (!axisX.SameHalf(aperture.Plane.AxisX))
+                    familyInstance.flipHand();
+            }
+
+            if (familyInstance.CanFlipFacing)
+            {
+                Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(true);
+                if (!normal.SameHalf(aperture.Plane.Normal))
+                    familyInstance.flipFacing();
+            }
 
             if (convertSettings.ConvertParameters)
             {

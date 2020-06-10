@@ -128,6 +128,7 @@
   <ItemGroup>
     <Compile Include="Classes\GooConvertSettings.cs" />
     <Compile Include="Component\RevitDeleteElement.cs" />
+    <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />
     <Compile Include="Component\SAMCoreConvertSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

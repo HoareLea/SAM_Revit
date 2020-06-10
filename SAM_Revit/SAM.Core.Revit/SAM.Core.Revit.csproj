@@ -104,6 +104,7 @@
     <Compile Include="Modify\Value.cs" />
     <Compile Include="Modify\Values.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
+    <Compile Include="Query\Location.cs" />
     <Compile Include="Query\Solids.cs" />
     <Compile Include="Query\Element.cs" />
     <Compile Include="Query\ElementId.cs" />

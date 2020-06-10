@@ -159,7 +159,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Panel> redundantPanels = new List<Panel>();
             if (merge)
-                panels_Temp = Analytical.Query.MergeCoplanarPanels(panels_Temp, Core.Tolerance.MacroDistance, ref redundantPanels, Core.Tolerance.MacroDistance);
+                panels_Temp = Analytical.Query.MergeCoplanarPanels(panels_Temp, Core.Tolerance.MacroDistance, ref redundantPanels, true, Core.Tolerance.MacroDistance);
 
             dataAccess.SetDataList(0, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
             dataAccess.SetDataList(1, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Roof));

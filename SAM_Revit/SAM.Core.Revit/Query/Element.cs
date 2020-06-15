@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 
 namespace SAM.Core.Revit
 {
@@ -19,6 +20,39 @@ namespace SAM.Core.Revit
                 return revitDocument.GetElement(linkElementId.LinkedElementId);
             else
                 return revitDocument.GetElement(linkElementId.HostElementId);
+        }
+
+        public static Element Element(this Document document, string uniqueId, string linkUniqueId = null)
+        {
+            if (document == null)
+                return null;
+
+            Document revitDocument = null;
+
+            if (!string.IsNullOrEmpty(linkUniqueId))
+            {
+                RevitLinkInstance revitLinkInstance = document.GetElement(linkUniqueId) as RevitLinkInstance;
+                if (revitLinkInstance != null)
+                    revitDocument = revitLinkInstance.GetLinkDocument();
+            }
+            else
+            {
+                revitDocument = document;
+            }
+
+            if (revitDocument == null)
+                return null;
+
+            return revitDocument.GetElement(uniqueId);
+        }
+
+        public static Element Element(this EnergyAnalysisOpening energyAnalysisOpening)
+        {
+            ElementId elementID = Query.ElementId(energyAnalysisOpening.OriginatingElementDescription);
+            if (elementID == null || elementID == Autodesk.Revit.DB.ElementId.InvalidElementId)
+                return null;
+
+            return energyAnalysisOpening.Document.GetElement(elementID);
         }
     }
 }

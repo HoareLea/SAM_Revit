@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
@@ -98,6 +99,21 @@ namespace SAM.Geometry.Revit
                 point3Ds.Add(curve.ToSAM().GetStart());
 
             return Spatial.Create.Polygon3D(point3Ds);
+        }
+
+        public static Polygon3D ToSAM(this Polyloop polyloop)
+        {
+            if (polyloop == null)
+                return null;
+
+            List<Point3D> point3Ds = new List<Point3D>();
+            foreach(XYZ xyz in polyloop.GetPoints())
+                point3Ds.Add(xyz.ToSAM());
+
+            if (point3Ds.Count < 3)
+                return null;
+
+            return new Polygon3D(point3Ds);
         }
     }
 }

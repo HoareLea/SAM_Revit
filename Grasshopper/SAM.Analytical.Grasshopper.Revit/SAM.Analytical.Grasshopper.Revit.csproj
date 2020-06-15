@@ -127,6 +127,7 @@
   <ItemGroup>
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />
+    <Compile Include="Component\SAMAnalyticalCreateAnalyticalModel.cs" />
     <Compile Include="Component\RevitSAMFloorsAndRoofsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />

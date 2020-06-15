@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMAnalyticalByType : GH_Component
+    public class RevitSAMAnalyticalByTypeName : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitSAMAnalyticalByType()
+        public RevitSAMAnalyticalByTypeName()
           : base("Revit.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
               "Convert Revit To SAM Analytical Object ie. Panel, Space",
               "SAM", "Revit")

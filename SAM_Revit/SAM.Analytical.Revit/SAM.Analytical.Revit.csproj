@@ -95,6 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
+    <Compile Include="Convert\ToSAM\AnalyticalModel.cs" />
+    <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />

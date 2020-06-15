@@ -1,12 +1,39 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
+using SAM.Geometry.Spatial;
 using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
+        public static Aperture ToSAM(this EnergyAnalysisOpening energyAnalysisOpening)
+        {
+            if (energyAnalysisOpening == null)
+                return null;
+
+            Document document = energyAnalysisOpening.Document;
+
+            Polygon3D polygon3D = energyAnalysisOpening.GetPolyloop().ToSAM();
+            if (polygon3D == null)
+                return null;
+
+            FamilyInstance familyInstance = Core.Revit.Query.Element(energyAnalysisOpening) as FamilyInstance;
+            if(familyInstance == null)
+                return new Aperture(null, polygon3D);
+
+            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
+
+            Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
+            if (point3D_Location == null)
+                return null;
+
+            Aperture aperture = new Aperture(apertureConstruction, polygon3D, point3D_Location);
+            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
+            return aperture;
+        }
         public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, PanelType panelType)
         {
             if (familyInstance == null)
@@ -88,5 +115,7 @@ namespace SAM.Analytical.Revit
 
             return aperture;
         }
+
+        
     }
 }

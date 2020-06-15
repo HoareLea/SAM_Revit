@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalCreateAnalyticalModel : GH_Component
+    public class SAMAnalyticalCreateAnalyticalModel : RhinoInside.Revit.GH.Components.TransactionalComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -46,13 +46,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             outputParamManager.AddParameter(new GooAnalyticalModelParam(), "AnalyticalModel", "AnalyticalModel", "SAM Analytical Model", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="dataAccess">
-        /// The DA object is used to retrieve from inputs and store in outputs.
-        /// </param>
-        protected override void SolveInstance(IGH_DataAccess dataAccess)
+        protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
             if (!dataAccess.GetData(0, ref run) || !run)
@@ -60,7 +54,20 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            AnalyticalModel analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document);
+            AnalyticalModel analyticalModel = null;
+
+            using (Transaction transaction = new Transaction(document, "GetAnalyticalModel"))
+            {
+                FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions();
+                failureHandlingOptions.SetFailuresPreprocessor(new Core.Revit.WarningSwallower());
+                transaction.SetFailureHandlingOptions(failureHandlingOptions);
+
+                transaction.Start();
+
+                analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document);
+
+                transaction.RollBack();
+            }
 
             dataAccess.SetData(0, new GooAnalyticalModel(analyticalModel));
         }

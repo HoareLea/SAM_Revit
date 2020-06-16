@@ -83,7 +83,7 @@ namespace SAM.Analytical.Revit
                         Tuple<Panel, List<Space>> tuple;
                         if (!dictionary.TryGetValue(energyAnalysisSurface.SurfaceName, out tuple))
                         {
-                            Panel panel = energyAnalysisSurface.ToSAM(space.Location);
+                            Panel panel = energyAnalysisSurface.ToSAM();
                             if (panel == null)
                                 continue;
 

@@ -23,7 +23,7 @@ namespace SAM.Analytical.Revit
 
             HostObject hostObject = Core.Revit.Query.Element(document, energyAnalysisSurface.CADObjectUniqueId, energyAnalysisSurface.CADLinkUniqueId) as HostObject;
             if (hostObject == null)
-                return new Panel(null, PanelType.Undefined, new Face3D(polygon3D));
+                return new Panel(null, PanelType.Air, new Face3D(polygon3D));
 
             ElementId elementId_Type = hostObject.GetTypeId();
             if (elementId_Type == null || elementId_Type == ElementId.InvalidElementId)

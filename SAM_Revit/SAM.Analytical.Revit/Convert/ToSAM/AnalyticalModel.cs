@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,13 @@ namespace SAM.Analytical.Revit
                         continue;
 
                     Space space = energyAnalysisSpace.ToSAM();
+                    if (space == null)
+                        continue;
+
+                    Shell shell = Geometry.Revit.Convert.ToSAM(energyAnalysisSpace.GetClosedShell());
+                    if (shell == null)
+                        continue;
+
                     adjacencyCluster.AddObject(space);
 
                     foreach (EnergyAnalysisSurface energyAnalysisSurface in energyAnalysisSpace.GetAnalyticalSurfaces())
@@ -83,7 +91,7 @@ namespace SAM.Analytical.Revit
                         Tuple<Panel, List<Space>> tuple;
                         if (!dictionary.TryGetValue(energyAnalysisSurface.SurfaceName, out tuple))
                         {
-                            Panel panel = energyAnalysisSurface.ToSAM(space.Location);
+                            Panel panel = energyAnalysisSurface.ToSAM(shell);
                             if (panel == null)
                                 continue;
 

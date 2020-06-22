@@ -40,6 +40,10 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooSpaceParam(), "_space", "_space", "SAM Analytical Space", GH_ParamAccess.item);
+
+            int index = inputParamManager.AddGenericParameter("_convertSettings", "_convertSettings", "SAM Convert Settings", GH_ParamAccess.item);
+            inputParamManager[index].Optional = true;
+
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -54,14 +58,31 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            if (!dataAccess.GetData(2, ref run) || !run)
                 return;
+
+            ConvertSettings convertSettings = null;
+            dataAccess.GetData(1, ref convertSettings);
+
+            if (convertSettings == null)
+                convertSettings = Core.Revit.Query.ConvertSettings();
 
             Space space = null;
             if (!dataAccess.GetData(0, ref space))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+
+            if (convertSettings.RemoveExisting)
+            {
+                ElementId elementId = space.ElementId();
+                if (elementId != null && elementId != ElementId.InvalidElementId)
+                {
+                    Element element = document.GetElement(elementId) as HostObject;
+                    if (element != null)
+                        document.Delete(elementId);
+                }
+            }
 
             Autodesk.Revit.DB.Mechanical.Space space_Revit = Analytical.Revit.Convert.ToRevit(document, space, new ConvertSettings(true, true, true));
 

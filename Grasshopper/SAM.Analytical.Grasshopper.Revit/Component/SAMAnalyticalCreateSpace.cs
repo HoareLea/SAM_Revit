@@ -28,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitCreateSpace()
-          : base("Revit.CreateSpace", "Revit.CreateSpace",
+          : base("SAMAnalytical.CreateSpace", "SAMAnalytical.CreateSpace",
               "Create Revit Space",
               "SAM", "Revit")
         {

@@ -125,7 +125,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\RevitCreateSpace.cs" />
+    <Compile Include="Component\SAMAnalyticalCreateSpace.cs" />
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />
     <Compile Include="Component\SAMAnalyticalCreateAnalyticalModel.cs" />

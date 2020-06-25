@@ -24,7 +24,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalDuplicateConstruction()
           : base("SAMAnalytical.DuplicateConstruction", "SAManalytical.DuplicateConstruction",
-              "Duplicate Analytical Object",
+              "Modify Duplicate Analytical Object",
               "SAM", "Revit")
         {
         }

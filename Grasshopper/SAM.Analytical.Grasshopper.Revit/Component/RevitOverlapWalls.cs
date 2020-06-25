@@ -29,7 +29,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public RevitOverlapWalls()
           : base("Revit.OverlapWalls", "Revit.OverlapWalls",
-              "Finds Overlap Revit Walls",
+              "Query Finds Overlap Revit Walls",
               "SAM", "Revit")
         {
         }

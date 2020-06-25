@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalCreateAnalyticalModel : RhinoInside.Revit.GH.Components.TransactionalComponent
+    public class RevitSAMAnalyticalModel : RhinoInside.Revit.GH.Components.TransactionalComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,9 +23,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAnalyticalCreateAnalyticalModel()
-          : base("Revit.CreateAnalyticalModel", "Revit.CreateAnalyticalModel",
-              "Creates Analytical Model",
+        public RevitSAMAnalyticalModel()
+          : base("Revit.SAMAnalyticalModel", "Revit.SAMAnalyticalModel",
+              "Convert Revit To SAM Analytical Model, using Revit gbXML Analytical model generation",
               "SAM", "Revit")
         {
         }

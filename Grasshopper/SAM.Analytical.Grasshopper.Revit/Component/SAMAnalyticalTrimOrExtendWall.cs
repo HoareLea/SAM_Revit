@@ -23,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalTrimOrExtendWall()
           : base("SAMAnalytical.TrimOrExtendWall", "SAMAnalytical.TrimOrExtendWall",
-              "Trim Or Extend Unconnected Revit Walls",
+              "Modify Trim Or Extend Unconnected Revit Walls",
               "SAM", "Revit")
         {
         }

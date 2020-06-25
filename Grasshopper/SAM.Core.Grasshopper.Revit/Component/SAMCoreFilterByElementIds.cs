@@ -23,7 +23,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// </summary>
         public SAMCoreFilterByElementIds()
           : base("SAMCore.FilterByElementIds", "SAMCore.FilterByElementIds",
-              "Filter SAM Objects By ElementIds",
+              "Query Filter SAM Objects By ElementIds",
               "SAM", "Core")
         {
         }

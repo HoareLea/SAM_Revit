@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -37,6 +38,16 @@ namespace SAM.Analytical.Revit
                 List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_Windows, Autodesk.Revit.DB.BuiltInCategory.OST_Doors };
                 LogicalOrFilter logicalOrFilter = new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter));
                 return new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsElementType();
+            }
+
+            if(type == typeof(Space))
+            {
+                FilteredElementCollector fileteredElementCollector = new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_MEPSpaces);
+                IEnumerable<ElementId> elementIds = fileteredElementCollector.ToElementIds();
+                if(elementIds == null || elementIds.Count() == 0)
+                    fileteredElementCollector = new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Rooms);
+
+                return fileteredElementCollector;
             }
 
             return null;

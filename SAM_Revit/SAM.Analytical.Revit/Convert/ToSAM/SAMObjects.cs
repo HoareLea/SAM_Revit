@@ -27,6 +27,32 @@ namespace SAM.Analytical.Revit
                 if (space != null)
                     result = new List<Core.SAMObject>() { space };
             }
+            else if (element is FamilyInstance)
+            {
+                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
+                {
+                    FamilyInstance familyInstance = (FamilyInstance)element;
+
+                    PanelType panelType = PanelType.Undefined;
+
+                    Panel panel = (familyInstance.Host as HostObject)?.ToSAM()?.First();
+                    if (panel != null)
+                        panelType = panel.PanelType;
+
+                    Aperture aperture = ToSAM_Aperture(familyInstance, panelType);
+                    if (aperture != null)
+                        result = new List<Core.SAMObject>() { aperture };
+                }
+            }
+            else if (element is FamilySymbol)
+            {
+                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
+                {
+                    ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction((FamilySymbol)element);
+                    if (apertureConstruction != null)
+                        result = new List<Core.SAMObject>() { apertureConstruction };
+                }
+            }
 
             return result;
         }

@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitCreateSpace : RhinoInside.Revit.GH.Components.TransactionComponent
+    public class SAMSpaceRevit : RhinoInside.Revit.GH.Components.TransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -27,9 +27,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitCreateSpace()
-          : base("SAMAnalytical.CreateSpace", "SAMAnalytical.CreateSpace",
-              "Create Revit Space",
+        public SAMSpaceRevit()
+          : base("SAMSpace.Revit", "SAMSpace.Revit",
+              "Convert SAM Space to Revit Space",
               "SAM", "Revit")
         {
         }
@@ -41,7 +41,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             inputParamManager.AddParameter(new GooSpaceParam(), "_space", "_space", "SAM Analytical Space", GH_ParamAccess.item);
 
-            int index = inputParamManager.AddGenericParameter("_convertSettings", "_convertSettings", "SAM Convert Settings", GH_ParamAccess.item);
+            int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
 
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
@@ -78,7 +78,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 ElementId elementId = space.ElementId();
                 if (elementId != null && elementId != ElementId.InvalidElementId)
                 {
-                    Element element = document.GetElement(elementId) as HostObject;
+                    Element element = document.GetElement(elementId) as SpatialElement;
                     if (element != null)
                         document.Delete(elementId);
                 }

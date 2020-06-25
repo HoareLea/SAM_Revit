@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalRevit : RhinoInside.Revit.GH.Components.ReconstructElementComponent
+    public class SAMPanelRevit : RhinoInside.Revit.GH.Components.ReconstructElementComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -34,9 +34,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAnalyticalRevit()
-          : base("SAMAnalytical.Revit", "SAManalytical.Revit",
-              "Create Revit HostObject from SAM Analytical ie. Panel",
+        public SAMPanelRevit()
+          : base("SAMPanel.Revit", "SAMPanel.Revit",
+              "Convert Revit HostObject from SAM Analytical Panel",
               "SAM", "Revit")
         {
         }
@@ -119,7 +119,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             base.OnCommitted(document, strTransactionName);
         }
 
-        private void ReconstructSAMAnalyticalRevit(Document document, ref HostObject hostObject, Panel panel, ConvertSettings convertSettings = null, bool _run = false)
+        private void ReconstructSAMPanelRevit(Document document, ref HostObject hostObject, Panel panel, ConvertSettings convertSettings = null, bool _run = false)
         {
             run = _run;
 

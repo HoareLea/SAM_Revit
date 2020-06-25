@@ -149,7 +149,9 @@
     <None Include="packages.config" />
     <None Include="Resources\SAM_Small.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\SAM_Revit.png" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj">
       <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>

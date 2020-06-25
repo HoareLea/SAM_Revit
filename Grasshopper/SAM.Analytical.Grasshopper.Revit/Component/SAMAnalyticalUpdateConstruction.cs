@@ -23,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdateConstruction()
           : base("SAMAnalytical.UpdateConstruction", "SAManalytical.UpdateConstruction",
-              "Update Analytical Construction",
+              "Modify Update Analytical Construction",
               "SAM", "Revit")
         {
         }

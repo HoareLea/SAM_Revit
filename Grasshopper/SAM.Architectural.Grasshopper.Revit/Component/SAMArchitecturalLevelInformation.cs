@@ -23,7 +23,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         public SAMArchitecturalLevelInformation()
           : base("SAMArchitectural.LevelInformation", "SAMCore.LevelInformation",
-              "Level Information",
+              "Query Level Information",
               "SAM", "Architectural")
         {
         }

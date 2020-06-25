@@ -125,17 +125,17 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\SAMAnalyticalCreateSpace.cs" />
+    <Compile Include="Component\SAMSpaceRevit.cs" />
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />
-    <Compile Include="Component\SAMAnalyticalCreateAnalyticalModel.cs" />
+    <Compile Include="Component\RevitSAMAnalyticalModel.cs" />
     <Compile Include="Component\RevitSAMFloorsAndRoofsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
-    <Compile Include="Component\RevitSAMAnalyticalByTypeName.cs" />
+    <Compile Include="Component\RevitLinkSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />
     <Compile Include="Component\SAMAnalyticalUpdateConstruction.cs" />
     <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
-    <Compile Include="Component\SAMAnalyticalRevit.cs" />
+    <Compile Include="Component\SAMPanelRevit.cs" />
     <Compile Include="Component\SAMAnalyticalTrimOrExtendWall.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

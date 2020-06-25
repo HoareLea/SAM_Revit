@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMAnalyticalByTypeName : GH_Component
+    public class RevitLinkSAMAnalyticalByTypeName : GH_Component
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,9 +23,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitSAMAnalyticalByTypeName()
-          : base("Revit.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
-              "Convert Revit To SAM Analytical Object ie. Panel, Space",
+        public RevitLinkSAMAnalyticalByTypeName()
+          : base("RevitLink.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
+              "Convert Revit Link Instance To SAM Analytical Object ie. Panel, Construction, Aperture, ApertureConstruction, Space",
               "SAM", "Revit")
         {
         }
@@ -37,12 +37,12 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             int index;
 
-            inputParamManager.AddTextParameter("_typeName_", "_typeName_", "Type Name", GH_ParamAccess.item, "Panel");
+            inputParamManager.AddTextParameter("_typeName_", "_typeName_", "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", GH_ParamAccess.item, "Panel");
 
-            index = inputParamManager.AddGenericParameter("revitLinkInstance_", "revitLinkInstance_", "RevitLinkInstance", GH_ParamAccess.item);
+            index = inputParamManager.AddGenericParameter("_revitLinkInstance", "_revitLinkInstance", "RevitLinkInstance", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
 
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -73,6 +73,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            typeName = typeName.Trim();
+            
             Type type = Type.GetType(string.Format("{0},{1}", "SAM.Analytical." + typeName, "SAM.Analytical"));
             if (type == null)
             {

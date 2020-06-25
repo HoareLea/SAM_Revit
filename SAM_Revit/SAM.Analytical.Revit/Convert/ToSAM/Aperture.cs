@@ -34,6 +34,7 @@ namespace SAM.Analytical.Revit
             aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
             return aperture;
         }
+
         public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, PanelType panelType)
         {
             if (familyInstance == null)
@@ -115,7 +116,5 @@ namespace SAM.Analytical.Revit
 
             return aperture;
         }
-
-        
     }
 }

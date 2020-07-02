@@ -76,7 +76,7 @@ namespace SAM.Analytical.Revit
                 double elevation = panel.LowElevation();
                 Level level = document.HighLevel(elevation);
 
-                Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Geometry.Spatial.Point3D(0, 0, elevation), Geometry.Spatial.Vector3D.WorldZ());
+                Geometry.Spatial.Plane plane = new Geometry.Spatial.Plane(new Geometry.Spatial.Point3D(0, 0, elevation), Geometry.Spatial.Vector3D.WorldZ);
 
                 CurveArray curveArray_Sloped = new CurveArray();
                 CurveArray curveArray_Plane = new CurveArray();

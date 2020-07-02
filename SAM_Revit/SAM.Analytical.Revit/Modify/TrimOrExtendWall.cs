@@ -26,7 +26,7 @@ namespace SAM.Analytical.Revit
                     dictionary[elevation] = dictionary_Wall;
                 }
 
-                dictionary_Wall[wall] = Geometry.Spatial.Plane.WorldXY().Convert(segment3D);
+                dictionary_Wall[wall] = Geometry.Spatial.Plane.WorldXY.Convert(segment3D);
             }
 
             List<Wall> result = new List<Wall>();

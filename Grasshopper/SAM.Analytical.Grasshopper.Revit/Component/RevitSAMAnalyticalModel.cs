@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using System;
@@ -20,6 +21,34 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
 
+        protected override ParamDefinition[] Inputs
+        {
+            get
+            {
+                ParamDefinition[] paramDefinitions = new ParamDefinition[1];
+
+                Param_Boolean param_Boolean = new Param_Boolean();
+                param_Boolean.Access = GH_ParamAccess.item;
+                paramDefinitions[0] = ParamDefinition.FromParam(param_Boolean, ParamVisibility.Mandatory, false);
+
+                return paramDefinitions;
+            }
+        }
+
+        protected override ParamDefinition[] Outputs
+        {
+            get
+            {
+                ParamDefinition[] paramDefinitions = new ParamDefinition[1];
+
+                GooAnalyticalModelParam gooAnalyticalModelParam = new GooAnalyticalModelParam();
+                gooAnalyticalModelParam.Access = GH_ParamAccess.item;
+                paramDefinitions[0] = ParamDefinition.FromParam(gooAnalyticalModelParam);
+
+                return paramDefinitions;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
@@ -28,22 +57,6 @@ namespace SAM.Analytical.Grasshopper.Revit
               "Convert Revit To SAM Analytical Model, using Revit gbXML Analytical model generation",
               "SAM", "Revit")
         {
-        }
-
-        /// <summary>
-        /// Registers all the input parameters for this component.
-        /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
-        {
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
-        }
-
-        /// <summary>
-        /// Registers all the output parameters for this component.
-        /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
-        {
-            outputParamManager.AddParameter(new GooAnalyticalModelParam(), "AnalyticalModel", "AnalyticalModel", "SAM Analytical Model", GH_ParamAccess.item);
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)

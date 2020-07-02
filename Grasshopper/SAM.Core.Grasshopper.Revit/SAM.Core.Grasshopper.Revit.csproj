@@ -87,16 +87,12 @@
     </Reference>
     <Reference Include="RhinoInside, Version=1.0.1.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\..\packages\Rhino.Inside.0.2.0\lib\net45\RhinoInside.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="RhinoInside.Revit">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2020'">
+    <Reference Include="RhinoInside.Revit.GH">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="RhinoWindows, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RhinoWindows.7.0.20182.13135-wip\lib\net45\RhinoWindows.dll</HintPath>

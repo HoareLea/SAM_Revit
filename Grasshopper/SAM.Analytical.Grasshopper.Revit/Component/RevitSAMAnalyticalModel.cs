@@ -29,7 +29,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Param_Boolean param_Boolean = new Param_Boolean();
                 param_Boolean.Access = GH_ParamAccess.item;
-                paramDefinitions[0] = ParamDefinition.FromParam(param_Boolean, ParamVisibility.Mandatory, false);
+                paramDefinitions[0] = ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding, false);
 
                 return paramDefinitions;
             }

@@ -25,7 +25,7 @@ namespace SAMAnalyticalDynamoRevit
         /// Creates Space from SAM Analytical Space
         /// </summary>
         /// <param name="space">SAM Analytical Space</param>
-        /// <param name="includePanels">Include panels in conversion</param>
+        /// <param name="convertSettings">convert Settings</param>
         /// <search>ToRevit, SAM Analytical Space</search>
         public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, SAM.Core.Revit.ConvertSettings convertSettings)
         {

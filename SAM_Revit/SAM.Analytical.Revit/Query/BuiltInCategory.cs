@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using NetTopologySuite.Mathematics;
 
 namespace SAM.Analytical.Revit
 {
@@ -32,6 +33,15 @@ namespace SAM.Analytical.Revit
             }
 
             return Autodesk.Revit.DB.BuiltInCategory.INVALID;
+        }
+
+        public static BuiltInCategory BuiltInCategory(this Geometry.Spatial.Vector3D normal)
+        {
+            PanelType panelType = Analytical.Query.PanelType(normal);
+            if (panelType == Analytical.PanelType.Undefined)
+                return Autodesk.Revit.DB.BuiltInCategory.INVALID;
+
+            return BuiltInCategory(panelType);
         }
 
         public static BuiltInCategory BuiltInCategory(this ApertureConstruction apertureConstruction)

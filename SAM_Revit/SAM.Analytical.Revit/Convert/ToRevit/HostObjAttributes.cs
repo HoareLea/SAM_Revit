@@ -4,16 +4,20 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static HostObjAttributes ToRevit(this Construction construction, Document document, PanelType panelType, Core.Revit.ConvertSettings convertSettings)
+        public static HostObjAttributes ToRevit(this Construction construction, Document document, PanelType panelType, Geometry.Spatial.Vector3D normal, Core.Revit.ConvertSettings convertSettings)
         {
             if (construction == null)
                 return null;
             FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
 
             BuiltInCategory builtInCategory = panelType.BuiltInCategory();
+            if (builtInCategory == BuiltInCategory.INVALID)
+                builtInCategory = normal.BuiltInCategory();
+
             if (builtInCategory != BuiltInCategory.INVALID)
                 filteredElementCollector.OfCategory(builtInCategory);
 
+                
             string familyName_Source = null;
             string typeName_Source = null;
             if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(construction.Name, out familyName_Source, out typeName_Source))

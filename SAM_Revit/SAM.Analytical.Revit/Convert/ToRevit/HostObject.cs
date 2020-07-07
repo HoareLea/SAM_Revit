@@ -9,15 +9,16 @@ namespace SAM.Analytical.Revit
     {
         public static HostObject ToRevit(this Panel panel, Document document, Core.Revit.ConvertSettings convertSettings)
         {
-            Geometry.Spatial.Face3D face3D = panel.GetFace3D();
+            Geometry.Spatial.Face3D face3D = panel?.GetFace3D();
             if (face3D == null)
                 return null;
 
             PanelType panelType = panel.PanelType;
+            Geometry.Spatial.Vector3D normal = panel.Normal;
 
-            HostObjAttributes hostObjAttributes = panel.Construction.ToRevit(document, panelType, convertSettings);
+            HostObjAttributes hostObjAttributes = panel.Construction.ToRevit(document, panelType, normal, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = Analytical.Query.Construction(panelType).ToRevit(document, panelType, convertSettings); //Default Construction
+                hostObjAttributes = Analytical.Query.Construction(panelType)?.ToRevit(document, panelType, normal, convertSettings); //Default Construction
 
             HostObject result = null;
             BuiltInParameter[] builtInParameters = null;

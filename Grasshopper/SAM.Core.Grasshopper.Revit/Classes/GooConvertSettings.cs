@@ -49,7 +49,7 @@ namespace SAM.Core.Grasshopper.Revit
             if (string.IsNullOrWhiteSpace(value))
                 return false;
 
-            Value = Create.IJSAMObject<ConvertSettings>(value);
+            Value = Core.Create.IJSAMObject<ConvertSettings>(value);
             return true;
         }
 

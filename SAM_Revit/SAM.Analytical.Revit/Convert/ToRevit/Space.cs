@@ -4,7 +4,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Document document, Space space, Core.Revit.ConvertSettings convertSettings)
+        public static Autodesk.Revit.DB.Mechanical.Space ToRevit(this Space space, Document document, Core.Revit.ConvertSettings convertSettings)
         {
             double lowElevation = Query.LowElevation(space);
             if (double.IsNaN(lowElevation))

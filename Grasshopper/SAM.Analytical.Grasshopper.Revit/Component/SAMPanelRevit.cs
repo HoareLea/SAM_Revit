@@ -156,7 +156,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             try
             {
-                hostObject_New = Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
+                hostObject_New = Analytical.Revit.Convert.ToRevit(panel, document, convertSettings);
             }
             catch (Exception exception)
             {

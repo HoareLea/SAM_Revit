@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static FamilyInstance ToRevit(this Document document, Aperture aperture, HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
+        public static FamilyInstance ToRevit(this Aperture aperture, Document document, HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
         {
             if (aperture == null || document == null)
                 return null;
@@ -15,9 +15,9 @@ namespace SAM.Analytical.Revit
             if (apertureConstruction == null)
                 return null;
 
-            FamilySymbol familySymbol = ToRevit(document, apertureConstruction, convertSettings);
+            FamilySymbol familySymbol = apertureConstruction.ToRevit(document, convertSettings);
             if (familySymbol == null)
-                familySymbol = ToRevit(document, Analytical.Query.ApertureConstruction(apertureConstruction.ApertureType, true), convertSettings); //Default Aperture Construction
+                familySymbol = Analytical.Query.ApertureConstruction(apertureConstruction.ApertureType, true).ToRevit(document, convertSettings); //Default Aperture Construction
 
             if (familySymbol == null)
                 return null;

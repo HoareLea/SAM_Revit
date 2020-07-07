@@ -7,7 +7,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static HostObject ToRevit(this Document document, Panel panel, Core.Revit.ConvertSettings convertSettings)
+        public static HostObject ToRevit(this Panel panel, Document document, Core.Revit.ConvertSettings convertSettings)
         {
             Geometry.Spatial.Face3D face3D = panel.GetFace3D();
             if (face3D == null)
@@ -15,9 +15,9 @@ namespace SAM.Analytical.Revit
 
             PanelType panelType = panel.PanelType;
 
-            HostObjAttributes hostObjAttributes = document.ToRevit(panel.Construction, panelType, convertSettings);
+            HostObjAttributes hostObjAttributes = panel.Construction.ToRevit(document, panelType, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = document.ToRevit(Analytical.Query.Construction(panelType), panelType, convertSettings); //Default Construction
+                hostObjAttributes = Analytical.Query.Construction(panelType).ToRevit(document, panelType, convertSettings); //Default Construction
 
             HostObject result = null;
             BuiltInParameter[] builtInParameters = null;
@@ -206,7 +206,7 @@ namespace SAM.Analytical.Revit
                     bool flipHand = !plane_Panel.AxisX.SameHalf(plane_Aperture.AxisX);
                     bool flipFacing = !plane_Panel.Normal.SameHalf(plane_Aperture.Normal);
 
-                    FamilyInstance failyInstance_Aperture = ToRevit(document, aperture, result, convertSettings);
+                    FamilyInstance failyInstance_Aperture = aperture.ToRevit(document, result, convertSettings);
                 }
             }
 

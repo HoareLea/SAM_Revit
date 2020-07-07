@@ -41,7 +41,7 @@ namespace SAMAnalyticalDynamoRevit
 
             TransactionManager.Instance.EnsureInTransaction(document);
 
-            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
+            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(panel, document, convertSettings);
 
             TransactionManager.Instance.TransactionTaskDone();
 
@@ -64,7 +64,7 @@ namespace SAMAnalyticalDynamoRevit
 
             SAM.Core.Revit.ConvertSettings convertSettings = SAM.Core.Revit.Query.ConvertSettings();
 
-            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(document, panel, convertSettings);
+            HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(panel, document, convertSettings);
 
             TransactionManager.Instance.TransactionTaskDone();
 

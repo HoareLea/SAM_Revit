@@ -84,7 +84,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
             }
 
-            Autodesk.Revit.DB.Mechanical.Space space_Revit = Analytical.Revit.Convert.ToRevit(document, space, new ConvertSettings(true, true, true));
+            Autodesk.Revit.DB.Mechanical.Space space_Revit = Analytical.Revit.Convert.ToRevit(space, document, new ConvertSettings(true, true, true));
 
             dataAccess.SetData(0, space_Revit);
         }

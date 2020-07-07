@@ -33,7 +33,7 @@ namespace SAMAnalyticalDynamoRevit
 
             TransactionManager.Instance.EnsureInTransaction(document);
 
-            Autodesk.Revit.DB.Element element = SAM.Analytical.Revit.Convert.ToRevit(document, space, convertSettings);
+            Autodesk.Revit.DB.Element element = SAM.Analytical.Revit.Convert.ToRevit(space, document, convertSettings);
 
             TransactionManager.Instance.TransactionTaskDone();
 

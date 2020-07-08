@@ -35,7 +35,7 @@ namespace SAM.Analytical.Revit
             return aperture;
         }
 
-        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, PanelType panelType)
+        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance)
         {
             if (familyInstance == null)
                 return null;
@@ -49,13 +49,37 @@ namespace SAM.Analytical.Revit
                     return aperture;
             }
 
-            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
-            if (apertureConstruction == null)
-                apertureConstruction = Analytical.Query.ApertureConstruction(panelType, familyInstance.ApertureType()); //Default Aperture Construction
-
             Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
             if (point3D_Location == null)
                 return null;
+
+            PanelType panelType_Host = PanelType.Undefined;
+
+            if (familyInstance.Host != null)
+            {
+                HostObject hostObject = familyInstance.Host as HostObject;
+                if (hostObject != null)
+                {
+                    List<Face3D> face3Ds_Temp = hostObject.Profiles();
+                    if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    {
+                        Geometry.Spatial.Plane plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
+                        if (plane_Host != null)
+                            point3D_Location = plane_Host.Project(point3D_Location);
+                    }
+
+                    HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
+                    if(hostObjAttributes != null)
+                        panelType_Host = hostObjAttributes.PanelType();
+
+                    if (panelType_Host == PanelType.Undefined)
+                        panelType_Host = hostObject.PanelType();
+                }
+            }
+
+            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
+            if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
+                apertureConstruction = Analytical.Query.ApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
 
             Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
             Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);

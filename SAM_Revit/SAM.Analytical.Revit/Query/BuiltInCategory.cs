@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using NetTopologySuite.Mathematics;
 
 namespace SAM.Analytical.Revit
 {

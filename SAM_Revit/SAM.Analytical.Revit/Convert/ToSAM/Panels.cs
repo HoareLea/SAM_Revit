@@ -67,7 +67,8 @@ namespace SAM.Analytical.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, panelType);
+                        //Aperture aperture = ToSAM_Aperture((FamilyInstance)element, panelType);
+                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element);
                         panel.AddAperture(aperture);
                     }
                 }

@@ -33,13 +33,14 @@ namespace SAM.Analytical.Revit
                 {
                     FamilyInstance familyInstance = (FamilyInstance)element;
 
-                    PanelType panelType = PanelType.Undefined;
+                    //PanelType panelType = PanelType.Undefined;
 
-                    Panel panel = (familyInstance.Host as HostObject)?.ToSAM()?.First();
-                    if (panel != null)
-                        panelType = panel.PanelType;
+                    //Panel panel = (familyInstance.Host as HostObject)?.ToSAM()?.First();
+                    //if (panel != null)
+                    //    panelType = panel.PanelType;
 
-                    Aperture aperture = ToSAM_Aperture(familyInstance, panelType);
+                    //Aperture aperture = ToSAM_Aperture(familyInstance, panelType);
+                    Aperture aperture = ToSAM_Aperture(familyInstance);
                     if (aperture != null)
                         result = new List<Core.SAMObject>() { aperture };
                 }

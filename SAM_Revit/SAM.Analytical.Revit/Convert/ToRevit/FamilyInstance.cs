@@ -1,6 +1,8 @@
 ﻿using Autodesk.Revit.DB;
-
+using NetTopologySuite.Mathematics;
 using SAM.Geometry.Revit;
+using SAM.Geometry.Spatial;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -22,7 +24,7 @@ namespace SAM.Analytical.Revit
             if (familySymbol == null)
                 return null;
 
-            Geometry.Spatial.Point3D point3D_Location = aperture.PlanarBoundary3D?.Plane?.Origin;
+            Point3D point3D_Location = aperture.PlanarBoundary3D?.Plane?.Origin;
             if (point3D_Location == null)
                 return null;
 
@@ -32,9 +34,45 @@ namespace SAM.Analytical.Revit
 
             FamilyInstance familyInstance;
             if (hostObject is RoofBase)
-                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, aperture.Plane.AxisX.ToRevit(false), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            {
+                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+
+                Face3D face3D = aperture.GetFace3D();
+                Geometry.Spatial.Plane plane = face3D.GetPlane();
+                
+                List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
+                IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge();
+                if (closedPlanar3D is ICurvable3D)
+                {
+                    List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
+                    foreach (ICurve3D curve3D in curve3Ds)
+                    {
+                        ICurve3D curve3D_Temp = plane.Project(curve3D);
+                        point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+                    }
+                }
+
+                Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
+                Geometry.Planar.Vector2D direction = null;
+                if (rectangle2D.Height > rectangle2D.Width)
+                    direction = rectangle2D.HeightDirection;
+                else
+                    direction = rectangle2D.WidthDirection;
+
+                double angle = plane.Convert(direction).ToRevit(false).AngleTo(new XYZ(0, 1, 0));
+                angle = System.Math.PI  - angle;
+                //if (angle > System.Math.PI)
+                //    angle = -(angle - System.Math.PI);
+                if (direction.X < 0)
+                    angle = -angle;
+
+                familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
+            }
             else
+            {
                 familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+            }
+                
 
             if (familyInstance == null)
                 return null;
@@ -61,7 +99,8 @@ namespace SAM.Analytical.Revit
                 Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
 
                 bool simplified = false;
-                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D()))
+                //check if geometry is rectagular
+                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
                     simplified = true;
 
                 Core.Revit.Modify.Simplified(familyInstance, simplified);

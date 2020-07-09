@@ -54,12 +54,14 @@ namespace SAM.Analytical.Revit
                 return null;
 
             PanelType panelType_Host = PanelType.Undefined;
-
+            BuiltInCategory builtInCategory_Host = BuiltInCategory.INVALID;
             if (familyInstance.Host != null)
             {
                 HostObject hostObject = familyInstance.Host as HostObject;
                 if (hostObject != null)
                 {
+                    builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
+
                     List<Face3D> face3Ds_Temp = hostObject.Profiles();
                     if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
                     {
@@ -81,10 +83,22 @@ namespace SAM.Analytical.Revit
             if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
                 apertureConstruction = Analytical.Query.ApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
 
-            Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
-            Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+            Vector3D axisX = null;
+            Vector3D normal = null;
+            Vector3D axisY = null;
+            if (builtInCategory_Host == BuiltInCategory.OST_Roofs)
+            {
+                axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                axisY = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                normal = Geometry.Spatial.Query.AxisY(axisY, axisX);
+            }
+            else
+            {
+                axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
+            }
 
-            Vector3D axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
 
             Geometry.Spatial.Plane plane = Geometry.Spatial.Create.Plane(point3D_Location, axisX, axisY);
             if (!plane.Normal.SameHalf(normal))

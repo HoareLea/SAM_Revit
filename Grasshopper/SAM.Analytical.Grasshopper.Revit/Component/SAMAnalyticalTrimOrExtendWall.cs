@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalTrimOrExtendWall : RhinoInside.Revit.GH.Components.TransactionComponent
-    {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
+    public class SAMAnalyticalTrimOrExtendWall : RhinoInside.Revit.GH.Components.TransactionComponent
+    {
         public override Guid ComponentGuid => new Guid("e237e813-ed88-483d-8124-3bb5551b7103");
 
         /// <summary>

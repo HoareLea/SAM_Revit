@@ -105,6 +105,7 @@
     <Compile Include="Modify\Value.cs" />
     <Compile Include="Modify\Values.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
+    <Compile Include="Query\ClosestLevel.cs" />
     <Compile Include="Query\Name.cs" />
     <Compile Include="Query\Location.cs" />
     <Compile Include="Query\Solids.cs" />

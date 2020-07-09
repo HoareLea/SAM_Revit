@@ -53,7 +53,7 @@ namespace SAM.Analytical.Revit
                 parameter = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null)
                 {
-                    double height = UnitUtils.ConvertToInternalUnits((panel.HightElevation() - lowElevation), DisplayUnitType.DUT_METERS);
+                    double height = UnitUtils.ConvertToInternalUnits((panel.HighElevation() - lowElevation), DisplayUnitType.DUT_METERS);
                     parameter.Set(height);
                 }
 

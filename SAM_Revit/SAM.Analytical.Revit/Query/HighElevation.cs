@@ -2,7 +2,7 @@
 {
     public static partial class Query
     {
-        public static double HightElevation(this Panel panel)
+        public static double HighElevation(this Panel panel)
         {
             return panel.GetBoundingBox().Max.Z;
         }

@@ -17,7 +17,7 @@ namespace SAM.Core.Revit
             double distance = double.MaxValue;
             foreach(Level level in levels)
             {
-                double distance_Temp = System.Math.Abs(level.Elevation - elevation);
+                double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS) - elevation);
                 if (distance < distance_Temp)
                     continue;
 

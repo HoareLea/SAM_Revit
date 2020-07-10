@@ -46,6 +46,14 @@ namespace SAM.Core.Revit
             return revitDocument.GetElement(uniqueId);
         }
 
+        public static T Element<T>(this Document document, ElementId elementId) where T: Element
+        {
+            if (document == null || elementId == null || elementId == Autodesk.Revit.DB.ElementId.InvalidElementId)
+                return default(T);
+
+            return document.GetElement(elementId) as T;
+        }
+
         public static Element Element(this EnergyAnalysisOpening energyAnalysisOpening)
         {
             ElementId elementID = Query.ElementId(energyAnalysisOpening.OriginatingElementDescription);

@@ -36,7 +36,9 @@ namespace SAM.Analytical.Revit
             if (hostObject is RoofBase)
             {
                 familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-
+                if (familyInstance == null)
+                    return null;              
+                
                 Face3D face3D = aperture.GetFace3D();
                 Geometry.Spatial.Plane plane = face3D.GetPlane();
                 
@@ -53,20 +55,34 @@ namespace SAM.Analytical.Revit
                 }
 
                 Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
-                Geometry.Planar.Vector2D direction = null;
-                if (rectangle2D.Height > rectangle2D.Width)
-                    direction = rectangle2D.HeightDirection;
-                else
-                    direction = rectangle2D.WidthDirection;
+                if (rectangle2D == null)
+                    return null;
 
-                double angle = plane.Convert(direction).ToRevit(false).AngleTo(new XYZ(0, 1, 0));
-                angle = System.Math.PI  - angle;
-                //if (angle > System.Math.PI)
-                //    angle = -(angle - System.Math.PI);
-                if (direction.X < 0)
-                    angle = -angle;
+                document.Regenerate();
+                familyInstance = document.GetElement(familyInstance.Id) as FamilyInstance;
+
+                XYZ handOrientation_FamilyInstance = familyInstance.HandOrientation;
+                XYZ handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection).ToRevit(false);
+
+                double angle = handOrienation_Aperture.AngleTo(handOrientation_FamilyInstance);
 
                 familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
+
+                //Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
+                //Geometry.Planar.Vector2D direction = null;
+                //if (rectangle2D.Height > rectangle2D.Width)
+                //    direction = rectangle2D.HeightDirection;
+                //else
+                //    direction = rectangle2D.WidthDirection;
+
+                //double angle = plane.Convert(direction).ToRevit(false).AngleTo(new XYZ(0, 1, 0));
+                //angle = System.Math.PI  - angle;
+                ////if (angle > System.Math.PI)
+                ////    angle = -(angle - System.Math.PI);
+                //if (direction.X < 0)
+                //    angle = -angle;
+
+                //familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
             }
             else
             {

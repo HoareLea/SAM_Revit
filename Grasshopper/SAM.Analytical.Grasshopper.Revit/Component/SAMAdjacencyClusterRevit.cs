@@ -40,6 +40,10 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM Analytical AdjacencyCluster", GH_ParamAccess.item);
+            
+            int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
+            inputParamManager[index].Optional = true;
+            
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -54,7 +58,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            if (!dataAccess.GetData(2, ref run) || !run)
                 return;
 
             ConvertSettings convertSettings = null;
@@ -69,7 +73,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            List<Element> elements = Analytical.Revit.Convert.ToRevit(adjacencyCluster, document, new ConvertSettings(true, true, true));
+            List<Element> elements = Analytical.Revit.Convert.ToRevit(adjacencyCluster, document, convertSettings);
 
             dataAccess.SetDataList(0, elements);
         }

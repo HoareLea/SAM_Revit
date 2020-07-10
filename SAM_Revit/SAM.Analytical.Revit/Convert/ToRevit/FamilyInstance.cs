@@ -35,26 +35,7 @@ namespace SAM.Analytical.Revit
             FamilyInstance familyInstance;
             if (hostObject is RoofBase)
             {
-                XYZ referenceDirection = new XYZ(0, 0, 0);
-                IList<Reference> references = HostObjectUtils.GetTopFaces(hostObject);
-                if(references != null && references.Count > 0)
-                {
-                    foreach(Reference reference in references)
-                    {
-                        PlanarFace planarFace = hostObject.GetGeometryObjectFromReference(reference) as PlanarFace;
-                        if (planarFace == null)
-                            continue;
-
-                        IntersectionResult intersectionResult = planarFace.Project(point3D_Location.ToRevit());
-                        if (intersectionResult == null || intersectionResult.Distance > Core.Tolerance.Distance)
-                            continue;
-
-                        referenceDirection = planarFace.XVector;
-                        break;
-                    }
-                }
-
-                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                 if (familyInstance == null)
                     return null;              
                 
@@ -81,11 +62,22 @@ namespace SAM.Analytical.Revit
                 familyInstance = document.GetElement(familyInstance.Id) as FamilyInstance;
 
                 Geometry.Spatial.Vector3D handOrientation_FamilyInstance = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D facingOrientation_FamilyInstance = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+
                 Geometry.Spatial.Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
+
+                Geometry.Spatial.Plane plane_FamilyInstance = new Geometry.Spatial.Plane(point3D_Location, handOrientation_FamilyInstance, facingOrientation_FamilyInstance);
+                handOrienation_Aperture = plane_FamilyInstance.Project(handOrienation_Aperture);
 
                 double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
                 familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
+                //document.Regenerate();
+
+                //BoundingBox3D boundingBox3D_familyInstance = familyInstance.BoundingBox3D();
+                //BoundingBox3D boundingBox3D_Aperture = aperture.GetBoundingBox();
+                //if(boundingBox3D_familyInstance.Min.Distance(boundingBox3D_Aperture.Min) > SAM.Core.Tolerance.MacroDistance)
+                //    familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), System.Math.PI / 2);
 
                 //Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
                 //Geometry.Planar.Vector2D direction = null;

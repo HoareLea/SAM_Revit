@@ -14,8 +14,6 @@ namespace SAM.Analytical.Revit
             if (energyAnalysisOpening == null)
                 return null;
 
-            Document document = energyAnalysisOpening.Document;
-
             Polygon3D polygon3D = energyAnalysisOpening.GetPolyloop().ToSAM();
             if (polygon3D == null)
                 return null;
@@ -24,15 +22,24 @@ namespace SAM.Analytical.Revit
             if(familyInstance == null)
                 return new Aperture(null, polygon3D);
 
+            Aperture result;
+
+            if (Core.Revit.Query.Simplified(familyInstance))
+            {
+                result = Core.Revit.Query.IJSAMObject<Aperture>(familyInstance);
+                if (result != null)
+                    return result;
+            }
+
             ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
 
             Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
             if (point3D_Location == null)
                 return null;
 
-            Aperture aperture = new Aperture(apertureConstruction, polygon3D, point3D_Location);
-            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
-            return aperture;
+            result = new Aperture(apertureConstruction, polygon3D, point3D_Location);
+            result.Add(Core.Revit.Query.ParameterSet(familyInstance));
+            return result;
         }
 
         public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance)

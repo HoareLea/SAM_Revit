@@ -35,7 +35,26 @@ namespace SAM.Analytical.Revit
             FamilyInstance familyInstance;
             if (hostObject is RoofBase)
             {
-                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                XYZ referenceDirection = new XYZ(0, 0, 0);
+                IList<Reference> references = HostObjectUtils.GetTopFaces(hostObject);
+                if(references != null && references.Count > 0)
+                {
+                    foreach(Reference reference in references)
+                    {
+                        PlanarFace planarFace = hostObject.GetGeometryObjectFromReference(reference) as PlanarFace;
+                        if (planarFace == null)
+                            continue;
+
+                        IntersectionResult intersectionResult = planarFace.Project(point3D_Location.ToRevit());
+                        if (intersectionResult == null || intersectionResult.Distance > Core.Tolerance.Distance)
+                            continue;
+
+                        referenceDirection = planarFace.XVector;
+                        break;
+                    }
+                }
+
+                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                 if (familyInstance == null)
                     return null;              
                 
@@ -61,10 +80,10 @@ namespace SAM.Analytical.Revit
                 document.Regenerate();
                 familyInstance = document.GetElement(familyInstance.Id) as FamilyInstance;
 
-                XYZ handOrientation_FamilyInstance = familyInstance.HandOrientation;
-                XYZ handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection).ToRevit(false);
+                Geometry.Spatial.Vector3D handOrientation_FamilyInstance = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
 
-                double angle = handOrienation_Aperture.AngleTo(handOrientation_FamilyInstance);
+                double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
                 familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
 

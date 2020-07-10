@@ -23,6 +23,7 @@ namespace SAM.Analytical.Revit
 
             List<Element> result = new List<Element>();
 
+            HashSet<System.Guid> guids = new HashSet<System.Guid>();
             foreach(KeyValuePair<Space, Shell> keyValuePair in dictionary)
             {
                 Space space = keyValuePair.Key;
@@ -32,6 +33,11 @@ namespace SAM.Analytical.Revit
                 {
                     foreach(Panel panel in panels)
                     {
+                        if (guids.Contains(panel.Guid))
+                            continue;
+
+                        guids.Add(panel.Guid);
+                        
                         HostObject hostObject = panel.ToRevit(document, convertSettings);
                         if (hostObject == null)
                             continue;

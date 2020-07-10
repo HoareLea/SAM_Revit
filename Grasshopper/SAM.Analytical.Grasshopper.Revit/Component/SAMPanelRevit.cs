@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMPanelRevit : RhinoInside.Revit.GH.Components.ReconstructElementComponent
+    public class SAMPanelRevit : SAMReconstructElementComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

@@ -2,13 +2,14 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Core.Grasshopper;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMFloorsAndRoofsFromSpaces : GH_Component
+    public class RevitSAMFloorsAndRoofsFromSpaces : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

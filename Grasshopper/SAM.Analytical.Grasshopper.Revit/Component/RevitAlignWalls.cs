@@ -2,6 +2,7 @@
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
+using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
@@ -12,7 +13,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAlignWalls : RhinoInside.Revit.GH.Components.TransactionComponent
+    public class RevitAlignWalls : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

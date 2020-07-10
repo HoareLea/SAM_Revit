@@ -4,7 +4,7 @@ using System;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class SAMCoreCreateConvertSettings : GH_Component
+    public class SAMCoreCreateConvertSettings : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

@@ -2,11 +2,12 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Architectural.Grasshopper.Revit.Properties;
+using SAM.Core.Grasshopper;
 using System;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
-    public class SAMArchitecturalLevelInformation : GH_Component
+    public class SAMArchitecturalLevelInformation : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

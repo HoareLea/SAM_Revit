@@ -123,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\GooConvertSettings.cs" />
+    <Compile Include="Classes\SAMReconstructElementComponent.cs" />
+    <Compile Include="Classes\SAMTransactionalComponent.cs" />
+    <Compile Include="Classes\SAMTransactionComponent.cs" />
     <Compile Include="Component\RevitDeleteElement.cs" />
     <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />
@@ -171,8 +174,8 @@ if not exist "%25GH_PACKAGES_DIR%25" mkdir "%25GH_PACKAGES_DIR%25"
 copy "$(TargetDir)*.dll" "%25GH_PACKAGES_DIR%25"
 copy "%25GH_PACKAGES_DIR%25\$(ProjectName).dll" "%25GH_PACKAGES_DIR%25\$(ProjectName).gha"
 
-erase "%25GH_PACKAGES_DIR%25$(ProjectName).dll"
-erase "$(TargetPath)"</PostBuildEvent>
+::erase "%25GH_PACKAGES_DIR%25$(ProjectName).dll"
+::erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <FallbackCulture>en-US</FallbackCulture>

@@ -1,11 +1,12 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Core.Grasshopper.Revit;
 using System;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalDuplicateConstruction : RhinoInside.Revit.GH.Components.TransactionComponent
+    public class SAMAnalyticalDuplicateConstruction : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

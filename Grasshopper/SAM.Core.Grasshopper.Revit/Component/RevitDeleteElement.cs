@@ -2,6 +2,7 @@
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Core;
+using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Grasshopper.Revit.Properties;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitDeleteElement : RhinoInside.Revit.GH.Components.TransactionComponent
+    public class RevitDeleteElement : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.

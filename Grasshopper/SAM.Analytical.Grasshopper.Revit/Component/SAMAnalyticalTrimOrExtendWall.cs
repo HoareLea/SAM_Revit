@@ -1,5 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-    public class SAMAnalyticalTrimOrExtendWall : RhinoInside.Revit.GH.Components.TransactionComponent
+    public class SAMAnalyticalTrimOrExtendWall : SAMTransactionComponent
     {
         public override Guid ComponentGuid => new Guid("e237e813-ed88-483d-8124-3bb5551b7103");
 

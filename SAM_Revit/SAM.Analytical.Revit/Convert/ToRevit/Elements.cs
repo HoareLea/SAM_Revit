@@ -28,10 +28,10 @@ namespace SAM.Analytical.Revit
             {
                 Space space = keyValuePair.Key;
 
-                List<Panel> panels = adjacencyCluster.GetPanels(space);
-                if(panels != null && panels.Count != 0)
+                List<Panel> panels_Space = adjacencyCluster.GetPanels(space);
+                if(panels_Space != null && panels_Space.Count != 0)
                 {
-                    foreach(Panel panel in panels)
+                    foreach(Panel panel in panels_Space)
                     {
                         if (guids.Contains(panel.Guid))
                             continue;
@@ -67,6 +67,20 @@ namespace SAM.Analytical.Revit
 
                 parameter = space_Revit.get_Parameter(BuiltInParameter.ROOM_UPPER_OFFSET);
                 parameter.Set(0);
+            }
+
+
+            List<Panel> panels = adjacencyCluster.GetShadingPanels();
+            if(panels != null && panels.Count != 0)
+            {
+                foreach(Panel panel in panels)
+                {
+                    HostObject hostObject = panel.ToRevit(document, convertSettings);
+                    if (hostObject == null)
+                        continue;
+
+                    result.Add(hostObject);
+                }
             }
 
             return result;

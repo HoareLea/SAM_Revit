@@ -54,6 +54,19 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <DocumentationFile>..\..\build\SAM.Analytical.Grasshopper.Revit.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug2021\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Analytical.Grasshopper.Revit.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RhinoCommon.7.0.20182.13135-wip\lib\net45\Eto.dll</HintPath>
@@ -79,6 +92,14 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Rhino.UI, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RhinoCommon.7.0.20182.13135-wip\lib\net45\Rhino.UI.dll</HintPath>
     </Reference>
@@ -89,11 +110,19 @@
       <HintPath>..\..\packages\Rhino.Inside.0.2.0\lib\net45\RhinoInside.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoInside.Revit">
+    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2021'">
+      <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2021'">
+      <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.GH.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+	    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoInside.Revit.GH">
+    <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2020'">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>

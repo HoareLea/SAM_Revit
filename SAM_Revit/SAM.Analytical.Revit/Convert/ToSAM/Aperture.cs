@@ -118,7 +118,7 @@ namespace SAM.Analytical.Revit
             List<Point2D> point2Ds = new List<Point2D>();
             foreach (Face3D face3D_Temp in face3Ds)
             {
-                IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge();
+                IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
                 if (closedPlanar3D is ICurvable3D)
                 {
                     List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();

@@ -161,7 +161,7 @@ namespace SAM.Geometry.Revit
                 Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
                 foreach (Face3D face3D in face3Ds)
                 {
-                    List<Planar.IClosed2D> internalEdges = face3D.InternalEdges;
+                    List<Planar.IClosed2D> internalEdges = face3D.InternalEdge2Ds;
                     if (internalEdges == null || internalEdges.Count == 0)
                         continue;
 

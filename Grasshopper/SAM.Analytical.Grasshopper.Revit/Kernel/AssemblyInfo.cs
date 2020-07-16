@@ -28,7 +28,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return Properties.Resources.SAM_Revit; ;
+                return Properties.Resources.SAM_Revit;
             }
         }
 

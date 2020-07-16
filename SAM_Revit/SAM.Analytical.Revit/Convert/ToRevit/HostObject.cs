@@ -25,7 +25,7 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
-                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
+                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
                 {
                     if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
                         continue;
@@ -70,7 +70,7 @@ namespace SAM.Analytical.Revit
             }
             else if (hostObjAttributes is FloorType)
             {
-                Geometry.Spatial.IClosedPlanar3D closedPlanar3D_External = face3D.GetExternalEdge();
+                Geometry.Spatial.IClosedPlanar3D closedPlanar3D_External = face3D.GetExternalEdge3D();
                 if (!(closedPlanar3D_External is Geometry.Spatial.ICurvable3D))
                     return null;
 
@@ -82,7 +82,7 @@ namespace SAM.Analytical.Revit
                 CurveArray curveArray_Sloped = new CurveArray();
                 CurveArray curveArray_Plane = new CurveArray();
 
-                Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge();
+                Geometry.Spatial.IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
                 if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
                     return null;
 
@@ -107,14 +107,14 @@ namespace SAM.Analytical.Revit
                 {
                     floor.ChangeTypeId(hostObjAttributes.Id);
 
-                    List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdges();
+                    List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdge3Ds();
                     if (closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
                     {
                         //Requires to be regenerated before inserting openings
                         //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
                         document.Regenerate();
 
-                        foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdges())
+                        foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdge3Ds())
                         {
                             curveArray_Plane = new CurveArray();
                             foreach (Geometry.Spatial.ICurve3D curve3D in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()))
@@ -153,7 +153,7 @@ namespace SAM.Analytical.Revit
             else if (hostObjAttributes is RoofType)
             {
                 CurveArray curveArray = new CurveArray();
-                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdges())
+                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
                 {
                     if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
                         continue;

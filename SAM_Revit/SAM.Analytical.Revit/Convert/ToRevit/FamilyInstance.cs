@@ -43,7 +43,7 @@ namespace SAM.Analytical.Revit
                 Geometry.Spatial.Plane plane = face3D.GetPlane();
                 
                 List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
-                IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge();
+                IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
                 if (closedPlanar3D is ICurvable3D)
                 {
                     List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();

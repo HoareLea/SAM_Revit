@@ -69,16 +69,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Eto, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoCommon.7.0.20182.13135-wip\lib\net45\Eto.dll</HintPath>
+      <HintPath>..\..\packages\RhinoCommon.7.0.20189.15345-wip\lib\net45\Eto.dll</HintPath>
     </Reference>
     <Reference Include="Eto.Wpf, Version=2.5.0.0, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoWindows.7.0.20182.13135-wip\lib\net45\Eto.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\RhinoWindows.7.0.20189.15345-wip\lib\net45\Eto.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="GH_IO, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Grasshopper.7.0.20182.13135-wip\lib\net45\GH_IO.dll</HintPath>
+    <Reference Include="GH_IO, Version=7.0.20189.15340, Culture=neutral, PublicKeyToken=6a29997d2e6b4f97, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Grasshopper.7.0.20189.15345-wip\lib\net45\GH_IO.dll</HintPath>
     </Reference>
-    <Reference Include="Grasshopper, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Grasshopper.7.0.20182.13135-wip\lib\net45\Grasshopper.dll</HintPath>
+    <Reference Include="Grasshopper, Version=7.0.20189.15340, Culture=neutral, PublicKeyToken=dda4f5ec2cd80803, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Grasshopper.7.0.20189.15345-wip\lib\net45\Grasshopper.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -100,11 +100,11 @@
       <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Rhino.UI, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoCommon.7.0.20182.13135-wip\lib\net45\Rhino.UI.dll</HintPath>
+    <Reference Include="Rhino.UI, Version=7.0.20189.15340, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoCommon.7.0.20189.15345-wip\lib\net45\Rhino.UI.dll</HintPath>
     </Reference>
-    <Reference Include="RhinoCommon, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoCommon.7.0.20182.13135-wip\lib\net45\RhinoCommon.dll</HintPath>
+    <Reference Include="RhinoCommon, Version=7.0.20189.15340, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoCommon.7.0.20189.15345-wip\lib\net45\RhinoCommon.dll</HintPath>
     </Reference>
     <Reference Include="RhinoInside, Version=1.0.1.0, Culture=neutral, processorArchitecture=AMD64">
       <HintPath>..\..\packages\Rhino.Inside.0.2.0\lib\net45\RhinoInside.dll</HintPath>
@@ -118,7 +118,7 @@
       <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
+    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020'">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -126,8 +126,8 @@
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RhinoWindows, Version=7.0.20182.13130, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoWindows.7.0.20182.13135-wip\lib\net45\RhinoWindows.dll</HintPath>
+    <Reference Include="RhinoWindows, Version=7.0.20189.15340, Culture=neutral, PublicKeyToken=552281e97c755530, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RhinoWindows.7.0.20189.15345-wip\lib\net45\RhinoWindows.dll</HintPath>
     </Reference>
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
@@ -241,15 +241,15 @@ erase "$(TargetPath)"</PostBuildEvent>
     </StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
-  <Import Project="..\..\packages\RhinoCommon.7.0.20182.13135-wip\build\net45\RhinoCommon.targets" Condition="Exists('..\..\packages\RhinoCommon.7.0.20182.13135-wip\build\net45\RhinoCommon.targets')" />
+  <Import Project="..\..\packages\RhinoCommon.7.0.20189.15345-wip\build\net45\RhinoCommon.targets" Condition="Exists('..\..\packages\RhinoCommon.7.0.20189.15345-wip\build\net45\RhinoCommon.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\RhinoCommon.7.0.20182.13135-wip\build\net45\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RhinoCommon.7.0.20182.13135-wip\build\net45\RhinoCommon.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Grasshopper.7.0.20182.13135-wip\build\net45\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Grasshopper.7.0.20182.13135-wip\build\net45\Grasshopper.targets'))" />
-    <Error Condition="!Exists('..\..\packages\RhinoWindows.7.0.20182.13135-wip\build\net45\RhinoWindows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RhinoWindows.7.0.20182.13135-wip\build\net45\RhinoWindows.targets'))" />
+    <Error Condition="!Exists('..\..\packages\RhinoCommon.7.0.20189.15345-wip\build\net45\RhinoCommon.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RhinoCommon.7.0.20189.15345-wip\build\net45\RhinoCommon.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Grasshopper.7.0.20189.15345-wip\build\net45\Grasshopper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Grasshopper.7.0.20189.15345-wip\build\net45\Grasshopper.targets'))" />
+    <Error Condition="!Exists('..\..\packages\RhinoWindows.7.0.20189.15345-wip\build\net45\RhinoWindows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RhinoWindows.7.0.20189.15345-wip\build\net45\RhinoWindows.targets'))" />
   </Target>
-  <Import Project="..\..\packages\Grasshopper.7.0.20182.13135-wip\build\net45\Grasshopper.targets" Condition="Exists('..\..\packages\Grasshopper.7.0.20182.13135-wip\build\net45\Grasshopper.targets')" />
-  <Import Project="..\..\packages\RhinoWindows.7.0.20182.13135-wip\build\net45\RhinoWindows.targets" Condition="Exists('..\..\packages\RhinoWindows.7.0.20182.13135-wip\build\net45\RhinoWindows.targets')" />
+  <Import Project="..\..\packages\Grasshopper.7.0.20189.15345-wip\build\net45\Grasshopper.targets" Condition="Exists('..\..\packages\Grasshopper.7.0.20189.15345-wip\build\net45\Grasshopper.targets')" />
+  <Import Project="..\..\packages\RhinoWindows.7.0.20189.15345-wip\build\net45\RhinoWindows.targets" Condition="Exists('..\..\packages\RhinoWindows.7.0.20189.15345-wip\build\net45\RhinoWindows.targets')" />
 </Project>

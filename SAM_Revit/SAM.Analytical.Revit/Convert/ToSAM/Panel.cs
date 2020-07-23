@@ -58,7 +58,7 @@ namespace SAM.Analytical.Revit
                 panelType = panelType_Temp;
 
             Face3D face3D = new Face3D(polygon3D);
-            Panel panel = new Panel(construction, panelType, face3D);
+            Panel result = new Panel(construction, panelType, face3D);
 
             IEnumerable<EnergyAnalysisOpening> energyAnalysisOpenings = energyAnalysisSurface.GetAnalyticalOpenings();
             if(energyAnalysisOpenings != null && energyAnalysisOpenings.Count() != 0)
@@ -67,11 +67,11 @@ namespace SAM.Analytical.Revit
                 {
                     Aperture aperture = energyAnalysisOpening.ToSAM();
                     if (aperture != null)
-                        panel.AddAperture(aperture);
+                        result.AddAperture(aperture);
                 }
             }
 
-            return panel;
+            return result;
         }
     }
 }

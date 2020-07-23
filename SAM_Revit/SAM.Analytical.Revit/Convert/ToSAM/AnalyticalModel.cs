@@ -139,7 +139,11 @@ namespace SAM.Analytical.Revit
             }
 
 
-            return new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
+            AnalyticalModel result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
+            Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
+            result.Add(parameterSet);
+
+            return result;
         }
     }
 }

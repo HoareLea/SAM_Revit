@@ -9,9 +9,9 @@ namespace SAM.Analytical.Revit
         public static class Name
         {
             //public const string Construction_Undefined = "Construction_Undefined";
-            public const string ParameterName_PanelType = "ParameterName_PanelType";
-            public const string ParameterName_ApertureHeight = "ParameterName_ApertureHeight";
-            public const string ParameterName_ApertureWidth = "ParameterName_BuildingElementWidth";
+            //public const string ParameterName_PanelType = "ParameterName_PanelType";
+            //public const string ParameterName_ApertureHeight = "ParameterName_ApertureHeight";
+            //public const string ParameterName_ApertureWidth = "ParameterName_BuildingElementWidth";
         }
 
         private static Setting setting = Load();
@@ -37,9 +37,9 @@ namespace SAM.Analytical.Revit
         {
             Setting result = new Setting(Assembly.GetExecutingAssembly());
 
-            result.Add(Name.ParameterName_PanelType, "SAM_BuildingElementType");
-            result.Add(Name.ParameterName_ApertureHeight, "SAM_BuildingElementHeight");
-            result.Add(Name.ParameterName_ApertureWidth, "SAM_BuildingElementWidth");
+            //result.Add(Name.ParameterName_PanelType, "SAM_BuildingElementType");
+            //result.Add(Name.ParameterName_ApertureHeight, "SAM_BuildingElementHeight");
+            //result.Add(Name.ParameterName_ApertureWidth, "SAM_BuildingElementWidth");
 
             MapCluster mapCluster = new MapCluster();
 

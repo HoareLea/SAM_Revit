@@ -135,8 +135,8 @@ namespace SAM.Analytical.Revit
 
             //TODO: Working on SAM Families (requested by Michal)
 
-            string parameterName_Height = Query.ParameterName_ApertureHeight();
-            string parameterName_Width = Query.ParameterName_BuildingElementWidth();
+            string parameterName_Height = Analytical.Query.ParameterName_Height();
+            string parameterName_Width = Analytical.Query.ParameterName_Width();
             if (!string.IsNullOrWhiteSpace(parameterName_Height) && !string.IsNullOrWhiteSpace(parameterName_Width))
             {
                 Parameter parameter_Height = familyInstance.LookupParameter(parameterName_Height);

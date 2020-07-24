@@ -71,6 +71,8 @@ namespace SAM.Analytical.Revit
                 }
             }
 
+            result.Add(Core.Revit.Query.ParameterSet(energyAnalysisSurface));
+
             return result;
         }
     }

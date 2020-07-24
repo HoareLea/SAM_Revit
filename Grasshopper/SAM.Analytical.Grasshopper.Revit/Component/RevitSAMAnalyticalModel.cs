@@ -37,11 +37,18 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             get
             {
-                ParamDefinition[] paramDefinitions = new ParamDefinition[1];
+                ParamDefinition[] paramDefinitions = new ParamDefinition[2];
 
                 GooAnalyticalModelParam gooAnalyticalModelParam = new GooAnalyticalModelParam();
                 gooAnalyticalModelParam.Access = GH_ParamAccess.item;
                 paramDefinitions[0] = ParamDefinition.FromParam(gooAnalyticalModelParam);
+
+                Param_Boolean param_Boolean = new Param_Boolean();
+                param_Boolean.Name = "Successful";
+                param_Boolean.NickName = "Successful";
+                param_Boolean.Description = "Correctly imported?";
+                param_Boolean.Access = GH_ParamAccess.item;
+                paramDefinitions[1] = ParamDefinition.FromParam(param_Boolean);
 
                 return paramDefinitions;
             }
@@ -59,6 +66,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            dataAccess.SetData(1, false);
+
             bool run = false;
             if (!dataAccess.GetData(0, ref run) || !run)
                 return;
@@ -81,6 +90,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             dataAccess.SetData(0, new GooAnalyticalModel(analyticalModel));
+            dataAccess.SetData(1, analyticalModel != null);
         }
     }
 }

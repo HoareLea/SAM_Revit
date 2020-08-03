@@ -87,12 +87,19 @@ namespace SAM.Core.Revit
             if (sAMObject == null || element == null)
                 return false;
 
-            ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
-            if (parameterSet != null)
+            List<ParameterSet> parameterSets = sAMObject.GetParamaterSets();
+            if(parameterSets != null && parameterSets.Count != 0)
             {
-                if (!Values(parameterSet, element, parameterNames_Excluded))
-                    return false;
+                foreach (ParameterSet parameterSet in parameterSets)
+                    Values(parameterSet, element, parameterNames_Excluded);
             }
+
+            //ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
+            //if (parameterSet != null)
+            //{
+            //    if (!Values(parameterSet, element, parameterNames_Excluded))
+            //        return false;
+            //}
 
             Setting setting = ActiveSetting.Setting;
 

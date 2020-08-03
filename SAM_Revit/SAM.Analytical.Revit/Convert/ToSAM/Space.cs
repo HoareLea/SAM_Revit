@@ -19,7 +19,9 @@ namespace SAM.Analytical.Revit
                 name = spatialElement.Name;
 
             Space space = new Space(name, point3D);
-            space.Add(Core.Revit.Query.ParameterSet(spatialElement));
+            Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(spatialElement);
+            parameterSet.Add(Analytical.Query.ParameterName_SpaceName(), name);
+            space.Add(parameterSet);
 
             return space;
         }

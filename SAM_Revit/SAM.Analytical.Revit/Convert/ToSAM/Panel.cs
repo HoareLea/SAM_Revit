@@ -10,10 +10,14 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, Shell shell = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
+        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, Core.Revit.ConvertSettings convertSettings, Shell shell = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
         {
             if (energyAnalysisSurface == null)
                 return null;
+
+            Panel result = convertSettings?.GetObject<Panel>(energyAnalysisSurface.Id);
+            if (result != null)
+                return result;
 
             Document document = energyAnalysisSurface.Document;
 
@@ -49,7 +53,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             PanelType panelType = Query.PanelType(hostObject);
-            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
             if (construction == null)
                 construction = Analytical.Query.Construction(panelType); //Default Construction
 
@@ -58,20 +62,22 @@ namespace SAM.Analytical.Revit
                 panelType = panelType_Temp;
 
             Face3D face3D = new Face3D(polygon3D);
-            Panel result = new Panel(construction, panelType, face3D);
+            result = new Panel(construction, panelType, face3D);
 
             IEnumerable<EnergyAnalysisOpening> energyAnalysisOpenings = energyAnalysisSurface.GetAnalyticalOpenings();
             if(energyAnalysisOpenings != null && energyAnalysisOpenings.Count() != 0)
             {
                 foreach(EnergyAnalysisOpening energyAnalysisOpening in energyAnalysisOpenings)
                 {
-                    Aperture aperture = energyAnalysisOpening.ToSAM();
+                    Aperture aperture = energyAnalysisOpening.ToSAM(convertSettings);
                     if (aperture != null)
                         result.AddAperture(aperture);
                 }
             }
 
             result.Add(Core.Revit.Query.ParameterSet(energyAnalysisSurface));
+
+            convertSettings?.Add(energyAnalysisSurface.Id, result);
 
             return result;
         }

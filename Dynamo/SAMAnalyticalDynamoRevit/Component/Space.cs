@@ -2,6 +2,7 @@
 using Revit.Elements;
 using RevitServices.Persistence;
 using RevitServices.Transactions;
+using SAM.Core.Revit;
 using System.Collections.Generic;
 
 namespace SAMAnalyticalDynamoRevit
@@ -18,7 +19,9 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>FromRevit, SAM Analytical Space</search>
         public static SAM.Analytical.Space FromRevit(Revit.Elements.Element element)
         {
-            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as SpatialElement);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as SpatialElement, convertSettings);
         }
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace SAMAnalyticalDynamoRevit
         /// <param name="space">SAM Analytical Space</param>
         /// <param name="convertSettings">convert Settings</param>
         /// <search>ToRevit, SAM Analytical Space</search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, SAM.Core.Revit.ConvertSettings convertSettings)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Space space, ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
 
@@ -51,7 +54,9 @@ namespace SAMAnalyticalDynamoRevit
             if (revitLinkInstance_Revit == null)
                 return null;
 
-            return SAM.Analytical.Revit.Convert.ToSAM_Spaces(revitLinkInstance_Revit, fromRooms);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            return SAM.Analytical.Revit.Convert.ToSAM_Spaces(revitLinkInstance_Revit, convertSettings, fromRooms);
         }
     }
 }

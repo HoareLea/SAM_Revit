@@ -9,10 +9,14 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Aperture ToSAM(this EnergyAnalysisOpening energyAnalysisOpening)
+        public static Aperture ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, Core.Revit.ConvertSettings convertSettings)
         {
             if (energyAnalysisOpening == null)
                 return null;
+
+            Aperture result = convertSettings?.GetObject<Aperture>(energyAnalysisOpening.Id);
+            if (result != null)
+                return result;
 
             Polygon3D polygon3D = energyAnalysisOpening.GetPolyloop().ToSAM();
             if (polygon3D == null)
@@ -22,8 +26,6 @@ namespace SAM.Analytical.Revit
             if(familyInstance == null)
                 return new Aperture(null, polygon3D);
 
-            Aperture result;
-
             if (Core.Revit.Query.Simplified(familyInstance))
             {
                 result = Core.Revit.Query.IJSAMObject<Aperture>(familyInstance);
@@ -31,7 +33,7 @@ namespace SAM.Analytical.Revit
                     return result;
             }
 
-            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
+            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
 
             Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
             if (point3D_Location == null)
@@ -39,21 +41,30 @@ namespace SAM.Analytical.Revit
 
             result = new Aperture(apertureConstruction, polygon3D, point3D_Location);
             result.Add(Core.Revit.Query.ParameterSet(familyInstance));
+
+            convertSettings?.Add(energyAnalysisOpening.Id, result);
+
             return result;
         }
 
-        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance)
+        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, Core.Revit.ConvertSettings convertSettings)
         {
             if (familyInstance == null)
                 return null;
 
-            Aperture aperture = null;
+            Aperture result = convertSettings?.GetObject<Aperture>(familyInstance.Id);
+            if (result != null)
+                return result;
 
             if (Core.Revit.Query.Simplified(familyInstance))
             {
-                aperture = Core.Revit.Query.IJSAMObject<Aperture>(familyInstance);
-                if (aperture != null)
-                    return aperture;
+                result = Core.Revit.Query.IJSAMObject<Aperture>(familyInstance);
+                if (result != null)
+                {
+                    convertSettings?.Add(familyInstance.Id, result);
+                    return result;
+                }
+                    
             }
 
             Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
@@ -86,7 +97,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance);
+            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
             if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
                 apertureConstruction = Analytical.Query.ApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
 
@@ -156,10 +167,12 @@ namespace SAM.Analytical.Revit
 
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
-            aperture = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
-            aperture.Add(Core.Revit.Query.ParameterSet(familyInstance));
+            result = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
+            result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
-            return aperture;
+            convertSettings?.Add(familyInstance.Id, result);
+
+            return result;
         }
     }
 }

@@ -73,13 +73,15 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (hostObjects == null || hostObjects.Count == 0)
                 return;
 
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
             List<Panel> panels = new List<Panel>();
             foreach (HostObject hostObject in hostObjects)
             {
                 if (!(hostObject is Wall))
                     continue;
 
-                List<Panel> panels_Temp = hostObject.ToSAM();
+                List<Panel> panels_Temp = hostObject.ToSAM(convertSettings);
                 if (panels_Temp != null)
                     panels.AddRange(panels_Temp);
             }

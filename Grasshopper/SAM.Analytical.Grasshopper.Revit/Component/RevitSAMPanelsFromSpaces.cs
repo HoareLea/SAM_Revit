@@ -3,6 +3,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
+using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 
@@ -103,7 +104,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            List<Panel> panels = Analytical.Revit.Create.Panels(space);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            List<Panel> panels = Analytical.Revit.Create.Panels(space, convertSettings);
             if (panels == null || panels.Count == 0)
             {
                 message = "Panels ould not be generated";

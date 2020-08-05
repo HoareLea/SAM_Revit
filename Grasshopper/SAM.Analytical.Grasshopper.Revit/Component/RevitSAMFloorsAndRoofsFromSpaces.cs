@@ -105,7 +105,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            List<Panel> panels = Analytical.Revit.Create.Panels(space);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            List<Panel> panels = Analytical.Revit.Create.Panels(space, convertSettings);
             if (panels == null || panels.Count == 0)
             {
                 message = "Panels ould not be generated";

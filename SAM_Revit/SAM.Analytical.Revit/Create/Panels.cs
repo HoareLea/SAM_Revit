@@ -7,7 +7,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Create
     {
-        public static List<Autodesk.Revit.DB.Panel> Panels(this Wall wall)
+        public static List<Autodesk.Revit.DB.Panel> Panels(this Wall wall, Core.Revit.ConvertSettings convertSettings)
         {
             if (wall == null)
                 return null;
@@ -34,7 +34,7 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-                List<Autodesk.Revit.DB.Panel> panels = Panels(wall.Document.GetElement(elementId_Host) as Wall);
+                List<Autodesk.Revit.DB.Panel> panels = Panels(wall.Document.GetElement(elementId_Host) as Wall, convertSettings);
                 if (panels != null && panels.Count > 0)
                     result.AddRange(panels);
             }
@@ -42,7 +42,7 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static List<Panel> Panels(this SpatialElement spatialElement)
+        public static List<Panel> Panels(this SpatialElement spatialElement, Core.Revit.ConvertSettings convertSettings)
         {
             if (spatialElement == null)
                 return null;
@@ -51,20 +51,20 @@ namespace SAM.Analytical.Revit
             spatialElementBoundaryOptions.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center;
             spatialElementBoundaryOptions.StoreFreeBoundaryFaces = true;
 
-            return Panels(spatialElement, spatialElementBoundaryOptions);
+            return Panels(spatialElement, spatialElementBoundaryOptions, convertSettings);
         }
 
-        public static List<Panel> Panels(this SpatialElement spatialElement, SpatialElementBoundaryOptions spatialElementBoundaryOptions)
+        public static List<Panel> Panels(this SpatialElement spatialElement, SpatialElementBoundaryOptions spatialElementBoundaryOptions, Core.Revit.ConvertSettings convertSettings)
         {
             if (spatialElement == null || spatialElementBoundaryOptions == null)
                 return null;
 
             SpatialElementGeometryCalculator spatialElementGeometryCalculator = new SpatialElementGeometryCalculator(spatialElement.Document, spatialElementBoundaryOptions);
 
-            return Panels(spatialElement, spatialElementGeometryCalculator);
+            return Panels(spatialElement, spatialElementGeometryCalculator, convertSettings);
         }
 
-        public static List<Panel> Panels(this SpatialElement spatialElement, SpatialElementGeometryCalculator spatialElementGeometryCalculator)
+        public static List<Panel> Panels(this SpatialElement spatialElement, SpatialElementGeometryCalculator spatialElementGeometryCalculator, Core.Revit.ConvertSettings convertSettings)
         {
             if (spatialElement == null || spatialElementGeometryCalculator == null)
                 return null;
@@ -121,7 +121,7 @@ namespace SAM.Analytical.Revit
                             HostObject hostObject = element as HostObject;
                             if (hostObject != null)
                             {
-                                List<Panel> panels = hostObject.ToSAM();
+                                List<Panel> panels = hostObject.ToSAM(convertSettings);
                                 if (panels != null && panels.Count > 0)
                                     panel = panels[0];
 
@@ -141,7 +141,7 @@ namespace SAM.Analytical.Revit
                                 {
                                     ElementId elementId_Type = hostObject.GetTypeId();
                                     if (elementId_Type != null && elementId_Type != ElementId.InvalidElementId)
-                                        construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM();
+                                        construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
                                 }
                             }
                         }

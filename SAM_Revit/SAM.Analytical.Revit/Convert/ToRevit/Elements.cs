@@ -8,7 +8,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static List<Element> ToRevit(this AdjacencyCluster adjacencyCluster, Document document, Core.Revit.ConvertSettings convertSettings)
+        public static List<Element> ToRevit(this AdjacencyCluster adjacencyCluster, Document document, ConvertSettings convertSettings)
         {
             if (adjacencyCluster == null || document == null)
                 return null;

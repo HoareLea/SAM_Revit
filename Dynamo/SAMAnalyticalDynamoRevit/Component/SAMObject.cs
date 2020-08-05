@@ -1,4 +1,5 @@
 ﻿using RevitServices.Transactions;
+using SAM.Core.Revit;
 using System.Collections.Generic;
 
 namespace SAMAnalyticalDynamoRevit
@@ -17,7 +18,9 @@ namespace SAMAnalyticalDynamoRevit
         {
             TransactionManager.Instance.ForceCloseTransaction();
 
-            IEnumerable<SAM.Core.SAMObject> sAMObjects = SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            IEnumerable<SAM.Core.SAMObject> sAMObjects = SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement, convertSettings);
             if (sAMObjects == null)
                 return null;
 

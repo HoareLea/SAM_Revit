@@ -3,6 +3,8 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
+using SAM.Core.Revit;
+using SAM.Geometry.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,10 +128,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Core.SAMObject> sAMObjects = new List<Core.SAMObject>();
 
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
             List<Element> elementList = filteredElementCollector.ToList();
             foreach (Element element in elementList)
             {
-                IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element);
+                IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element, convertSettings);
                 if (sAMObjects_Temp != null && sAMObjects_Temp.Count() > 0)
                 {
                     sAMObjects.AddRange(sAMObjects_Temp);

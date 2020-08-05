@@ -7,7 +7,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static IEnumerable<Space> ToSAM_Spaces(this RevitLinkInstance revitLinkInstance, bool fromRooms = true)
+        public static IEnumerable<Space> ToSAM_Spaces(this RevitLinkInstance revitLinkInstance, Core.Revit.ConvertSettings convertSettings, bool fromRooms = true)
         {
             Document document_Source = revitLinkInstance.GetLinkDocument();
 
@@ -22,7 +22,7 @@ namespace SAM.Analytical.Revit
             List<Space> spaces = new List<Space>();
             foreach (SpatialElement spatialElement in spatialElements)
             {
-                Space space = ToSAM(spatialElement);
+                Space space = ToSAM(spatialElement, convertSettings);
                 if (space != null)
                     spaces.Add(space);
             }

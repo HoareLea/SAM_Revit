@@ -2,6 +2,7 @@
 using Revit.Elements;
 using RevitServices.Persistence;
 using RevitServices.Transactions;
+using SAM.Core.Revit;
 using System.Collections.Generic;
 
 namespace SAMAnalyticalDynamoRevit
@@ -18,7 +19,9 @@ namespace SAMAnalyticalDynamoRevit
         /// <search>FromRevit, SAM Analytical Panel</search>
         public static List<SAM.Analytical.Panel> FromRevit(Revit.Elements.Element element)
         {
-            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as HostObject);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            return SAM.Analytical.Revit.Convert.ToSAM(element.InternalElement as HostObject, convertSettings);
         }
 
         public static List<SAM.Analytical.Panel> FromRevitLinkInstance(Revit.Elements.Element revitLinkInstance)
@@ -27,7 +30,9 @@ namespace SAMAnalyticalDynamoRevit
             if (revitLinkInstance_Revit == null)
                 return null;
 
-            return SAM.Analytical.Revit.Convert.ToSAM_Panels(revitLinkInstance_Revit);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+            return SAM.Analytical.Revit.Convert.ToSAM_Panels(revitLinkInstance_Revit, convertSettings);
         }
 
         /// <summary>
@@ -35,7 +40,7 @@ namespace SAMAnalyticalDynamoRevit
         /// </summary>
         /// <param name="panel">SAM Analytical Panel</param>
         /// <search>ToRevit, SAM Analytical Panel</search>
-        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, SAM.Core.Revit.ConvertSettings convertSettings)
+        public static Revit.Elements.Element ToRevit(SAM.Analytical.Panel panel, ConvertSettings convertSettings)
         {
             Document document = DocumentManager.Instance.CurrentDBDocument;
 
@@ -62,7 +67,7 @@ namespace SAMAnalyticalDynamoRevit
 
             TransactionManager.Instance.EnsureInTransaction(document);
 
-            SAM.Core.Revit.ConvertSettings convertSettings = SAM.Core.Revit.Query.ConvertSettings();
+            ConvertSettings convertSettings = Query.ConvertSettings();
 
             HostObject hostObject = SAM.Analytical.Revit.Convert.ToRevit(panel, document, convertSettings);
 

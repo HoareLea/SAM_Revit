@@ -3,6 +3,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
+using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,10 +95,13 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 return;
             }
+
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
             IEnumerable<Core.ISAMObject> sAMObjects = null;
             if (element is RevitLinkInstance)
             {
-                List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels((RevitLinkInstance)element);
+                List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels((RevitLinkInstance)element, convertSettings);
                 if (panels != null)
                     sAMObjects = panels.Cast<Core.ISAMObject>();
             }
@@ -105,7 +109,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 try
                 {
-                    sAMObjects = Analytical.Revit.Convert.ToSAM(element);
+                    sAMObjects = Analytical.Revit.Convert.ToSAM(element, convertSettings);
                 }
                 catch (Exception exception)
                 {

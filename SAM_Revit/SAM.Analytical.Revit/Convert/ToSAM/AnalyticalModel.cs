@@ -9,16 +9,22 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static AnalyticalModel ToSAM_AnalyticalModel(this Document document)
+        public static AnalyticalModel ToSAM_AnalyticalModel(this Document document, Core.Revit.ConvertSettings convertSettings)
         {
             if (document == null)
                 return null;
 
+            ProjectInfo projectInfo = document.ProjectInformation;
+
+            AnalyticalModel result = convertSettings?.GetObject<AnalyticalModel>(projectInfo?.Id);
+            if (result != null)
+                return result;
+
             Core.Location location = Core.Revit.Query.Location(document);
             Core.Address address = null;
-            ProjectInfo projectInfo = new FilteredElementCollector(document).OfClass(typeof(ProjectInfo)).FirstOrDefault() as ProjectInfo;
             if (projectInfo != null)
                 address = new Core.Address(Guid.NewGuid(), projectInfo.BuildingName, projectInfo.Address, null, null, Core.CountryCode.Undefined);
+
             AdjacencyCluster adjacencyCluster = new AdjacencyCluster();
 
             EnergyAnalysisDetailModelOptions energyAnalysisDetailModelOptions = new EnergyAnalysisDetailModelOptions();
@@ -76,7 +82,7 @@ namespace SAM.Analytical.Revit
                     if (energyAnalysisSpace.Area <= Core.Tolerance.MacroDistance)
                         continue;
 
-                    Space space = energyAnalysisSpace.ToSAM();
+                    Space space = energyAnalysisSpace.ToSAM(convertSettings);
                     if (space == null)
                         continue;
 
@@ -91,7 +97,7 @@ namespace SAM.Analytical.Revit
                         Tuple<Panel, List<Space>> tuple;
                         if (!dictionary.TryGetValue(energyAnalysisSurface.SurfaceName, out tuple))
                         {
-                            Panel panel = energyAnalysisSurface.ToSAM(shell);
+                            Panel panel = energyAnalysisSurface.ToSAM(convertSettings, shell);
                             if (panel == null)
                                 continue;
 
@@ -123,7 +129,7 @@ namespace SAM.Analytical.Revit
                 try
                 {
 
-                    Panel panel = energyAnalysisSurface.ToSAM();
+                    Panel panel = energyAnalysisSurface.ToSAM(convertSettings);
                     if (panel == null)
                         continue;
 
@@ -138,10 +144,11 @@ namespace SAM.Analytical.Revit
 
             }
 
-
-            AnalyticalModel result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
+            result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
             Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
             result.Add(parameterSet);
+
+            convertSettings?.Add(projectInfo.Id, result);
 
             return result;
         }

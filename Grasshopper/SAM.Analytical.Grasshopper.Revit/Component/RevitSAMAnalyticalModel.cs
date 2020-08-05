@@ -3,6 +3,7 @@ using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
+using SAM.Core.Revit;
 using System;
 
 namespace SAM.Analytical.Grasshopper.Revit
@@ -84,7 +85,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 transaction.Start();
 
-                analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document);
+                ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
+                analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document, convertSettings);
 
                 transaction.RollBack();
             }

@@ -4,12 +4,21 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Construction ToSAM(this HostObjAttributes hostObjAttributes)
+        public static Construction ToSAM(this HostObjAttributes hostObjAttributes, Core.Revit.ConvertSettings convertSettings)
         {
-            Construction construction = new Construction(hostObjAttributes.Name);
-            construction.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
+            if (hostObjAttributes == null)
+                return null;
 
-            return construction;
+            Construction result = convertSettings?.GetObject<Construction>(hostObjAttributes.Id);
+            if (result != null)
+                return result;
+
+            result = new Construction(hostObjAttributes.Name);
+            result.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
+
+            convertSettings?.Add(hostObjAttributes.Id, result);
+
+            return result;
         }
     }
 }

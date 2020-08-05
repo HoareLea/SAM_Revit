@@ -102,11 +102,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (walls_All == null || walls_All.Count() == 0)
                 return;
 
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+
             List<Panel> panels = new List<Panel>();
             List<Panel> panels_Reference = new List<Panel>();
             foreach (Wall wall in walls_All)
             {
-                List<Panel> panels_Temp = Analytical.Revit.Convert.ToSAM(wall);
+                List<Panel> panels_Temp = Analytical.Revit.Convert.ToSAM(wall, convertSettings);
                 foreach (Panel panel in panels_Temp)
                 {
                     double max = panel.MaxElevation();

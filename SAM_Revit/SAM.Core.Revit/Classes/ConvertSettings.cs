@@ -179,7 +179,7 @@ namespace SAM.Core.Revit
                 return null;
 
             List<object> objects = null;
-            if (!objects.TryGetValue(id, out objects))
+            if (!this.objects.TryGetValue(id, out objects))
                 return null;
 
             return objects;

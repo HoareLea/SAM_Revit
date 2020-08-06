@@ -20,6 +20,8 @@ namespace SAM.Analytical.Revit
             if (elementId_Type == null || elementId_Type == ElementId.InvalidElementId)
                 return null;
 
+            result = new List<Panel>();
+
             PanelType panelType = Query.PanelType(hostObject);
             Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
             if (construction == null)

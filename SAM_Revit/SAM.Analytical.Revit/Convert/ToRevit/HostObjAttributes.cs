@@ -8,6 +8,11 @@ namespace SAM.Analytical.Revit
         {
             if (construction == null)
                 return null;
+
+            HostObjAttributes result = convertSettings?.GetObject<HostObjAttributes>(construction.Guid);
+            if (result != null)
+                return result;
+
             FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
 
             BuiltInCategory builtInCategory = panelType.BuiltInCategory();
@@ -23,7 +28,6 @@ namespace SAM.Analytical.Revit
             if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(construction.Name, out familyName_Source, out typeName_Source))
                 return null;
 
-            HostObjAttributes hostObjAttributes_Default = null;
             foreach (HostObjAttributes hostObjAttributes in filteredElementCollector)
             {
                 string fullName = Core.Revit.Query.FullName(hostObjAttributes);
@@ -40,10 +44,12 @@ namespace SAM.Analytical.Revit
                     continue;
 
                 if (typeName.Equals(typeName_Source))
-                    hostObjAttributes_Default = hostObjAttributes;
+                    result = hostObjAttributes;
             }
 
-            return hostObjAttributes_Default;
+            convertSettings?.Add(construction.Guid, result);
+
+            return result;
         }
     }
 }

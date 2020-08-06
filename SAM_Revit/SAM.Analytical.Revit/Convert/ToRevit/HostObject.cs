@@ -13,6 +13,10 @@ namespace SAM.Analytical.Revit
             if (face3D == null)
                 return null;
 
+            HostObject result = convertSettings?.GetObject<HostObject>(panel.Guid);
+            if (result != null)
+                return result;
+
             PanelType panelType = panel.PanelType;
             Geometry.Spatial.Vector3D normal = panel.Normal;
 
@@ -20,7 +24,6 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes == null)
                 hostObjAttributes = Analytical.Query.Construction(panelType)?.ToRevit(document, panelType, normal, convertSettings); //Default Construction
 
-            HostObject result = null;
             BuiltInParameter[] builtInParameters = null;
             if (hostObjAttributes is WallType)
             {
@@ -220,6 +223,8 @@ namespace SAM.Analytical.Revit
             }
             //TODO: Implement proper log
             //System.IO.File.AppendAllText(@"C:\Users\DengusiakM\Desktop\SAM\2020-04-16 floorbug\LOG.txt", string.Format("{0}\t{1}\t{2}\n", DateTime.Now.ToString(), panel.Guid, panel.Name));
+
+            convertSettings?.Add(panel.Guid, result);
 
             return result;
         }

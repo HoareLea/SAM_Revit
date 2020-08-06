@@ -13,6 +13,10 @@ namespace SAM.Analytical.Revit
             if (adjacencyCluster == null || document == null)
                 return null;
 
+            List<Element> result = convertSettings?.GetObjects<Element>(adjacencyCluster.Guid);
+            if (result != null)
+                return result;
+
             Dictionary<Space, Shell> dictionary = adjacencyCluster.ShellDictionary();
             if (dictionary == null)
                 return null;
@@ -21,7 +25,7 @@ namespace SAM.Analytical.Revit
             if (levels == null || levels.Count == 0)
                 return null;
 
-            List<Element> result = new List<Element>();
+            result = new List<Element>();
 
             HashSet<System.Guid> guids = new HashSet<System.Guid>();
             foreach(KeyValuePair<Space, Shell> keyValuePair in dictionary)
@@ -82,6 +86,8 @@ namespace SAM.Analytical.Revit
                     result.Add(hostObject);
                 }
             }
+
+            convertSettings?.Add(adjacencyCluster.Guid, result);
 
             return result;
         }

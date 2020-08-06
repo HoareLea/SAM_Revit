@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using NetTopologySuite.Mathematics;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
@@ -12,6 +11,10 @@ namespace SAM.Analytical.Revit
         {
             if (aperture == null || document == null)
                 return null;
+
+            FamilyInstance result = convertSettings?.GetObject<FamilyInstance>(aperture.Guid);
+            if (result != null)
+                return result;
 
             ApertureConstruction apertureConstruction = aperture.ApertureConstruction;
             if (apertureConstruction == null)
@@ -32,11 +35,10 @@ namespace SAM.Analytical.Revit
             if (level == null)
                 return null;
 
-            FamilyInstance familyInstance;
             if (hostObject is RoofBase)
             {
-                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-                if (familyInstance == null)
+                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                if (result == null)
                     return null;              
                 
                 Face3D face3D = aperture.GetFace3D();
@@ -59,10 +61,10 @@ namespace SAM.Analytical.Revit
                     return null;
 
                 document.Regenerate();
-                familyInstance = document.GetElement(familyInstance.Id) as FamilyInstance;
+                result = document.GetElement(result.Id) as FamilyInstance;
 
-                Geometry.Spatial.Vector3D handOrientation_FamilyInstance = familyInstance.HandOrientation.ToSAM_Vector3D(false);
-                Geometry.Spatial.Vector3D facingOrientation_FamilyInstance = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D handOrientation_FamilyInstance = result.HandOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D facingOrientation_FamilyInstance = result.FacingOrientation.ToSAM_Vector3D(false);
 
                 Geometry.Spatial.Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
 
@@ -71,7 +73,7 @@ namespace SAM.Analytical.Revit
 
                 double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
-                familyInstance.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
+                result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
                 //document.Regenerate();
 
                 //BoundingBox3D boundingBox3D_familyInstance = familyInstance.BoundingBox3D();
@@ -97,44 +99,46 @@ namespace SAM.Analytical.Revit
             }
             else
             {
-                familyInstance = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, hostObject, level, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
             }
                 
 
-            if (familyInstance == null)
+            if (result == null)
                 return null;
 
-            if (familyInstance.CanFlipHand)
+            if (result.CanFlipHand)
             {
                 document.Regenerate();
-                Geometry.Spatial.Vector3D axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D axisX = result.HandOrientation.ToSAM_Vector3D(false);
                 if (!axisX.SameHalf(aperture.Plane.AxisX))
-                    familyInstance.flipHand();
+                    result.flipHand();
             }
 
-            if (familyInstance.CanFlipFacing)
+            if (result.CanFlipFacing)
             {
                 document.Regenerate(); // this is needed to get flip correctly pushed to revit
-                Geometry.Spatial.Vector3D normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                Geometry.Spatial.Vector3D normal = result.FacingOrientation.ToSAM_Vector3D(false);
                 if (!normal.SameHalf(aperture.Plane.Normal))
-                    familyInstance.flipFacing();
+                    result.flipFacing();
             }
 
             if (convertSettings.ConvertParameters)
             {
-                Core.Revit.Modify.Values(aperture, familyInstance, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
-                Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, familyInstance);
+                Core.Revit.Modify.Values(aperture, result, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
+                Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, result);
 
                 bool simplified = false;
                 //check if geometry is rectagular
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
                     simplified = true;
 
-                Core.Revit.Modify.Simplified(familyInstance, simplified);
-                Core.Revit.Modify.Json(familyInstance, aperture.ToJObject()?.ToString());
+                Core.Revit.Modify.Simplified(result, simplified);
+                Core.Revit.Modify.Json(result, aperture.ToJObject()?.ToString());
             }
 
-            return familyInstance;
+            convertSettings?.Add(aperture.Guid, result);
+
+            return result;
         }
     }
 }

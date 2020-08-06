@@ -11,6 +11,10 @@ namespace SAM.Analytical.Revit
             if (apertureConstruction == null)
                 return null;
 
+            FamilySymbol result = convertSettings?.GetObject<FamilySymbol>(apertureConstruction.Guid);
+            if (result != null)
+                return result;
+
             string fullName = apertureConstruction.Name;
 
             string familyName;
@@ -43,14 +47,16 @@ namespace SAM.Analytical.Revit
             if (familySymbols.Count == 0)
                 return null;
 
-            FamilySymbol familySymbol = familySymbols.First();
-            if (familySymbol == null)
+            result = familySymbols.First();
+            if (result == null)
                 return null;
 
-            if (!familySymbol.IsActive)
-                familySymbol.Activate();
+            if (!result.IsActive)
+                result.Activate();
 
-            return familySymbol;
+            convertSettings?.Add(apertureConstruction.Guid, result);
+
+            return result;
         }
     }
 }

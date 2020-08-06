@@ -10,7 +10,9 @@ namespace SAM.Analytical.Revit
             if (space == null)
                 return null;
 
-            Autodesk.Revit.DB.Mechanical.Space result = null;
+            Autodesk.Revit.DB.Mechanical.Space result = convertSettings?.GetObject<Autodesk.Revit.DB.Mechanical.Space>(space.Guid);
+            if (result != null)
+                return result;
 
             if (!convertSettings.RemoveExisting)
                 result = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space);
@@ -40,6 +42,8 @@ namespace SAM.Analytical.Revit
 
                 Core.Revit.Modify.Json(result, space.ToJObject()?.ToString());
             }
+
+            convertSettings?.Add(space.Guid, result);
 
             return result;
         }

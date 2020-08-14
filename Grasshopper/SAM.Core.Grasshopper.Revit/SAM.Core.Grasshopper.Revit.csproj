@@ -201,7 +201,7 @@ set DirectoryName=Libraries-Inside-Revit-2020
 
 if "$(ConfigurationName)" == "Debug2021" (
 set Version=Revit 2021
-set DirectoryName=Libraries-Inside-Revit-2020
+set DirectoryName=Libraries-Inside-Revit-2021
 )
 
 copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
@@ -213,7 +213,7 @@ copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
 copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
 
 if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
-copy "$(SolutionDir)files\%25Version%25\SAM.Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM.Revit.ghlink"
+copy "$(SolutionDir)files\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 
 ::erase "%25SAM_DIR%25$(ProjectName).dll"
 ::erase "$(TargetPath)"</PostBuildEvent>

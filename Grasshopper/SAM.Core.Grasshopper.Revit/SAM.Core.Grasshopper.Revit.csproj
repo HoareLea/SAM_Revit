@@ -193,15 +193,29 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
+    <PostBuildEvent>
+if "$(ConfigurationName)" == "Debug2020" (
+set Version=Revit 2020
+set DirectoryName=Libraries-Inside-Revit-2020
+)
 
-set GH_PACKAGES_DIR=$(APPDATA)\Grasshopper\Libraries\SAM\
-if not exist "%25GH_PACKAGES_DIR%25" mkdir "%25GH_PACKAGES_DIR%25"
+if "$(ConfigurationName)" == "Debug2021" (
+set Version=Revit 2021
+set DirectoryName=Libraries-Inside-Revit-2020
+)
 
-copy "$(TargetDir)*.dll" "%25GH_PACKAGES_DIR%25"
-copy "%25GH_PACKAGES_DIR%25\$(ProjectName).dll" "%25GH_PACKAGES_DIR%25\$(ProjectName).gha"
+copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
 
-::erase "%25GH_PACKAGES_DIR%25$(ProjectName).dll"
+set SAM_DIR=$(APPDATA)\SAM\%25Version%25
+if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
+
+copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
+copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
+
+if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
+copy "$(SolutionDir)files\%25Version%25\SAM.Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM.Revit.ghlink"
+
+::erase "%25SAM_DIR%25$(ProjectName).dll"
 ::erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

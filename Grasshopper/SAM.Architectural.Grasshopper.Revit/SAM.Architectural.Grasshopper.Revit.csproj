@@ -195,16 +195,20 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
+    <PostBuildEvent>
+if "$(ConfigurationName)" == "Debug2020" set Version=Revit 2020
+if "$(ConfigurationName)" == "Debug2021" set Version=Revit 2021
 
-set GH_PACKAGES_DIR=$(APPDATA)\Grasshopper\Libraries\SAM\
-if not exist "%25GH_PACKAGES_DIR%25" mkdir "%25GH_PACKAGES_DIR%25"
+copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
 
-copy "$(TargetDir)*.dll" "%25GH_PACKAGES_DIR%25"
-copy "%25GH_PACKAGES_DIR%25\$(ProjectName).dll" "%25GH_PACKAGES_DIR%25\$(ProjectName).gha"
+set SAM_DIR=$(APPDATA)\SAM\%25Version%25
+if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
 
-erase "%25GH_PACKAGES_DIR%25$(ProjectName).dll"
-erase "$(TargetPath)"</PostBuildEvent>
+copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
+copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
+
+::erase "%25SAM_DIR%25$(ProjectName).dll"
+::erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <FallbackCulture>en-US</FallbackCulture>

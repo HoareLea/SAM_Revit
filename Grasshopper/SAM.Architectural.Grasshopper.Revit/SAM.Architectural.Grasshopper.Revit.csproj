@@ -155,6 +155,13 @@
     <Reference Include="SAM.Analytical">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Architectural, Version=1.0.7531.23988, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Architectural.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Architectural.Grasshopper">
+      <HintPath>..\..\..\SAM\build\SAM.Architectural.Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
@@ -177,6 +184,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\SAMLevelRevit.cs" />
     <Compile Include="Component\SAMArchitecturalLevelInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -193,9 +201,17 @@
     <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SAM_Revit\SAM.Architectural.Revit\SAM.Architectural.Revit.csproj">
+      <Project>{dce3c7bc-9efe-449c-b6ff-375886082a4c}</Project>
+      <Name>SAM.Architectural.Revit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj">
       <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
       <Name>SAM.Core.Revit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SAM.Core.Grasshopper.Revit\SAM.Core.Grasshopper.Revit.csproj">
+      <Project>{e31e5f4e-eac1-4e48-a5f9-e4560896c2b3}</Project>
+      <Name>SAM.Core.Grasshopper.Revit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

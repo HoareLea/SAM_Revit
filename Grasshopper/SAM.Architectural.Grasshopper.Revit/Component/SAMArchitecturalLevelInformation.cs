@@ -67,7 +67,7 @@ namespace SAM.Architectural.Grasshopper.Revit
                 return;
             }
 
-            Level level = null;
+            Autodesk.Revit.DB.Level level = null;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
             if (document == null)
@@ -85,12 +85,12 @@ namespace SAM.Architectural.Grasshopper.Revit
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cannot access Element");
                     return;
                 }
-                level = document.GetElement(elementId) as Level;
+                level = document.GetElement(elementId) as Autodesk.Revit.DB.Level;
             }
             else if (obj.GetType().GetProperty("Id") != null)
             {
                 ElementId aId = obj.Id as ElementId;
-                level = document.GetElement(aId) as Level;
+                level = document.GetElement(aId) as Autodesk.Revit.DB.Level;
             }
 
             if (level == null)
@@ -105,12 +105,12 @@ namespace SAM.Architectural.Grasshopper.Revit
                 return;
             }
 
-            Level level_High = Core.Revit.Query.HighLevel(level);
+            Autodesk.Revit.DB.Level level_High = Core.Revit.Query.HighLevel(level);
             double elevation_High = double.NaN;
             if (level_High != null)
                 elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, DisplayUnitType.DUT_METERS);
 
-            Level level_Low = Core.Revit.Query.LowLevel(level);
+            Autodesk.Revit.DB.Level level_Low = Core.Revit.Query.LowLevel(level);
             double elevation_Low = double.NaN;
             if (level_Low != null)
                 elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, DisplayUnitType.DUT_METERS);

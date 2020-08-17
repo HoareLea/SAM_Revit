@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,12 +43,23 @@ namespace SAM.Architectural.Revit
                         document.Delete(elementId);
                 }
             }
-            
-            result = Autodesk.Revit.DB.Level.Create(document, elevation);
+
+            if (result == null)
+                result = Autodesk.Revit.DB.Level.Create(document, elevation);
+
             if (result == null)
                 return null;
 
-            result.Name = level.Name;
+            //TODO: Implement method to properly rename element 
+            try
+            {
+                result.Name = level.Name;
+            }
+            catch(Exception exception)
+            {
+
+            }
+            
 
             if (convertSettings.ConvertParameters)
             {

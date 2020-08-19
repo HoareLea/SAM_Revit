@@ -66,7 +66,10 @@ namespace SAM.Analytical.Revit
                 Vector3D handOrientation_FamilyInstance = result.HandOrientation.ToSAM_Vector3D(false);
                 Vector3D facingOrientation_FamilyInstance = result.FacingOrientation.ToSAM_Vector3D(false);
 
-                Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
+                Geometry.Planar.Vector2D direction = rectangle2D.WidthDirection;
+                direction = new Geometry.Planar.Vector2D(direction.X, System.Math.Abs(direction.Y));
+
+                Vector3D handOrienation_Aperture = plane.Convert(direction);
 
                 Geometry.Spatial.Plane plane_FamilyInstance = new Geometry.Spatial.Plane(point3D_Location, handOrientation_FamilyInstance, facingOrientation_FamilyInstance);
                 handOrienation_Aperture = plane_FamilyInstance.Project(handOrienation_Aperture);
@@ -108,16 +111,16 @@ namespace SAM.Analytical.Revit
 
             if (result.CanFlipHand)
             {
-                document.Regenerate();
-                Geometry.Spatial.Vector3D axisX = result.HandOrientation.ToSAM_Vector3D(false);
+                document.Regenerate(); //This is needed to get flip correctly pushed to revit
+                Vector3D axisX = result.HandOrientation.ToSAM_Vector3D(false);
                 if (!axisX.SameHalf(aperture.Plane.AxisX))
                     result.flipHand();
             }
 
             if (result.CanFlipFacing)
             {
-                document.Regenerate(); // this is needed to get flip correctly pushed to revit
-                Geometry.Spatial.Vector3D normal = result.FacingOrientation.ToSAM_Vector3D(false);
+                document.Regenerate(); //This is needed to get flip correctly pushed to revit
+                Vector3D normal = result.FacingOrientation.ToSAM_Vector3D(false);
                 if (!normal.SameHalf(aperture.Plane.Normal))
                     result.flipFacing();
             }

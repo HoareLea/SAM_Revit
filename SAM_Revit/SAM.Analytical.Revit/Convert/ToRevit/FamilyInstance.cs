@@ -66,8 +66,11 @@ namespace SAM.Analytical.Revit
                 Vector3D handOrientation_FamilyInstance = result.HandOrientation.ToSAM_Vector3D(false);
                 Vector3D facingOrientation_FamilyInstance = result.FacingOrientation.ToSAM_Vector3D(false);
 
+
+                double factor = 0;
                 Geometry.Planar.Vector2D direction = rectangle2D.WidthDirection;
-                direction = new Geometry.Planar.Vector2D(direction.X, System.Math.Abs(direction.Y));
+                if (Core.Query.Round(direction.Y) < 0)
+                    factor = System.Math.PI / 2;
 
                 Vector3D handOrienation_Aperture = plane.Convert(direction);
 
@@ -76,7 +79,7 @@ namespace SAM.Analytical.Revit
 
                 double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
-                result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle);
+                result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle + factor);
                 //document.Regenerate();
 
                 //BoundingBox3D boundingBox3D_familyInstance = familyInstance.BoundingBox3D();

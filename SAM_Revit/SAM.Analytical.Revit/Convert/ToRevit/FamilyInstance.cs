@@ -63,10 +63,10 @@ namespace SAM.Analytical.Revit
                 document.Regenerate();
                 result = document.GetElement(result.Id) as FamilyInstance;
 
-                Geometry.Spatial.Vector3D handOrientation_FamilyInstance = result.HandOrientation.ToSAM_Vector3D(false);
-                Geometry.Spatial.Vector3D facingOrientation_FamilyInstance = result.FacingOrientation.ToSAM_Vector3D(false);
+                Vector3D handOrientation_FamilyInstance = result.HandOrientation.ToSAM_Vector3D(false);
+                Vector3D facingOrientation_FamilyInstance = result.FacingOrientation.ToSAM_Vector3D(false);
 
-                Geometry.Spatial.Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
+                Vector3D handOrienation_Aperture = plane.Convert(rectangle2D.WidthDirection);
 
                 Geometry.Spatial.Plane plane_FamilyInstance = new Geometry.Spatial.Plane(point3D_Location, handOrientation_FamilyInstance, facingOrientation_FamilyInstance);
                 handOrienation_Aperture = plane_FamilyInstance.Project(handOrienation_Aperture);

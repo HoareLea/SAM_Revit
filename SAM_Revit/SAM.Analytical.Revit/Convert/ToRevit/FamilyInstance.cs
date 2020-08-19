@@ -69,7 +69,7 @@ namespace SAM.Analytical.Revit
 
                 double factor = 0;
                 Geometry.Planar.Vector2D direction = rectangle2D.WidthDirection;
-                if (Core.Query.Round(direction.Y) < 0)
+                if (!plane.Coplanar(Geometry.Spatial.Plane.WorldXY) && Core.Query.Round(direction.Y) < 0)
                     factor = System.Math.PI / 2;
 
                 Vector3D handOrienation_Aperture = plane.Convert(direction);

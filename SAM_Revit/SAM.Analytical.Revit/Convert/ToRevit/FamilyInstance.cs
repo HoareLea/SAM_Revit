@@ -39,26 +39,34 @@ namespace SAM.Analytical.Revit
 
             if (hostObject is RoofBase)
             {
-                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
-                if (result == null)
-                    return null;              
-                
+
                 Face3D face3D = aperture.GetFace3D();
                 Geometry.Spatial.Plane plane = face3D.GetPlane();
-                
-                List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
-                IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
-                if (closedPlanar3D is ICurvable3D)
-                {
-                    List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
-                    foreach (ICurve3D curve3D in curve3Ds)
-                    {
-                        ICurve3D curve3D_Temp = plane.Project(curve3D);
-                        point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
-                    }
-                }
 
-                Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
+                bool coplanar = plane.Coplanar(Geometry.Spatial.Plane.WorldXY);
+                //if(coplanar)
+                //{
+                //    referenceDirection = new XYZ(0, 0, 1);
+                //}
+
+                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                if (result == null)
+                    return null;
+
+                //List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
+                //IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
+                //if (closedPlanar3D is ICurvable3D)
+                //{
+                //    List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
+                //    foreach (ICurve3D curve3D in curve3Ds)
+                //    {
+                //        ICurve3D curve3D_Temp = plane.Project(curve3D);
+                //        point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+                //    }
+                //}
+
+                //Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
+                Geometry.Planar.Rectangle2D rectangle2D = Analytical.Create.Rectangle2D(aperture.PlanarBoundary3D);
                 if (rectangle2D == null)
                     return null;
 
@@ -71,7 +79,7 @@ namespace SAM.Analytical.Revit
 
                 double factor = 0;
                 Geometry.Planar.Vector2D direction = rectangle2D.WidthDirection;
-                if (!plane.Coplanar(Geometry.Spatial.Plane.WorldXY) && Core.Query.Round(direction.Y) < 0)
+                if (!coplanar && Core.Query.Round(direction.Y) < 0)
                     factor = System.Math.PI / 2;
 
                 Vector3D handOrienation_Aperture = plane.Convert(direction);
@@ -81,7 +89,7 @@ namespace SAM.Analytical.Revit
 
                 double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
-                //result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle + factor);
+                result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle + factor);
                 //document.Regenerate();
 
                 //BoundingBox3D boundingBox3D_familyInstance = familyInstance.BoundingBox3D();

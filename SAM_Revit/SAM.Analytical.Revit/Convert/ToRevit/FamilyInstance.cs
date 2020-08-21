@@ -35,9 +35,11 @@ namespace SAM.Analytical.Revit
             if (level == null)
                 return null;
 
+            XYZ referenceDirection = new XYZ(0, 0, 0);
+
             if (hostObject is RoofBase)
             {
-                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, new XYZ(0, 0, 0), hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
+                result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                 if (result == null)
                     return null;              
                 
@@ -79,7 +81,7 @@ namespace SAM.Analytical.Revit
 
                 double angle = Geometry.Spatial.Query.SignedAngle(handOrientation_FamilyInstance, handOrienation_Aperture, plane.Normal);
 
-                result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle + factor);
+                //result.Location.Rotate(Line.CreateUnbound(point3D_Location.ToRevit(), plane.Normal.ToRevit(false)), angle + factor);
                 //document.Regenerate();
 
                 //BoundingBox3D boundingBox3D_familyInstance = familyInstance.BoundingBox3D();

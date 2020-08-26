@@ -117,8 +117,14 @@ namespace SAM.Core.Revit
         {
             List<object> objects = GetObjects(guid.ToString());
             if (objects != null && objects.Count != 0)
-                return objects[0] as T;
+            {
+                T @object = objects[0] as T;
+                if (@object == null || !@object.IsValidObject)
+                    return null;
 
+                return objects[0] as T;
+            }
+                
             return  null;
         }
 
@@ -171,6 +177,15 @@ namespace SAM.Core.Revit
                 return false;
             
             return objects.ContainsKey(elementId.IntegerValue.ToString());
+        }
+
+        public bool ClearObjects()
+        {
+            if (objects == null || objects.Count == 0)
+                return false;
+
+            objects.Clear();
+            return true;
         }
 
         private List<object> GetObjects(string id)

@@ -18,6 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             gHComponent.OnPingDocument().SolutionEnd += solutionEndEventHandler = (sender, args) =>
             {
                 (sender as GH_Document).SolutionEnd -= solutionEndEventHandler;
+                convertSettings.ClearObjects();
                 gHComponent.Phase = GH_SolutionPhase.Blank;
             };
 

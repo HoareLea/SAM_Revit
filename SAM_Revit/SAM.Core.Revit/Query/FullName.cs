@@ -6,6 +6,9 @@ namespace SAM.Core.Revit
     {
         public static string FullName(this Element element)
         {
+            if (element == null || !element.IsValidObject)
+                return null;
+            
             ElementType elementType = null;
             string familyTypeName = element.Name;
 

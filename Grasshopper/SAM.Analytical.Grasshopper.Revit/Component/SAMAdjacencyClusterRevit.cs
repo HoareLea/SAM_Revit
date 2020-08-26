@@ -60,21 +60,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             ConvertSettings convertSettings = null;
             dataAccess.GetData(1, ref convertSettings);
-
-            if (convertSettings == null)
-            {
-                convertSettings = Core.Revit.Query.ConvertSettings();
-            }
-            else
-            {
-                GH_Document.SolutionEndEventHandler endHandler = null;
-
-                OnPingDocument().SolutionEnd += endHandler = (sender, args) =>
-                {
-                    (sender as GH_Document).SolutionEnd -= endHandler;
-                    Phase = GH_SolutionPhase.Blank;
-                };
-            }
+            convertSettings = this.UpdateSolutionEndEventHandler(convertSettings);
 
             AdjacencyCluster adjacencyCluster = null;
             if (!dataAccess.GetData(0, ref adjacencyCluster))

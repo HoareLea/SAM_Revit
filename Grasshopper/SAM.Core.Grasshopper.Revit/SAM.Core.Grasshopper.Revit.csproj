@@ -178,6 +178,7 @@
     <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />
     <Compile Include="Component\SAMCoreConvertSettings.cs" />
+    <Compile Include="Modify\UpdateSolutionEndEventHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

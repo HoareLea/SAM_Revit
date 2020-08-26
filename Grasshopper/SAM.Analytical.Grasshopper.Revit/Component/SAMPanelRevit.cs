@@ -131,7 +131,20 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             if (convertSettings == null)
+            {
                 convertSettings = Core.Revit.Query.ConvertSettings();
+            }
+            else
+            {
+                GH_Document.SolutionEndEventHandler endHandler = null;
+
+                OnPingDocument().SolutionEnd += endHandler = (sender, args) =>
+                {
+                    (sender as GH_Document).SolutionEnd -= endHandler;
+                    Phase = GH_SolutionPhase.Blank;
+                };
+            }
+
 
             string name = panel.Name;
             Guid guid = panel.Guid;

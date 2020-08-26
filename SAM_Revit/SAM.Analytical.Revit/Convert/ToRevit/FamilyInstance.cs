@@ -144,9 +144,29 @@ namespace SAM.Analytical.Revit
                 Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, result);
 
                 bool simplified = false;
-                //check if geometry is rectagular
+
+                //Check if geometry is simplified
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
                     simplified = true;
+
+                if (!simplified && result.Host is Wall)
+                {
+                    Face3D face3D = aperture.GetFace3D();
+                    Geometry.Spatial.Plane plane = face3D.GetPlane();
+
+                    Geometry.Planar.Rectangle2D rectangle2D = Analytical.Create.Rectangle2D(aperture.PlanarBoundary3D);
+                    if (rectangle2D != null)
+                    {
+                        Vector3D widthDirection = plane.Convert(rectangle2D.WidthDirection);
+                        Vector3D heightDirection = plane.Convert(rectangle2D.HeightDirection);
+
+                        //TODO: Implement code for Tilted Walls
+                        Vector3D vector3D_Z = Vector3D.WorldZ;
+                        
+                        if (!widthDirection.AlmostSimilar(vector3D_Z) && !heightDirection.AlmostSimilar(vector3D_Z))
+                            simplified = true;
+                    }
+                }
 
                 Core.Revit.Modify.Simplified(result, simplified);
                 Core.Revit.Modify.Json(result, aperture.ToJObject()?.ToString());

@@ -185,7 +185,7 @@ namespace SAM.Analytical.Revit
             if (hostObject == null)
                 return null;
 
-            return ToRevit(aperture, document, convertSettings);
+            return ToRevit(aperture, document, hostObject, convertSettings);
         }
     }
 }

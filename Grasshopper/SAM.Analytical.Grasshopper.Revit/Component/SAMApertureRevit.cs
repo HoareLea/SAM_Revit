@@ -70,45 +70,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Core.Revit.Modify.RemoveExisting(convertSettings, document, aperture);
 
-            HostObject hostObject = null;
-
-            PanelGroup panelGroup = Analytical.Query.PanelGroup(Analytical.Query.PanelType(aperture.Plane.Normal));
-            switch(panelGroup)
-            {
-                case PanelGroup.Wall:
-                    IEnumerable<Wall> walls = Geometry.Revit.Query.Elements<Wall>(document, aperture.GetBoundingBox());
-                    if (walls != null && walls.Count() != 0)
-                        hostObject = walls.First();
-                    break;
-                case PanelGroup.Floor:
-                    IEnumerable<Element> elements_Floor = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), BuiltInCategory.OST_Floors);
-                    if (elements_Floor != null && elements_Floor.Count() != 0)
-                        hostObject = elements_Floor.First() as HostObject;
-                    break;
-                case PanelGroup.Roof:
-                    IEnumerable<Element> elements_Roof = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), BuiltInCategory.OST_Roofs);
-                    if (elements_Roof != null && elements_Roof.Count() != 0)
-                        hostObject = elements_Roof.First() as HostObject;
-                    break;
-            }    
-            
-            if(hostObject == null)
-            {
-                switch(panelGroup)
-                {
-                    case PanelGroup.Roof:
-                        IEnumerable<Element> elements_Floor = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), BuiltInCategory.OST_Floors);
-                        if (elements_Floor != null && elements_Floor.Count() != 0)
-                            hostObject = elements_Floor.First() as HostObject;
-                        break;
-                    case PanelGroup.Floor:
-                        IEnumerable<Element> elements_Roof = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), BuiltInCategory.OST_Roofs);
-                        if (elements_Roof != null && elements_Roof.Count() != 0)
-                            hostObject = elements_Roof.First() as HostObject;
-                        break;
-                }
-            }
-
+            HostObject hostObject = Analytical.Revit.Query.HostObject(aperture, document);
             if(hostObject == null)
             {
                 dataAccess.SetData(0, null);

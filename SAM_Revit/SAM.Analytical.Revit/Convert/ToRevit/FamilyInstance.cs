@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
-using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -175,6 +174,18 @@ namespace SAM.Analytical.Revit
             convertSettings?.Add(aperture.Guid, result);
 
             return result;
+        }
+
+        public static FamilyInstance ToRevit(this Aperture aperture, Document document, Core.Revit.ConvertSettings convertSettings)
+        {
+            if (aperture == null || document == null)
+                return null;
+            
+            HostObject hostObject = Query.HostObject(aperture, document);
+            if (hostObject == null)
+                return null;
+
+            return ToRevit(aperture, document, convertSettings);
         }
     }
 }

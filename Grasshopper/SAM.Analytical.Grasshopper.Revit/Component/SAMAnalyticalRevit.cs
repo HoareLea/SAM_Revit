@@ -1,18 +1,23 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Core;
+using SAM.Core.Grasshopper;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMPanelRevit_NEW : SAMTransactionComponent
+    public class SAMAnalyticalRevit : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("c41bed74-4396-4135-be30-96fbf0748fe9");
+        public override Guid ComponentGuid => new Guid("f60b6d3c-9af8-41a2-8c54-f26d82d55078");
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -22,9 +27,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMPanelRevit_NEW()
-          : base("SAMPanel.Revit NEW", "SAMPanel.Revit NEW",
-              "Convert SAM Panel to Revit HostObject",
+        public SAMAnalyticalRevit()
+          : base("SAMAnalytical.Revit", "SAMAnalytical.Revit",
+              "Convert SAM Analytical Object to Revit Object",
               "SAM", "Revit")
         {
         }
@@ -34,7 +39,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddParameter(new GooPanelParam(), "_panel", "_panel", "SAM Analytical Panel", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "_analytical", "_analytical", "SAM Analytical Object", GH_ParamAccess.item);
 
             int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
@@ -47,7 +52,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "hostObject", "hostObject", "Revit HostObject", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Elements", "Element", "Revit Elements", GH_ParamAccess.list);
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
@@ -60,17 +65,29 @@ namespace SAM.Analytical.Grasshopper.Revit
             dataAccess.GetData(1, ref convertSettings);
             convertSettings = this.UpdateSolutionEndEventHandler(convertSettings);
 
-            Panel panel = null;
-            if (!dataAccess.GetData(0, ref panel))
+            SAMObject sAMObject = null;
+            if (!dataAccess.GetData(0, ref sAMObject))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            Core.Revit.Modify.RemoveExisting(convertSettings, document, panel);
+            if(!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
+            {
+                dataAccess.SetData(0, null);
+                return;
+            }
 
-            HostObject hostObject = Analytical.Revit.Convert.ToRevit(panel, document, convertSettings);
+            Core.Revit.Modify.RemoveExisting(convertSettings, document, sAMObject);
 
-            dataAccess.SetData(0, hostObject);
+            object @object = Analytical.Revit.Convert.ToRevit(sAMObject as dynamic, document, convertSettings);
+
+            IEnumerable<Element> elements = null;
+            if (@object is IEnumerable)
+                elements = ((IEnumerable)@object).Cast<Element>();
+            else
+                elements = new List<Element>() { @object as Element };
+
+            dataAccess.SetDataList(0, elements);
         }
     }
 }

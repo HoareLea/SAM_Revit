@@ -128,6 +128,7 @@
     <Compile Include="Convert\ToSAM\Shell.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
     <Compile Include="Query\BoundingBox3D.cs" />
+    <Compile Include="Query\Elements.cs" />
     <Compile Include="Query\Location.cs" />
     <Compile Include="Query\FullName.cs" />
     <Compile Include="Query\BottomProfiles.cs" />

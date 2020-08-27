@@ -68,16 +68,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            if (convertSettings.RemoveExisting)
-            {
-                ElementId elementId = aperture.ElementId();
-                if (elementId != null && elementId != ElementId.InvalidElementId)
-                {
-                    Element element = document.GetElement(elementId) as SpatialElement;
-                    if (element != null)
-                        document.Delete(elementId);
-                }
-            }
+            Core.Revit.Modify.RemoveExisting(convertSettings, document, aperture);
 
             HostObject hostObject = null;
 

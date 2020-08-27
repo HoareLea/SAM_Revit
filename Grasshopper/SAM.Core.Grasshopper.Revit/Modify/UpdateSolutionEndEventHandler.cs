@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 (sender as GH_Document).SolutionEnd -= solutionEndEventHandler;
                 convertSettings.ClearObjects();
-                gHComponent.Phase = GH_SolutionPhase.Blank;
+                //gHComponent.Phase = GH_SolutionPhase.Blank;
             };
 
             return convertSettings;

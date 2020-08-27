@@ -146,6 +146,7 @@
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Modify\RemoveExisting.cs" />
     <Compile Include="Modify\Json.cs" />
     <Compile Include="Modify\Simplified.cs" />
     <Compile Include="Modify\Value.cs" />

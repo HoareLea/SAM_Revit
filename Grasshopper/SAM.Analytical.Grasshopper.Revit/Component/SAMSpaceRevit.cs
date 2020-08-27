@@ -66,16 +66,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            if (convertSettings.RemoveExisting)
-            {
-                ElementId elementId = space.ElementId();
-                if (elementId != null && elementId != ElementId.InvalidElementId)
-                {
-                    Element element = document.GetElement(elementId) as SpatialElement;
-                    if (element != null)
-                        document.Delete(elementId);
-                }
-            }
+            Core.Revit.Modify.RemoveExisting(convertSettings, document, space);
 
             Autodesk.Revit.DB.Mechanical.Space space_Revit = Analytical.Revit.Convert.ToRevit(space, document, convertSettings);
 

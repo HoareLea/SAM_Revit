@@ -141,18 +141,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
             }
 
-            HostObject hostObject_New = null;
+            Core.Revit.Modify.RemoveExisting(convertSettings, document, panel);
 
-            if (convertSettings.RemoveExisting)
-            {
-                ElementId elementId = panel.ElementId();
-                if (elementId != null && elementId != ElementId.InvalidElementId)
-                {
-                    Element element = document.GetElement(elementId) as HostObject;
-                    if (element != null)
-                        document.Delete(elementId);
-                }
-            }
+            HostObject hostObject_New = null;
 
             try
             {

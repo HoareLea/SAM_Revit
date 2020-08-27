@@ -32,5 +32,21 @@ namespace SAM.Geometry.Revit
 
             return new FilteredElementCollector(document).OfClass(typeof(T)).WherePasses(logicalOrFilter).Cast<T>();
         }
+
+        public static IEnumerable<Element> Elements(this Document document, BoundingBox3D boundingBox3D, params BuiltInCategory[] builtInCategories)
+        {
+            if (document == null || boundingBox3D == null)
+                return null;
+
+            Outline outline = new Outline(boundingBox3D.Min.ToRevit(), boundingBox3D.Max.ToRevit());
+
+            LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new ElementFilter[] { new BoundingBoxIntersectsFilter(outline), new BoundingBoxIsInsideFilter(outline) });
+
+            FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document);
+            if(builtInCategories != null && builtInCategories.Length != 0)
+                filteredElementCollector.WherePasses(new LogicalOrFilter(builtInCategories.ToList().ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter)));
+
+            return new FilteredElementCollector(document).WherePasses(logicalOrFilter);
+        }
     }
 }

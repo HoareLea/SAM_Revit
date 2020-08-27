@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
+    <Compile Include="Component\SAMApertureRevit.cs" />
     <Compile Include="Component\SAMSpaceRevit.cs" />
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />

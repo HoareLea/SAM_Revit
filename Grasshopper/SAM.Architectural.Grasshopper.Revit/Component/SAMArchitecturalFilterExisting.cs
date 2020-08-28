@@ -25,7 +25,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public SAMArchitecturalFilterExisting()
-          : base("SAMArchitectural.FilterExistingt", "SAMArchitectural.FilterExisting",
+          : base("SAMArchitectural.FilterExisting", "SAMArchitectural.FilterExisting",
               "Filters existing Levels based on Level elevation",
               "SAM", "Revit")
         {
@@ -57,7 +57,7 @@ namespace SAM.Architectural.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            IEnumerable<Autodesk.Revit.DB.Level> levels_Revit = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Level)).Cast<Autodesk.Revit.DB.Level>();
+            List<Autodesk.Revit.DB.Level> levels_Revit = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Level)).Cast<Autodesk.Revit.DB.Level>().ToList();
             if(levels_Revit == null || levels_Revit.Count() == 0)
             {                
                 dataAccess.SetDataList(0, null);
@@ -69,13 +69,11 @@ namespace SAM.Architectural.Grasshopper.Revit
 
             List<GooLevel> gooLevels_New = new List<GooLevel>();
             List<GooLevel> gooLevels_Existing = new List<GooLevel>();
-            foreach (Autodesk.Revit.DB.Level level in levels_Revit)
+            foreach (Level level_SAM in levels_SAM)
             {
-                double elevation = Architectural.Revit.Query.Elevation(level);
-
-                Level level_SAM = levels_SAM.Find(x => Math.Abs( x.Elevation - elevation) < Core.Tolerance.MacroDistance);
-                if (level_SAM == null)
-                    gooLevels_New.Add(new GooLevel(Architectural.Revit.Convert.ToSAM(level, convertSettings)));
+                Autodesk.Revit.DB.Level level_Revit = levels_Revit.Find(x => Math.Abs(Architectural.Revit.Query.Elevation(x) - level_SAM.Elevation) < Core.Tolerance.MacroDistance);
+                if (level_Revit == null)
+                    gooLevels_New.Add(new GooLevel(level_SAM));
                 else
                     gooLevels_Existing.Add(new GooLevel(level_SAM));
             }

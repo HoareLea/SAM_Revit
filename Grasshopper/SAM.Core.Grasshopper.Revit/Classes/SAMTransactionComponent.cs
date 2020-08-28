@@ -7,7 +7,7 @@ namespace SAM.Core.Grasshopper.Revit
         public SAMTransactionComponent(string name, string nickname, string description, string category, string subCategory) 
             : base(name, nickname, description, category, subCategory)
         {
-            Message = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            Message = Core.Query.CurrentVersion();
         }
     }
 }

@@ -149,6 +149,7 @@
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\ApertureType.cs" />
     <Compile Include="Query\HostObject.cs" />
+    <Compile Include="Create\Log.cs" />
     <Compile Include="Query\PanelType.cs" />
     <Compile Include="Query\LowElevation.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />

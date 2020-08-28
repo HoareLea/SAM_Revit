@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
-    public class SAMArchitecturalFilterExisting : SAMTransactionComponent
+    public class SAMArchitecturalLevelDispatchExisting : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -24,10 +24,10 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMArchitecturalFilterExisting()
-          : base("SAMArchitectural.FilterExisting", "SAMArchitectural.FilterExisting",
-              "Filters existing Levels based on Level elevation",
-              "SAM", "Revit")
+        public SAMArchitecturalLevelDispatchExisting()
+          : base("SAMArchitectural.LevelDispatchExisting", "SAMArchitectural.LevelDispatchExisting",
+              "Dispatch/Filters existing Levels in Revit model based on Level elevation, help you chose which Levels are need to be created and missing in Revit",
+              "SAM", "Architecture")
         {
 
         }
@@ -45,8 +45,8 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooLevelParam(), "New", "New", "New Levels", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooLevelParam(), "Existing", "Existing", "Existing Levels", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooLevelParam(), "New", "New", "New Levels that do not exisit in Revit model", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooLevelParam(), "Existing", "Existing", "Existing Levels in Revit model", GH_ParamAccess.list);
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)

@@ -48,7 +48,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddParameter(new GooLogParam(), "Log", "Log", "SAM Log", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooLogParam(), "Log", "Log", "SAM Log", GH_ParamAccess.item);
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
@@ -74,7 +74,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Log log = Analytical.Revit.Create.Log(sAMObject as dynamic, document);
 
-            dataAccess.SetDataList(0, log);
+            dataAccess.SetData(0, log);
         }
     }
 }

@@ -71,6 +71,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            if (sAMObject is AnalyticalModel)
+                sAMObject = ((AnalyticalModel)sAMObject).AdjacencyCluster;
+            
             if(!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
             {
                 dataAccess.SetData(0, null);

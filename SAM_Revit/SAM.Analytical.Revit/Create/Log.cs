@@ -70,7 +70,26 @@ namespace SAM.Analytical.Revit
                 result.Add("Panel {0} is missing Construction Guid: {1}", LogRecordType.Error, panel.Name, panel.Guid);
             }
 
-            result.AddRange(Log(panel.Construction, document));
+            result.AddRange(Log(construction, document));
+
+            return result;
+        }
+
+        public static Log Log(this Aperture aperture, Document document)
+        {
+            if (aperture == null || document == null)
+                return null;
+
+            ApertureConstruction apertureConstruction = aperture.ApertureConstruction;
+
+            Log result = new Log();
+
+            if (apertureConstruction == null)
+            {
+                result.Add("Aperture {0} is missing ApertureConstruction Guid: {1}", LogRecordType.Error, aperture.Name, aperture.Guid);
+            }
+
+            result.AddRange(Log(apertureConstruction, document));
 
             return result;
         }

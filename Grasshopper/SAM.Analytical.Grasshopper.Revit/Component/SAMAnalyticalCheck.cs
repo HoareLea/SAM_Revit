@@ -74,6 +74,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Log log = Analytical.Revit.Create.Log(sAMObject as dynamic, document);
 
+            if (log == null)
+                log = new Log();
+
+            if (log.Count() == 0)
+                log.Add("All good! You can switch off your computer and go home now.");
+
             dataAccess.SetData(0, log);
         }
     }

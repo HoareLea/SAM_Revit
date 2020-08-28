@@ -147,6 +147,7 @@
   <ItemGroup>
     <Compile Include="Convert\ToRevit\Level.cs" />
     <Compile Include="Convert\ToSAM\Level.cs" />
+    <Compile Include="Create\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\Elevation.cs" />
   </ItemGroup>

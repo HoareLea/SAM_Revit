@@ -30,7 +30,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public RevitAlignWalls()
           : base("Revit.AlignWalls", "Revit.AlignWalls",
-              "Modify Align Revit Walls",
+              "Modify Align Revit Walls at _level ",
               "SAM", "Revit")
         {
 

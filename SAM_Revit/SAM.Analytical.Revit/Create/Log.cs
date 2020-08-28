@@ -103,7 +103,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            result.Add("Could not find valid FamilySymbol for ApertureConstruction Guid: {0}, Name: {1}", LogRecordType.Error, apertureConstruction.Guid, apertureConstruction.Name);
+            result.Add("Could not find Revit FamilyType Name: {1} for ApertureConstruction Guid: {0}", LogRecordType.Error, apertureConstruction.Guid, apertureConstruction.Name);
             return result;
         }
     }

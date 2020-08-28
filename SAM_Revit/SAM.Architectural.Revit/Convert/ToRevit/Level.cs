@@ -18,7 +18,7 @@ namespace SAM.Architectural.Revit
                 return result;
 
             if (!convertSettings.RemoveExisting)
-                result = Query.Element<Autodesk.Revit.DB.Level>(document, level);
+                result = Core.Revit.Query.Element<Autodesk.Revit.DB.Level>(document, level);
 
             double elevation = level.Elevation;
             if (double.IsNaN(elevation))

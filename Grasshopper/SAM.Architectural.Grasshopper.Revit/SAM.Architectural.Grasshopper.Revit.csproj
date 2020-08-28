@@ -184,6 +184,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\SAMArchitecturalFilterExisting.cs" />
     <Compile Include="Component\SAMLevelRevit.cs" />
     <Compile Include="Component\SAMArchitecturalLevelInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

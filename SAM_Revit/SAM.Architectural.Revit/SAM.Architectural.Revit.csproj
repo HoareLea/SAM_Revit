@@ -146,12 +146,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert\ToRevit\Level.cs" />
+    <Compile Include="Convert\ToSAM\Level.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\Elevation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />
     <Folder Include="Modify\" />
-    <Folder Include="Query\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -179,7 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
-    <Compile Include="Component\SAMAnalyticalCheck.cs" />
+    <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
     <Compile Include="Component\SAMApertureRevit.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Component\SAMSpaceRevit.cs" />

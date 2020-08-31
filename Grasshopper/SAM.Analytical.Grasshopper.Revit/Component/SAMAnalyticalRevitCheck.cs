@@ -4,15 +4,12 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
 using SAM.Core.Grasshopper.Revit;
-using SAM.Core.Revit;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalCheck : SAMTransactionComponent
+    public class SAMAnalyticalRevitCheck : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -27,8 +24,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAnalyticalCheck()
-          : base("SAMAnalytical.Check", "SAMAnalytical.Check",
+        public SAMAnalyticalRevitCheck()
+          : base("SAMAnalytical.RevitCheck", "SAMAnalytical.RevitCheck",
               "Check Document against analytical object",
               "SAM", "Revit")
         {

@@ -145,7 +145,7 @@ namespace SAM.Analytical.Revit
                 bool simplified = false;
 
                 //Check if geometry is simplified
-                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.Edge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
+                if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.ExternalEdge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
                     simplified = true;
 
                 if (!simplified && result.Host is Wall)

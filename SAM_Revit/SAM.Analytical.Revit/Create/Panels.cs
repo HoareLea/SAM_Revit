@@ -169,7 +169,7 @@ namespace SAM.Analytical.Revit
                     }
 
                     if (construction == null)
-                        construction = Analytical.Query.Construction(panelType); //Default Construction
+                        construction = Analytical.Query.DefaultConstruction(panelType); //Default Construction
 
                     if (panel == null)
                     {

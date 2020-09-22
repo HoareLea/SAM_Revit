@@ -55,7 +55,7 @@ namespace SAM.Analytical.Revit
             PanelType panelType = Query.PanelType(hostObject);
             Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
             if (construction == null)
-                construction = Analytical.Query.Construction(panelType); //Default Construction
+                construction = Analytical.Query.DefaultConstruction(panelType); //Default Construction
 
             PanelType panelType_Temp = Query.PanelType(construction);
             if (panelType_Temp != PanelType.Undefined)

@@ -22,7 +22,7 @@ namespace SAM.Analytical.Revit
 
             HostObjAttributes hostObjAttributes = panel.Construction.ToRevit(document, panelType, normal, convertSettings);
             if (hostObjAttributes == null)
-                hostObjAttributes = Analytical.Query.Construction(panelType)?.ToRevit(document, panelType, normal, convertSettings); //Default Construction
+                hostObjAttributes = Analytical.Query.DefaultConstruction(panelType)?.ToRevit(document, panelType, normal, convertSettings); //Default Construction
 
             BuiltInParameter[] builtInParameters = null;
             if (hostObjAttributes is WallType)

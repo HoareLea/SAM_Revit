@@ -18,6 +18,13 @@ namespace SAM.Analytical.Revit
 
             convertSettings?.Add(hostObjAttributes.Id, result);
 
+            if(hostObjAttributes.PanelType() == PanelType.Undefined)
+            {
+                PanelType panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.IntegerValue);
+                if (panelType != PanelType.Undefined)
+                    result.SetPanelType(panelType);
+            }
+
             return result;
         }
     }

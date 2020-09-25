@@ -7,16 +7,9 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Query
     {
-        public static PanelType PanelType(this HostObject hostObject)
+        public static PanelType PanelType(BuiltInCategory builtInCategory)
         {
-            if (hostObject == null)
-                return Analytical.PanelType.Undefined;
-
-            PanelType panelType = PanelType(hostObject?.Document?.GetElement(hostObject.GetTypeId()) as HostObjAttributes);
-            if (panelType != Analytical.PanelType.Undefined)
-                return panelType;
-
-            switch ((BuiltInCategory)hostObject.Category.Id.IntegerValue)
+            switch (builtInCategory)
             {
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Walls:
                     return Analytical.PanelType.Wall;
@@ -26,9 +19,24 @@ namespace SAM.Analytical.Revit
 
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Floors:
                     return Analytical.PanelType.Floor;
+
+                case Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings:
+                    return Analytical.PanelType.Ceiling;
             }
 
             return Analytical.PanelType.Undefined;
+        }
+        
+        public static PanelType PanelType(this HostObject hostObject)
+        {
+            if (hostObject == null)
+                return Analytical.PanelType.Undefined;
+
+            PanelType panelType = PanelType(hostObject?.Document?.GetElement(hostObject.GetTypeId()) as HostObjAttributes);
+            if (panelType != Analytical.PanelType.Undefined)
+                return panelType;
+
+            return PanelType((BuiltInCategory)hostObject.Category.Id.IntegerValue);
         }
 
         public static PanelType PanelType(this HostObjAttributes hostObjAttributes)

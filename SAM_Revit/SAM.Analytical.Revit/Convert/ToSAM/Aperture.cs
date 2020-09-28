@@ -99,7 +99,7 @@ namespace SAM.Analytical.Revit
 
             ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
             if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
-                apertureConstruction = Analytical.Query.ApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
+                apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
 
             Vector3D axisX = null;
             Vector3D normal = null;

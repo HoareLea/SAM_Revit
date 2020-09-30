@@ -21,7 +21,7 @@ namespace SAM.Analytical.Revit
 
             FamilySymbol familySymbol = apertureConstruction.ToRevit(document, convertSettings);
             if (familySymbol == null)
-                familySymbol = Analytical.Query.DefaultApertureConstruction(apertureConstruction.ApertureType, true).ToRevit(document, convertSettings); //Default Aperture Construction
+                familySymbol = Analytical.Query.DefaultApertureConstruction(hostObject.PanelType(), apertureConstruction.ApertureType).ToRevit(document, convertSettings); //Default Aperture Construction
 
             if (familySymbol == null)
                 return null;

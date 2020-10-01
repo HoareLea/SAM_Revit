@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 
 using SAM.Geometry.Revit;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -27,7 +28,17 @@ namespace SAM.Analytical.Revit
             if (result != null)
                 return result;
 
-            result = new ApertureConstruction(familySymbol.FullName(), familySymbol.ApertureType());
+            string name = familySymbol.FullName();
+
+            ApertureType apertureType = familySymbol.ApertureType();
+
+            List<ApertureConstruction> apertureConstructions = Analytical.Query.DefaultApertureConstructionLibrary().GetApertureConstructions(apertureType);
+            if (apertureConstructions != null)
+                result = apertureConstructions.Find(x => name.Equals(x.UniqueName()) || name.Equals(x.Name));
+
+            if (result == null)
+                result = new ApertureConstruction(name, apertureType);
+            
             result.Add(Core.Revit.Query.ParameterSet(familySymbol));
 
             convertSettings?.Add(familySymbol.Id, result);

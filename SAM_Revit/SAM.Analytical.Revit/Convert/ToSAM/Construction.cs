@@ -13,17 +13,23 @@ namespace SAM.Analytical.Revit
             if (result != null)
                 return result;
 
-            result = new Construction(hostObjAttributes.Name);
+            string name = hostObjAttributes.Name;
+            PanelType panelType = hostObjAttributes.PanelType();
+            if (panelType == PanelType.Undefined)
+                panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.IntegerValue);
+
+            Construction construction = Analytical.Query.DefaultConstruction(panelType);
+            if(construction != null && (name.Equals(construction.Name) || name.Equals(construction.UniqueName())))
+                result = new Construction(construction);
+            else
+                result = new Construction(hostObjAttributes.Name);
+            
             result.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
 
             convertSettings?.Add(hostObjAttributes.Id, result);
 
-            if(hostObjAttributes.PanelType() == PanelType.Undefined)
-            {
-                PanelType panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.IntegerValue);
-                if (panelType != PanelType.Undefined)
-                    result.SetPanelType(panelType);
-            }
+            if (panelType != PanelType.Undefined)
+                result.SetPanelType(panelType);
 
             return result;
         }

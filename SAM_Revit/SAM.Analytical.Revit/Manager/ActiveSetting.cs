@@ -65,6 +65,9 @@ namespace SAM.Analytical.Revit
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
 
+            //File Names
+            result.Add(Name.FileName_DefaultAirConstructionLibrary, "SAM_AirConstructionLibrary.JSON");
+
             string path;
 
             path = Query.DefaultAirConstructionLibraryPath(result);

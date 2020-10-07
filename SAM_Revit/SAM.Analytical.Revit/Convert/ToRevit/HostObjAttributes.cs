@@ -6,6 +6,9 @@ namespace SAM.Analytical.Revit
     {
         public static HostObjAttributes ToRevit(this Construction construction, Document document, PanelType panelType, Geometry.Spatial.Vector3D normal, Core.Revit.ConvertSettings convertSettings)
         {
+            if (construction == null && panelType == PanelType.Air && normal != null)
+                construction = Query.DefaultAirConstruction(normal.PanelType().PanelGroup());
+            
             if (construction == null)
                 return null;
 
@@ -16,7 +19,7 @@ namespace SAM.Analytical.Revit
             FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
 
             BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            if (builtInCategory == BuiltInCategory.INVALID)
+            if (builtInCategory == BuiltInCategory.INVALID && normal != null)
                 builtInCategory = normal.BuiltInCategory();
 
             if (builtInCategory != BuiltInCategory.INVALID)

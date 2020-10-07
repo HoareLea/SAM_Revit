@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -6,32 +7,11 @@ namespace SAM.Analytical.Revit
     {
         public static BuiltInCategory BuiltInCategory(this PanelType panelType)
         {
-            switch (panelType)
-            {
-                case Analytical.PanelType.Roof:
-                case Analytical.PanelType.UndergroundCeiling:
-                    return Autodesk.Revit.DB.BuiltInCategory.OST_Roofs;
+            List<BuiltInCategory> result = BuiltInCategories(panelType);
+            if (result == null || result.Count != 1)
+                return Autodesk.Revit.DB.BuiltInCategory.INVALID;
 
-                case Analytical.PanelType.Wall:
-                case Analytical.PanelType.WallExternal:
-                case Analytical.PanelType.WallInternal:
-                case Analytical.PanelType.UndergroundWall:
-                case Analytical.PanelType.CurtainWall:
-                    return Autodesk.Revit.DB.BuiltInCategory.OST_Walls;
-
-                case Analytical.PanelType.Floor:
-                case Analytical.PanelType.FloorExposed:
-                case Analytical.PanelType.FloorInternal:
-                case Analytical.PanelType.FloorRaised:
-                case Analytical.PanelType.SlabOnGrade:
-                case Analytical.PanelType.UndergroundSlab:
-                    return Autodesk.Revit.DB.BuiltInCategory.OST_Floors;
-
-                case Analytical.PanelType.Ceiling:
-                    return Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings;
-            }
-
-            return Autodesk.Revit.DB.BuiltInCategory.INVALID;
+            return result[0];
         }
 
         public static BuiltInCategory BuiltInCategory(this Geometry.Spatial.Vector3D normal)

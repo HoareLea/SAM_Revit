@@ -105,25 +105,31 @@ namespace SAM.Analytical.Revit
 
             if (string.IsNullOrWhiteSpace(name))
             {
-                result.Add("ApertureConstruction has invalid name Guid: {0}", LogRecordType.Error, construction.Guid);
+                result.Add("Construction has invalid name Guid: {0}", LogRecordType.Error, construction.Guid);
                 return result;
             }
 
             PanelType panelType = construction.PanelType();
             if(panelType == PanelType.Undefined)
             {
-                result.Add("Could not get panelType from Construction Guid: {0}, Name: {1}", LogRecordType.Error, construction.Guid, construction.Name);
+                result.Add("Could not get panelType from Construction Guid: {0}, Name: {1}", LogRecordType.Warning, construction.Guid, construction.Name);
                 return result;
             }
 
-            BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            if (builtInCategory == BuiltInCategory.INVALID)
+            List<BuiltInCategory> builtInCategories = Query.BuiltInCategories(panelType);
+            if(builtInCategories == null || builtInCategories.Count == 0)
             {
-                result.Add("Could not get BuiltInCategory from ApertureConstruction Guid: {0}, Name: {1}", LogRecordType.Error, construction.Guid, construction.Name);
+                result.Add("Could not get BuiltInCategory from Construction Guid: {0}, Name: {1}", LogRecordType.Error, construction.Guid, construction.Name);
                 return result;
             }
 
-            List<HostObjAttributes> hostObjAttributes = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes)).OfCategory(builtInCategory).Cast<HostObjAttributes>().ToList();
+            FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
+            if (builtInCategories.Count == 1)
+                filteredElementCollector.OfCategory(builtInCategories[0]);
+            else
+                filteredElementCollector.WherePasses(new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter)));
+
+            List<HostObjAttributes> hostObjAttributes = filteredElementCollector.Cast<HostObjAttributes>().ToList();
             if (hostObjAttributes != null && hostObjAttributes.Count != 0)
             {
                 foreach (HostObjAttributes hostObjAttributes_Temp in hostObjAttributes)
@@ -134,7 +140,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            result.Add("Could not find Revit FamilyType (Category: {2}) Name: {1} for Construction Guid: {0}", LogRecordType.Error, construction.Guid, construction.Name, document?.Settings?.Categories?.get_Item(builtInCategory)?.Name);
+            result.Add("Could not find Revit FamilyType (Category: {2}) Name: {1} for Construction Guid: {0}", LogRecordType.Error, construction.Guid, construction.Name, document?.Settings?.Categories?.get_Item(builtInCategories[0])?.Name);
             return result;
         }
 

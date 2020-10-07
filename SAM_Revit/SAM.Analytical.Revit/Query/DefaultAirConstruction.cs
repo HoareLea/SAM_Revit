@@ -8,7 +8,7 @@ namespace SAM.Analytical.Revit
         {
             ConstructionLibrary constructionLibrary = new ConstructionLibrary("Test");
 
-            return constructionLibrary?.GetConstructions(panelGroup).FirstOrDefault();
+            return constructionLibrary?.GetConstructions(panelGroup)?.FirstOrDefault();
         }
     }
 }

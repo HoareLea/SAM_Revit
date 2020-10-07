@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -12,14 +13,30 @@ namespace SAM.Analytical.Revit
             if (construction == null)
                 return null;
 
-            HostObjAttributes result = convertSettings?.GetObject<HostObjAttributes>(construction.Guid);
+            HostObjAttributes result = null;
+            if(panelType != PanelType.Shade)
+            {
+                result = convertSettings?.GetObject<HostObjAttributes>(construction.Guid);
+            }
+            else
+            {
+                List<HostObjAttributes> hostObjAttributes = convertSettings?.GetObjects<HostObjAttributes>(construction.Guid);
+                if(hostObjAttributes != null && hostObjAttributes.Count != 0)
+                {
+                    if (normal.PanelType().PanelGroup() == PanelGroup.Wall)
+                        result = hostObjAttributes.Find(x => x is WallType);
+                    else
+                        result = hostObjAttributes.Find(x => !(x is WallType));
+                }
+            }
+
             if (result != null)
                 return result;
 
             FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
 
             BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            if (builtInCategory == BuiltInCategory.INVALID && normal != null)
+            if (normal != null && (builtInCategory == BuiltInCategory.INVALID || panelType == PanelType.Shade))
                 builtInCategory = normal.BuiltInCategory();
 
             if (builtInCategory != BuiltInCategory.INVALID)

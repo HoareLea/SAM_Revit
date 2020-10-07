@@ -9,7 +9,6 @@ namespace SAM.Analytical.Revit
             switch (panelType)
             {
                 case Analytical.PanelType.Roof:
-                case Analytical.PanelType.Shade:
                 case Analytical.PanelType.UndergroundCeiling:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Roofs;
 

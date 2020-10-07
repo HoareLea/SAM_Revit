@@ -21,9 +21,9 @@ namespace SAM.Analytical.Revit
             if (dictionary == null)
                 return null;
 
-            List<Level> levels = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
-            if (levels == null || levels.Count == 0)
-                return null;
+            //List<Level> levels = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
+            //if (levels == null || levels.Count == 0)
+            //    return null;
 
             result = new List<Element>();
 

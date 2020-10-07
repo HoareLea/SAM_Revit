@@ -6,9 +6,11 @@ namespace SAM.Analytical.Revit
     {
         public static Construction DefaultAirConstruction(this PanelGroup panelGroup)
         {
-            ConstructionLibrary constructionLibrary = new ConstructionLibrary("Test");
+            ConstructionLibrary constructionLibrary = DefaultAirConstructionLibrary();
+            if (constructionLibrary == null)
+                return null;
 
-            return constructionLibrary?.GetConstructions(panelGroup)?.FirstOrDefault();
+            return constructionLibrary.GetConstructions(panelGroup)?.FirstOrDefault();
         }
     }
 }

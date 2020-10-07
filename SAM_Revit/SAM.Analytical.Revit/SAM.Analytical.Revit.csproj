@@ -149,6 +149,8 @@
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
     <Compile Include="Modify\DuplicateByConstruction.cs" />
+    <Compile Include="Query\DefaultAirConstructionLibraryPath.cs" />
+    <Compile Include="Query\DefaultAirConstructionLibrary.cs" />
     <Compile Include="Query\FilteredElementCollector.cs" />
     <Compile Include="Query\DefaultAirConstruction.cs" />
     <Compile Include="Query\HighElevation.cs" />

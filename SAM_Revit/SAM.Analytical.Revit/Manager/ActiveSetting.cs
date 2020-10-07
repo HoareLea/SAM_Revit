@@ -8,6 +8,9 @@ namespace SAM.Analytical.Revit
     {
         public static class Name
         {
+            public const string FileName_DefaultAirConstructionLibrary = "FileName_DefaultAirConstructionLibrary";
+            public const string Library_DefaultAirConstructionLibrary = "Library_DefaultAirConstructionLibrary";
+
             //public const string Construction_Undefined = "Construction_Undefined";
             //public const string ParameterName_PanelType = "ParameterName_PanelType";
             //public const string ParameterName_ApertureHeight = "ParameterName_ApertureHeight";
@@ -61,6 +64,12 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementTransparent"); //bool
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
+
+            string path;
+
+            path = Query.DefaultAirConstructionLibraryPath(result);
+            if (System.IO.File.Exists(path))
+                result.Add(Name.Library_DefaultAirConstructionLibrary, Core.Create.IJSAMObject<ConstructionLibrary>(System.IO.File.ReadAllText(path)));
 
             return result;
         }

@@ -10,7 +10,7 @@ namespace SAM.Analytical.Revit
             {
                 case Analytical.PanelType.Roof:
                 case Analytical.PanelType.Shade:
-
+                case Analytical.PanelType.UndergroundCeiling:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Roofs;
 
                 case Analytical.PanelType.Wall:
@@ -18,7 +18,6 @@ namespace SAM.Analytical.Revit
                 case Analytical.PanelType.WallInternal:
                 case Analytical.PanelType.UndergroundWall:
                 case Analytical.PanelType.CurtainWall:
-                case Analytical.PanelType.UndergroundCeiling:
                     return Autodesk.Revit.DB.BuiltInCategory.OST_Walls;
 
                 case Analytical.PanelType.Floor:

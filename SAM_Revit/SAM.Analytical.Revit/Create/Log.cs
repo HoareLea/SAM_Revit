@@ -134,7 +134,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            result.Add("Could not find Revit FamilyType Name: {1} for Construction Guid: {0}", LogRecordType.Error, construction.Guid, construction.Name);
+            result.Add("Could not find Revit FamilyType (Category: {2}) Name: {1} for Construction Guid: {0}", LogRecordType.Error, construction.Guid, construction.Name, document?.Settings?.Categories?.get_Item(builtInCategory)?.Name);
             return result;
         }
 

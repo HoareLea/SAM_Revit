@@ -111,7 +111,7 @@ namespace SAM.Core.Revit
                 }
 
                 //YesNo Type parameter
-                if (parameter.Definition.ParameterType == ParameterType.YesNo)
+                if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.YesNo)
                 {
                     value_Temp = value_Temp.ToUpper().Trim();
 
@@ -205,7 +205,7 @@ namespace SAM.Core.Revit
             if (double.IsNaN(value_Temp))
                 return false;
 
-            if (parameter.Definition.ParameterType == ParameterType.Invalid)
+            if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.Invalid)
             {
                 parameter.Set(value_Temp);
                 return true;

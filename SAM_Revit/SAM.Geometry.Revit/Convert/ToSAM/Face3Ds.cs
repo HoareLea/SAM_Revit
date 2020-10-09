@@ -13,7 +13,20 @@ namespace SAM.Geometry.Revit
 
         public static List<Face3D> ToSAM_Face3Ds(this Sketch sketch, bool flip = false)
         {
-            if (sketch == null || sketch.Profile == null)
+            if (sketch == null)
+                return null;
+
+            CurveArrArray profile = null;
+            try
+            {
+                profile = sketch.Profile;
+            }
+            catch
+            {
+                profile = null;
+            }
+
+            if (profile == null)
                 return null;
 
             List<Face3D> result = new List<Face3D>();

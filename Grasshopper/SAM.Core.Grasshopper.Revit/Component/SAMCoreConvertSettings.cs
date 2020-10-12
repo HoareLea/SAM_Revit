@@ -22,7 +22,7 @@ namespace SAM.Core.Grasshopper.Revit
         public SAMCoreCreateConvertSettings()
           : base("SAMCore.CreateConvertSettings", "SAMCore.CreateConvertSettings",
               "Create SAM Core ConvertSettings",
-              "SAM", "Core")
+              "SAM", "Revit")
         {
         }
 

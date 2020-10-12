@@ -24,7 +24,7 @@ namespace SAM.Core.Grasshopper.Revit
         public SAMCoreGetLocation()
           : base("SAMCore.GetLocation", "SAMCore.GetLocation",
               "Query Gets Location from Revit Document",
-              "SAM", "Core")
+              "SAM", "Revit")
         {
         }
 

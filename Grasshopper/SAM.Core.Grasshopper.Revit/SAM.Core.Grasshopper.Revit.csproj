@@ -174,7 +174,7 @@
     <Compile Include="Classes\SAMReconstructElementComponent.cs" />
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Classes\SAMTransactionComponent.cs" />
-    <Compile Include="Component\RevitDeleteElement.cs" />
+    <Compile Include="Component\SAMCoreDeleteElement.cs" />
     <Compile Include="Component\SAMCoreElementsByScopeBox.cs" />
     <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />

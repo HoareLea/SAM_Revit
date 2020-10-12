@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitDeleteElement : SAMTransactionComponent
+    public class SAMCoreDeleteElement : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -25,8 +25,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitDeleteElement()
-          : base("Revit.DeleteElement", "Revit.DeleteElement",
+        public SAMCoreDeleteElement()
+          : base("SAMCore.DeleteElement", "SAMCore.DeleteElement",
               "Modify Deletes Revit Element",
               "SAM", "Revit")
         {

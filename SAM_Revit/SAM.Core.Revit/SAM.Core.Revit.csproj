@@ -153,6 +153,7 @@
     <Compile Include="Modify\Values.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
     <Compile Include="Query\ClosestLevel.cs" />
+    <Compile Include="Query\BoundingBoxXYZ.cs" />
     <Compile Include="Query\UniqueId.cs" />
     <Compile Include="Query\Name.cs" />
     <Compile Include="Query\Location.cs" />

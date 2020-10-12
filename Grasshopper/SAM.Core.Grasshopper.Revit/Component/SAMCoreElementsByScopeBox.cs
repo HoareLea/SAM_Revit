@@ -80,11 +80,14 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-            Outline outline = new Outline(boundingBoxXYZ.Min, boundingBoxXYZ.Max);
+            Outline outline = new Outline(boundingBoxXYZ.Transform.OfPoint(boundingBoxXYZ.Min), boundingBoxXYZ.Transform.OfPoint(boundingBoxXYZ.Max));
 
-            List<Element> elements = new FilteredElementCollector(document).WherePasses(new BoundingBoxIntersectsFilter(outline, Tolerance.MacroDistance)).ToElements()?.ToList();
+            List<Element> elements = new FilteredElementCollector(document).WherePasses(new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline, Tolerance.MacroDistance), new BoundingBoxIntersectsFilter(outline, Tolerance.MacroDistance))).ToElements()?.ToList();
 
-            dataAccess.SetData(0, elements);
+            List<RhinoInside.Revit.GH.Types.Element> elements_Result = elements.ConvertAll(x => RhinoInside.Revit.GH.Types.Element.FromElement(x));
+            elements_Result.RemoveAll(x => x == null || !x.IsValid);
+
+            dataAccess.SetData(0, elements_Result);
         }
     }
 }

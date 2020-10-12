@@ -87,7 +87,7 @@ namespace SAM.Core.Grasshopper.Revit
             List<RhinoInside.Revit.GH.Types.Element> elements_Result = elements.ConvertAll(x => RhinoInside.Revit.GH.Types.Element.FromElement(x));
             elements_Result.RemoveAll(x => x == null || !x.IsValid);
 
-            dataAccess.SetDataList(0, elements_Result);
+           dataAccess.SetDataList(0, elements_Result);
         }
     }
 }

@@ -198,6 +198,24 @@ namespace SAM.Geometry.Revit
 
             Document document = hostObject.Document;
 
+            //Remove FaceSplitter Sketches
+            IEnumerable<ElementId> elementIds_FaceSplitter = hostObject.GetDependentElements(new ElementClassFilter(typeof(FaceSplitter)));
+            if (elementIds_FaceSplitter != null && elementIds_FaceSplitter.Count() != 0)
+            {
+                List<ElementId> elementIds_Temp = new List<ElementId>(elementIds); 
+                foreach (ElementId elementId in elementIds_FaceSplitter)
+                {
+                    FaceSplitter faceSplitter = document.GetElement(elementId) as FaceSplitter;
+                    if (faceSplitter == null)
+                        continue;
+
+                    IEnumerable<ElementId> elementIds_Sketch = faceSplitter.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
+                    if (elementIds_Sketch != null && elementIds_Sketch.Count() != 0)
+                        elementIds_Temp.RemoveAll(x => elementIds_Sketch.Contains(x));
+                }
+                elementIds = elementIds_Temp;
+            }
+
             List<Face3D> result = new List<Face3D>();
             foreach (ElementId elementId in elementIds)
             {
@@ -213,6 +231,8 @@ namespace SAM.Geometry.Revit
                     if (face != null)
                         result.Add(face);
             }
+
+
 
             return result;
         }

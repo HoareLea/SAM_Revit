@@ -16,6 +16,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         public override Guid ComponentGuid => new Guid("54287c2b-9aaf-478d-ac32-4d258aec2548");
 
         /// <summary>
+        /// The latest version of this component
+        /// </summary>
+        public override string LatestComponentVersion => "1.0.0";
+
+        /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;

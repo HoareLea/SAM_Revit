@@ -4,7 +4,6 @@ using SAM.Architectural.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
-using System.Collections.Generic;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
@@ -14,6 +13,11 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
         public override Guid ComponentGuid => new Guid("b09e4a6e-8dc8-4e0a-8b8f-92e3ccaa8977");
+
+        /// <summary>
+        /// The latest version of this component
+        /// </summary>
+        public override string LatestComponentVersion => "1.0.0";
 
         /// <summary>
         /// Provides an Icon for the component.

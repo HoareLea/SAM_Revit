@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Grasshopper.Kernel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace SAM.Core.Grasshopper.Revit
@@ -10,8 +11,6 @@ namespace SAM.Core.Grasshopper.Revit
         {
             SetValue("SAM_SAMVersion", Core.Query.CurrentVersion());
             SetValue("SAM_ComponentVersion", LatestComponentVersion);
-
-            Message = LatestComponentVersion;
         }
 
 
@@ -53,5 +52,11 @@ namespace SAM.Core.Grasshopper.Revit
         }
 
         public abstract string LatestComponentVersion { get; }
+
+        public override void AddedToDocument(GH_Document document)
+        {
+            base.AddedToDocument(document);
+            Message = ComponentVersion;
+        }
     }
 }

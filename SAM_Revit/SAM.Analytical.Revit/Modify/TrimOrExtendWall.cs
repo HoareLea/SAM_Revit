@@ -91,7 +91,7 @@ namespace SAM.Analytical.Revit
                                 if (point2D_1.AlmostEquals(point2D_2, tolerance))
                                     continue;
 
-                                Vector2D direction_New = new Vector2D(point2D_2, point2D_1);
+                                Vector2D direction_New = new Vector2D(point2D_2, point2D_1).Unit;
                                 if (!direction_Temp.AlmostEqual(direction_New, tolerance) && !direction_Temp.AlmostEqual(direction_New.GetNegated(), tolerance))
                                     continue;
 

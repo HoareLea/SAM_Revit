@@ -76,7 +76,27 @@ namespace SAM.Analytical.Revit
                         {
                             Point2D point2D_Intersection = segment2D_Temp.Intersection(segment2D, false, tolerance);
                             if (point2D_Intersection == null)
-                                continue;
+                            {
+                                //Checking Coplanar Segment2Ds if can be extended
+
+                                Vector2D direction_Temp = segment2D_Temp.Direction;
+                                Vector2D direction = segment2D.Direction;
+
+                                if (!direction_Temp.AlmostEqual(direction, tolerance) && !direction_Temp.AlmostEqual(direction.GetNegated(), tolerance))
+                                    continue;
+
+                                Point2D point2D_1 = segment2D.Closest(segment2D_Temp[0]);
+                                Point2D point2D_2 = segment2D_Temp.Closest(point2D_1);
+
+                                if (point2D_1.AlmostEquals(point2D_2, tolerance))
+                                    continue;
+
+                                Vector2D direction_New = new Vector2D(point2D_2, point2D_1);
+                                if (!direction_Temp.AlmostEqual(direction_New, tolerance) && !direction_Temp.AlmostEqual(direction_New.GetNegated(), tolerance))
+                                    continue;
+
+                                point2D_Intersection = point2D_1;
+                            }
 
                             double distance;
 

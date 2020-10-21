@@ -205,7 +205,11 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Construction construction_New = constructions.Find(x => x.Name == name_destination);
                 if (construction_New == null)
+                {
                     construction_New = new Construction(construction, name_destination);
+                    construction_New.SetDescription(construction.Name);
+                }
+                    
 
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panel.PanelType, panel.Normal, convertSettings);
                 if (hostObjAttributes == null)

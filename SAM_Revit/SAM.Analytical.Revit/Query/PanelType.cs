@@ -44,10 +44,10 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes == null)
                 return Analytical.PanelType.Undefined;
 
-            string parameterName_PanelType = Analytical.Query.ParameterName_PanelType();
-            if (!string.IsNullOrWhiteSpace(parameterName_PanelType))
+            string parameterName_Type = Analytical.Query.ParameterName_Type();
+            if (!string.IsNullOrWhiteSpace(parameterName_Type))
             {
-                IEnumerable<Parameter> parameters = hostObjAttributes.GetParameters(parameterName_PanelType);
+                IEnumerable<Parameter> parameters = hostObjAttributes.GetParameters(parameterName_Type);
                 if(parameters != null && parameters.Count() > 0)
                 {
                     foreach(Parameter parameter in parameters)
@@ -76,11 +76,11 @@ namespace SAM.Analytical.Revit
 
             PanelType result = Analytical.PanelType.Undefined;
 
-            string parameterName_PanelType = Analytical.Query.ParameterName_PanelType();
-            if (!string.IsNullOrWhiteSpace(parameterName_PanelType))
+            string parameterName_Type = Analytical.Query.ParameterName_Type();
+            if (!string.IsNullOrWhiteSpace(parameterName_Type))
             {
                 string text = null;
-                if(construction.TryGetValue(parameterName_PanelType, out text))
+                if(construction.TryGetValue(parameterName_Type, out text))
                 {
                     if(!string.IsNullOrWhiteSpace(text))
                         result = Analytical.Query.PanelType(text);

@@ -77,7 +77,7 @@ namespace SAM.Analytical.Revit
                             Point2D point2D_Intersection = segment2D_Temp.Intersection(segment2D, false, tolerance);
                             if (point2D_Intersection == null)
                             {
-                                //Checking Coplanar Segment2Ds if can be extended
+                                //Checking Colinear Segment2Ds if can be extended
 
                                 Vector2D direction_Temp = segment2D_Temp.Direction;
                                 Vector2D direction = segment2D.Direction;
@@ -85,17 +85,19 @@ namespace SAM.Analytical.Revit
                                 if (!direction_Temp.AlmostEqual(direction, tolerance) && !direction_Temp.AlmostEqual(direction.GetNegated(), tolerance))
                                     continue;
 
-                                Point2D point2D_1 = segment2D.Closest(segment2D_Temp[0]);
-                                Point2D point2D_2 = segment2D_Temp.Closest(point2D_1);
-
-                                if (point2D_1.AlmostEquals(point2D_2, tolerance))
+                                Point2D point2D_Temp = null;
+                                Point2D point2D = null;
+                                if (!Geometry.Planar.Query.Closest(segment2D_Temp, segment2D, out point2D_Temp, out point2D, tolerance))
                                     continue;
 
-                                Vector2D direction_New = new Vector2D(point2D_2, point2D_1).Unit;
+                                if (point2D_Temp.AlmostEquals(point2D, tolerance))
+                                    continue;
+
+                                Vector2D direction_New = new Vector2D(point2D, point2D_Temp).Unit;
                                 if (!direction_Temp.AlmostEqual(direction_New, tolerance) && !direction_Temp.AlmostEqual(direction_New.GetNegated(), tolerance))
                                     continue;
 
-                                point2D_Intersection = point2D_1;
+                                point2D_Intersection = point2D;
                             }
 
                             double distance;

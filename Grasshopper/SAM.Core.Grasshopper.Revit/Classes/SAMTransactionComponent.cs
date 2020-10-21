@@ -43,14 +43,9 @@ namespace SAM.Core.Grasshopper.Revit
         {
             base.AppendAdditionalMenuItems(menu);
             Menu_AppendSeparator(menu);
-            Menu_AppendItem(menu, "Source code", OnSourceCodeClick, Properties.Resources.SAM_Small);
 
+            this.AppendSourceCodeAdditionalMenuItem(menu);
             this.AppendNewComponentAdditionalMenuItem(menu);
-        }
-
-        public virtual void OnSourceCodeClick(object sender = null, object e = null)
-        {
-            Process.Start("https://github.com/HoareLea/SAM");
         }
 
         public abstract string LatestComponentVersion { get; }

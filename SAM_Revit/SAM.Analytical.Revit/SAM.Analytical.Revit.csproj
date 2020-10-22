@@ -148,7 +148,7 @@
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
-    <Compile Include="Modify\DuplicateByConstruction.cs" />
+    <Compile Include="Modify\DuplicateByType.cs" />
     <Compile Include="Query\BuiltInCategories.cs" />
     <Compile Include="Query\DefaultAirConstructionLibraryPath.cs" />
     <Compile Include="Query\DefaultAirConstructionLibrary.cs" />

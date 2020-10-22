@@ -38,7 +38,7 @@ namespace SAM.Core.Grasshopper.Revit
             }
         }
 
-        public virtual void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
         {
             base.AppendAdditionalMenuItems(menu);
             Menu_AppendSeparator(menu);

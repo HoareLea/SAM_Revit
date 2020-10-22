@@ -246,9 +246,11 @@ copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
 copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
 
 if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
-copy "$(SolutionDir)files\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+copy "$(SolutionDir)files\Grasshopper\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 
 xcopy "$(SolutionDir)\files\resources" "$(APPDATA)\SAM\" /Y /I /E/S
+
+xcopy "$(SolutionDir)\files\Grasshopper\UserObjects" "$(APPDATA)\Grasshopper\UserObjects\SAM" /Y /I /E/S
 
 ::erase "%25SAM_DIR%25$(ProjectName).dll"
 ::erase "$(TargetPath)"</PostBuildEvent>

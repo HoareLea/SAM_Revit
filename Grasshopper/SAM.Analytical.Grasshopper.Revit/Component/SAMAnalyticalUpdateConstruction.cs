@@ -244,6 +244,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 if (construction_New == null)
                 {
                     construction_New = new Construction(construction, name_destination);
+                    construction_New.SetValue(ConstructionParameter.Description, construction.Name);
                     construction_New.SetDescription(construction.Name);
                 }
                     
@@ -329,6 +330,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         if (apertureConstruction_New == null)
                         {
                             apertureConstruction_New = new ApertureConstruction(apertureConstruction, name_destination);
+                            apertureConstruction_New.SetValue(ApertureConstructionParameter.Description, apertureConstruction.Name);
                             apertureConstruction_New.SetDescription(apertureConstruction.Name);
                         }
 

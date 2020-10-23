@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core.Revit.Enums.Parameter;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,8 +13,14 @@ namespace SAM.Core.Revit
                 return null;
 
             ParameterSet parameterSet = new ParameterSet(typeof(Element)?.Assembly);
+            parameterSet.Add(ElementParameter.ElementId.Name(), element.Id.IntegerValue);
+            parameterSet.Add(ElementParameter.UniqueId.Name(), element.UniqueId);
+            parameterSet.Add(ElementParameter.CategoryName.Name(), element.Category?.Name);
+
+            //TODO: To be removed
             parameterSet.Add("ElementId", element.Id.IntegerValue);
             parameterSet.Add("UniqueId", element.UniqueId);
+            
             foreach (Parameter parameter in element.ParametersMap)
             {
                 if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(parameter.Definition.Name))

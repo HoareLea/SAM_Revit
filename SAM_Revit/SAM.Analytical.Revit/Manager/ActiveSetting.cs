@@ -69,6 +69,15 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(ConstructionParameter.DefaultPanelType, typeof(FamilySymbol), "SAM_BuildingElementType");
             mapCluster.Add(ConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
 
+            mapCluster.Add(InternalConditionParameter.NumberOfPeople, typeof(Space), "SAM_NoPeople");
+            mapCluster.Add(InternalConditionParameter.OccupancyProfileName, typeof(Space), "SAM_OccupacyProfile");
+            mapCluster.Add(InternalConditionParameter.OccupantSensibleGain, typeof(Space), "SAM_OccupantSensGain");
+            mapCluster.Add(InternalConditionParameter.OccupantLatentGain, typeof(Space), "SAM_OccupantLatGain");
+            mapCluster.Add(InternalConditionParameter.EquipmentSensibleProfileName, typeof(Space), "SAM_SmallPowerSensProfile");
+            mapCluster.Add(InternalConditionParameter.EquipmentLatentProfileName, typeof(Space), "SAM_SmallPowerLatProfile");
+            mapCluster.Add(InternalConditionParameter.LightingGain, typeof(Space), "SAM_GenLightingGain");
+            mapCluster.Add(InternalConditionParameter.DesignLuxLevel, typeof(Space), "SAM_DesignLuxLevel");
+
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
 
             //File Names

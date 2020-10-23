@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 
 namespace SAM.Analytical.Revit
 {
@@ -51,6 +52,25 @@ namespace SAM.Analytical.Revit
             }
 
             return null;
+        }
+
+        public static FilteredElementCollector FilteredElementCollector(this Document document, PanelType panelType)
+        {
+            if (document == null || panelType == Analytical.PanelType.Undefined)
+                return null;
+
+            List<BuiltInCategory> builtInCategories = panelType.BuiltInCategories();
+            if (builtInCategories == null || builtInCategories.Count == 0)
+                return null;
+
+            builtInCategories.RemoveAll(x => x == Autodesk.Revit.DB.BuiltInCategory.INVALID);
+            if (builtInCategories.Count == 0)
+                return null;
+
+            if (builtInCategories.Count == 1)
+                return new FilteredElementCollector(document).OfCategory(builtInCategories[0]);
+
+            return new FilteredElementCollector(document).WherePasses(new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter)));
         }
     }
 }

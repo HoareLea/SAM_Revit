@@ -11,11 +11,11 @@ namespace SAM.Analytical.Revit
             if (construction_New == null || document == null || string.IsNullOrWhiteSpace(name_Old))
                 return null;
 
-            BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            if (builtInCategory == BuiltInCategory.INVALID)
+            FilteredElementCollector filteredElementCollector = Query.FilteredElementCollector(document, panelType);
+            if (filteredElementCollector == null)
                 return null;
 
-            List<ElementType> elementTypes = new FilteredElementCollector(document).OfClass(typeof(ElementType)).OfCategory(builtInCategory).Cast<ElementType>().ToList();
+            List<ElementType> elementTypes = filteredElementCollector.OfClass(typeof(ElementType)).Cast<ElementType>().ToList();
             if (elementTypes == null || elementTypes.Count == 0)
                 return null;
 

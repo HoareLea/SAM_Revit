@@ -187,6 +187,10 @@
       <Project>{33206e35-bc18-4ea3-9fb4-3473ef99f3be}</Project>
       <Name>SAM.Geometry.Revit</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj">
+      <Project>{44356aa4-67fe-4c4f-bf7d-8404ca7bcee1}</Project>
+      <Name>SAM.Units.Revit</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

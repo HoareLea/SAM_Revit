@@ -247,7 +247,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                     construction_New.SetDescription(construction.Name);
                 }
                     
-
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);
                 if (hostObjAttributes == null)
                 {
@@ -270,6 +269,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
 
                 Panel panel_New = new Panel(panel, construction_New);
+                if (panel_New.PanelType != panelType)
+                    panel_New = new Panel(panel_New, panelType);
+
                 List<Aperture> apertures = panel_New.Apertures;
                 if(apertures != null && apertures.Count != 0)
                 {                    

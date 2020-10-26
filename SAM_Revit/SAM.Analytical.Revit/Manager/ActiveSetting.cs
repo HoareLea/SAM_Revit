@@ -52,18 +52,28 @@ namespace SAM.Analytical.Revit
             //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementInternalShadows"); //bool
 
             //Construction
+            mapCluster.Add(ConstructionParameter.Color, typeof(FamilySymbol), "SAM_BuildingElementColor");
             mapCluster.Add(ConstructionParameter.DefaultPanelType, typeof(FamilySymbol), "SAM_BuildingElementType");
             mapCluster.Add(ConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
+            mapCluster.Add(typeof(Construction), typeof(FamilySymbol), "GetThickness", "SAM_BuildingElementThickness");
 
             //InternalCondition
-            mapCluster.Add(InternalConditionParameter.NumberOfPeople, typeof(Space), "SAM_NoPeople");
-            mapCluster.Add(InternalConditionParameter.OccupancyProfileName, typeof(Space), "SAM_OccupacyProfile");
-            mapCluster.Add(InternalConditionParameter.OccupantSensibleGain, typeof(Space), "SAM_OccupantSensGain");
-            mapCluster.Add(InternalConditionParameter.OccupantLatentGain, typeof(Space), "SAM_OccupantLatGain");
-            mapCluster.Add(InternalConditionParameter.EquipmentSensibleProfileName, typeof(Space), "SAM_SmallPowerSensProfile");
-            mapCluster.Add(InternalConditionParameter.EquipmentLatentProfileName, typeof(Space), "SAM_SmallPowerLatProfile");
-            mapCluster.Add(InternalConditionParameter.LightingGain, typeof(Space), "SAM_GenLightingGain");
-            mapCluster.Add(InternalConditionParameter.DesignLuxLevel, typeof(Space), "SAM_DesignLuxLevel");
+            mapCluster.Add(InternalConditionParameter.NumberOfPeople, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_NoPeople");
+            mapCluster.Add(InternalConditionParameter.OccupancyProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupacyProfile");
+            mapCluster.Add(InternalConditionParameter.OccupantSensibleGain, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantSensGain");
+            mapCluster.Add(InternalConditionParameter.OccupantLatentGain, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantLatGain");
+            mapCluster.Add(InternalConditionParameter.EquipmentSensibleProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SmallPowerSensProfile");
+            mapCluster.Add(InternalConditionParameter.EquipmentLatentProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SmallPowerLatProfile");
+            mapCluster.Add(InternalConditionParameter.LightingGain, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_GenLightingGain");
+            mapCluster.Add(InternalConditionParameter.DesignLuxLevel, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesignLuxLevel");
+
+            //Space
+            mapCluster.Add(SpaceParameter.Area, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Area");
+            mapCluster.Add(SpaceParameter.Volume, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Volume");
+            mapCluster.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
+
+            //GasMaterial
+            mapCluster.Add(MaterialParameter.Description, typeof(FamilyInstance), "SAM_Material_Description");
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, mapCluster);
 

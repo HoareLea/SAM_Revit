@@ -73,7 +73,10 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
 
             //Material
-            mapCluster.Add(MaterialParameter.Description, typeof(FamilyInstance), "SAM_Material_Description");
+            mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "ThermalConductivity", "SAM_Material_Conductivity");
+            mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "SpecificHeatCapacity", "SAM_Material_SpecificHeat");
+            mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Density", "SAM_Material_Density");
+            mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Description", "SAM_Material_Description");
             mapCluster.Add(MaterialParameter.DefaultThickness, typeof(FamilyInstance), "SAM_Material_Width");
             mapCluster.Add(MaterialParameter.VapourDiffusionFactor, typeof(FamilyInstance), "SAM_Material_VapourDiffusionFactor");
 

@@ -50,6 +50,7 @@ namespace SAM.Analytical.Revit
             //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementAir"); //bool
             //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementGround"); //bool
             //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementInternalShadows"); //bool
+            //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementFrameWidth"); //double
 
             //Construction
             mapCluster.Add(ConstructionParameter.Color, typeof(FamilySymbol), "SAM_BuildingElementColor");
@@ -72,11 +73,18 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(SpaceParameter.Volume, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Volume");
             mapCluster.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
 
+            //Panel
+            //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_NorthAngle"); //double
+            //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double
+            //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternalGlazing"); //double
+
             //Material
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "ThermalConductivity", "SAM_Material_Conductivity");
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "SpecificHeatCapacity", "SAM_Material_SpecificHeat");
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Density", "SAM_Material_Density");
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Description", "SAM_Material_Description");
+            mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Name", "SAM_Material_Name");
+            //mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), null, "SAM_Material_Type");
             mapCluster.Add(MaterialParameter.DefaultThickness, typeof(FamilyInstance), "SAM_Material_Width");
             mapCluster.Add(MaterialParameter.VapourDiffusionFactor, typeof(FamilyInstance), "SAM_Material_VapourDiffusionFactor");
 

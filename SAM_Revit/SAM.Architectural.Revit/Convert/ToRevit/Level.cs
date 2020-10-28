@@ -63,10 +63,10 @@ namespace SAM.Architectural.Revit
 
             if (convertSettings.ConvertParameters)
             {
-                Modify.Values(level, result);
-                Modify.Values(ActiveSetting.Setting, level, result);
+                Modify.SetValues(result, level);
+                Modify.SetValues(result, level, ActiveSetting.Setting);
 
-                Modify.Json(result, level.ToJObject()?.ToString());
+                Modify.SetJson(result, level.ToJObject()?.ToString());
             }
 
             convertSettings?.Add(level.Guid, result);

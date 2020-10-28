@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Electrical;
 using SAM.Core;
 using System.Reflection;
 
@@ -37,6 +38,9 @@ namespace SAM.Analytical.Revit
 
             MapCluster mapCluster = new MapCluster();
 
+            //AnalyticalModel
+            mapCluster.Add(AnalyticalModelParameter.NorthAngle, typeof(ProjectInfo), "SAM_NorthAngle");
+
             //Aperture
             mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "GetWidth", "SAM_BuildingElementWidth");
             mapCluster.Add(typeof(Aperture), typeof(FamilyInstance), "GetHeight", "SAM_BuildingElementHeight");
@@ -47,15 +51,17 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(ApertureConstructionParameter.DefaultPanelType, typeof(FamilySymbol), "SAM_BuildingElementType");
             mapCluster.Add(ApertureConstructionParameter.Transparent, typeof(FamilySymbol), "SAM_BuildingElementTransparent");
             mapCluster.Add(ApertureConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
-            //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementAir"); //bool
-            //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementGround"); //bool
-            //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementInternalShadows"); //bool
-            //mapCluster.Add(typeof(ApertureConstruction), typeof(FamilySymbol), null, "SAM_BuildingElementFrameWidth"); //double
+            mapCluster.Add(ApertureConstructionParameter.DefaultFrameWidth, typeof(FamilySymbol), "SAM_BuildingElementFrameWidth");
+            mapCluster.Add(ApertureConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
 
             //Construction
             mapCluster.Add(ConstructionParameter.Color, typeof(FamilySymbol), "SAM_BuildingElementColor");
             mapCluster.Add(ConstructionParameter.DefaultPanelType, typeof(FamilySymbol), "SAM_BuildingElementType");
             mapCluster.Add(ConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
+            mapCluster.Add(ConstructionParameter.IsAir, typeof(FamilySymbol), "SAM_BuildingElementAir");
+            mapCluster.Add(ConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
+            mapCluster.Add(ConstructionParameter.IsGround, typeof(FamilySymbol), "SAM_BuildingElementGround");
+            mapCluster.Add(ConstructionParameter.Transparent, typeof(FamilySymbol), "SAM_BuildingElementTransparent");
             mapCluster.Add(typeof(Construction), typeof(FamilySymbol), "GetThickness", "SAM_BuildingElementThickness");
 
             //InternalCondition
@@ -71,9 +77,12 @@ namespace SAM.Analytical.Revit
             //Space
             mapCluster.Add(SpaceParameter.Area, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Area");
             mapCluster.Add(SpaceParameter.Volume, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Volume");
+            mapCluster.Add(SpaceParameter.FacingExternal, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_FacingExternal");
+            mapCluster.Add(SpaceParameter.FacingExternalGlazing, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_FacingExternalGlazing");
             mapCluster.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
 
             //Panel
+            mapCluster.Add(PanelParameter.Transparent, typeof(HostObject), "SAM_BuildingElementTransparent");
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_NorthAngle"); //double
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternalGlazing"); //double
@@ -84,7 +93,7 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Density", "SAM_Material_Density");
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Description", "SAM_Material_Description");
             mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), "Name", "SAM_Material_Name");
-            //mapCluster.Add(typeof(Core.Material), typeof(FamilyInstance), null, "SAM_Material_Type");
+            mapCluster.Add(MaterialParameter.TypeName, typeof(FamilyInstance), "SAM_Material_Type");
             mapCluster.Add(MaterialParameter.DefaultThickness, typeof(FamilyInstance), "SAM_Material_Width");
             mapCluster.Add(MaterialParameter.VapourDiffusionFactor, typeof(FamilyInstance), "SAM_Material_VapourDiffusionFactor");
 

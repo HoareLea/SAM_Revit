@@ -6,7 +6,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool RemoveExisting(this ConvertSettings convertSettings, Autodesk.Revit.DB.Document document, SAMObject sAMObject)
+        public static bool RemoveExisting(this ConvertSettings convertSettings, Document document, SAMObject sAMObject)
         {
             if (convertSettings == null || document == null || sAMObject == null)
                 return false;

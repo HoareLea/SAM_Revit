@@ -37,10 +37,10 @@ namespace SAM.Analytical.Revit
 
             if (convertSettings.ConvertParameters)
             {
-                Core.Revit.Modify.Values(space, result);
-                Core.Revit.Modify.Values(ActiveSetting.Setting, space, result);
+                Core.Revit.Modify.SetValues(result, space);
+                Core.Revit.Modify.SetValues(result, space, ActiveSetting.Setting);
 
-                Core.Revit.Modify.Json(result, space.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, space.ToJObject()?.ToString());
             }
 
             convertSettings?.Add(space.Guid, result);

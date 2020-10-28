@@ -32,8 +32,8 @@ namespace SAM.Analytical.Revit
             if (elementType == null)
                 return null;
 
-            Core.Revit.Modify.Values(construction_Old, elementType);
-            Core.Revit.Modify.Values(ActiveSetting.Setting, construction_Old, elementType);
+            Core.Revit.Modify.SetValues(elementType, construction_Old);
+            Core.Revit.Modify.SetValues(elementType, construction_Old, ActiveSetting.Setting);
 
             return elementType;
         }

@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
@@ -40,7 +41,8 @@ namespace SAM.Analytical.Revit
                 return null;
 
             result = new Aperture(apertureConstruction, polygon3D, point3D_Location);
-            result.Add(Core.Revit.Query.ParameterSet(familyInstance));
+            result.UpdateParameterSets(familyInstance);
+            //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);
 
@@ -146,8 +148,8 @@ namespace SAM.Analytical.Revit
 
             //TODO: Working on SAM Families (requested by Michal)
 
-            string parameterName_Height = Analytical.Query.ParameterName_Height();
-            string parameterName_Width = Analytical.Query.ParameterName_Width();
+            string parameterName_Height = Core.Revit.Query.Name(ActiveSetting.Setting, typeof(Aperture), typeof(FamilyInstance), "GetHeight");
+            string parameterName_Width = Core.Revit.Query.Name(ActiveSetting.Setting, typeof(Aperture), typeof(FamilyInstance), "GetWidth");
             if (!string.IsNullOrWhiteSpace(parameterName_Height) && !string.IsNullOrWhiteSpace(parameterName_Width))
             {
                 Parameter parameter_Height = familyInstance.LookupParameter(parameterName_Height);
@@ -168,7 +170,8 @@ namespace SAM.Analytical.Revit
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
             result = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
-            result.Add(Core.Revit.Query.ParameterSet(familyInstance));
+            result.UpdateParameterSets(familyInstance);
+            //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(familyInstance.Id, result);
 

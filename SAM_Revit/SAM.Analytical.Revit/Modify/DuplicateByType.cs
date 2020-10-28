@@ -32,8 +32,8 @@ namespace SAM.Analytical.Revit
             if (elementType == null)
                 return null;
 
-            Core.Revit.Modify.Values(construction_New, elementType);
-            Core.Revit.Modify.Values(ActiveSetting.Setting, construction_New, elementType);
+            Core.Revit.Modify.SetValues(elementType, construction_New);
+            Core.Revit.Modify.SetValues(elementType, construction_New, ActiveSetting.Setting);
 
             return elementType;
         }
@@ -64,8 +64,8 @@ namespace SAM.Analytical.Revit
             if (elementType == null)
                 return null;
 
-            Core.Revit.Modify.Values(apertureConstruction_New, elementType);
-            Core.Revit.Modify.Values(ActiveSetting.Setting, apertureConstruction_New, elementType);
+            Core.Revit.Modify.SetValues(elementType, apertureConstruction_New);
+            Core.Revit.Modify.SetValues(elementType, apertureConstruction_New, ActiveSetting.Setting);
 
             return elementType;
         }

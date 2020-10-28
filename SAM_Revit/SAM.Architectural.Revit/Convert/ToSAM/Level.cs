@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core.Revit;
 
 namespace SAM.Architectural.Revit
 {
@@ -18,7 +19,8 @@ namespace SAM.Architectural.Revit
             double elevation = Query.Elevation(level);
 
             result = new Level(level.Name, elevation);
-            result.Add(Core.Revit.Query.ParameterSet(level));
+            result.UpdateParameterSets(level);
+            //result.Add(Core.Revit.Query.ParameterSet(level));
 
             convertSettings?.Add(level.Id, result);
 

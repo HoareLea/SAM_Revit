@@ -30,5 +30,28 @@ namespace SAM.Core.Revit
 
             return result;
         }
+
+        public static string Name(Setting setting, System.Type type_1, System.Type type_2, System.Enum @enum)
+        {
+            string name = @enum.Name();
+            if (name == null)
+                return null;
+
+            MapCluster mapCluster;
+            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+                return null;
+
+            return mapCluster.GetName(type_1, type_2, @enum);
+        }
+
+        public static string Name(Setting setting, SAMObject sAMObject, Element element, System.Enum @enum)
+        {
+            return Name(setting, sAMObject?.GetType(), element?.GetType(), @enum);
+        }
+
+        public static string Name(Setting setting, System.Type type_1, System.Type type_2, string name)
+        {
+            return Name(setting, type_1, type_2, name);
+        }
     }
 }

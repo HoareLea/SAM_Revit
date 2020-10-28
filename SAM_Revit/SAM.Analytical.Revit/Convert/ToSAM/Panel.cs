@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using SAM.Core;
+using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
@@ -75,7 +76,9 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            result.Add(Core.Revit.Query.ParameterSet(energyAnalysisSurface));
+            result.UpdateParameterSets(energyAnalysisSurface);
+
+            //result.Add(Core.Revit.Query.ParameterSet(energyAnalysisSurface));
 
             convertSettings?.Add(energyAnalysisSurface.Id, result);
 

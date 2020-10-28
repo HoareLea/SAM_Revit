@@ -1,7 +1,7 @@
 ﻿using SAM.Core.Attributes;
 using System.ComponentModel;
 
-namespace SAM.Core.Revit.Enums.Parameter
+namespace SAM.Core.Revit
 {
     [AssociatedTypes(typeof(SAMObject)), Description("Revit Element Parameter")]
     public enum ElementParameter

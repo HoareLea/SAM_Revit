@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
@@ -145,8 +146,9 @@ namespace SAM.Analytical.Revit
             }
 
             result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
-            Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
-            result.Add(parameterSet);
+            result.UpdateParameterSets(document.ProjectInformation);
+            //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
+            //result.Add(parameterSet);
 
             convertSettings?.Add(projectInfo.Id, result);
 

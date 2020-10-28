@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core.Revit;
 
 namespace SAM.Analytical.Revit
 {
@@ -23,8 +24,10 @@ namespace SAM.Analytical.Revit
                 result = new Construction(construction);
             else
                 result = new Construction(hostObjAttributes.Name);
+
+            result.UpdateParameterSets(hostObjAttributes);
             
-            result.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
+            //result.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
 
             convertSettings?.Add(hostObjAttributes.Id, result);
 

@@ -139,8 +139,8 @@ namespace SAM.Analytical.Revit
 
             if (convertSettings.ConvertParameters)
             {
-                Core.Revit.Modify.Values(aperture, result, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
-                Core.Revit.Modify.Values(ActiveSetting.Setting, aperture, result);
+                Core.Revit.Modify.SetValues(result, aperture, new BuiltInParameter[] { BuiltInParameter.INSTANCE_SILL_HEIGHT_PARAM, BuiltInParameter.INSTANCE_HEAD_HEIGHT_PARAM, BuiltInParameter.FAMILY_LEVEL_PARAM, BuiltInParameter.SCHEDULE_LEVEL_PARAM });
+                Core.Revit.Modify.SetValues(result, aperture, ActiveSetting.Setting);
 
                 bool simplified = false;
 
@@ -167,8 +167,8 @@ namespace SAM.Analytical.Revit
                     }
                 }
 
-                Core.Revit.Modify.Simplified(result, simplified);
-                Core.Revit.Modify.Json(result, aperture.ToJObject()?.ToString());
+                Core.Revit.Modify.SetSimplified(result, simplified);
+                Core.Revit.Modify.SetJson(result, aperture.ToJObject()?.ToString());
             }
 
             convertSettings?.Add(aperture.Guid, result);

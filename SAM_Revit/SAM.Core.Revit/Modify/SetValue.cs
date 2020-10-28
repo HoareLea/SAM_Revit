@@ -4,33 +4,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool Value(this Parameter parameter, object value)
-        {
-            if (parameter == null || parameter.IsReadOnly)
-                return false;
-
-            switch (parameter.StorageType)
-            {
-                case StorageType.Double:
-                    return Value_Double(parameter, value);
-
-                case StorageType.ElementId:
-                    return Value_ElementId(parameter, value);
-
-                case StorageType.Integer:
-                    return Value_Integer(parameter, value);
-
-                case StorageType.None:
-                    return Value_None(parameter, value);
-
-                case StorageType.String:
-                    return Value_String(parameter, value);
-            }
-
-            return false;
-        }
-
-        public static bool Value(this SAMObject sAMObject, Element element, string parameterName_SAMObject, string parameterName_Element)
+        public static bool SetValue(this Element element, string parameterName_Element, SAMObject sAMObject, string parameterName_SAMObject)
         {
             if (string.IsNullOrWhiteSpace(parameterName_SAMObject) || string.IsNullOrWhiteSpace(parameterName_Element) || sAMObject == null || element == null)
                 return false;
@@ -43,10 +17,36 @@ namespace SAM.Core.Revit
             if (!Core.Query.TryGetValue(sAMObject, parameterName_SAMObject, out value))
                 return false;
 
-            return Value(parameter, value);
+            return SetValue(parameter, value);
         }
 
-        private static bool Value_String(this Parameter parameter, object value)
+        public static bool SetValue(this Parameter parameter, object value)
+        {
+            if (parameter == null || parameter.IsReadOnly)
+                return false;
+
+            switch (parameter.StorageType)
+            {
+                case StorageType.Double:
+                    return SetValue_Double(parameter, value);
+
+                case StorageType.ElementId:
+                    return SetValue_ElementId(parameter, value);
+
+                case StorageType.Integer:
+                    return SetValue_Integer(parameter, value);
+
+                case StorageType.None:
+                    return SetValue_None(parameter, value);
+
+                case StorageType.String:
+                    return SetValue_String(parameter, value);
+            }
+
+            return false;
+        }
+        
+        private static bool SetValue_String(this Parameter parameter, object value)
         {
             if (parameter == null)
                 return false;
@@ -68,12 +68,12 @@ namespace SAM.Core.Revit
             return true;
         }
 
-        private static bool Value_None(this Parameter parameter, object value)
+        private static bool SetValue_None(this Parameter parameter, object value)
         {
             return false;
         }
 
-        private static bool Value_Integer(this Parameter parameter, object value)
+        private static bool SetValue_Integer(this Parameter parameter, object value)
         {
             if (parameter == null || value == null)
                 return false;
@@ -148,7 +148,7 @@ namespace SAM.Core.Revit
             return false;
         }
 
-        private static bool Value_ElementId(this Parameter parameter, object value)
+        private static bool SetValue_ElementId(this Parameter parameter, object value)
         {
             if (parameter == null)
                 return false;
@@ -182,7 +182,7 @@ namespace SAM.Core.Revit
             return false;
         }
 
-        private static bool Value_Double(this Parameter parameter, object value)
+        private static bool SetValue_Double(this Parameter parameter, object value)
         {
             if (parameter == null || value == null)
                 return false;

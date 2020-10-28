@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,8 @@ namespace SAM.Analytical.Revit
                     continue;
 
                 Panel panel = new Panel(construction, panelType, face3D);
-                panel.Add(Core.Revit.Query.ParameterSet(hostObject));
+                panel.UpdateParameterSets(hostObject);
+                //panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
                 if (elementIds != null && elementIds.Count() > 0)
                 {

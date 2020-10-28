@@ -1,4 +1,6 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +8,14 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool Values(this ParameterSet parameterSet, Element element, IEnumerable<string> parameterNames_Excluded = null)
+        /// <summary>
+        /// Sets Revit element parameters uisng values in given ParameterSet
+        /// </summary>
+        /// <param name="element">Revit Element</param>
+        /// <param name="parameterSet">SAM ParameterSet values will be teaken</param>
+        /// <param name="parameterNames_Excluded"> Parameter Names to be skipped</param>
+        /// <returns></returns>
+        public static bool SetValues(this Element element, ParameterSet parameterSet,  IEnumerable<string> parameterNames_Excluded = null)
         {
             if (parameterSet == null || element == null)
                 return false;
@@ -24,13 +33,13 @@ namespace SAM.Core.Revit
                     continue;
 
                 foreach (Parameter parameter in parameters)
-                    Value(parameter, parameterSet.ToObject(name));
+                    SetValue(parameter, parameterSet.ToObject(name));
             }
 
             return true;
         }
 
-        public static bool Values(this ParameterSet parameterSet, Element element, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
+        public static bool SetValues(this Element element, ParameterSet parameterSet, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
         {
             if (parameterSet == null || element == null)
                 return false;
@@ -53,36 +62,33 @@ namespace SAM.Core.Revit
                     if (Ids != null && Ids.Contains(parameter.Id.IntegerValue))
                         continue;
 
-                    Value(parameter, parameterSet.ToObject(name));
+                    SetValue(parameter, parameterSet.ToObject(name));
                 }
             }
 
             return true;
         }
 
-        public static bool Values(this Setting setting, SAMObject sAMObject, Element element)
+        public static bool SetValues(this Element element, SAMObject sAMObject, Setting setting)
         {
             if (element == null)
                 return false;
 
             MapCluster mapCluster;
-            if (setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster))
+            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+                return false;
+
+            List<string> names = mapCluster.GetNames(sAMObject.GetType(), element.GetType());
+            if (names != null || names.Count > 0)
             {
-                if (mapCluster != null)
-                {
-                    List<string> names = mapCluster.GetNames(sAMObject.GetType(), element.GetType());
-                    if (names != null || names.Count > 0)
-                    {
-                        foreach (string name in names)
-                            Value(sAMObject, element, name, mapCluster.GetName(sAMObject.GetType(), element.GetType(), name));
-                    }
-                }
+                foreach (string name in names)
+                    SetValue(element, mapCluster.GetName(sAMObject.GetType(), element.GetType(), name), sAMObject, name);
             }
 
             return true;
         }
 
-        public static bool Values(this SAMObject sAMObject, Element element, IEnumerable<string> parameterNames_Excluded = null)
+        public static bool SetValues(this Element element, SAMObject sAMObject,  IEnumerable<string> parameterNames_Excluded = null)
         {
             if (sAMObject == null || element == null)
                 return false;
@@ -91,25 +97,18 @@ namespace SAM.Core.Revit
             if(parameterSets != null && parameterSets.Count != 0)
             {
                 foreach (ParameterSet parameterSet in parameterSets)
-                    Values(parameterSet, element, parameterNames_Excluded);
+                    element.SetValues(parameterSet, parameterNames_Excluded);
             }
-
-            //ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
-            //if (parameterSet != null)
-            //{
-            //    if (!Values(parameterSet, element, parameterNames_Excluded))
-            //        return false;
-            //}
 
             Setting setting = ActiveSetting.Setting;
 
-            if (!Values(setting, sAMObject, element))
+            if (!element.SetValues(sAMObject, setting))
                 return false;
 
             return true;
         }
 
-        public static bool Values(this SAMObject sAMObject, Element element, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
+        public static bool SetValues(this Element element, SAMObject sAMObject, IEnumerable<BuiltInParameter> builtInParameters_Excluded)
         {
             if (sAMObject == null || element == null)
                 return false;
@@ -117,13 +116,13 @@ namespace SAM.Core.Revit
             ParameterSet parameterSet = sAMObject.GetParameterSet(element.GetType()?.Assembly);
             if (parameterSet != null)
             {
-                if (!Values(parameterSet, element, builtInParameters_Excluded))
+                if (!element.SetValues(parameterSet, builtInParameters_Excluded))
                     return false;
             }
 
             Setting setting = ActiveSetting.Setting;
 
-            if (!Values(setting, sAMObject, element))
+            if (!element.SetValues(sAMObject, setting))
                 return false;
 
             return true;

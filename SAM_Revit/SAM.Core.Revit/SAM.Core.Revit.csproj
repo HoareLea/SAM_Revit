@@ -148,10 +148,11 @@
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\RemoveExisting.cs" />
-    <Compile Include="Modify\Json.cs" />
-    <Compile Include="Modify\Simplified.cs" />
-    <Compile Include="Modify\Value.cs" />
-    <Compile Include="Modify\Values.cs" />
+    <Compile Include="Modify\SetJson.cs" />
+    <Compile Include="Modify\UpdateParameterSets.cs" />
+    <Compile Include="Modify\SetSimplified.cs" />
+    <Compile Include="Modify\SetValue.cs" />
+    <Compile Include="Modify\SetValues.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
     <Compile Include="Query\ClosestLevel.cs" />
     <Compile Include="Query\BoundingBoxXYZ.cs" />
@@ -172,7 +173,6 @@
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\Simplified.cs" />
     <Compile Include="Query\TryGetFamilyNameAndTypeName.cs" />
-    <Compile Include="Query\ParameterSet.cs" />
     <Compile Include="Query\FullName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Convert\ToRevit\ElementId.cs" />

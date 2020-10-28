@@ -130,7 +130,6 @@
     <Compile Include="Query\BoundingBox3D.cs" />
     <Compile Include="Query\Elements.cs" />
     <Compile Include="Query\Location.cs" />
-    <Compile Include="Query\FullName.cs" />
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />

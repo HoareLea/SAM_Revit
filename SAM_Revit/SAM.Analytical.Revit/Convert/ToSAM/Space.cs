@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 
@@ -7,7 +8,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Space ToSAM(this SpatialElement spatialElement, Core.Revit.ConvertSettings convertSettings)
+        public static Space ToSAM(this SpatialElement spatialElement, ConvertSettings convertSettings)
         {
             if (spatialElement == null)
                 return null;
@@ -26,9 +27,11 @@ namespace SAM.Analytical.Revit
                 name = spatialElement.Name;
 
             result = new Space(name, point3D);
-            Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(spatialElement);
-            parameterSet.Add(Analytical.Query.ParameterName_SpaceName(), name);
-            result.Add(parameterSet);
+            result.UpdateParameterSets(spatialElement);
+
+            //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(spatialElement);
+            //parameterSet.Add(Analytical.Query.ParameterName_SpaceName(), name);
+            //result.Add(parameterSet);
 
             convertSettings?.Add(spatialElement.Id, result);
 

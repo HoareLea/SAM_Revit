@@ -245,7 +245,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     construction_New = new Construction(construction, name_destination);
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
-                    construction_New.SetDescription(construction.Name);
                 }
                     
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);
@@ -331,7 +330,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                         {
                             apertureConstruction_New = new ApertureConstruction(apertureConstruction, name_destination);
                             apertureConstruction_New.SetValue(ApertureConstructionParameter.Description, apertureConstruction.Name);
-                            apertureConstruction_New.SetDescription(apertureConstruction.Name);
                         }
 
                         FamilySymbol familySymbol = Analytical.Revit.Convert.ToRevit(apertureConstruction_New, document, convertSettings);

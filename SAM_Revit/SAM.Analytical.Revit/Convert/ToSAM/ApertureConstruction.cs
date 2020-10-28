@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB;
-
+using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using System.Collections.Generic;
 
@@ -39,9 +39,12 @@ namespace SAM.Analytical.Revit
             if (result == null)
                 result = new ApertureConstruction(name, apertureType);
 
-            Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(familySymbol);
-            parameterSet.Add(Analytical.Query.ParameterName_Type(), Analytical.Query.Text(result.ApertureType));
-            result.Add(parameterSet);
+            result.UpdateParameterSets(familySymbol);
+
+            //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(familySymbol);
+            //parameterSet.Add(Analytical.Query.ParameterName_Type(), Analytical.Query.Text(result.ApertureType));
+            //result.Add(parameterSet);
+            //result.SetValue(AnalyticalParameter.TypeName, Analytical.Query.Text(result.ApertureType));
 
             convertSettings?.Add(familySymbol.Id, result);
 

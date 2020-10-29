@@ -19,7 +19,11 @@ namespace SAM.Core.Revit
 
             ParameterSet parameterSet = sAMObject.GetParameterSet(assembly);
             if(parameterSet == null)
+            {
                 parameterSet = new ParameterSet(assembly);
+                sAMObject.Add(parameterSet);
+            }
+                
 
             Type type_SAMObject = sAMObject.GetType();
             Type type_Element = element.GetType();
@@ -71,6 +75,21 @@ namespace SAM.Core.Revit
 
                             continue;                            
                         }
+                    }
+                }
+
+                if(value  == null)
+                {
+                    switch (parameter.StorageType)
+                    {
+                        case StorageType.ElementId:
+                            IntegerId integerId = null;
+                            parameterSet.Add(parameterName_Element, integerId);
+                            continue; ;
+                        default:
+                            string @string = null;
+                            parameterSet.Add(parameterName_Element, @string);
+                            continue;
                     }
                 }
 

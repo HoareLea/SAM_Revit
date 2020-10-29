@@ -32,7 +32,9 @@ namespace SAM.Analytical.Revit
             convertSettings?.Add(hostObjAttributes.Id, result);
 
             if (panelType != PanelType.Undefined)
-                result.SetPanelType(panelType);
+                result.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
+            else
+                result.SetValue(ConstructionParameter.DefaultPanelType, null);
 
             return result;
         }

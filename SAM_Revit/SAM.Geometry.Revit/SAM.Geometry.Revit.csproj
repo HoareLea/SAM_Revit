@@ -112,7 +112,8 @@
     <Reference Include="SAM.Geometry">
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
-    <Reference Include="SAM.Units">
+    <Reference Include="SAM.Units, Version=1.0.7607.16769, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Units.dll</HintPath>
     </Reference>
     <Reference Include="System" />

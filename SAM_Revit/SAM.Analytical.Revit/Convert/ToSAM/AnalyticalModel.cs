@@ -146,7 +146,7 @@ namespace SAM.Analytical.Revit
             }
 
             result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
-            result.UpdateParameterSets(document.ProjectInformation);
+            result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
             //result.Add(parameterSet);
 

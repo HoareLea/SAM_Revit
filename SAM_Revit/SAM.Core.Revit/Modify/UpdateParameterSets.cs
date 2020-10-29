@@ -8,7 +8,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static void UpdateParameterSets(this SAMObject sAMObject, Element element, IEnumerable<string> parameterNames_Excluded = null)
+        public static void UpdateParameterSets(this SAMObject sAMObject, Element element, MapCluster mapCluster, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (sAMObject == null || element == null)
                 return;
@@ -26,8 +26,8 @@ namespace SAM.Core.Revit
 
             List<Enum> enums = ActiveManager.GetParameterEnums(sAMObject);
 
-            MapCluster mapCluster;
-            ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster);
+            //MapCluster mapCluster;
+            //ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster);
 
             foreach (Parameter parameter in element.ParametersMap)
             {

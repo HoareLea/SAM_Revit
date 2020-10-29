@@ -39,7 +39,7 @@ namespace SAM.Analytical.Revit
             if (result == null)
                 result = new ApertureConstruction(name, apertureType);
 
-            result.UpdateParameterSets(familySymbol);
+            result.UpdateParameterSets(familySymbol, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(familySymbol);
             //parameterSet.Add(Analytical.Query.ParameterName_Type(), Analytical.Query.Text(result.ApertureType));

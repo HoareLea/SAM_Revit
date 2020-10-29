@@ -55,14 +55,14 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(ApertureConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
 
             //Construction
-            mapCluster.Add(ConstructionParameter.Color, typeof(FamilySymbol), "SAM_BuildingElementColor");
-            mapCluster.Add(ConstructionParameter.DefaultPanelType, typeof(FamilySymbol), "SAM_BuildingElementType");
-            mapCluster.Add(ConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
-            mapCluster.Add(ConstructionParameter.IsAir, typeof(FamilySymbol), "SAM_BuildingElementAir");
-            mapCluster.Add(ConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
-            mapCluster.Add(ConstructionParameter.IsGround, typeof(FamilySymbol), "SAM_BuildingElementGround");
-            mapCluster.Add(ConstructionParameter.Transparent, typeof(FamilySymbol), "SAM_BuildingElementTransparent");
-            mapCluster.Add(typeof(Construction), typeof(FamilySymbol), "GetThickness", "SAM_BuildingElementThickness");
+            mapCluster.Add(ConstructionParameter.Color, typeof(HostObjAttributes), "SAM_BuildingElementColor");
+            mapCluster.Add(ConstructionParameter.DefaultPanelType, typeof(HostObjAttributes), "SAM_BuildingElementType");
+            mapCluster.Add(ConstructionParameter.Description, typeof(HostObjAttributes), "SAM_BuildingElementDescription");
+            mapCluster.Add(ConstructionParameter.IsAir, typeof(HostObjAttributes), "SAM_BuildingElementAir");
+            mapCluster.Add(ConstructionParameter.IsInternalShadow, typeof(HostObjAttributes), "SAM_BuildingElementInternalShadows");
+            mapCluster.Add(ConstructionParameter.IsGround, typeof(HostObjAttributes), "SAM_BuildingElementGround");
+            mapCluster.Add(ConstructionParameter.Transparent, typeof(HostObjAttributes), "SAM_BuildingElementTransparent");
+            mapCluster.Add(typeof(Construction), typeof(HostObjAttributes), "GetThickness", "SAM_BuildingElementThickness");
 
             //InternalCondition
             mapCluster.Add(InternalConditionParameter.NumberOfPeople, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_NoPeople");

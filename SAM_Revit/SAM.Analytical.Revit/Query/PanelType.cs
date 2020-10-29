@@ -44,7 +44,7 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes == null)
                 return Analytical.PanelType.Undefined;
 
-            string parameterName_Type = Core.Revit.Query.Name(ActiveSetting.Setting, typeof(Construction), typeof(FamilySymbol), ConstructionParameter.DefaultPanelType);
+            string parameterName_Type = Core.Revit.Query.Name(ActiveSetting.Setting, typeof(Construction), typeof(HostObjAttributes), ConstructionParameter.DefaultPanelType);
             if (!string.IsNullOrWhiteSpace(parameterName_Type))
             {
                 IEnumerable<Parameter> parameters = hostObjAttributes.GetParameters(parameterName_Type);
@@ -57,7 +57,7 @@ namespace SAM.Analytical.Revit
                             string text = parameter.AsString();
                             if(!string.IsNullOrWhiteSpace(text))
                             {
-                                PanelType result = Analytical.Query.PanelType(text);
+                                PanelType result = Analytical.Query.PanelType(text, false);
                                 if (result != Analytical.PanelType.Undefined)
                                     return result;
                             }
@@ -66,7 +66,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            return Analytical.Query.PanelType(hostObjAttributes.Name);
+            return Analytical.Query.PanelType(hostObjAttributes.Name, true);
         }
 
         public static PanelType PanelType(this Construction construction)

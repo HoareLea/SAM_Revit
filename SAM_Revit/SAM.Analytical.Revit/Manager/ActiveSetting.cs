@@ -62,7 +62,7 @@ namespace SAM.Analytical.Revit
             mapCluster.Add(ConstructionParameter.IsInternalShadow, typeof(HostObjAttributes), "SAM_BuildingElementInternalShadows");
             mapCluster.Add(ConstructionParameter.IsGround, typeof(HostObjAttributes), "SAM_BuildingElementGround");
             mapCluster.Add(ConstructionParameter.Transparent, typeof(HostObjAttributes), "SAM_BuildingElementTransparent");
-            mapCluster.Add(typeof(Construction), typeof(HostObjAttributes), "GetThickness", "SAM_BuildingElementThickness");
+            mapCluster.Add(ConstructionParameter.DefaultThickness, typeof(HostObjAttributes), "SAM_BuildingElementThickness");
 
             //InternalCondition
             mapCluster.Add(InternalConditionParameter.NumberOfPeople, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_NoPeople");

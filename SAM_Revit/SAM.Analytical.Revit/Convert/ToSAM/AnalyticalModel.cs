@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using SAM.Core;
 using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using System;
@@ -145,7 +146,10 @@ namespace SAM.Analytical.Revit
 
             }
 
-            result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster);
+            IEnumerable<IMaterial> materials = Analytical.Query.Materials(adjacencyCluster, Analytical.Query.DefaultMaterialLibrary());
+            MaterialLibrary materialLibrary = Core.Create.MaterialLibrary("Default Material Library", materials);
+
+            result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster, materialLibrary);
             result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
             //result.Add(parameterSet);

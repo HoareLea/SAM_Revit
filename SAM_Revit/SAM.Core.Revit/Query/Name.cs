@@ -51,7 +51,14 @@ namespace SAM.Core.Revit
 
         public static string Name(Setting setting, System.Type type_1, System.Type type_2, string name)
         {
-            return Name(setting, type_1, type_2, name);
+            if (setting == null || type_1 == null || type_2 == null || name == null)
+                return null;
+            
+            MapCluster mapCluster;
+            if (!ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+                return null;
+
+            return mapCluster.GetName(type_1, type_2, name);
         }
     }
 }

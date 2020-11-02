@@ -150,28 +150,28 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            int index_Source = delimitedFileTable.GetIndex(sourceColumn);
+            int index_Source = delimitedFileTable.GetColumnIndex(sourceColumn);
             if (index_Source == -1)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            int index_Default = delimitedFileTable.GetIndex(defaultColumn);
+            int index_Default = delimitedFileTable.GetColumnIndex(defaultColumn);
             if (index_Default == -1)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            int index_Destination = delimitedFileTable.GetIndex(destinationColumn);
+            int index_Destination = delimitedFileTable.GetColumnIndex(destinationColumn);
             if (index_Destination == -1)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            int index_Type = delimitedFileTable.GetIndex(typeColumn);
+            int index_Type = delimitedFileTable.GetColumnIndex(typeColumn);
             if (index_Type == -1)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
@@ -204,7 +204,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 string name_default = null;
                 string name_source = null;
                 PanelType panelType = PanelType.Undefined;
-                for (int i = 0; i < delimitedFileTable.Count; i++)
+                for (int i = 0; i < delimitedFileTable.RowCount; i++)
                 {
                     string typeName = null;
                     if (delimitedFileTable.TryGetValue(i, index_Type, out typeName))
@@ -291,7 +291,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         name_default = null;
                         name_source = null;
                         ApertureType apertureType = ApertureType.Undefined;
-                        for (int i = 0; i < delimitedFileTable.Count; i++)
+                        for (int i = 0; i < delimitedFileTable.RowCount; i++)
                         {
                             string typeName = null;
                             if (!delimitedFileTable.TryGetValue(i, index_Type, out typeName))

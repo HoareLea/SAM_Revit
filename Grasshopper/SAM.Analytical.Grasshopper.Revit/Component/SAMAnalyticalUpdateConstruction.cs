@@ -245,6 +245,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     construction_New = new Construction(construction, name_destination);
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
+                    construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
                 }
                     
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);

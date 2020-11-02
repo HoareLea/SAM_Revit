@@ -29,7 +29,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdateConstruction()
           : base("SAMAnalytical.UpdateConstruction", "SAManalytical.UpdateConstruction",
-              "Modify Update Analytical Construction",
+              "Modify Update Analytical Construction from csv file heading column: Prefix, Name, Width, Function,SAM_BuildingElementType, template Family. New Name Family,SAM Types in Template ",
               "SAM", "Revit")
         {
         }
@@ -45,11 +45,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             index = inputParamManager.AddParameter(new GooApertureConstructionParam(), "apertureConstructions_", "apertureConstructions_", "SAM Analytical ApertureContructions", GH_ParamAccess.list);
             inputParamManager[index].Optional = true;
 
-            inputParamManager.AddTextParameter("_csv", "_csv", "csv", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_sourceColumn", "_sourceColumn", "Column with Source Name of Construction or ApertureConstruction", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_defaultColumn", "_defaultColumn", "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_destinationColumn", "_destinationColumn", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_typeColumn", "_typeColumn", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item);
+            inputParamManager.AddTextParameter("_csv", "_csv", "file path to csv", GH_ParamAccess.item);
+            inputParamManager.AddTextParameter("_sourceColumn_", "_sourceColumn_", "Column with Source Name of Construction or ApertureConstruction", GH_ParamAccess.item, "Name");
+            inputParamManager.AddTextParameter("_defaultColumn_", "_defaultColumn_", "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", GH_ParamAccess.item, "template Family");
+            inputParamManager.AddTextParameter("_destinationColumn_", "_destinationColumn_", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item, "New Name Family");
+            inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "SAM_BuildingElementType");
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 

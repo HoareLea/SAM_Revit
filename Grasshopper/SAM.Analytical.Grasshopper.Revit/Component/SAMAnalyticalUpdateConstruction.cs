@@ -4,6 +4,7 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -17,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -60,6 +61,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             
             outputParamManager.AddGenericParameter("Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
             outputParamManager.AddGenericParameter("Apertures", "Apertures", "SAM Analytical Apertures", GH_ParamAccess.list);
+
+            outputParamManager.AddParameter(new GooConstructionLibraryParam(), "ConstructionLibrary", "ConstructionLibrary", "SAM Analytical ConstructionLibrary", GH_ParamAccess.item);
+            outputParamManager.AddParameter(new GooApertureConstructionLibraryParam(), "ApertureConstructionLibrary", "ApertureConstructionLibrary", "SAM Analytical ApertureConstructionLibrary", GH_ParamAccess.item);
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
@@ -183,6 +187,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (convertSettings == null)
                 convertSettings = Core.Revit.Query.ConvertSettings();
 
+            ConstructionLibrary constructionLibrary = new ConstructionLibrary("Project ConstructionLibrary");
+            ApertureConstructionLibrary apertureConstructionLibrary = new ApertureConstructionLibrary("Project ApertureConstructionLibrary");
+
             List<Panel> panels_Result = new List<Panel>();
             List<Aperture> apertures_Result = new List<Aperture>();
             List<ElementType> elementTypes_Panels= new List<ElementType>();
@@ -247,6 +254,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
                     construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
                 }
+
+                Construction construction_Library = constructionLibrary.GetConstructions(construction_New.Name)?.FirstOrDefault();
+                if(construction_Library == null)
+                    constructionLibrary.Add(construction_Library);
                     
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);
                 if (hostObjAttributes == null)
@@ -333,6 +344,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                             apertureConstruction_New.SetValue(ApertureConstructionParameter.Description, apertureConstruction.Name);
                         }
 
+                        ApertureConstruction apertureConstruction_Library = apertureConstructionLibrary.GetApertureConstructions(apertureConstruction_New.Name)?.FirstOrDefault();
+                        if (apertureConstruction_Library == null)
+                            apertureConstructionLibrary.Add(apertureConstruction_Library);
+
                         FamilySymbol familySymbol = Analytical.Revit.Convert.ToRevit(apertureConstruction_New, document, convertSettings);
                         if(familySymbol == null)
                         {
@@ -372,6 +387,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             dataAccess.SetDataList(1, elementTypes_Apertures);
             dataAccess.SetDataList(2, panels_Result.ConvertAll(x => new GooPanel(x)));
             dataAccess.SetDataList(3, apertures_Result.ConvertAll(x => new GooAperture(x)));
+            dataAccess.SetData(4, new GooConstructionLibrary(constructionLibrary));
+            dataAccess.SetData(5, new GooApertureConstructionLibrary(apertureConstructionLibrary));
         }
     }
 }

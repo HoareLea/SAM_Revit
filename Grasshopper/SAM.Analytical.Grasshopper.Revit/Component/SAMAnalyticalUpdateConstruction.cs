@@ -350,10 +350,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                         if (apertureType == ApertureType.Undefined)
                             continue;
 
-                        ApertureConstruction apertureConstruction_New = apertureConstructionLibrary_Result.GetApertureConstructions(name_Destination)?.FirstOrDefault();
+                        ApertureConstruction apertureConstruction_New = apertureConstructionLibrary_Result.GetApertureConstructions(name_Destination, Core.TextComparisonType.Equals, true, apertureType)?.FirstOrDefault();
                         if (apertureConstruction_New == null)
                         {
-                            ApertureConstruction apertureConstruction_Temp = apertureConstructionLibrary.GetApertureConstructions(name_Template)?.FirstOrDefault();
+                            ApertureConstruction apertureConstruction_Temp = apertureConstructionLibrary.GetApertureConstructions(name_Template, Core.TextComparisonType.Equals, true, apertureType)?.FirstOrDefault();
                             if (apertureConstruction_Temp == null)
                                 continue;
 

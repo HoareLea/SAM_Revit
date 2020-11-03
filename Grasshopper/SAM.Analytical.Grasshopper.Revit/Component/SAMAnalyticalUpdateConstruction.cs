@@ -18,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -40,10 +40,10 @@ namespace SAM.Analytical.Grasshopper.Revit
             int index;
 
             inputParamManager.AddParameter(new GooPanelParam(), "_panels_", "_panels_", "SAM Analytical Panels", GH_ParamAccess.list);
-            index = inputParamManager.AddParameter(new GooConstructionParam(), "constructions_", "constructions_", "SAM Analytical Contructions", GH_ParamAccess.list);
+            index = inputParamManager.AddParameter(new GooConstructionLibraryParam(), "constructionLibrary_", "constructionLibrary_", "SAM Analytical ContructionLibrary", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
 
-            index = inputParamManager.AddParameter(new GooApertureConstructionParam(), "apertureConstructions_", "apertureConstructions_", "SAM Analytical ApertureContructions", GH_ParamAccess.list);
+            index = inputParamManager.AddParameter(new GooApertureConstructionLibraryParam(), "apertureConstructionLibrary_", "apertureConstructionLibrary_", "SAM Analytical ApertureContructionLibrary", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
 
             inputParamManager.AddTextParameter("_csv", "_csv", "file path to csv", GH_ParamAccess.item);
@@ -92,15 +92,15 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            List<Construction> constructions = new List<Construction>();
-            dataAccess.GetDataList(1, constructions);
-            if (constructions == null)
-                constructions = new List<Construction>();
+            ConstructionLibrary constructionLibrary = null;
+            dataAccess.GetData(1, ref constructionLibrary);
+            if (constructionLibrary == null)
+                constructionLibrary = Analytical.Query.DefaultConstructionLibrary();
 
-            List<ApertureConstruction> apertureConstructions = new List<ApertureConstruction>();
-            dataAccess.GetDataList(2, apertureConstructions);
-            if (apertureConstructions == null)
-                apertureConstructions = new List<ApertureConstruction>();
+            ApertureConstructionLibrary apertureConstructionLibrary = null;
+            dataAccess.GetData(2, ref apertureConstructionLibrary);
+            if (apertureConstructionLibrary == null)
+                apertureConstructionLibrary = Analytical.Query.DefaultApertureConstructionLibrary();
 
             string csvOrPath = null;
             if (!dataAccess.GetData(3, ref csvOrPath) || string.IsNullOrWhiteSpace(csvOrPath))
@@ -116,8 +116,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            string defaultColumn = null;
-            if (!dataAccess.GetData(5, ref defaultColumn) || string.IsNullOrWhiteSpace(defaultColumn))
+            string templateColumn = null;
+            if (!dataAccess.GetData(5, ref templateColumn) || string.IsNullOrWhiteSpace(templateColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -161,8 +161,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            int index_Default = delimitedFileTable.GetColumnIndex(defaultColumn);
-            if (index_Default == -1)
+            int index_Template = delimitedFileTable.GetColumnIndex(templateColumn);
+            if (index_Template == -1)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -187,8 +187,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (convertSettings == null)
                 convertSettings = Core.Revit.Query.ConvertSettings();
 
-            ConstructionLibrary constructionLibrary = new ConstructionLibrary("Project ConstructionLibrary");
-            ApertureConstructionLibrary apertureConstructionLibrary = new ApertureConstructionLibrary("Project ApertureConstructionLibrary");
+            ConstructionLibrary constructionLibrary_Result = new ConstructionLibrary(constructionLibrary.Name);
+            ApertureConstructionLibrary apertureConstructionLibrary_Result = new ApertureConstructionLibrary(apertureConstructionLibrary.Name);
 
             List<Panel> panels_Result = new List<Panel>();
             List<Aperture> apertures_Result = new List<Aperture>();
@@ -207,9 +207,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                     continue;
                 }
 
-                string name_destination = null;
-                string name_default = null;
-                string name_source = null;
+                string name_Destination = null;
+                string name_Template = null;
+                string name_Source = null;
                 PanelType panelType = PanelType.Undefined;
                 for (int i = 0; i < delimitedFileTable.RowCount; i++)
                 {
@@ -223,59 +223,68 @@ namespace SAM.Analytical.Grasshopper.Revit
                         panelType = Analytical.Query.PanelType(typeName as object);
                     }
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Source, out name_source))
+                    if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source))
                         continue;
 
-                    if (!name.Equals(name_source))
+                    if (!name.Equals(name_Source))
                         continue;
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Destination, out name_destination))
+                    if (!delimitedFileTable.TryGetValue(i, index_Destination, out name_Destination))
                     {
-                        name_destination = null;
+                        name_Destination = null;
                         continue;
                     }
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Default, out name_default))
-                        name_default = null;
+                    if (!delimitedFileTable.TryGetValue(i, index_Template, out name_Template))
+                        name_Template = null;
 
                     break;
                 }
 
-                if (string.IsNullOrWhiteSpace(name_destination))
+                if (string.IsNullOrWhiteSpace(name_Destination))
+                    name_Destination = name_Template;
+
+                if (string.IsNullOrWhiteSpace(name_Destination))
                     continue;
 
                 if (panelType == PanelType.Undefined)
                     panelType = panel.PanelType;
 
-                Construction construction_New = constructions.Find(x => x.Name == name_destination);
-                if (construction_New == null)
+                Construction construction_New = constructionLibrary_Result.GetConstructions(name_Destination)?.FirstOrDefault();
+                if(construction_New == null)
                 {
-                    construction_New = new Construction(construction, name_destination);
+                    Construction construction_Temp = constructionLibrary.GetConstructions(name_Template)?.FirstOrDefault();
+                    if (construction_Temp == null)
+                        continue;
+
+                    if (name_Destination.Equals(name_Template))
+                        construction_New = construction_Temp;
+                    else
+                        construction_New = new Construction(construction_Temp, name_Destination);
+
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
                     construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
-                }
 
-                Construction construction_Library = constructionLibrary.GetConstructions(construction_New.Name)?.FirstOrDefault();
-                if(construction_Library == null)
-                    constructionLibrary.Add(construction_New);
+                    constructionLibrary_Result.Add(construction_New);
+                }
                     
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);
                 if (hostObjAttributes == null)
                 {
-                    if (string.IsNullOrWhiteSpace(name_default))
+                    if (string.IsNullOrWhiteSpace(name_Template))
                     {
                         Construction construction_Default = Analytical.Query.DefaultConstruction(panelType);
                         if (construction_Default != null)
-                            name_default = construction_Default.Name;
+                            name_Template = construction_Default.Name;
                     }
 
-                    if (string.IsNullOrWhiteSpace(name_default))
+                    if (string.IsNullOrWhiteSpace(name_Template))
                         continue;
 
-                    hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, name_default, panelType, construction_New) as HostObjAttributes;
+                    hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, name_Template, panelType, construction_New) as HostObjAttributes;
                     if (hostObjAttributes == null)
                     {
-                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for panel ({2}). Element Type Name for: {0}, could not be assinged from {1}", name, name_default, panel.PanelType));
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for panel ({2}). Element Type Name for: {0}, could not be assinged from {1}", name, name_Template, panel.PanelType));
                         continue;
                     }
                 }
@@ -299,9 +308,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                         if (name == null)
                             continue;
 
-                        name_destination = null;
-                        name_default = null;
-                        name_source = null;
+                        name_Destination = null;
+                        name_Template = null;
+                        name_Source = null;
                         ApertureType apertureType = ApertureType.Undefined;
                         for (int i = 0; i < delimitedFileTable.RowCount; i++)
                         {
@@ -313,58 +322,68 @@ namespace SAM.Analytical.Grasshopper.Revit
                             if (apertureType == ApertureType.Undefined)
                                 continue;
 
-                            if (!delimitedFileTable.TryGetValue(i, index_Source, out name_source))
+                            if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source))
                                 continue;
 
-                            if (!name.Equals(name_source))
+                            if (!name.Equals(name_Source))
                                 continue;
 
-                            if (!delimitedFileTable.TryGetValue(i, index_Destination, out name_destination))
+                            if (!delimitedFileTable.TryGetValue(i, index_Destination, out name_Destination))
                             {
-                                name_destination = null;
+                                name_Destination = null;
                                 continue;
                             }
 
-                            if (!delimitedFileTable.TryGetValue(i, index_Default, out name_default))
-                                name_default = null;
+                            if (!delimitedFileTable.TryGetValue(i, index_Template, out name_Template))
+                                name_Template = null;
 
                             break;
                         }
 
-                        if (string.IsNullOrWhiteSpace(name_destination))
+
+                        if (string.IsNullOrWhiteSpace(name_Destination))
+                            name_Destination = name_Template;
+
+                        if (string.IsNullOrWhiteSpace(name_Destination))
                             continue;
 
                         if (apertureType == ApertureType.Undefined)
                             continue;
 
-                        ApertureConstruction apertureConstruction_New = apertureConstructions.Find(x => x.Name == name_destination);
+                        ApertureConstruction apertureConstruction_New = apertureConstructionLibrary_Result.GetApertureConstructions(name_Destination)?.FirstOrDefault();
                         if (apertureConstruction_New == null)
                         {
-                            apertureConstruction_New = new ApertureConstruction(apertureConstruction, name_destination);
-                            apertureConstruction_New.SetValue(ApertureConstructionParameter.Description, apertureConstruction.Name);
-                        }
+                            ApertureConstruction apertureConstruction_Temp = apertureConstructionLibrary.GetApertureConstructions(name_Template)?.FirstOrDefault();
+                            if (apertureConstruction_Temp == null)
+                                continue;
 
-                        ApertureConstruction apertureConstruction_Library = apertureConstructionLibrary.GetApertureConstructions(apertureConstruction_New.Name)?.FirstOrDefault();
-                        if (apertureConstruction_Library == null)
-                            apertureConstructionLibrary.Add(apertureConstruction_New);
+                            if (name_Destination.Equals(name_Template))
+                                apertureConstruction_New = apertureConstruction_Temp;
+                            else
+                                apertureConstruction_New = new ApertureConstruction(apertureConstruction_Temp, name_Destination);
+
+                            apertureConstruction_New.SetValue(ApertureConstructionParameter.Description, apertureConstruction.Name);
+
+                            apertureConstructionLibrary_Result.Add(apertureConstruction_New);
+                        }
 
                         FamilySymbol familySymbol = Analytical.Revit.Convert.ToRevit(apertureConstruction_New, document, convertSettings);
                         if(familySymbol == null)
                         {
-                            if (string.IsNullOrWhiteSpace(name_default))
+                            if (string.IsNullOrWhiteSpace(name_Template))
                             {
                                 ApertureConstruction apertureConstruction_Default = Analytical.Query.DefaultApertureConstruction(panelType, apertureType);
                                 if (apertureConstruction_Default != null)
-                                    name_default = apertureConstruction_Default.Name;
+                                    name_Template = apertureConstruction_Default.Name;
                             }
 
-                            if (string.IsNullOrWhiteSpace(name_default))
+                            if (string.IsNullOrWhiteSpace(name_Template))
                                 continue;
 
-                            familySymbol = Analytical.Revit.Modify.DuplicateByType(document, name_default, apertureConstruction_New) as FamilySymbol;
+                            familySymbol = Analytical.Revit.Modify.DuplicateByType(document, name_Template, apertureConstruction_New) as FamilySymbol;
                             if (familySymbol == null)
                             {
-                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for panel ({2}). Element Type Name for: {0}, could not be assinged from {1}", name, name_default, panel.PanelType));
+                                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for panel ({2}). Element Type Name for: {0}, could not be assinged from {1}", name, name_Template, panel.PanelType));
                                 continue;
                             }
                         }

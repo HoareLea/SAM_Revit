@@ -406,8 +406,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             dataAccess.SetDataList(1, elementTypes_Apertures);
             dataAccess.SetDataList(2, panels_Result.ConvertAll(x => new GooPanel(x)));
             dataAccess.SetDataList(3, apertures_Result.ConvertAll(x => new GooAperture(x)));
-            dataAccess.SetData(4, new GooConstructionLibrary(constructionLibrary));
-            dataAccess.SetData(5, new GooApertureConstructionLibrary(apertureConstructionLibrary));
+            dataAccess.SetData(4, new GooConstructionLibrary(constructionLibrary_Result));
+            dataAccess.SetData(5, new GooApertureConstructionLibrary(apertureConstructionLibrary_Result));
         }
     }
 }

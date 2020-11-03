@@ -257,7 +257,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Construction construction_Library = constructionLibrary.GetConstructions(construction_New.Name)?.FirstOrDefault();
                 if(construction_Library == null)
-                    constructionLibrary.Add(construction_Library);
+                    constructionLibrary.Add(construction_New);
                     
                 HostObjAttributes hostObjAttributes = Analytical.Revit.Convert.ToRevit(construction_New, document, panelType, panel.Normal, convertSettings);
                 if (hostObjAttributes == null)
@@ -346,7 +346,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                         ApertureConstruction apertureConstruction_Library = apertureConstructionLibrary.GetApertureConstructions(apertureConstruction_New.Name)?.FirstOrDefault();
                         if (apertureConstruction_Library == null)
-                            apertureConstructionLibrary.Add(apertureConstruction_Library);
+                            apertureConstructionLibrary.Add(apertureConstruction_New);
 
                         FamilySymbol familySymbol = Analytical.Revit.Convert.ToRevit(apertureConstruction_New, document, convertSettings);
                         if(familySymbol == null)

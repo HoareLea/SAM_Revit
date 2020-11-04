@@ -32,7 +32,7 @@ namespace SAM.Analytical.Revit
 
             ApertureType apertureType = familySymbol.ApertureType();
 
-            List<ApertureConstruction> apertureConstructions = Analytical.Query.DefaultApertureConstructionLibrary().GetApertureConstructions(apertureType);
+            List<ApertureConstruction> apertureConstructions = Analytical.ActiveSetting.Setting.GetValue<ApertureConstructionLibrary>(AnalyticalSettingParameter.DefaultApertureConstructionLibrary).GetApertureConstructions(apertureType);
             if (apertureConstructions != null)
                 result = apertureConstructions.Find(x => name.Equals(x.UniqueName()) || name.Equals(x.Name));
 

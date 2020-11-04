@@ -95,12 +95,12 @@ namespace SAM.Analytical.Grasshopper.Revit
             ConstructionLibrary constructionLibrary = null;
             dataAccess.GetData(1, ref constructionLibrary);
             if (constructionLibrary == null)
-                constructionLibrary = Analytical.Query.DefaultConstructionLibrary();
+                constructionLibrary = ActiveSetting.Setting.GetValue<ConstructionLibrary>(AnalyticalSettingParameter.DefaultConstructionLibrary);
 
             ApertureConstructionLibrary apertureConstructionLibrary = null;
             dataAccess.GetData(2, ref apertureConstructionLibrary);
             if (apertureConstructionLibrary == null)
-                apertureConstructionLibrary = Analytical.Query.DefaultApertureConstructionLibrary();
+                apertureConstructionLibrary = ActiveSetting.Setting.GetValue<ApertureConstructionLibrary>(AnalyticalSettingParameter.DefaultApertureConstructionLibrary);
 
             string csvOrPath = null;
             if (!dataAccess.GetData(3, ref csvOrPath) || string.IsNullOrWhiteSpace(csvOrPath))

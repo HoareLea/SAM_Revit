@@ -146,7 +146,7 @@ namespace SAM.Analytical.Revit
 
             }
 
-            IEnumerable<IMaterial> materials = Analytical.Query.Materials(adjacencyCluster, Analytical.Query.DefaultMaterialLibrary());
+            IEnumerable<IMaterial> materials = Analytical.Query.Materials(adjacencyCluster, Analytical.ActiveSetting.Setting.GetValue<MaterialLibrary>(AnalyticalSettingParameter.DefaultMaterialLibrary));
             MaterialLibrary materialLibrary = Core.Create.MaterialLibrary("Default Material Library", materials);
 
             result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster, materialLibrary);

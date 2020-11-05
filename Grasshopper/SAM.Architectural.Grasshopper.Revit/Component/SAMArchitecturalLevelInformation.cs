@@ -92,6 +92,14 @@ namespace SAM.Architectural.Grasshopper.Revit
                 }
                 level = document.GetElement(elementId) as Autodesk.Revit.DB.Level;
             }
+            else if(obj is GH_String)
+            {
+                string @string = ((GH_String)obj).Value;
+                if (@string.Length > 37)
+                    @string = @string.Substring(37);
+
+                level = document.GetElement(@string) as Autodesk.Revit.DB.Level;
+            }
             else if (obj.GetType().GetProperty("Id") != null)
             {
                 ElementId aId = obj.Id as ElementId;

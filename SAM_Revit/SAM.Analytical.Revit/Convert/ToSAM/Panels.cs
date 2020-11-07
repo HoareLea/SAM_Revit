@@ -86,15 +86,11 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, Core.Revit.ConvertSettings convertSettings)
+        public static List<Panel> ToSAM_Panels(this Document document, Core.Revit.ConvertSettings convertSettings)
         {
-            Document document_Source = revitLinkInstance.GetLinkDocument();
-
-            //LogicalOrFilter logicalOrFilter = new LogicalOrFilter((new List<System.Type> { typeof(Wall), typeof(Floor), typeof(RoofBase) }).ConvertAll(x => (ElementFilter)(new ElementClassFilter(x))));
-
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs }).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
 
-            IEnumerable<HostObject> hostObjects = new FilteredElementCollector(document_Source).WherePasses(logicalOrFilter).OfClass(typeof(HostObject)).WhereElementIsNotElementType().Cast<HostObject>();
+            IEnumerable<HostObject> hostObjects = new FilteredElementCollector(document).WherePasses(logicalOrFilter).OfClass(typeof(HostObject)).WhereElementIsNotElementType().Cast<HostObject>();
             if (hostObjects == null || hostObjects.Count() == 0)
                 return null;
 
@@ -107,6 +103,13 @@ namespace SAM.Analytical.Revit
             }
 
             return result;
+        }
+
+        public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, Core.Revit.ConvertSettings convertSettings)
+        {
+            Document document = revitLinkInstance.GetLinkDocument();
+
+            return ToSAM_Panels(document, convertSettings);
         }
     }
 }

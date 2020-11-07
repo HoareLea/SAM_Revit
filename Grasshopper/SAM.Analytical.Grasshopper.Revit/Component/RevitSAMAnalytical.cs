@@ -76,11 +76,36 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+            IEnumerable<Core.ISAMObject> sAMObjects = null;
+            string message = null;
+
             dynamic obj = objectWrapper.Value;
+            if(obj is RhinoInside.Revit.GH.Types.ProjectDocument)
+            {
+                Document document = ((RhinoInside.Revit.GH.Types.ProjectDocument)obj).Value;
+                List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels(document, convertSettings);
+                if (panels != null)
+                    sAMObjects = panels.Cast<Core.ISAMObject>();
+
+                if (sAMObjects == null || sAMObjects.Count() == 0)
+                {
+                    message = string.Format("Cannot convert Document.");
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+                    dataAccess.SetData(1, message);
+
+                    return;
+                }
+
+                dataAccess.SetDataList(0, sAMObjects);
+
+                message = string.Format("Document converted");
+                dataAccess.SetData(1, message);
+
+                return;
+            }
 
             ElementId aId = obj.Id as ElementId;
-
-            string message = null;
 
             Element element = (obj.Document as Document).GetElement(aId);
             if (element == null)
@@ -101,9 +126,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
-
-            IEnumerable<Core.ISAMObject> sAMObjects = null;
+            
             if (element is RevitLinkInstance)
             {
                 List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels((RevitLinkInstance)element, convertSettings);

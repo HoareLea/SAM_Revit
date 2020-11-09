@@ -84,16 +84,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Document document = level_GH.Document;
-
-            Level level = document.GetElement(level_GH.Value) as Level;
+            Level level = level_GH.Value;
             if (level == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Level referenceLevel = document.GetElement(referenceLevel_GH.Value) as Level;
+            Level referenceLevel = referenceLevel_GH.Value;
             if (level == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
@@ -102,6 +100,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
             double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, DisplayUnitType.DUT_METERS);
+
+            Document document = level.Document;
 
             IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
             if (walls_All == null || walls_All.Count() == 0)

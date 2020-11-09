@@ -66,7 +66,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (PreviousStructure is object)
             {
                 var unjoinedWalls = PreviousStructure.OfType<RhinoInside.Revit.GH.Types.Element>().
-                                    Select(x => document.GetElement(x)).
+                                    Select(x => x.Value).
                                     OfType<Wall>().
                                     Where(x => x.Pinned).
                                     Select

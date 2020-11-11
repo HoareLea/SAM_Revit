@@ -18,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.3";
+        public override string LatestComponentVersion => "1.0.4";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -51,6 +51,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             inputParamManager.AddTextParameter("_defaultColumn_", "_defaultColumn_", "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", GH_ParamAccess.item, "template Family");
             inputParamManager.AddTextParameter("_destinationColumn_", "_destinationColumn_", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item, "New Name Family");
             inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "SAM_BuildingElementType");
+            inputParamManager.AddTextParameter("_thicknessColumn_", "_thicknessColumn_", "Column with thickness for Construction or ApertureConstruction", GH_ParamAccess.item, "Width");
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
 
@@ -69,7 +70,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData<bool>(8, ref run))
+            if (!dataAccess.GetData(9, ref run))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 dataAccess.SetData(3, false);
@@ -137,6 +138,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            string thicknessColumn = null;
+            dataAccess.GetData(8, ref thicknessColumn);
+
             Core.DelimitedFileTable delimitedFileTable = null;
             if (Core.Query.ValidFilePath(csvOrPath))
             {
@@ -182,6 +186,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            int index_Thickness = -1;
+            if(string.IsNullOrWhiteSpace(thicknessColumn))
+                index_Thickness = delimitedFileTable.GetColumnIndex(thicknessColumn);
+
             Core.Revit.ConvertSettings convertSettings = null;
 
             if (convertSettings == null)
@@ -211,6 +219,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 string name_Template = null;
                 string name_Source = null;
                 PanelType panelType = PanelType.Undefined;
+                double thickness = double.NaN;
                 for (int i = 0; i < delimitedFileTable.RowCount; i++)
                 {
                     string typeName = null;
@@ -237,6 +246,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                     if (!delimitedFileTable.TryGetValue(i, index_Template, out name_Template))
                         name_Template = null;
+
+                    if (index_Thickness != -1)
+                    {
+                        if (!delimitedFileTable.TryGetValue(i, index_Thickness, out thickness))
+                            thickness = double.NaN;
+                    }
 
                     break;
                 }
@@ -265,6 +280,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
                     construction_New.RemoveValue(ConstructionParameter.DefaultPanelType);
                     //construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
+
+                    if(!double.IsNaN(thickness))
+                        construction_New.SetValue(ConstructionParameter.DefaultThickness, thickness);
 
                     constructionLibrary_Result.Add(construction_New);
                 }

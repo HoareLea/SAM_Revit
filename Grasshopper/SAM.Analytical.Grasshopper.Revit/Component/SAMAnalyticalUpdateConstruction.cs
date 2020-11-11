@@ -50,7 +50,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             inputParamManager.AddTextParameter("_sourceColumn_", "_sourceColumn_", "Column with Source Name of Construction or ApertureConstruction", GH_ParamAccess.item, "Name");
             inputParamManager.AddTextParameter("_defaultColumn_", "_defaultColumn_", "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", GH_ParamAccess.item, "template Family");
             inputParamManager.AddTextParameter("_destinationColumn_", "_destinationColumn_", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item, "New Name Family");
-            inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "SAM_BuildingElementType");
+            inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "Category Name");
             inputParamManager.AddTextParameter("_thicknessColumn_", "_thicknessColumn_", "Column with thickness for Construction or ApertureConstruction", GH_ParamAccess.item, "Width");
             inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
         }
@@ -187,7 +187,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             int index_Thickness = -1;
-            if(string.IsNullOrWhiteSpace(thicknessColumn))
+            if(!string.IsNullOrWhiteSpace(thicknessColumn))
                 index_Thickness = delimitedFileTable.GetColumnIndex(thicknessColumn);
 
             Core.Revit.ConvertSettings convertSettings = null;
@@ -249,7 +249,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                     if (index_Thickness != -1)
                     {
-                        if (!delimitedFileTable.TryGetValue(i, index_Thickness, out thickness))
+                        if (!delimitedFileTable.TryConvert(i, index_Thickness, out thickness))
                             thickness = double.NaN;
                     }
 

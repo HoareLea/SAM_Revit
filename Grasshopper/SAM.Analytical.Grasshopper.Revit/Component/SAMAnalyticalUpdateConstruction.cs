@@ -263,7 +263,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         construction_New = new Construction(construction_Temp, name_Destination);
 
                     construction_New.SetValue(ConstructionParameter.Description, construction.Name);
-                    construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
+                    //construction_New.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
 
                     constructionLibrary_Result.Add(construction_New);
                 }

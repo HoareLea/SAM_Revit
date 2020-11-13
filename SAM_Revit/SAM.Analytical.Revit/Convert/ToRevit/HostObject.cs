@@ -33,7 +33,21 @@ namespace SAM.Analytical.Revit
                     if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
                         continue;
 
-                    curveList.AddRange(Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves()).ConvertAll(x => x.ToRevit_Line()));
+                    List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
+                    if (curve3Ds == null)
+                        continue;
+
+                    List<Geometry.Spatial.Segment3D> segment3Ds = curve3Ds.ConvertAll(x => x as Geometry.Spatial.Segment3D);
+                    if (segment3Ds.Contains(null))
+                        continue;
+
+                    Geometry.Spatial.Plane plane = closedPlanar3D.GetPlane();
+                    List<Geometry.Planar.Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(x));
+                    segment2Ds.RemoveAll(x => x.GetLength() <= Core.Tolerance.Distance);
+                    Geometry.Planar.Query.SimplifyBySAM_Angle(segment2Ds);
+                    Geometry.Planar.Modify.Snap(segment2Ds);
+
+                    curveList.AddRange(segment2Ds.ConvertAll(x => plane.Convert(x).ToRevit_Line()));
                 }
 
                 if (curveList == null || curveList.Count == 0)

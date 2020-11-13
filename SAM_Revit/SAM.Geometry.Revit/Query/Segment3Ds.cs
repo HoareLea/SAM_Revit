@@ -29,7 +29,7 @@ namespace SAM.Geometry.Revit
             segment2Ds.RemoveAll(x => x.GetLength() <= tolerance_Distance);
 
             Planar.Query.SimplifyBySAM_Angle(segment2Ds, tolerance_Distance, tolerance_Angle);
-            Planar.Modify.Snap(segment2Ds);
+            segment2Ds = Planar.Query.Snap(segment2Ds);
 
             return segment2Ds.ConvertAll(x => plane.Convert(x));
         }

@@ -30,24 +30,11 @@ namespace SAM.Analytical.Revit
                 List<Curve> curveList = new List<Curve>();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
                 {
-                    if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
+                    List<Line> lines = closedPlanar3D.ToRevit();
+                    if (lines == null)
                         continue;
 
-                    List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
-                    if (curve3Ds == null)
-                        continue;
-
-                    List<Geometry.Spatial.Segment3D> segment3Ds = curve3Ds.ConvertAll(x => x as Geometry.Spatial.Segment3D);
-                    if (segment3Ds.Contains(null))
-                        continue;
-
-                    Geometry.Spatial.Plane plane = closedPlanar3D.GetPlane();
-                    List<Geometry.Planar.Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(x));
-                    segment2Ds.RemoveAll(x => x.GetLength() <= Core.Tolerance.Distance);
-                    Geometry.Planar.Query.SimplifyBySAM_Angle(segment2Ds);
-                    Geometry.Planar.Modify.Snap(segment2Ds);
-
-                    curveList.AddRange(segment2Ds.ConvertAll(x => plane.Convert(x).ToRevit_Line()));
+                    curveList.AddRange(lines);
                 }
 
                 if (curveList == null || curveList.Count == 0)
@@ -103,19 +90,19 @@ namespace SAM.Analytical.Revit
                 if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
                     return null;
 
-                List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
-                if (curve3Ds == null || curve3Ds.Count == 0)
+                List<Geometry.Spatial.Segment3D> segment3Ds = Geometry.Revit.Query.Segment3Ds(closedPlanar3D);
+                if (segment3Ds == null || segment3Ds.Count == 0)
                     return null;
 
-                foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
+                foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
                 {
-                    curveArray_Sloped.Append(curve3D.ToRevit_Line());
+                    curveArray_Sloped.Append(segment3D.ToRevit_Line());
 
-                    Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
-                    if (curve3D_Temp == null)
+                    Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                    if (segment3D_Temp == null)
                         continue;
 
-                    curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
+                    curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
                 }
 
                 Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
@@ -133,16 +120,20 @@ namespace SAM.Analytical.Revit
 
                         foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdge3Ds())
                         {
-                            curveArray_Plane = new CurveArray();
-                            foreach (Geometry.Spatial.ICurve3D curve3D in Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D_Internal).GetCurves()))
-                            {
-                                curveArray_Sloped.Append(curve3D.ToRevit_Line());
+                            List<Geometry.Spatial.Segment3D> segment3Ds_Internal = Geometry.Revit.Query.Segment3Ds(closedPlanar3D_Internal);
+                            if (segment3Ds_Internal == null || segment3Ds_Internal.Count == 0)
+                                continue;
 
-                                Geometry.Spatial.ICurve3D curve3D_Temp = plane.Project(curve3D);
-                                if (curve3D_Temp == null)
+                            curveArray_Plane = new CurveArray();
+                            foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
+                            {
+                                curveArray_Sloped.Append(segment3D.ToRevit_Line());
+
+                                Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                                if (segment3D_Temp == null)
                                     continue;
 
-                                curveArray_Plane.Append(curve3D_Temp.ToRevit_Line());
+                                curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
                             }
 
                             Opening opening = document.Create.NewOpening(floor, curveArray_Plane, true);
@@ -172,15 +163,11 @@ namespace SAM.Analytical.Revit
                 CurveArray curveArray = new CurveArray();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
                 {
-                    if (!(closedPlanar3D is Geometry.Spatial.ICurvable3D))
-                        continue;
+                    List<Geometry.Spatial.Segment3D> segment3Ds = Geometry.Revit.Query.Segment3Ds(closedPlanar3D);
+                    if (segment3Ds == null || segment3Ds.Count == 0)
+                        return null;
 
-                    List<Geometry.Spatial.ICurve3D> curve3Ds = Geometry.Spatial.Query.Explode(((Geometry.Spatial.ICurvable3D)closedPlanar3D).GetCurves());
-                    if (curve3Ds == null || curve3Ds.Count == 0)
-                        continue;
-
-                    foreach (Geometry.Spatial.ICurve3D curve3D in curve3Ds)
-                        curveArray.Append(curve3D.ToRevit_Line());
+                    segment3Ds.ForEach(x => curveArray.Append(x.ToRevit_Line()));
                 }
 
                 Level level = document.HighLevel(panel.LowElevation());

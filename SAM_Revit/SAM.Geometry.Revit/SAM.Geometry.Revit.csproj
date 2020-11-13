@@ -126,6 +126,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToSAM\Shell.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
     <Compile Include="Query\BoundingBox3D.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />
+    <Compile Include="Query\Segment3Ds.cs" />
     <Compile Include="Query\TopProfiles.cs" />
     <Compile Include="Query\Profiles.cs" />
     <Compile Include="Convert\ToRevit\Line.cs" />

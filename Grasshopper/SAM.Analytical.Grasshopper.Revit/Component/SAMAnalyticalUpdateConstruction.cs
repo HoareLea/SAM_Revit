@@ -52,7 +52,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             inputParamManager.AddTextParameter("_destinationColumn_", "_destinationColumn_", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item, "New Name Family");
             inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "Category Name");
             inputParamManager.AddTextParameter("_thicknessColumn_", "_thicknessColumn_", "Column with thickness for Construction or ApertureConstruction", GH_ParamAccess.item, "Width");
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)

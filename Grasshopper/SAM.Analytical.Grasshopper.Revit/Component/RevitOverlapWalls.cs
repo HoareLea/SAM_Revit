@@ -49,7 +49,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             hostObject.Optional = true;
 
             inputParamManager.AddParameter(hostObject, "walls_", "walls_", "Revit Walls", GH_ParamAccess.list);
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>

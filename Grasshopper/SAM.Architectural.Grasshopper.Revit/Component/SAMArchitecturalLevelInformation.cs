@@ -17,7 +17,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -29,7 +29,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         public SAMArchitecturalLevelInformation()
           : base("SAMArchitectural.LevelInformation", "SAMCore.LevelInformation",
-              "Query Level Information",
+              "Query Revit Level Information *use Level Picker Node",
               "SAM", "Architectural")
         {
         }
@@ -39,7 +39,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("Level", "L", "New Level", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_level", "_level", "Revit Level", GH_ParamAccess.item);
         }
 
         /// <summary>

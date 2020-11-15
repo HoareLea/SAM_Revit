@@ -43,7 +43,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             inputParamManager.AddGenericParameter("_space", "_space", "Revit Space Instance", GH_ParamAccess.item);
             inputParamManager.AddBooleanParameter("_merge_", "_merge_", "Merge Coplanar Panels", GH_ParamAccess.item, true);
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>

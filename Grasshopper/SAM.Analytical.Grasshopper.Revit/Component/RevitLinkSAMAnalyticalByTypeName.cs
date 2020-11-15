@@ -50,7 +50,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             index = inputParamManager.AddGenericParameter("_revitLinkInstance", "_revitLinkInstance", "RevitLinkInstance", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
 
-            inputParamManager.AddBooleanParameter("_run", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>

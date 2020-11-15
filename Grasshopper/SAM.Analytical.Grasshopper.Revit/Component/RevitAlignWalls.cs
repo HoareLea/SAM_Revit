@@ -49,7 +49,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "_level", "_level", "Revit Level", GH_ParamAccess.item);
             inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "_referenceLevel", "_refLvl", "Revit Reference Level", GH_ParamAccess.item);
             inputParamManager.AddNumberParameter("_maxDistance", "_max", "Max Distance", GH_ParamAccess.item, 0.2);
-            inputParamManager.AddBooleanParameter("_run_", "_run_", "Run", GH_ParamAccess.item, false);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>

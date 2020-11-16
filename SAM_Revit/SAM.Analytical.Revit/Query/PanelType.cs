@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using SAM.Core;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -91,6 +90,27 @@ namespace SAM.Analytical.Revit
                 result = panelType_Temp;
 
             return result;
+        }
+
+        public static PanelType PanelType(this Geometry.Spatial.Vector3D normal)
+        {
+            if (normal == null)
+                return Analytical.PanelType.Undefined;
+
+            double value;
+
+            value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldZ);
+            if (System.Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
+                return Analytical.PanelType.Wall;
+
+            if(value < 0)
+            {
+                value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
+                if (System.Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
+                    return Analytical.PanelType.Floor;
+            }
+
+            return Analytical.PanelType.Roof;
         }
     }
 }

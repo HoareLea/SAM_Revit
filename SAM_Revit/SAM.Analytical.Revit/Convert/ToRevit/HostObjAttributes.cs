@@ -71,5 +71,13 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
+    
+        public static HostObjAttributes ToRevit_HostObjAttributes(this Panel panel, Document document, Core.Revit.ConvertSettings convertSettings)
+        {
+            if (panel == null || document == null)
+                return null;
+
+            return ToRevit(panel.Construction, document, panel.PanelType, panel.Normal, convertSettings);
+        }
     }
 }

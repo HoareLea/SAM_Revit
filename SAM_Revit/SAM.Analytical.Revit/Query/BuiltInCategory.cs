@@ -16,7 +16,7 @@ namespace SAM.Analytical.Revit
 
         public static BuiltInCategory BuiltInCategory(this Geometry.Spatial.Vector3D normal)
         {
-            PanelType panelType = Analytical.Query.PanelType(normal, Core.Tolerance.MacroDistance);
+            PanelType panelType = Analytical.Query.PanelType(normal, Core.Revit.Tolerance.WallTilt);
             if (panelType == Analytical.PanelType.Undefined)
                 return Autodesk.Revit.DB.BuiltInCategory.INVALID;
 

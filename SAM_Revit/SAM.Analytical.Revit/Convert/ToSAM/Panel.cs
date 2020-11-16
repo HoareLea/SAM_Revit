@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
-using SAM.Core;
 using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
@@ -11,7 +10,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, Core.Revit.ConvertSettings convertSettings, Shell shell = null, double silverSpacing = Tolerance.MacroDistance, double tolerance = Tolerance.Distance)
+        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, Core.Revit.ConvertSettings convertSettings, Shell shell = null, double silverSpacing = Core.Tolerance.MacroDistance, double tolerance = Core.Tolerance.Distance)
         {
             if (energyAnalysisSurface == null)
                 return null;

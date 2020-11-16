@@ -146,12 +146,15 @@ namespace SAM.Analytical.Revit
                     document.Regenerate();
 
                     SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
-                    slabShapeEditor.ResetSlabShape();
-
-                    foreach (Curve curve in curveArray_Sloped)
+                    if (slabShapeEditor != null)
                     {
-                        XYZ xYZ = curve.GetEndPoint(0);
-                        slabShapeEditor.DrawPoint(xYZ);
+                        slabShapeEditor.ResetSlabShape();
+
+                        foreach (Curve curve in curveArray_Sloped)
+                        {
+                            XYZ xYZ = curve.GetEndPoint(0);
+                            slabShapeEditor.DrawPoint(xYZ);
+                        }
                     }
                 }
 
@@ -181,13 +184,16 @@ namespace SAM.Analytical.Revit
                     parameter.Set(ElementId.InvalidElementId);
 
                 SlabShapeEditor slabShapeEditor = roofBase.SlabShapeEditor;
-                slabShapeEditor.ResetSlabShape();
-
-                foreach (Curve curve in curveArray)
+                if(slabShapeEditor != null)
                 {
-                    XYZ xYZ = curve.GetEndPoint(0);
-                    //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
-                    slabShapeEditor.DrawPoint(xYZ);
+                    slabShapeEditor.ResetSlabShape();
+
+                    foreach (Curve curve in curveArray)
+                    {
+                        XYZ xYZ = curve.GetEndPoint(0);
+                        //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
+                        slabShapeEditor.DrawPoint(xYZ);
+                    }
                 }
 
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM, BuiltInParameter.ROOF_BASE_LEVEL_PARAM, BuiltInParameter.ROOF_UPTO_LEVEL_PARAM };

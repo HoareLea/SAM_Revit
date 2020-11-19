@@ -74,15 +74,15 @@ namespace SAM.Core.Revit
             if (element == null)
                 return false;
 
-            MapCluster mapCluster;
-            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+            TypeMap typeMap;
+            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return false;
 
-            List<string> names = mapCluster.GetNames(sAMObject.GetType(), element.GetType());
+            List<string> names = typeMap.GetNames(sAMObject.GetType(), element.GetType());
             if (names != null || names.Count > 0)
             {
                 foreach (string name in names)
-                    SetValue(element, mapCluster.GetName(sAMObject.GetType(), element.GetType(), name), sAMObject, name);
+                    SetValue(element, typeMap.GetName(sAMObject.GetType(), element.GetType(), name), sAMObject, name);
             }
 
             return true;

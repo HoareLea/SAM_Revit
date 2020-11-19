@@ -41,7 +41,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             result = new Aperture(apertureConstruction, polygon3D, point3D_Location);
-            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);
@@ -170,7 +170,7 @@ namespace SAM.Analytical.Revit
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
             result = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
-            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(familyInstance.Id, result);

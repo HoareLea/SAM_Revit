@@ -37,11 +37,11 @@ namespace SAM.Core.Revit
             if (name == null)
                 return null;
 
-            MapCluster mapCluster;
-            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+            TypeMap typeMap;
+            if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return null;
 
-            return mapCluster.GetName(type_1, type_2, @enum);
+            return typeMap.GetName(type_1, type_2, @enum);
         }
 
         public static string Name(Setting setting, SAMObject sAMObject, Element element, System.Enum @enum)
@@ -54,11 +54,11 @@ namespace SAM.Core.Revit
             if (setting == null || type_1 == null || type_2 == null || name == null)
                 return null;
             
-            MapCluster mapCluster;
-            if (!ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+            TypeMap typeMap;
+            if (!ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return null;
 
-            return mapCluster.GetName(type_1, type_2, name);
+            return typeMap.GetName(type_1, type_2, name);
         }
     }
 }

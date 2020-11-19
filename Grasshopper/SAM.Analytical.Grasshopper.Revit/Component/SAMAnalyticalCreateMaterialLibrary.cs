@@ -89,32 +89,32 @@ namespace SAM.Analytical.Grasshopper.Revit
             string name = null;
             dataAccess.GetData(1, ref name);
 
-            MapCluster mapCluster;
-            if (!ActiveSetting.Setting.TryGetValue(Core.Revit.ActiveSetting.Name.ParameterMap, out mapCluster) || mapCluster == null)
+            TypeMap typeMap;
+            if (!ActiveSetting.Setting.TryGetValue(Core.Revit.ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            string parameterName_Type = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.TypeName);
-            string parameterName_Name = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Name");
-            string parameterName_MaterialDescription = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.Description);
-            string parameterName_DefaultThickness = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.DefaultThickness);
-            string parameterName_ThermalConductivity = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "ThermalConductivity");
-            string parameterName_SpecificHeatCapacity = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "SpecificHeatCapacity");
-            string parameterName_Density = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Density");
-            string parameterName_VapourDiffusionFactor = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.VapourDiffusionFactor);
-            string parameterName_ExternalSolarReflectance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalSolarReflectance);
-            string parameterName_InternalSolarReflectance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalSolarReflectance);
-            string parameterName_ExternalLightReflectance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalLightReflectance);
-            string parameterName_InternalLightReflectance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalLightReflectance);
-            string parameterName_ExternalEmissivity = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalEmissivity);
-            string parameterName_InternalEmissivity = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalEmissivity);
-            string parameterName_IgnoreThermalTransmittanceCalculations = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), OpaqueMaterialParameter.IgnoreThermalTransmittanceCalculations);
-            string parameterName_SolarTransmittance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.SolarTransmittance);
-            string parameterName_LightTransmittance = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.LightTransmittance);
-            string parameterName_IsBlind = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.IsBlind);
-            string parameterName_HeatTransferCoefficient = mapCluster.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), GasMaterialParameter.HeatTransferCoefficient);
+            string parameterName_Type = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.TypeName);
+            string parameterName_Name = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Name");
+            string parameterName_MaterialDescription = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.Description);
+            string parameterName_DefaultThickness = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.DefaultThickness);
+            string parameterName_ThermalConductivity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "ThermalConductivity");
+            string parameterName_SpecificHeatCapacity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "SpecificHeatCapacity");
+            string parameterName_Density = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Density");
+            string parameterName_VapourDiffusionFactor = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.VapourDiffusionFactor);
+            string parameterName_ExternalSolarReflectance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalSolarReflectance);
+            string parameterName_InternalSolarReflectance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalSolarReflectance);
+            string parameterName_ExternalLightReflectance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalLightReflectance);
+            string parameterName_InternalLightReflectance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalLightReflectance);
+            string parameterName_ExternalEmissivity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.ExternalEmissivity);
+            string parameterName_InternalEmissivity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.InternalEmissivity);
+            string parameterName_IgnoreThermalTransmittanceCalculations = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), OpaqueMaterialParameter.IgnoreThermalTransmittanceCalculations);
+            string parameterName_SolarTransmittance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.SolarTransmittance);
+            string parameterName_LightTransmittance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.LightTransmittance);
+            string parameterName_IsBlind = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.IsBlind);
+            string parameterName_HeatTransferCoefficient = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), GasMaterialParameter.HeatTransferCoefficient);
             
             MaterialLibrary result = Create.MaterialLibrary(
                 path,

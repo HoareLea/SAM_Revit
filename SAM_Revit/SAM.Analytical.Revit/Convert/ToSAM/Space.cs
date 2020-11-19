@@ -27,7 +27,7 @@ namespace SAM.Analytical.Revit
                 name = spatialElement.Name;
 
             result = new Space(name, point3D);
-            result.UpdateParameterSets(spatialElement, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(spatialElement, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(spatialElement);
             //parameterSet.Add(Analytical.Query.ParameterName_SpaceName(), name);

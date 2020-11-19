@@ -8,7 +8,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static void UpdateParameterSets(this SAMObject sAMObject, Element element, MapCluster mapCluster, IEnumerable<string> parameterNames_Excluded = null)
+        public static void UpdateParameterSets(this SAMObject sAMObject, Element element, TypeMap typeMap, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (sAMObject == null || element == null)
                 return;
@@ -62,9 +62,9 @@ namespace SAM.Core.Revit
                         break;
                 }
 
-                if (mapCluster != null)
+                if (typeMap != null)
                 {
-                    string parametrName_SAMObject = mapCluster.GetName(type_SAMObject, type_Element, parameterName_Element, 1);
+                    string parametrName_SAMObject = typeMap.GetName(type_SAMObject, type_Element, parameterName_Element, 1);
                     if (!string.IsNullOrWhiteSpace(parametrName_SAMObject))
                     {
                         List<Enum> enums_Temp = enums.FindAll(x => x.Name() == parametrName_SAMObject);

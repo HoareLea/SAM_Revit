@@ -19,7 +19,7 @@ namespace SAM.Architectural.Revit
             double elevation = Query.Elevation(level);
 
             result = new Level(level.Name, elevation);
-            result.UpdateParameterSets(level, ActiveSetting.Setting.GetValue<Core.MapCluster>(ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(level, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
             //result.Add(Core.Revit.Query.ParameterSet(level));
 
             convertSettings?.Add(level.Id, result);

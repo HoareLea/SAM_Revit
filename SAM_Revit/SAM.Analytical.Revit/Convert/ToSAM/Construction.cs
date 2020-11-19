@@ -25,7 +25,7 @@ namespace SAM.Analytical.Revit
             else
                 result = new Construction(hostObjAttributes.Name);
 
-            result.UpdateParameterSets(hostObjAttributes, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(hostObjAttributes, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             
             //result.Add(Core.Revit.Query.ParameterSet(hostObjAttributes));
 

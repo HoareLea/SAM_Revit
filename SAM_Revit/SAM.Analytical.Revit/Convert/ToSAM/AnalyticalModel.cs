@@ -150,7 +150,7 @@ namespace SAM.Analytical.Revit
             MaterialLibrary materialLibrary = Core.Create.MaterialLibrary("Default Material Library", materials);
 
             result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster, materialLibrary);
-            result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
             //result.Add(parameterSet);
 

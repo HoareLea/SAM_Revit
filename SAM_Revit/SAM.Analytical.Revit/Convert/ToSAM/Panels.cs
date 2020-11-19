@@ -56,7 +56,7 @@ namespace SAM.Analytical.Revit
                     continue;
 
                 Panel panel = new Panel(construction, panelType, face3D);
-                panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.MapCluster>(Core.Revit.ActiveSetting.Name.ParameterMap));
+                panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
                 //panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
                 if (elementIds != null && elementIds.Count() > 0)

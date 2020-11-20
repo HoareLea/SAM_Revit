@@ -149,10 +149,11 @@ namespace SAM.Analytical.Revit
             IEnumerable<IMaterial> materials = Analytical.Query.Materials(adjacencyCluster, Analytical.ActiveSetting.Setting.GetValue<MaterialLibrary>(AnalyticalSettingParameter.DefaultMaterialLibrary));
             MaterialLibrary materialLibrary = Core.Create.MaterialLibrary("Default Material Library", materials);
 
-            result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster, materialLibrary);
-            result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
-            //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(document.ProjectInformation);
-            //result.Add(parameterSet);
+            IEnumerable<Profile> profiles = Analytical.Query.Profiles(adjacencyCluster, Analytical.ActiveSetting.Setting.GetValue<ProfileLibrary>(AnalyticalSettingParameter.DefaultProfileLibrary));
+            ProfileLibrary profileLibrary = new ProfileLibrary("Default Profile Library", profiles);
+
+            result = new AnalyticalModel(document.Title, null, location, address, adjacencyCluster, materialLibrary, profileLibrary);
+            result.UpdateParameterSets(document.ProjectInformation, ActiveSetting.Setting.GetValue<TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             convertSettings?.Add(projectInfo.Id, result);
 

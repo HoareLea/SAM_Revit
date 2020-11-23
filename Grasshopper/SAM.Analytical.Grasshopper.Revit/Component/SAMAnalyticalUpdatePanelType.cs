@@ -65,7 +65,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             PanelType panelType = panel.PanelType;
-            PanelType panelType_Normal = Analytical.Query.PanelType(panel.Normal, Core.Revit.Tolerance.Tilt);
+            PanelType panelType_Normal = Analytical.Revit.Query.PanelType(panel.Normal);
             if(panelType == PanelType.Undefined || panelType_Normal == PanelType.Undefined ||  panelType.PanelGroup() == panelType_Normal.PanelGroup())
             {
                 dataAccess.SetData(0, new GooPanel(new Panel(panel)));

@@ -67,8 +67,15 @@ namespace SAM.Analytical.Grasshopper.Revit
             Geometry.Spatial.Vector3D normal = panel.Normal;
 
             PanelType panelType = panel.PanelType;
+            if(panelType == PanelType.Air || panelType == PanelType.Undefined)
+            {
+                dataAccess.SetData(0, new GooPanel(new Panel(panel)));
+                dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                return;
+            }
+
             PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
-            if(panelType == PanelType.Undefined || panelType_Normal == PanelType.Undefined ||  panelType.PanelGroup() == panelType_Normal.PanelGroup())
+            if(panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
             {
                 dataAccess.SetData(0, new GooPanel(new Panel(panel)));
                 dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));

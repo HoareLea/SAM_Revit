@@ -64,13 +64,26 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            Geometry.Spatial.Vector3D normal = panel.Normal;
+
             PanelType panelType = panel.PanelType;
-            PanelType panelType_Normal = Analytical.Revit.Query.PanelType(panel.Normal);
+            PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
             if(panelType == PanelType.Undefined || panelType_Normal == PanelType.Undefined ||  panelType.PanelGroup() == panelType_Normal.PanelGroup())
             {
                 dataAccess.SetData(0, new GooPanel(new Panel(panel)));
                 dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
                 return;
+            }
+
+            if(panelType.PanelGroup() == PanelGroup.Floor || panelType.PanelGroup() == PanelGroup.Roof)
+            {
+                double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
+                if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
+                {
+                    dataAccess.SetData(0, new GooPanel(new Panel(panel)));
+                    dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                    return;
+                }
             }
 
             HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, panelType_Normal, panel.Construction) as HostObjAttributes;

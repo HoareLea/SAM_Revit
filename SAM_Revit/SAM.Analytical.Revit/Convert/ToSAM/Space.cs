@@ -29,9 +29,7 @@ namespace SAM.Analytical.Revit
             result = new Space(name, point3D);
             result.UpdateParameterSets(spatialElement, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
-            //Core.ParameterSet parameterSet = Core.Revit.Query.ParameterSet(spatialElement);
-            //parameterSet.Add(Analytical.Query.ParameterName_SpaceName(), name);
-            //result.Add(parameterSet);
+            result.InternalCondition = ToSAM_InternalCondition(spatialElement, convertSettings);
 
             convertSettings?.Add(spatialElement.Id, result);
 

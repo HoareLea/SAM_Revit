@@ -144,6 +144,7 @@
     <Compile Include="Convert\ToRevit\Elements.cs" />
     <Compile Include="Convert\ToSAM\AnalyticalModel.cs" />
     <Compile Include="Convert\ToSAM\Panel.cs" />
+    <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />

@@ -64,7 +64,6 @@ namespace SAM.Analytical.Revit
             typeMap.Add(ConstructionParameter.DefaultThickness, typeof(HostObjAttributes), "SAM_BuildingElementThickness");
 
             //InternalCondition
-            typeMap.Add(InternalConditionParameter.Occupancy, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_NoPeople");
             typeMap.Add(InternalConditionParameter.OccupancyProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupacyProfile");
             typeMap.Add(InternalConditionParameter.OccupancySensibleGain, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantSensGain");
             typeMap.Add(InternalConditionParameter.OccupancyLatentGain, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantLatGain");

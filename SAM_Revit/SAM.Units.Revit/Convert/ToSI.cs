@@ -28,6 +28,12 @@ namespace SAM.Units.Revit
 
                 case ParameterType.ElectricalCurrent:
                     return UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_AMPERES);
+
+                case ParameterType.Area:
+                    return UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_SQUARE_METERS);
+
+                case ParameterType.Volume:
+                    return UnitUtils.ConvertFromInternalUnits(value, DisplayUnitType.DUT_CUBIC_METERS);
             }
 
             return value;

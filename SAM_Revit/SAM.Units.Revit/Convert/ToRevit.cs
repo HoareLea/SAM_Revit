@@ -28,6 +28,12 @@ namespace SAM.Units.Revit
 
                 case ParameterType.ElectricalCurrent:
                     return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_AMPERES);
+
+                case ParameterType.HVACCoolingLoad:
+                    return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_WATTS);
+
+                case ParameterType.HVACHeatingLoad:
+                    return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_WATTS);
             }
 
             return value;

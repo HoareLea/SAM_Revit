@@ -9,7 +9,7 @@ namespace SAM.Core.Revit
     public static partial class Modify
     {
         /// <summary>
-        /// Sets Revit element parameters uisng values in given ParameterSet
+        /// Sets Revit element parameters using values in given ParameterSet
         /// </summary>
         /// <param name="element">Revit Element</param>
         /// <param name="parameterSet">SAM ParameterSet values will be teaken</param>

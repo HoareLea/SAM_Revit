@@ -38,7 +38,7 @@ namespace SAM.Core.Revit
                 switch (parameter.StorageType)
                 {
                     case StorageType.Double:
-                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.ParameterType);
+                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.UnitType);
                         break;
 
                     case StorageType.Integer:

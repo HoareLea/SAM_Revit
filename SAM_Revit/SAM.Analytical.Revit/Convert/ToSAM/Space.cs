@@ -36,7 +36,7 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static Space ToSAM(this EnergyAnalysisSpace energyAnalysisSpace, Core.Revit.ConvertSettings convertSettings)
+        public static Space ToSAM(this EnergyAnalysisSpace energyAnalysisSpace, ConvertSettings convertSettings)
         {
             if (energyAnalysisSpace == null)
                 return null;

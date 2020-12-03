@@ -28,6 +28,8 @@ namespace SAM.Architectural.Revit
 
             Log result = new Log();
 
+            Core.Revit.Create.Log(level, document);
+
             Autodesk.Revit.DB.Level level_Revit = levels_Revit.Find(x => System.Math.Abs(Query.Elevation(x) - level.Elevation) < Tolerance.MacroDistance);
 
             if (level_Revit == null)

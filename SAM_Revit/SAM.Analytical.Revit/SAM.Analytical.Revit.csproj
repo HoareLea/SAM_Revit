@@ -104,7 +104,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
-    <Reference Include="SAM.Architectural, Version=1.0.7545.26432, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SAM.Architectural, Version=1.0.7642.28640, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Architectural.dll</HintPath>
     </Reference>

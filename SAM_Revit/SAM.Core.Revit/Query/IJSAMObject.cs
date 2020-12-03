@@ -14,7 +14,7 @@ namespace SAM.Core.Revit
             if (jObject == null)
                 return default;
 
-            return Create.IJSAMObject<T>(jObject);
+            return Core.Create.IJSAMObject<T>(jObject);
         }
     }
 }

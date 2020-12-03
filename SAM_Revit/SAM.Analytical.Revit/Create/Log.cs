@@ -66,7 +66,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            Core.Modify.AddRange(result, Log((SAMObject)panel, document));
+            Core.Modify.AddRange(result, Core.Revit.Create.Log(panel, document));
 
             Construction construction = panel.Construction;
 
@@ -87,19 +87,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            Core.Modify.AddRange(result, Log((SAMObject)space, document));
-
-            return result;
-        }
-
-        public static Log Log(this Architectural.Level level, Document document)
-        {
-            if (level == null || document == null)
-                return null;
-
-            Log result = new Log();
-
-            Core.Modify.AddRange(result, Log((SAMObject)level, document));
+            Core.Modify.AddRange(result, Core.Revit.Create.Log(space, document));
 
             return result;
         }
@@ -111,7 +99,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            Core.Modify.AddRange(result, Log((SAMObject)aperture, document));
+            Core.Modify.AddRange(result, Core.Revit.Create.Log(aperture, document));
 
             ApertureConstruction apertureConstruction = aperture.ApertureConstruction;
 
@@ -132,7 +120,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            Core.Modify.AddRange(result, Log((SAMObject)construction, document));
+            Core.Modify.AddRange(result, Core.Revit.Create.Log(construction, document));
 
             string name = construction.Name;
 
@@ -184,7 +172,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            Core.Modify.AddRange(result, Log((SAMObject)apertureConstruction, document));
+            Core.Modify.AddRange(result, Core.Revit.Create.Log(apertureConstruction, document));
 
             string name = apertureConstruction.Name;
 
@@ -213,27 +201,6 @@ namespace SAM.Analytical.Revit
             }
 
             result.Add("Could not find Revit FamilyType Name: {1} for ApertureConstruction Guid: {0}", LogRecordType.Error, apertureConstruction.Guid, apertureConstruction.Name);
-            return result;
-        }
-
-        public static Log Log(SAMObject sAMObject, Document document)
-        {
-            if (sAMObject == null || document == null)
-                return null;
-
-            ElementId elementId = Core.Revit.Query.ElementId(sAMObject);
-            if (elementId == null || elementId == ElementId.InvalidElementId)
-                return null;
-
-            Log result = new Log();
-
-            Element element = document.GetElement(elementId);
-            if (element == null)
-            {
-                result.Add("There is no mathing Revit element for {0} {1} (Guid: {2})", LogRecordType.Warning, sAMObject.Name, sAMObject.GetType().Name, sAMObject.Guid);
-                return result;
-            }
-
             return result;
         }
     }

@@ -195,6 +195,7 @@
     <Compile Include="Accuracy\Tolerance.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
+    <Compile Include="Create\Log.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\RemoveExisting.cs" />

@@ -5,7 +5,6 @@ using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -25,7 +24,7 @@ namespace SAM.Analytical.Revit
             Core.Location location = Core.Revit.Query.Location(document);
             Core.Address address = null;
             if (projectInfo != null)
-                address = new Core.Address(Guid.NewGuid(), projectInfo.BuildingName, projectInfo.Address, null, null, Core.CountryCode.Undefined);
+                address = new Address(Guid.NewGuid(), projectInfo.BuildingName, projectInfo.Address, null, null, CountryCode.Undefined);
 
             AdjacencyCluster adjacencyCluster = new AdjacencyCluster();
 

@@ -76,6 +76,9 @@ namespace SAM.Units.Revit
             if (displayUnitTypes.Contains(DisplayUnitType.DUT_SQUARE_METERS))
                 return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_SQUARE_METERS);
 
+            if (displayUnitTypes.Contains(DisplayUnitType.DUT_CUBIC_METERS_PER_SECOND))
+                return UnitUtils.ConvertToInternalUnits(value, DisplayUnitType.DUT_CUBIC_METERS_PER_SECOND);
+
             return value;
         }
     }

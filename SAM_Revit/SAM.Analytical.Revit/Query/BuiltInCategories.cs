@@ -41,7 +41,11 @@ namespace SAM.Analytical.Revit
                     result.Add(Autodesk.Revit.DB.BuiltInCategory.OST_Walls);
                     result.Add(Autodesk.Revit.DB.BuiltInCategory.OST_Roofs);
                     break;
-                
+                case Analytical.PanelType.Air:
+                    result.Add(Autodesk.Revit.DB.BuiltInCategory.OST_Floors);
+                    result.Add(Autodesk.Revit.DB.BuiltInCategory.OST_Walls);
+                    break;
+
                 default:
                     return null;
             }

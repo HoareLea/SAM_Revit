@@ -57,6 +57,9 @@ namespace SAM.Core.Revit
                 if (typeMap != null)
                 {
                     string parametrName_SAMObject = typeMap.GetName(type_SAMObject, type, parameterName_Element, 1);
+                    if (string.IsNullOrWhiteSpace(parametrName_SAMObject))
+                        parametrName_SAMObject = parameterName_Element;
+
                     if (!string.IsNullOrWhiteSpace(parametrName_SAMObject))
                     {
                         List<Enum> enums_Temp = enums.FindAll(x => x.Name() == parametrName_SAMObject);
@@ -77,7 +80,7 @@ namespace SAM.Core.Revit
                         case StorageType.ElementId:
                             IntegerId integerId = null;
                             parameterSet.Add(parameterName_Element, integerId);
-                            continue; ;
+                            continue;
                         default:
                             string @string = null;
                             parameterSet.Add(parameterName_Element, @string);

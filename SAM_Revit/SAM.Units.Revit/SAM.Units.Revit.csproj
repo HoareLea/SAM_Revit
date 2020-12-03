@@ -186,6 +186,7 @@
     <Compile Include="Convert\ToRevit.cs" />
     <Compile Include="Convert\ToSI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\DisplayUnitType.cs" />
     <Compile Include="Query\Factor.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -85,14 +85,24 @@ namespace SAM.Analytical.Grasshopper.Revit
             using (Transaction transaction = new Transaction(document, "GetAnalyticalModel"))
             {
                 FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions();
-                failureHandlingOptions.SetFailuresPreprocessor(new Core.Revit.WarningSwallower());
+                failureHandlingOptions.SetFailuresPreprocessor(new WarningSwallower());
                 transaction.SetFailureHandlingOptions(failureHandlingOptions);
 
                 transaction.Start();
 
                 ConvertSettings convertSettings = new ConvertSettings(true, true, true);
-
-                analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document, convertSettings);
+                try
+                {
+                    analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document, convertSettings);
+                }
+                catch(Exception exception)
+                {
+                    if(exception.Message.Contains("spatial bounding elements"))
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Check your setting in Export Category: Rooms/Spaces in Export gbXML settings");
+                    else
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, exception.Message);
+                }
+                
 
                 transaction.RollBack();
             }

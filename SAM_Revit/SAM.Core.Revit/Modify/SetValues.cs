@@ -33,7 +33,11 @@ namespace SAM.Core.Revit
                     continue;
 
                 foreach (Parameter parameter in parameters)
-                    SetValue(parameter, parameterSet.ToObject(name));
+                {
+                    if (!parameter.IsReadOnly)
+                        SetValue(parameter, parameterSet.ToObject(name));
+                }
+                    
             }
 
             return true;

@@ -65,7 +65,7 @@ namespace SAM.Analytical.Revit
 
             Log result = new Log();
 
-            if (construction == null)
+            if (panel.PanelType != PanelType.Air && construction == null)
             {
                 result.Add("Panel {0} is missing Construction Guid: {1}", LogRecordType.Error, panel.Name, panel.Guid);
             }

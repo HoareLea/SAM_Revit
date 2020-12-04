@@ -83,8 +83,8 @@ namespace SAM.Analytical.Revit
             typeMap.Add(InternalConditionParameter.InfiltrationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_InfiltrationProfile");
             
             typeMap.Add(InternalConditionParameter.PollutantProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantProfile");
-            typeMap.Add(InternalConditionParameter.PollutantGenerationPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutanGeneration_ghrm2");
-            typeMap.Add(InternalConditionParameter.PollutantGenerationPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutanGeneration_ghrperson");
+            typeMap.Add(InternalConditionParameter.PollutantGenerationPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrm2");
+            typeMap.Add(InternalConditionParameter.PollutantGenerationPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrperson");
             
             typeMap.Add(InternalConditionParameter.HeatingEmmiterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion");
             typeMap.Add(InternalConditionParameter.HeatingEmmiterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient");

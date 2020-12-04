@@ -20,7 +20,7 @@ namespace SAM.Analytical.Revit
             Core.TypeMap typeMap = ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap);
             if(typeMap != null)
             {
-                string parameterName = typeMap.GetName(typeof(InternalCondition), typeof(Space), "Name", 2);
+                string parameterName = typeMap.GetName(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", 2);
                 if(!string.IsNullOrWhiteSpace(parameterName))
                 {
                     name = Core.Revit.Query.Name(spatialElement);

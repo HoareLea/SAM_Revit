@@ -23,17 +23,16 @@ namespace SAM.Analytical.Revit
                 string parameterName = typeMap.GetName(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", 2);
                 if(!string.IsNullOrWhiteSpace(parameterName))
                 {
-                    name = Core.Revit.Query.Name(spatialElement);
-                    if (string.IsNullOrWhiteSpace(name))
-                        name = spatialElement.Name;
-                    
-                    if (string.IsNullOrWhiteSpace(name))
-                    {
-                        Parameter parameter = spatialElement.GetParameters(parameterName)?.ToList().Find(x => x.StorageType == StorageType.String);
-                        if (parameter != null)
-                            name = parameter.AsString();
-                    }
+                    Parameter parameter = spatialElement.GetParameters(parameterName)?.ToList().Find(x => x.StorageType == StorageType.String);
+                    if (parameter != null)
+                        name = parameter.AsString();
                 }
+
+                if(string.IsNullOrWhiteSpace(name))
+                    name = Core.Revit.Query.Name(spatialElement);
+
+                if (string.IsNullOrWhiteSpace(name))
+                    name = spatialElement.Name;
             }
 
             result = new InternalCondition(name);

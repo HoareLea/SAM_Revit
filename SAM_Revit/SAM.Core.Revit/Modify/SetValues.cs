@@ -14,8 +14,9 @@ namespace SAM.Core.Revit
         /// <param name="element">Revit Element</param>
         /// <param name="parameterSet">SAM ParameterSet values will be teaken</param>
         /// <param name="parameterNames_Excluded"> Parameter Names to be skipped</param>
+        /// <param name="parameterNames_Included"> Parameter Names to be included (rest to be skipped)</param>
         /// <returns></returns>
-        public static bool SetValues(this Element element, ParameterSet parameterSet,  IEnumerable<string> parameterNames_Excluded = null)
+        public static bool SetValues(this Element element, ParameterSet parameterSet, IEnumerable<string> parameterNames_Included = null, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (parameterSet == null || element == null)
                 return false;
@@ -26,6 +27,9 @@ namespace SAM.Core.Revit
                     continue;
 
                 if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(name))
+                    continue;
+
+                if (parameterNames_Included != null && !parameterNames_Included.Contains(name))
                     continue;
 
                 IEnumerable<Parameter> parameters = element.GetParameters(name);
@@ -92,7 +96,7 @@ namespace SAM.Core.Revit
             return true;
         }
 
-        public static bool SetValues(this Element element, SAMObject sAMObject,  IEnumerable<string> parameterNames_Excluded = null)
+        public static bool SetValues(this Element element, SAMObject sAMObject, IEnumerable<string> parameterNames_Included = null, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (sAMObject == null || element == null)
                 return false;
@@ -101,7 +105,7 @@ namespace SAM.Core.Revit
             if(parameterSets != null && parameterSets.Count != 0)
             {
                 foreach (ParameterSet parameterSet in parameterSets)
-                    element.SetValues(parameterSet, parameterNames_Excluded);
+                    element.SetValues(parameterSet, parameterNames_Included, parameterNames_Excluded);
             }
 
             Setting setting = ActiveSetting.Setting;

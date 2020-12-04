@@ -31,6 +31,14 @@ namespace SAM.Analytical.Revit
 
             result.InternalCondition = ToSAM_InternalCondition(spatialElement, convertSettings);
 
+            ElementId elementId_Level = spatialElement.LevelId;
+            if(elementId_Level != null && elementId_Level != ElementId.InvalidElementId)
+            {
+                Level level = spatialElement.Document?.GetElement(elementId_Level) as Level;
+                if (level != null)
+                    result.SetValue(SpaceParameter.LevelName, level.Name);
+            }
+
             convertSettings?.Add(spatialElement.Id, result);
 
             return result;

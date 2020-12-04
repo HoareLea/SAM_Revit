@@ -12,7 +12,7 @@ namespace SAM.Core.Revit
             if (sAMObject == null || document == null)
                 return null;
 
-            ElementId elementId = Core.Revit.Query.ElementId(sAMObject);
+            ElementId elementId = Query.ElementId(sAMObject);
             if (elementId == null || elementId == ElementId.InvalidElementId)
                 return null;
 
@@ -21,7 +21,7 @@ namespace SAM.Core.Revit
             Element element = document.GetElement(elementId);
             if (element == null)
             {
-                result.Add("There is no mathing Revit element for {0} {1} (Guid: {2})", LogRecordType.Warning, sAMObject.Name, sAMObject.GetType().Name, sAMObject.Guid);
+                result.Add("There is no mathing Revit element with Element Id {0} for {1} {2} (Guid: {3})", LogRecordType.Warning, elementId.IntegerValue, sAMObject.Name, sAMObject.GetType().Name, sAMObject.Guid);
                 return result;
             }
 

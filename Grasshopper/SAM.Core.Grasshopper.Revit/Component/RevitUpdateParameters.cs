@@ -94,10 +94,10 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-            bool result = Core.Revit.Modify.SetValues(element, sAMObject, names, null);
+            Core.Revit.Modify.SetValues(element, sAMObject, names, null);
 
             dataAccess.SetData(0, element);
-            dataAccess.SetData(1, result);
+            dataAccess.SetData(1, true);
         }
     }
 }

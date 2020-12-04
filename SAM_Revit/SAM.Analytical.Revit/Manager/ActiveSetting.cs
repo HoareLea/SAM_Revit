@@ -64,28 +64,38 @@ namespace SAM.Analytical.Revit
             typeMap.Add(ConstructionParameter.DefaultThickness, typeof(HostObjAttributes), "SAM_BuildingElementThickness");
 
             //InternalCondition
+            typeMap.Add(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_IC_ThermalTemplate");
+
             typeMap.Add(InternalConditionParameter.OccupancyProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupacyProfile");
             typeMap.Add(InternalConditionParameter.OccupancySensibleGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantSensGain");
             typeMap.Add(InternalConditionParameter.OccupancyLatentGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantLatGain");
+
+            typeMap.Add(InternalConditionParameter.EquipmentSensibleGainPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpecSmallPowerSens");
             typeMap.Add(InternalConditionParameter.EquipmentSensibleProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SmallPowerSensProfile");
+            typeMap.Add(InternalConditionParameter.EquipmentLatentGainPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpecSmallPowerLat");
             typeMap.Add(InternalConditionParameter.EquipmentLatentProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SmallPowerLatProfile");
-            typeMap.Add(InternalConditionParameter.LightingGainPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_GenLightingGain");
+            
+            typeMap.Add(InternalConditionParameter.LightingGainPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpecGenLighting");
             typeMap.Add(InternalConditionParameter.LightingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_GenLightingProfile");
+            typeMap.Add(InternalConditionParameter.LightingLevel, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesignLuxLevel");
+
             typeMap.Add(InternalConditionParameter.InfiltrationAirChangesPerHour, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CLGInfiltrationACH");
             typeMap.Add(InternalConditionParameter.InfiltrationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_InfiltrationProfile");
+            
             typeMap.Add(InternalConditionParameter.PollutantProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantProfile");
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutanGeneration_ghrm2");
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutanGeneration_ghrperson");
+            
             typeMap.Add(InternalConditionParameter.HeatingEmmiterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion");
             typeMap.Add(InternalConditionParameter.HeatingEmmiterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient");
             typeMap.Add(InternalConditionParameter.HeatingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHeatingProfile");
+            
             typeMap.Add(InternalConditionParameter.CoolingEmmiterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterRadiantProportion");
             typeMap.Add(InternalConditionParameter.CoolingEmmiterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterCoefficient");
             typeMap.Add(InternalConditionParameter.CoolingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceCoolingProfile");
+            
             typeMap.Add(InternalConditionParameter.HumidificationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHumidificationProfile");
             typeMap.Add(InternalConditionParameter.DehumidificationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceDehumidificationProfile");
-            typeMap.Add(InternalConditionParameter.LightingLevel, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesignLuxLevel");
-            typeMap.Add(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_IC_ThermalTemplate");
 
             //Space
             typeMap.Add(SpaceParameter.Area, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Area");

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class RevitUpdateParameters : GH_SAMComponent
+    public class RevitUpdateParameters : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -58,7 +58,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <param name="dataAccess">
         /// The DA object is used to retrieve from inputs and store in outputs.
         /// </param>
-        protected override void SolveInstance(IGH_DataAccess dataAccess)
+        protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             dataAccess.SetData(1, false);
 

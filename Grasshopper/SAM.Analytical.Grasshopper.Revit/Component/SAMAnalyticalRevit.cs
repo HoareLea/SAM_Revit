@@ -85,7 +85,16 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Core.Revit.Modify.RemoveExisting(convertSettings, document, sAMObject);
+            if(sAMObject is AdjacencyCluster)
+            {
+                AdjacencyCluster adjacencyCluster = (AdjacencyCluster)sAMObject;
+                adjacencyCluster.GetPanels()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
+                adjacencyCluster.GetSpaces()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
+            }
+            else
+            {
+                Core.Revit.Modify.RemoveExisting(convertSettings, document, sAMObject);
+            }            
 
             object @object = Analytical.Revit.Convert.ToRevit(sAMObject as dynamic, document, convertSettings);
 

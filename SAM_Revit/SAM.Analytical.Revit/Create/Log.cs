@@ -34,6 +34,8 @@ namespace SAM.Analytical.Revit
 
             List<Panel> panels = adjacencyCluster.GetPanels();
 
+            panels?.ForEach(x => Core.Modify.AddRange(result, Core.Revit.Create.Log(x, document)));
+
             List<Architectural.Level> levels = Analytical.Create.Levels(panels);
             if (levels == null || levels.Count == 0)
                 result.Add("Could not find proper levels in AdjacencyCluster", LogRecordType.Error);

@@ -39,6 +39,8 @@ namespace SAM.Analytical.Revit
 
             //AnalyticalModel
             typeMap.Add(AnalyticalModelParameter.NorthAngle, typeof(ProjectInfo), "SAM_NorthAngle");
+            typeMap.Add(AnalyticalModelParameter.CoolingSizingFactor, typeof(ProjectInfo), "SAM_SizingFactorCooling");
+            typeMap.Add(AnalyticalModelParameter.HeatingSizingFactor, typeof(ProjectInfo), "SAM_SizingFactorHeating");
 
             //Aperture
             typeMap.Add(typeof(Aperture), typeof(FamilyInstance), "GetWidth", "SAM_BuildingElementWidth");
@@ -103,6 +105,8 @@ namespace SAM.Analytical.Revit
             typeMap.Add(SpaceParameter.Volume, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_Volume");
             typeMap.Add(SpaceParameter.FacingExternal, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_FacingExternal");
             typeMap.Add(SpaceParameter.FacingExternalGlazing, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_FacingExternalGlazing");
+            typeMap.Add(SpaceParameter.CoolingSizingFactor, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OversizingFactorCooling");
+            typeMap.Add(SpaceParameter.HeatingSizingFactor, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OversizingFactorHeating");
             typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
 
             //Panel

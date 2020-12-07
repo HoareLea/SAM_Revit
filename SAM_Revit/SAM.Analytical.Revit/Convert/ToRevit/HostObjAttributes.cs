@@ -33,16 +33,27 @@ namespace SAM.Analytical.Revit
             if (result != null)
                 return result;
 
-            FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
+            FilteredElementCollector filteredElementCollector = Query.FilteredElementCollector(document, panelType)?.OfClass(typeof(HostObjAttributes));
+            if (filteredElementCollector == null)
+                return null;
 
-            BuiltInCategory builtInCategory = panelType.BuiltInCategory();
-            if (normal != null && (builtInCategory == BuiltInCategory.INVALID || panelType == PanelType.Shade))
-                builtInCategory = normal.BuiltInCategory();
+            if(normal != null && panelType == PanelType.Air)
+            {
+                BuiltInCategory builtInCategory = normal.BuiltInCategory();
+                if (builtInCategory == BuiltInCategory.OST_Walls)
+                    filteredElementCollector.OfCategory(builtInCategory);
+            }
 
-            if (builtInCategory != BuiltInCategory.INVALID)
-                filteredElementCollector.OfCategory(builtInCategory);
+            //FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));
 
-                
+            //BuiltInCategory builtInCategory = panelType.BuiltInCategory();
+            //if (normal != null && (builtInCategory == BuiltInCategory.INVALID || panelType == PanelType.Shade))
+            //    builtInCategory = normal.BuiltInCategory();
+
+            //if (builtInCategory != BuiltInCategory.INVALID)
+            //    filteredElementCollector.OfCategory(builtInCategory);
+
+
             string familyName_Source = null;
             string typeName_Source = null;
             if (!Core.Revit.Query.TryGetFamilyNameAndTypeName(construction.Name, out familyName_Source, out typeName_Source))

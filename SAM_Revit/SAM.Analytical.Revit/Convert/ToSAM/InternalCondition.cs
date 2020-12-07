@@ -37,8 +37,7 @@ namespace SAM.Analytical.Revit
 
             result = new InternalCondition(name);
 
-            //Replace by UpdateParameterSets(this SAMObject sAMObject, Type type, IEnumerable < Parameter > parameters, TypeMap typeMap)
-            result.UpdateParameterSets(spatialElement, typeMap);
+            result.UpdateParameterSets(spatialElement, typeMap, null, null, false);
 
             convertSettings?.Add(spatialElement.Id, result);
 

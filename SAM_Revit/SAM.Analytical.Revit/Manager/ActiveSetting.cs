@@ -71,6 +71,7 @@ namespace SAM.Analytical.Revit
             typeMap.Add(InternalConditionParameter.OccupancyProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupacyProfile");
             typeMap.Add(InternalConditionParameter.OccupancySensibleGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantSensGain");
             typeMap.Add(InternalConditionParameter.OccupancyLatentGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantLatGain");
+            typeMap.Add(InternalConditionParameter.OccupancyPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantDensity");
 
             typeMap.Add(InternalConditionParameter.EquipmentSensibleGainPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpecSmallPowerSens");
             typeMap.Add(InternalConditionParameter.EquipmentSensibleProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SmallPowerSensProfile");

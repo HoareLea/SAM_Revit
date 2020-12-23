@@ -81,12 +81,6 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynamoServices, Version=2.6.1.8786, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DynamoVisualProgramming.DynamoServices.2.6.1.8786\lib\net47\DynamoServices.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
       <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -149,7 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Analytical.Revit\SAM.Analytical.Revit.csproj">
@@ -164,6 +157,14 @@
       <Project>{33206e35-bc18-4ea3-9fb4-3473ef99f3be}</Project>
       <Name>SAM.Geometry.Revit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DynamoVisualProgramming.DynamoServices">
+      <Version>2.6.1.8786</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

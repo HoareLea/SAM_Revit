@@ -117,6 +117,7 @@
     <DocumentationFile>..\..\build\SAM.Core.Revit.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
       <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -190,11 +191,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accuracy\Tolerance.cs" />
+    <Compile Include="Classes\RevitFilePreview.cs" />
+    <Compile Include="Classes\RevitFilePreviewParameter.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
+    <Compile Include="Create\RevitFilePreviewParameter.cs" />
+    <Compile Include="Create\RevitFilePreview.cs" />
     <Compile Include="Create\Log.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />

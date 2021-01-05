@@ -57,12 +57,9 @@ namespace SAM.Analytical.Revit
 
                 Panel panel = new Panel(construction, panelType, face3D);
                 panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
-                //panel.Add(Core.Revit.Query.ParameterSet(hostObject));
 
                 if (elementIds != null && elementIds.Count() > 0)
                 {
-                    //Geometry.Spatial.Plane plane = panel.PlanarBoundary3D.Plane;
-
                     foreach (ElementId elementId in elementIds)
                     {
                         Element element = hostObject.Document.GetElement(elementId);
@@ -72,7 +69,6 @@ namespace SAM.Analytical.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        //Aperture aperture = ToSAM_Aperture((FamilyInstance)element, panelType);
                         Aperture aperture = ToSAM_Aperture((FamilyInstance)element, convertSettings);
                         panel.AddAperture(aperture);
                     }

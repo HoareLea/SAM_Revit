@@ -171,7 +171,6 @@ namespace SAM.Analytical.Revit
 
             result = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
             result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
-            //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(familyInstance.Id, result);
 

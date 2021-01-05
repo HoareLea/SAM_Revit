@@ -77,8 +77,6 @@ namespace SAM.Analytical.Revit
 
             result.UpdateParameterSets(energyAnalysisSurface, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
-            //result.Add(Core.Revit.Query.ParameterSet(energyAnalysisSurface));
-
             convertSettings?.Add(energyAnalysisSurface.Id, result);
 
             return result;

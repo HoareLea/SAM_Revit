@@ -439,7 +439,15 @@ namespace SAM.Core.Revit
             foreach (XElement xElement_Type in xElements)
             {
                 XElement xElement_Title = xElement_Type.Element(xName);
-                if (xElement_Title == null || string.IsNullOrEmpty(xElement_Title.Value))
+                if (xElement_Title == null)
+                    continue;
+
+                string familyTypeName_Temp = xElement_Title.Value;
+
+                if (string.IsNullOrEmpty(familyTypeName_Temp))
+                    continue;
+
+                if (familyTypeName != familyTypeName_Temp)
                     continue;
 
                 result = new List<RevitFilePreviewParameter>();
@@ -467,6 +475,14 @@ namespace SAM.Core.Revit
             }
             return result;
 
+        }
+
+        public RevitFilePreviewParameter GetRevitFilePreviewParameter(string familyTypeName, string parameterName)
+        {
+            if (string.IsNullOrEmpty(familyTypeName) || string.IsNullOrEmpty(parameterName))
+                return null;
+
+            return GetRevitFilePreviewParameters(familyTypeName)?.Find(x => parameterName.Equals(x.NameOfParameter));
         }
 
         public string GetOmniClass()

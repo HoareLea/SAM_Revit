@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System.Xml.Linq;
 
 namespace SAM.Core.Revit
 {
@@ -66,6 +65,18 @@ namespace SAM.Core.Revit
             get
             {
                 return typeOfParameter;
+            }
+        }
+
+        public string NameOfParameter
+        {
+            get
+            {
+                string result = displayName;
+                if (string.IsNullOrEmpty(result))
+                    result = name;
+
+                return result;
             }
         }
 

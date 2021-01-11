@@ -89,12 +89,12 @@ namespace SAM.Analytical.Revit
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrm2");
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrperson");
             
-            typeMap.Add(InternalConditionParameter.HeatingEmmiterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion");
-            typeMap.Add(InternalConditionParameter.HeatingEmmiterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient");
+            typeMap.Add(InternalConditionParameter.HeatingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion");
+            typeMap.Add(InternalConditionParameter.HeatingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient");
             typeMap.Add(InternalConditionParameter.HeatingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHeatingProfile");
             
-            typeMap.Add(InternalConditionParameter.CoolingEmmiterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterRadiantProportion");
-            typeMap.Add(InternalConditionParameter.CoolingEmmiterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterCoefficient");
+            typeMap.Add(InternalConditionParameter.CoolingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterRadiantProportion");
+            typeMap.Add(InternalConditionParameter.CoolingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterCoefficient");
             typeMap.Add(InternalConditionParameter.CoolingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceCoolingProfile");
             
             typeMap.Add(InternalConditionParameter.HumidificationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHumidificationProfile");

@@ -161,6 +161,7 @@
   <ItemGroup>
     <PackageReference Include="DynamoVisualProgramming.DynamoServices">
       <Version>2.6.1.8786</Version>
+	  <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>

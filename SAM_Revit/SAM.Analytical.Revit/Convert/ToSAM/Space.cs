@@ -39,6 +39,18 @@ namespace SAM.Analytical.Revit
                     result.SetValue(SpaceParameter.LevelName, level.Name);
             }
 
+            double area;
+            if (!result.TryGetValue(SpaceParameter.Area, out area) || double.IsNaN(area) || area == 0)
+                result.SetValue(SpaceParameter.Area, UnitUtils.ConvertFromInternalUnits(spatialElement.Area, DisplayUnitType.DUT_SQUARE_METERS));
+
+            double volume;
+            if (!result.TryGetValue(SpaceParameter.Volume, out volume) || double.IsNaN(volume) || volume == 0)
+            {
+                Parameter parameter = spatialElement.get_Parameter(BuiltInParameter.ROOM_VOLUME);
+                if (parameter != null && parameter.HasValue)
+                    result.SetValue(SpaceParameter.Volume, UnitUtils.ConvertFromInternalUnits(parameter.AsDouble(), DisplayUnitType.DUT_CUBIC_METERS));
+            }
+
             convertSettings?.Add(spatialElement.Id, result);
 
             return result;

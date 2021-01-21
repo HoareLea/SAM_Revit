@@ -22,7 +22,7 @@ namespace SAM.Analytical.Revit
                 return result;
 
             Core.Location location = Core.Revit.Query.Location(document);
-            Core.Address address = null;
+            Address address = null;
             if (projectInfo != null)
                 address = new Address(Guid.NewGuid(), projectInfo.BuildingName, projectInfo.Address, null, null, CountryCode.Undefined);
 

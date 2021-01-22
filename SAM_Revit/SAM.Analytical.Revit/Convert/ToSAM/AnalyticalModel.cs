@@ -10,7 +10,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static AnalyticalModel ToSAM_AnalyticalModel(this Document document, Core.Revit.ConvertSettings convertSettings)
+        public static AnalyticalModel ToSAM_AnalyticalModel(this Document document, ConvertSettings convertSettings)
         {
             if (document == null)
                 return null;
@@ -114,6 +114,37 @@ namespace SAM.Analytical.Revit
 
                 }
             }
+
+            #region Additional Checks (WIP)
+            //Additional Check for wrongly recoginzed internal panels (WIP)
+            List<Tuple<string, Panel, Space, Face3D>> tuples_External = new List<Tuple<string, Panel, Space, Face3D>>();
+            foreach (KeyValuePair<string, Tuple<Panel, List<Space>>> keyValuePair in dictionary)
+            {
+                Tuple<Panel, List<Space>> tuple = keyValuePair.Value;
+                if (tuple.Item1 != null && tuple.Item2 != null && tuple.Item2.Count == 1)
+                {
+                    Face3D face3D = tuple.Item1.GetFace3D();
+                    if (face3D != null)
+                        tuples_External.Add(new Tuple<string, Panel, Space, Face3D>(keyValuePair.Key, tuple.Item1, tuple.Item2[0], face3D));
+                }
+            }
+
+            while (tuples_External.Count > 0)
+            {
+                Tuple<string, Panel, Space, Face3D> tuple = tuples_External[0];
+                tuples_External.RemoveAt(0);
+
+                Point3D point3D = tuple.Item4.InternalPoint3D();
+                if (point3D == null)
+                    continue;
+
+                List<Tuple<string, Panel, Space, Face3D>> tuples_Overlap = tuples_External.FindAll(x => x.Item4.Inside(point3D));
+                if (tuples_Overlap.Count == 0)
+                    continue;
+
+                tuples_Overlap.Add(tuple);
+            }
+            #endregion
 
             foreach (Tuple<Panel, List<Space>> tuple in dictionary.Values)
             {

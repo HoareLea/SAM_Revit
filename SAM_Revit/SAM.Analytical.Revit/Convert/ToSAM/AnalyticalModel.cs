@@ -139,10 +139,19 @@ namespace SAM.Analytical.Revit
                     continue;
 
                 List<Tuple<string, Panel, Space, Face3D>> tuples_Overlap = tuples_External.FindAll(x => x.Item4.Inside(point3D));
-                if (tuples_Overlap.Count == 0)
+                if (tuples_Overlap.Count != 1)
                     continue;
 
                 tuples_Overlap.Add(tuple);
+
+                tuples_Overlap.Sort((x, y) => y.Item4.GetArea().CompareTo(x.Item4.GetArea()));
+
+                tuple = tuples_Overlap[0];
+                Tuple<string, Panel, Space, Face3D> tuple_Overlap = tuples_Overlap[1];
+
+                dictionary[tuple.Item1].Item2.Add(tuple_Overlap.Item3);
+                dictionary[tuple_Overlap.Item1] = new Tuple<Panel, List<Space>>(new Panel(dictionary[tuple_Overlap.Item1].Item1, PanelType.Shade), null);
+                tuples_External.RemoveAt(tuples_External.IndexOf(tuple_Overlap));
             }
             #endregion
 
@@ -151,7 +160,7 @@ namespace SAM.Analytical.Revit
                 Panel panel = tuple.Item1;
 
                 adjacencyCluster.AddObject(panel);
-                tuple.Item2.ForEach(x => adjacencyCluster.AddRelation(x, panel));
+                tuple.Item2?.ForEach(x => adjacencyCluster.AddRelation(x, panel));
             }
 
             //AnalyticalShadingSurfaces

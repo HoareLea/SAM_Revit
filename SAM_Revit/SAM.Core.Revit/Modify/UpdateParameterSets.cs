@@ -38,6 +38,9 @@ namespace SAM.Core.Revit
                 if (parameterName_Element == null)
                     continue;
 
+                if (!parameter.HasValue)
+                    continue;
+
                 object value = null;
                 switch (parameter.StorageType)
                 {

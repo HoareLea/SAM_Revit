@@ -151,6 +151,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\SAMAnalyticalMapZones.cs" />
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
     <Compile Include="Component\SAMAnalyticalCreateMaterialLibrary.cs" />
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
@@ -220,7 +221,7 @@
     </PackageReference>
     <PackageReference Include="Rhino.Inside">
       <Version>7.0.0</Version>
-	  <ExcludeAssets>runtime</ExcludeAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

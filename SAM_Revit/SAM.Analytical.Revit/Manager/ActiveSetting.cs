@@ -10,6 +10,7 @@ namespace SAM.Analytical.Revit
         {
             public const string FileName_DefaultAirConstructionLibrary = "FileName_DefaultAirConstructionLibrary";
             public const string Library_DefaultAirConstructionLibrary = "Library_DefaultAirConstructionLibrary";
+            public const string ZoneMap = "Zone Map";
         }
 
         private static Setting setting = Load();
@@ -151,6 +152,12 @@ namespace SAM.Analytical.Revit
 
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, typeMap);
+
+            TextMap textMap = new TextMap("Zone Map");
+            textMap.Add(ZoneType.Cooling.Text(), "SAM_ZoneCoolingReference");
+            textMap.Add(ZoneType.Heating.Text(), "SAM_ZoneHeatingReference");
+            textMap.Add(ZoneType.Ventilation.Text(), "SAM_ZoneVentilationReference");
+            result.Add(Name.ZoneMap, textMap);
 
             //File Names
             result.Add(Name.FileName_DefaultAirConstructionLibrary, "SAM_AirConstructionLibrary.JSON");

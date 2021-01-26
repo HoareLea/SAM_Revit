@@ -132,6 +132,7 @@
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Modify\MapZones.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
     <Compile Include="Modify\DuplicateByType.cs" />

@@ -207,6 +207,7 @@
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\RemoveExisting.cs" />
     <Compile Include="Modify\SetJson.cs" />
+    <Compile Include="Modify\SetDefault.cs" />
     <Compile Include="Modify\UpdateParameterSets.cs" />
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />

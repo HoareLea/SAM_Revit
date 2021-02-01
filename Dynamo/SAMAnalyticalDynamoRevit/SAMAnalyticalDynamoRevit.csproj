@@ -91,9 +91,11 @@
     </Reference>
     <Reference Include="RevitNodes" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
       <HintPath>..\..\references\Revit 2021\RevitNodes.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitServices" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
       <HintPath>..\..\references\Revit 2021\RevitServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
       <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
@@ -105,9 +107,11 @@
     </Reference>
     <Reference Include="RevitNodes" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
       <HintPath>..\..\references\Revit 2020\RevitNodes.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitServices" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
       <HintPath>..\..\references\Revit 2020\RevitServices.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SAM.Analytical, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

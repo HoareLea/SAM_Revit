@@ -208,21 +208,25 @@
 if "$(ConfigurationName)" == "Debug2020" (
 set Version=Revit 2020
 set DirectoryName=Libraries-Inside-Revit-2020
+set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
 )
 
 if "$(ConfigurationName)" == "Debug2021" (
 set Version=Revit 2021
 set DirectoryName=Libraries-Inside-Revit-2021
+set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
 )
 
 if "$(ConfigurationName)" == "Release2020" (
 set Version=Revit 2020
 set DirectoryName=Libraries-Inside-Revit-2020
+set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
 )
 
 if "$(ConfigurationName)" == "Release2021" (
 set Version=Revit 2021
 set DirectoryName=Libraries-Inside-Revit-2021
+set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
 )
 
 copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
@@ -235,6 +239,12 @@ copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
 
 if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
 copy "$(SolutionDir)files\Grasshopper\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+
+echo #Order of files is important > "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Core.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Architectural.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Analytical.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+
 
 xcopy "$(SolutionDir)\files\resources" "$(APPDATA)\SAM\" /Y /I /E/S
 

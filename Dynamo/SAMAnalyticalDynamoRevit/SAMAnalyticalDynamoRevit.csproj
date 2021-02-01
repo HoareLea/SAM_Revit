@@ -58,7 +58,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
-    <OutputPath>bin\Release2020\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>..\build\SAMAnalyticalDynamoRevit.xml</DocumentationFile>
     <Optimize>true</Optimize>
@@ -69,7 +69,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
-    <OutputPath>bin\Release2021\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>..\build\SAMAnalyticalDynamoRevit.xml</DocumentationFile>
     <Optimize>true</Optimize>

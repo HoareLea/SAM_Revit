@@ -86,11 +86,18 @@ namespace SAM.Core.Revit
             if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return false;
 
-            List<string> names = typeMap.GetNames(sAMObject.GetType(), element.GetType());
-            if (names != null || names.Count > 0)
+            Type type_SAMObject = sAMObject.GetType();
+            Type type_Revit = element.GetType();
+
+            List<string> names_SAM = typeMap.GetNames(type_SAMObject, type_Revit);
+            if (names_SAM != null || names_SAM.Count > 0)
             {
-                foreach (string name in names)
-                    SetValue(element, typeMap.GetName(sAMObject.GetType(), element.GetType(), name), sAMObject, name);
+                foreach (string name_SAM in names_SAM.Distinct())
+                {
+                    List<string> names_Revit = typeMap.GetNames(type_SAMObject, type_Revit, name_SAM);
+                    if (names_Revit != null || names_Revit.Count > 0)
+                        names_Revit.ForEach(x => SetValue(element, x, sAMObject, name_SAM));
+                }
             }
 
             return true;

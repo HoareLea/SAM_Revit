@@ -60,6 +60,10 @@ namespace SAM.Core.Revit
             {
                 parameter.Set((string)value);
             }
+            else if(value is IJSAMObject)
+            {
+                parameter.Set(((IJSAMObject)value).ToJObject()?.ToString());
+            }
             else
             {
                 parameter.Set(value.ToString());

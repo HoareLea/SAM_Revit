@@ -43,7 +43,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new GooLevelParam(), "_levels", "_levels", "SAM Architectural Levels", GH_ParamAccess.list);
-                          }
+        }
 
         /// <summary>
         /// Registers all the output parameters for this component.

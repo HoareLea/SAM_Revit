@@ -86,8 +86,18 @@ namespace SAM.Core.Revit
             if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return false;
 
+            return SetValues(element, sAMObject, typeMap);
+        }
+
+        public static bool SetValues(this Element element, SAMObject sAMObject, TypeMap typeMap)
+        {
+            if (element == null || typeMap == null)
+                return false;
+
             Type type_SAMObject = sAMObject.GetType();
             Type type_Revit = element.GetType();
+
+            Dictionary<string, object> dictionary = null;
 
             List<string> names_SAM = typeMap.GetNames(type_SAMObject, type_Revit);
             if (names_SAM != null || names_SAM.Count > 0)
@@ -96,7 +106,32 @@ namespace SAM.Core.Revit
                 {
                     List<string> names_Revit = typeMap.GetNames(type_SAMObject, type_Revit, name_SAM);
                     if (names_Revit != null || names_Revit.Count > 0)
-                        names_Revit.ForEach(x => SetValue(element, x, sAMObject, name_SAM));
+                    {
+                        for (int i = 0; i < names_Revit.Count; i++)
+                        {
+                            string name_Revit = names_Revit[i];
+
+                            if (string.IsNullOrWhiteSpace(name_Revit))
+                                continue;
+
+                            if (name_Revit.StartsWith("="))
+                            {
+                                if (dictionary == null)
+                                {
+                                    dictionary = new Dictionary<string, object>();
+                                    dictionary["Object_1"] = sAMObject;
+                                    dictionary["Object_2"] = element;
+                                    dictionary["Name_1"] = name_SAM;
+                                    dictionary["Name_2"] = name_Revit;
+                                }
+
+                                if (Core.Query.TryCompute(new Expression(name_Revit.Substring(0, name_Revit.Length - 1)), out string name_Revit_Temp, dictionary))
+                                    name_Revit = name_Revit_Temp;
+                            }
+
+                            SetValue(element, name_Revit, sAMObject, name_SAM);
+                        }
+                    }
                 }
             }
 

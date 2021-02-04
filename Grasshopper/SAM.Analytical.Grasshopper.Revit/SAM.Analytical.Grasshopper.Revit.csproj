@@ -154,10 +154,11 @@
     <Compile Include="Component\SAMAnalyticalMapZones.cs" />
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
     <Compile Include="Component\SAMAnalyticalCreateMaterialLibrary.cs" />
+    <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
     <Compile Include="Component\SAMAnalyticalUpdatePanelType.cs" />
     <Compile Include="Component\SAMApertureRevit.cs" />
-    <Compile Include="Component\SAMAnalyticalRevit.cs" />
+    <Compile Include="Component\SAMAnalyticalResultRevit.cs" />
     <Compile Include="Component\SAMSpaceRevit.cs" />
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />

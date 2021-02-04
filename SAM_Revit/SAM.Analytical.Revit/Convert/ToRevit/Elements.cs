@@ -2,6 +2,7 @@
 using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -16,18 +17,18 @@ namespace SAM.Analytical.Revit
             if (result != null)
                 return result;
 
-            Dictionary<Space, Shell> dictionary = adjacencyCluster.ShellDictionary();
-            if (dictionary == null)
+            Dictionary<Space, Shell> dictionary_Shell = adjacencyCluster.ShellDictionary();
+            if (dictionary_Shell == null)
                 return null;
 
             //List<Level> levels = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
             //if (levels == null || levels.Count == 0)
             //    return null;
 
-            result = new List<Element>();
+            Dictionary<ElementId, Element> dictionary_Element = new Dictionary<ElementId, Element>();
 
             HashSet<System.Guid> guids = new HashSet<System.Guid>();
-            foreach (KeyValuePair<Space, Shell> keyValuePair in dictionary)
+            foreach (KeyValuePair<Space, Shell> keyValuePair in dictionary_Shell)
             {
                 Space space = keyValuePair.Key;
 
@@ -45,7 +46,7 @@ namespace SAM.Analytical.Revit
                         if (hostObject == null)
                             continue;
 
-                        result.Add(hostObject);
+                        dictionary_Element[hostObject.Id] = hostObject;
                     }
                 }
 
@@ -53,7 +54,7 @@ namespace SAM.Analytical.Revit
                 if (space_Revit == null)
                     continue;
 
-                result.Add(space_Revit);
+                dictionary_Element[space_Revit.Id] = space_Revit;
 
                 BoundingBox3D boundingBox3D = keyValuePair.Value.GetBoundingBox();
                 if (boundingBox3D == null)
@@ -84,9 +85,52 @@ namespace SAM.Analytical.Revit
                     if (hostObject == null)
                         continue;
 
-                    result.Add(hostObject);
+                    dictionary_Element[hostObject.Id] = hostObject;
                 }
             }
+
+            List<Zone> zones = adjacencyCluster.GetObjects<Zone>();
+            if (zones != null)
+            {
+                foreach (Zone zone in zones)
+                {
+                    List<Autodesk.Revit.DB.Mechanical.Space> spaces = ToRevit(adjacencyCluster, zone, document, convertSettings);
+                    spaces?.ForEach(x => dictionary_Element[x.Id] = x);
+                }
+            }
+
+            List<ZoneSimulationResult> zoneSimulationResults = adjacencyCluster.GetObjects<ZoneSimulationResult>();
+            if(zoneSimulationResults != null)
+            {
+                foreach(ZoneSimulationResult zoneSimulationResult in zoneSimulationResults)
+                {
+                    List<Autodesk.Revit.DB.Mechanical.Space> spaces = ToRevit(adjacencyCluster, zoneSimulationResult, document, convertSettings);
+                    spaces?.ForEach(x => dictionary_Element[x.Id] = x);
+                }
+            }
+
+            List<SpaceSimulationResult> spaceSimulationResults = adjacencyCluster.GetObjects<SpaceSimulationResult>();
+            if (zoneSimulationResults != null)
+            {
+                foreach (SpaceSimulationResult spaceSimulationResult in spaceSimulationResults)
+                {
+                    List<Autodesk.Revit.DB.Mechanical.Space> spaces = ToRevit(adjacencyCluster, spaceSimulationResult, document, convertSettings);
+                    spaces?.ForEach(x => dictionary_Element[x.Id] = x);
+                }
+            }
+
+            List<AdjacencyClusterSimulationResult> adjacencyClusterSimulationResults = adjacencyCluster.GetObjects<AdjacencyClusterSimulationResult>();
+            if (adjacencyClusterSimulationResults != null)
+            {
+                foreach (AdjacencyClusterSimulationResult adjacencyClusterSimulationResult in adjacencyClusterSimulationResults)
+                {
+                    ProjectInfo projectInfo = ToRevit(adjacencyClusterSimulationResult, document, convertSettings);
+                    if (projectInfo != null)
+                        dictionary_Element[projectInfo.Id] = projectInfo;
+                }
+            }
+
+            result = dictionary_Element.Values.ToList();
 
             convertSettings?.Add(adjacencyCluster.Guid, result);
 

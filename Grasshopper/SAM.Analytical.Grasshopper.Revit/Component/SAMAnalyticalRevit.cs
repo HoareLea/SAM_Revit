@@ -78,14 +78,14 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if (sAMObject is AnalyticalModel)
                 sAMObject = ((AnalyticalModel)sAMObject).AdjacencyCluster;
-            
-            if(!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
+
+            if (!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
             {
                 dataAccess.SetData(0, null);
                 return;
             }
 
-            if(sAMObject is AdjacencyCluster)
+            if (sAMObject is AdjacencyCluster)
             {
                 AdjacencyCluster adjacencyCluster = (AdjacencyCluster)sAMObject;
                 adjacencyCluster.GetPanels()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));

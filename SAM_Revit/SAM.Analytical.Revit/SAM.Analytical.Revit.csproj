@@ -127,12 +127,15 @@
   <ItemGroup>
     <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
     <Compile Include="Convert\ToRevit\Elements.cs" />
+    <Compile Include="Convert\ToRevit\ProjectInfo.cs" />
+    <Compile Include="Convert\ToRevit\Spaces.cs" />
     <Compile Include="Convert\ToSAM\AnalyticalModel.cs" />
     <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\MapZones.cs" />
+    <Compile Include="Modify\SetValues.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
     <Compile Include="Modify\DuplicateByType.cs" />

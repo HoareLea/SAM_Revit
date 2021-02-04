@@ -8,9 +8,9 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static List<Panel> ToSAM(this HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
+        public static List<Panel> ToSAM(this HostObject hostObject, ConvertSettings convertSettings)
         {
-            if (hostObject == null)
+            if (hostObject == null || !hostObject.IsValidObject)
                 return null;
 
             List<Panel> result = convertSettings?.GetObjects<Panel>(hostObject.Id);
@@ -33,6 +33,8 @@ namespace SAM.Analytical.Revit
                 panelType = panelType_Temp;
 
             List<Geometry.Spatial.Face3D> face3Ds = hostObject.Profiles();
+            if (face3Ds == null || face3Ds.Count == 0)
+                return null;
 
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
@@ -82,7 +84,7 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static List<Panel> ToSAM_Panels(this Document document, Core.Revit.ConvertSettings convertSettings)
+        public static List<Panel> ToSAM_Panels(this Document document, ConvertSettings convertSettings)
         {
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs }).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
 
@@ -101,7 +103,7 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, Core.Revit.ConvertSettings convertSettings)
+        public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, ConvertSettings convertSettings)
         {
             Document document = revitLinkInstance.GetLinkDocument();
 

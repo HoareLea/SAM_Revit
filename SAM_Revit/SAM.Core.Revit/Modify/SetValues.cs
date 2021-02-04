@@ -114,7 +114,7 @@ namespace SAM.Core.Revit
                             if (string.IsNullOrWhiteSpace(name_Revit))
                                 continue;
 
-                            if (name_Revit.StartsWith("="))
+                            if (name_Revit.StartsWith("=") && name_Revit.Length > 1)
                             {
                                 if (dictionary == null)
                                 {
@@ -125,7 +125,7 @@ namespace SAM.Core.Revit
                                     dictionary["Name_2"] = name_Revit;
                                 }
 
-                                if (Core.Query.TryCompute(new Expression(name_Revit.Substring(0, name_Revit.Length - 1)), out string name_Revit_Temp, dictionary))
+                                if (Core.Query.TryCompute(new Expression(name_Revit.Substring(1, name_Revit.Length - 1)), out string name_Revit_Temp, dictionary))
                                     name_Revit = name_Revit_Temp;
                             }
 

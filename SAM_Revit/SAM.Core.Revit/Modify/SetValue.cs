@@ -4,22 +4,6 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool SetValue(this Element element, string parameterName_Element, SAMObject sAMObject, string parameterName_SAMObject)
-        {
-            if (string.IsNullOrWhiteSpace(parameterName_SAMObject) || string.IsNullOrWhiteSpace(parameterName_Element) || sAMObject == null || element == null)
-                return false;
-
-            Parameter parameter = element.LookupParameter(parameterName_Element);
-            if (parameter == null)
-                return false;
-
-            object value;
-            if (!Core.Query.TryGetValue(sAMObject, parameterName_SAMObject, out value))
-                return false;
-
-            return SetValue(parameter, value);
-        }
-
         public static bool SetValue(this Parameter parameter, object value)
         {
             if (parameter == null || parameter.IsReadOnly)

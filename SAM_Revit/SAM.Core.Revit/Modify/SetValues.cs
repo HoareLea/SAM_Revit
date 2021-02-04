@@ -104,12 +104,20 @@ namespace SAM.Core.Revit
             {
                 foreach (string name_SAM in names_SAM.Distinct())
                 {
+                    object value;
+                    if (!Core.Query.TryGetValue(sAMObject, name_SAM, out value))
+                        return false;
+
                     List<string> names_Revit = typeMap.GetNames(type_SAMObject, type_Revit, name_SAM);
+                    List<string> formulas = typeMap.GetFormulas(type_SAMObject, type_Revit, name_SAM);
                     if (names_Revit != null || names_Revit.Count > 0)
                     {
                         for (int i = 0; i < names_Revit.Count; i++)
                         {
                             string name_Revit = names_Revit[i];
+                            string formula = null;
+                            if (formulas.Count > i)
+                                formula = formulas[i];
 
                             if (string.IsNullOrWhiteSpace(name_Revit))
                                 continue;
@@ -123,13 +131,38 @@ namespace SAM.Core.Revit
                                     dictionary["Object_2"] = element;
                                     dictionary["Name_1"] = name_SAM;
                                     dictionary["Name_2"] = name_Revit;
+                                    dictionary["Value"] = value;
                                 }
 
                                 if (Core.Query.TryCompute(new Expression(name_Revit.Substring(1, name_Revit.Length - 1)), out string name_Revit_Temp, dictionary))
                                     name_Revit = name_Revit_Temp;
                             }
 
-                            SetValue(element, name_Revit, sAMObject, name_SAM);
+                            Parameter parameter = element.LookupParameter(name_Revit);
+                            if (parameter == null)
+                                return false;
+
+                            object value_Temp = value;
+                            if(formula != null)
+                            {
+                                if (formula.StartsWith("="))
+                                    formula = formula.Substring(1, name_Revit.Length - 1);
+
+                                if (dictionary == null)
+                                {
+                                    dictionary = new Dictionary<string, object>();
+                                    dictionary["Object_1"] = sAMObject;
+                                    dictionary["Object_2"] = element;
+                                    dictionary["Name_1"] = name_SAM;
+                                    dictionary["Name_2"] = name_Revit;
+                                    dictionary["Value"] = value;
+                                }
+
+                                if (Core.Query.TryCompute(new Expression(formula), out object value_Temp_1, dictionary))
+                                    value_Temp = value_Temp_1;
+                            }
+
+                            SetValue(parameter, value_Temp);
                         }
                     }
                 }

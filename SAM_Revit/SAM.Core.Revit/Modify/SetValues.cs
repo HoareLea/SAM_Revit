@@ -106,7 +106,7 @@ namespace SAM.Core.Revit
                 {
                     object value;
                     if (!Core.Query.TryGetValue(sAMObject, name_SAM, out value))
-                        return false;
+                        continue;
 
                     List<string> names_Revit = typeMap.GetNames(type_SAMObject, type_Revit, name_SAM);
                     List<string> formulas = typeMap.GetFormulas(type_SAMObject, type_Revit, name_SAM);

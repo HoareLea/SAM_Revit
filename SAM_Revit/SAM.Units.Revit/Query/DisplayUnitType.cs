@@ -24,8 +24,8 @@ namespace SAM.Units.Revit
             if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_KILOGRAMS_MASS))
                 return Autodesk.Revit.DB.DisplayUnitType.DUT_KILOGRAMS_MASS;
 
-            if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_KELVIN))
-                return Autodesk.Revit.DB.DisplayUnitType.DUT_KELVIN;
+            if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_CELSIUS))
+                return Autodesk.Revit.DB.DisplayUnitType.DUT_CELSIUS;
 
             if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_AMPERES))
                 return Autodesk.Revit.DB.DisplayUnitType.DUT_AMPERES;

@@ -129,10 +129,11 @@ namespace SAM.Core.Revit
                                     dictionary = new Dictionary<string, object>();
                                     dictionary["Object_1"] = sAMObject;
                                     dictionary["Object_2"] = element;
-                                    dictionary["Name_1"] = name_SAM;
-                                    dictionary["Name_2"] = name_Revit;
-                                    dictionary["Value"] = value;
                                 }
+
+                                dictionary["Name_1"] = name_SAM;
+                                dictionary["Name_2"] = name_Revit;
+                                dictionary["Value"] = value;
 
                                 if (Core.Query.TryCompute(new Expression(name_Revit.Substring(1, name_Revit.Length - 1)), out string name_Revit_Temp, dictionary))
                                     name_Revit = name_Revit_Temp;
@@ -153,10 +154,11 @@ namespace SAM.Core.Revit
                                     dictionary = new Dictionary<string, object>();
                                     dictionary["Object_1"] = sAMObject;
                                     dictionary["Object_2"] = element;
-                                    dictionary["Name_1"] = name_SAM;
-                                    dictionary["Name_2"] = name_Revit;
-                                    dictionary["Value"] = value;
                                 }
+
+                                dictionary["Name_1"] = name_SAM;
+                                dictionary["Name_2"] = name_Revit;
+                                dictionary["Value"] = value;
 
                                 if (Core.Query.TryCompute(new Expression(formula), out object value_Temp_1, dictionary))
                                     value_Temp = value_Temp_1;

@@ -16,7 +16,7 @@
             if (occupiedHours == 0)
                 return 0;
 
-            return (occupiedHours / occupiedHours25) * 100;
+            return (System.Convert.ToDouble(occupiedHours25) / System.Convert.ToDouble(occupiedHours)) * 100;
         }
     }
 }

@@ -175,37 +175,21 @@ namespace SAM.Core.Revit
             if (parameter == null || value == null)
                 return false;
 
-            double value_Temp = double.NaN;
-            if (value is string)
-            {
-                if (!double.TryParse((string)value, out value_Temp))
-                    return false;
-            }
-            else if (value is double)
-            {
-                value_Temp = (double)value;
-            }
-            else if (value is int)
-            {
-                value_Temp = System.Convert.ToDouble(value);
-            }
+            if (!Core.Query.TryConvert(value, out double value_Temp))
+                return false;
 
             if (double.IsNaN(value_Temp))
                 return false;
 
             if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.Invalid)
-            {
-                parameter.Set(value_Temp);
-                return true;
-            }
+                return parameter.Set(value_Temp);
 
             value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.UnitType);
 
             if (double.IsNaN(value_Temp))
                 return false;
 
-            parameter.Set(value_Temp);
-            return true;
+            return parameter.Set(value_Temp);
         }
     }
 }

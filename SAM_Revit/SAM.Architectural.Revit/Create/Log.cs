@@ -35,7 +35,7 @@ namespace SAM.Architectural.Revit
             if (level_Revit == null)
                 result.Add("Revit Level with elevation {0} is missing.", LogRecordType.Error, level.Elevation);
             else if(!level_Revit.Name.Equals(level.Name))
-                result.Add("Revit Level {0} and SAM Level {1} names does not math.", LogRecordType.Warning, level_Revit.Name, level.Name);
+                result.Add("Revit Level {0} and SAM Level {1} names do not match.", LogRecordType.Warning, level_Revit.Name, level.Name);
 
             return result;
         }

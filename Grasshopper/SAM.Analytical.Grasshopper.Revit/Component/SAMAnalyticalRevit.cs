@@ -77,7 +77,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             if (sAMObject is AnalyticalModel)
+            {
+                convertSettings.AddParameter("AnalyticalModel", (AnalyticalModel)sAMObject);
                 sAMObject = ((AnalyticalModel)sAMObject).AdjacencyCluster;
+            }
+                
 
             if (!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
             {
@@ -88,6 +92,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (sAMObject is AdjacencyCluster)
             {
                 AdjacencyCluster adjacencyCluster = (AdjacencyCluster)sAMObject;
+
+                convertSettings.AddParameter("AdjacencyCluster", adjacencyCluster);
+
                 adjacencyCluster.GetPanels()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
                 adjacencyCluster.GetSpaces()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
             }

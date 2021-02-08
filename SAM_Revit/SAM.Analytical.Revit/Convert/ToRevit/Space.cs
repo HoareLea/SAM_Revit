@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -39,15 +38,17 @@ namespace SAM.Analytical.Revit
 
             if (convertSettings.ConvertParameters)
             {
+                Dictionary<string, object> parameters = convertSettings.GetParameters();
+
                 InternalCondition internalCondition = space.InternalCondition;
                 if(internalCondition != null)
                 {
                     Core.Revit.Modify.SetValues(result, internalCondition);
-                    Core.Revit.Modify.SetValues(result, internalCondition, ActiveSetting.Setting);
+                    Core.Revit.Modify.SetValues(result, internalCondition, ActiveSetting.Setting, parameters);
                 }
 
                 Core.Revit.Modify.SetValues(result, space);
-                Core.Revit.Modify.SetValues(result, space, ActiveSetting.Setting);
+                Core.Revit.Modify.SetValues(result, space, ActiveSetting.Setting, parameters);
 
                 Core.Revit.Modify.SetJson(result, space.ToJObject()?.ToString());
             }

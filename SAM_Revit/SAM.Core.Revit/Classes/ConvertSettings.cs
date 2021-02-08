@@ -13,10 +13,13 @@ namespace SAM.Core.Revit
 
         private Dictionary<string, List<object>> objects;
 
+        private Dictionary<string, object> parameters;
+
         public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting)
         {
             objects = new Dictionary<string, List<object>>();
-            
+            parameters = null;
+
             this.convertGeometry = convertGeometry;
             this.convertParameters = convertParameters;
             this.removeExisting = removeExisting;
@@ -24,11 +27,23 @@ namespace SAM.Core.Revit
 
         public ConvertSettings(ConvertSettings convertSettings)
         {
-            objects = new Dictionary<string, List<object>>();
-
             convertGeometry = convertSettings.convertGeometry;
             convertParameters = convertSettings.convertParameters;
             removeExisting = convertSettings.removeExisting;
+
+            if(convertSettings.parameters != null)
+            {
+                parameters = new Dictionary<string, object>();
+                foreach (KeyValuePair<string, object> keyValuePair in convertSettings.parameters)
+                    parameters[keyValuePair.Key] = keyValuePair.Value;
+            }
+
+            objects = new Dictionary<string, List<object>>();
+        }
+
+        public ConvertSettings(JObject jObject)
+        {
+            FromJObject(jObject);
         }
 
         public bool ConvertGeometry
@@ -53,6 +68,30 @@ namespace SAM.Core.Revit
             {
                 return removeExisting;
             }
+        }
+
+        public Dictionary<string, object> GetParameters()
+        {
+            if (parameters == null)
+                return null;
+
+            Dictionary<string, object> result = new Dictionary<string, object>();
+            foreach (KeyValuePair<string, object> keyValuePair in parameters)
+                result[keyValuePair.Key] = keyValuePair.Value;
+
+            return result;
+        }
+
+        public bool AddParameter(string name, object value)
+        {
+            if (name == null)
+                return false;
+
+            if (parameters == null)
+                parameters = new Dictionary<string, object>();
+
+            parameters[name] = value;
+            return true;
         }
 
         public bool FromJObject(JObject jObject)

@@ -73,6 +73,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            convertSettings.AddParameter("AdjacencyCluster", adjacencyCluster);
+
             List<Element> elements = Analytical.Revit.Convert.ToRevit(adjacencyCluster, document, convertSettings);
 
             dataAccess.SetDataList(0, elements);

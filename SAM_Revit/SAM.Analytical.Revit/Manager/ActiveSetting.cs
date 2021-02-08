@@ -117,8 +117,8 @@ namespace SAM.Analytical.Revit
             typeMap.Add(SpaceParameter.CoolingSizingFactor, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OversizingFactorCooling");
             typeMap.Add(SpaceParameter.HeatingSizingFactor, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OversizingFactorHeating");
             typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
-            typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "CoolingDesignTemperature", "SAM_WinterDesignTemperature", null, "[SAM.Analytical.Query.CoolingDesignTemperature(Object_1, AnalyticalModel)]");
-            typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "HeatingDesignTemperature", "SAM_SummerDesignTemperature", null, "[SAM.Analytical.Query.SummerDesignTemperature(Object_1, AnalyticalModel)]");
+            typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "HeatingDesignTemperature", "SAM_WinterDesignTemperature", null, "[SAM.Analytical.Query.HeatingDesignTemperature(Object_1, AnalyticalModel)]");
+            typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "CoolingDesignTemperature", "SAM_SummerDesignTemperature", null, "[SAM.Analytical.Query.CoolingDesignTemperature(Object_1, AnalyticalModel)]");
             typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "SpecificOccupancySensibleGain", "SAM_SpecOccupancySens", null, "[SAM.Analytical.Query.SpecificOccupancySensibleGain(Object_1)]");
 
             //SpaceSimulationResultParameter

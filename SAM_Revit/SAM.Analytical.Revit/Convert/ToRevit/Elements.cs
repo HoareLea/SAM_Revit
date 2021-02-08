@@ -110,7 +110,7 @@ namespace SAM.Analytical.Revit
             }
 
             List<SpaceSimulationResult> spaceSimulationResults = adjacencyCluster.GetObjects<SpaceSimulationResult>();
-            if (zoneSimulationResults != null)
+            if (spaceSimulationResults != null)
             {
                 foreach (SpaceSimulationResult spaceSimulationResult in spaceSimulationResults)
                 {

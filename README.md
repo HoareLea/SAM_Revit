@@ -5,3 +5,5 @@ link with Autodesk Revit
 
 To install SAM from .exe just download and run latest installer 
 https://github.com/HoareLea/SAM_Deploy/releases
+
+Please read [Wiki](https://github.com/HoareLea/SAM_Revit/wiki) for more details and some guidance. 

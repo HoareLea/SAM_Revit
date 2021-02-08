@@ -234,10 +234,10 @@ namespace SAM.Analytical.Revit
             typeMap_Result_Heating.Add(SpaceSimulationResultParameter.OpaqueExternalConduction, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_HDD_ExternalConductionOpaque'");
             typeMap_Result_Heating.Add(SpaceSimulationResultParameter.HumidityRatio, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_HDD_SpaceHumidityRatio'");
             typeMap_Result_Heating.Add(SpaceSimulationResultParameter.BuildingHeatTransfer, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_HDD_BuildingHeatTransfer'");
-            typeMap_Result_Cooling.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesSpecSensHeatLoad", null, "[SAM.Analytical.Query.SpecificLoad(Object_1)]");
-            typeMap_Result_Cooling.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Height'", null, "[SAM.Analytical.Query.Height(Object_1)]");
+            typeMap_Result_Heating.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesSpecSensHeatLoad", null, "[SAM.Analytical.Query.SpecificLoad(Object_1)]");
+            typeMap_Result_Heating.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Height'", null, "[SAM.Analytical.Query.Height(Object_1)]");
 
-            typeMap_Result_Cooling.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(ProjectInfo), "SAM_BuildingUnmetHoursHeating");
+            typeMap_Result_Heating.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(ProjectInfo), "SAM_BuildingUnmetHoursHeating");
             
             result.Add(Name.ResultHeatingMap, typeMap_Result_Heating);
 

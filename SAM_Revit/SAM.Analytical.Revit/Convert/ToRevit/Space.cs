@@ -39,6 +39,13 @@ namespace SAM.Analytical.Revit
 
             if (convertSettings.ConvertParameters)
             {
+                InternalCondition internalCondition = space.InternalCondition;
+                if(internalCondition != null)
+                {
+                    Core.Revit.Modify.SetValues(result, internalCondition);
+                    Core.Revit.Modify.SetValues(result, internalCondition, ActiveSetting.Setting);
+                }
+
                 Core.Revit.Modify.SetValues(result, space);
                 Core.Revit.Modify.SetValues(result, space, ActiveSetting.Setting);
 

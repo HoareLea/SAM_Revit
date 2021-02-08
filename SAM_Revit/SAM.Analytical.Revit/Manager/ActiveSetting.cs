@@ -71,6 +71,11 @@ namespace SAM.Analytical.Revit
             //InternalCondition
             typeMap.Add(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_IC_ThermalTemplate");
 
+
+            typeMap.Add(InternalConditionParameter.VentilationSystemTypeName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_VentType");
+            typeMap.Add(InternalConditionParameter.HeatingSystemTypeName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingTypePrimary");
+            typeMap.Add(InternalConditionParameter.CoolingSystemTypeName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingTypePrimary");
+
             typeMap.Add(InternalConditionParameter.OccupancyProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupacyProfile");
             typeMap.Add(InternalConditionParameter.OccupancySensibleGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantSensGain");
             typeMap.Add(InternalConditionParameter.OccupancyLatentGainPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupantLatGain");
@@ -92,12 +97,12 @@ namespace SAM.Analytical.Revit
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerArea, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrm2");
             typeMap.Add(InternalConditionParameter.PollutantGenerationPerPerson, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_PollutantGeneration_ghrperson");
             
-            typeMap.Add(InternalConditionParameter.HeatingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion");
-            typeMap.Add(InternalConditionParameter.HeatingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient");
+            typeMap.Add(InternalConditionParameter.HeatingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterRadiantProportion"); // Add formula to copy value from System if InternalCondition has no value
+            typeMap.Add(InternalConditionParameter.HeatingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_HeatingEmmiterCoefficient"); // Add formula to copy value from System if InternalCondition has no value
             typeMap.Add(InternalConditionParameter.HeatingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHeatingProfile");
             
-            typeMap.Add(InternalConditionParameter.CoolingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterRadiantProportion");
-            typeMap.Add(InternalConditionParameter.CoolingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterCoefficient");
+            typeMap.Add(InternalConditionParameter.CoolingEmitterRadiantProportion, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterRadiantProportion"); // Add formula to copy value from System if InternalCondition has no value
+            typeMap.Add(InternalConditionParameter.CoolingEmitterCoefficient, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_CoolingEmmiterCoefficient"); // Add formula to copy value from System if InternalCondition has no value
             typeMap.Add(InternalConditionParameter.CoolingProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceCoolingProfile");
             
             typeMap.Add(InternalConditionParameter.HumidificationProfileName, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_SpaceHumidificationProfile");
@@ -114,6 +119,8 @@ namespace SAM.Analytical.Revit
             typeMap.Add(typeof(Space), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_SpaceName");
 
             //SpaceSimulationResultParameter
+            typeMap.Add(SpaceSimulationResultParameter.Area, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Area'");
+            typeMap.Add(SpaceSimulationResultParameter.Volume, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Volume'");
             typeMap.Add(SpaceSimulationResultParameter.OccupiedHours, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_OccupancyNoHoursYearly");
             typeMap.Add(SpaceSimulationResultParameter.OccupiedHours25, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_ComfNoHoursAbv25'");
             typeMap.Add(SpaceSimulationResultParameter.OccupiedHours28, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_ComfNoHoursAbv28'");

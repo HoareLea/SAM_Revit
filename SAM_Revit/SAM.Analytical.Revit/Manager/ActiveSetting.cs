@@ -220,6 +220,7 @@ namespace SAM.Analytical.Revit
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneCLGTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirflow(AdjacencyCluster, Object_1)]");
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneCLGSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirflow(AdjacencyCluster, Object_1)]");
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneCLGSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirflow(AdjacencyCluster, Object_1)]");
+            parameterMap_Cooling.Add(ZoneSimulationResultParameter.MaxSensibleLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM_Zone' + [SAM.Core.Revit.Query.ZoneId(AdjacencyCluster, Object_1)] + 'CoolingSensLoad'");
             result.Add(Name.ParameterMap_Cooling, parameterMap_Cooling);
 
             TypeMap parameterMap_Heating= new TypeMap();
@@ -241,9 +242,10 @@ namespace SAM.Analytical.Revit
             parameterMap_Heating.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_DesSpecSensHeatLoad", null, "[SAM.Analytical.Query.SpecificLoad(Object_1)]");
             parameterMap_Heating.Add(SpaceSimulationResultParameter.Load, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Height'", null, "[SAM.Analytical.Query.Height(Object_1)]");
             parameterMap_Heating.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(ProjectInfo), "SAM_BuildingUnmetHoursHeating");
-            parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneHTGTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirflow(AdjacencyCluster, Object_1)]");
-            parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneHTGSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirflow(AdjacencyCluster, Object_1)]");
-            parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneHTGSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirflow(AdjacencyCluster, Object_1)]");
+            parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneHTGTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirflow(AdjacencyCluster, Object_1)]");
+            parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneHTGSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirflow(AdjacencyCluster, Object_1)]");
+            parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneHTGSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirflow(AdjacencyCluster, Object_1)]");
+            parameterMap_Heating.Add(ZoneSimulationResultParameter.MaxSensibleLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM_Zone' + [SAM.Core.Revit.Query.ZoneId(AdjacencyCluster, Object_1)] + 'HeatingSensLoad'");
             result.Add(Name.ParameterMap_Heating, parameterMap_Heating);
 
             TypeMap parameterMap_Ventilation = new TypeMap();

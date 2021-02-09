@@ -22,6 +22,10 @@ namespace SAM.Analytical.Revit
 
             if (convertSettings.ConvertParameters)
             {
+                string zoneParameterName = Query.ZoneParameterName(zone);
+
+                ZoneType zoneType = zone.ZoneType();
+               
                 List<Space> spaces = adjacencyCluster.GetSpaces(zone_Temp);
                 if (spaces != null)
                 {
@@ -40,8 +44,26 @@ namespace SAM.Analytical.Revit
                         if (space_Revit == null)
                             continue;
 
+                        if (!string.IsNullOrWhiteSpace(zoneParameterName))
+                        {
+                            IEnumerable<Parameter> parameters = space_Revit.GetParameters(zoneParameterName);
+                            if(parameters != null)
+                            {
+                                foreach (Parameter parameter in parameters)
+                                {
+                                    if (parameter == null || parameter.IsReadOnly || parameter.StorageType != StorageType.String)
+                                        continue;
+
+                                    parameter.Set(zone.Name);
+                                }
+                            }
+                        }
+
                         Core.Revit.Modify.SetValues(space_Revit, zone_Temp);
                         Core.Revit.Modify.SetValues(space_Revit, zone_Temp, ActiveSetting.Setting);
+
+                        if(zoneType != ZoneType.Undefined)
+                            Modify.SetValues(space_Revit, zone_Temp, ActiveSetting.Setting, zoneType);
                     }
                 }
             }

@@ -1,11 +1,12 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
     public static partial class Modify
     {
-        public static bool SetValues(this Element element, Result result, Setting setting, LoadType loadType)
+        public static bool SetValues(this Element element, Result result, Setting setting, LoadType loadType, Dictionary<string, object> parameters = null)
         {
             if (element == null || result == null)
                 return false;
@@ -29,10 +30,10 @@ namespace SAM.Analytical.Revit
             if (!setting.TryGetValue(name, out typeMap) || typeMap == null)
                 return false;
 
-            return Core.Revit.Modify.SetValues(element, result, typeMap);
+            return Core.Revit.Modify.SetValues(element, result, typeMap, parameters);
         }
 
-        public static bool SetValues(this Element element, Zone zone, Setting setting, ZoneType zoneType)
+        public static bool SetValues(this Element element, Zone zone, Setting setting, ZoneType zoneType, Dictionary<string, object> parameters = null)
         {
             if (element == null || zone == null)
                 return false;
@@ -60,7 +61,7 @@ namespace SAM.Analytical.Revit
             if (!setting.TryGetValue(name, out typeMap) || typeMap == null)
                 return false;
 
-            return Core.Revit.Modify.SetValues(element, zone, typeMap);
+            return Core.Revit.Modify.SetValues(element, zone, typeMap, parameters);
         }
     }
 }

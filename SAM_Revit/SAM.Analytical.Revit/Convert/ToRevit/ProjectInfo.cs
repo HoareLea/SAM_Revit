@@ -22,7 +22,7 @@ namespace SAM.Analytical.Revit
                 {
                     Core.Revit.Modify.SetValues(result, adjacencyClusterSimulationResult);
                     Core.Revit.Modify.SetValues(result, adjacencyClusterSimulationResult, ActiveSetting.Setting);
-                    Modify.SetValues(result, adjacencyClusterSimulationResult, ActiveSetting.Setting, adjacencyClusterSimulationResult.LoadType());
+                    Modify.SetValues(result, adjacencyClusterSimulationResult, ActiveSetting.Setting, adjacencyClusterSimulationResult.LoadType(), convertSettings?.GetParameters());
                 }
                 
             }

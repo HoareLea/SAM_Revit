@@ -63,7 +63,7 @@ namespace SAM.Analytical.Revit
                         Core.Revit.Modify.SetValues(space_Revit, zone_Temp, ActiveSetting.Setting);
 
                         if(zoneType != ZoneType.Undefined)
-                            Modify.SetValues(space_Revit, zone_Temp, ActiveSetting.Setting, zoneType);
+                            Modify.SetValues(space_Revit, zone_Temp, ActiveSetting.Setting, zoneType, convertSettings?.GetParameters());
                     }
                 }
             }
@@ -113,7 +113,13 @@ namespace SAM.Analytical.Revit
 
                                 Core.Revit.Modify.SetValues(space_Revit, zoneSimulationResult);
                                 Core.Revit.Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting);
-                                Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting, zoneSimulationResult.LoadType());
+
+
+                                //TODO: Fill correct parameters
+                                ZoneType zoneType = zone.ZoneType();
+                                LoadType loadType = zoneSimulationResult.LoadType();
+
+                                Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting, loadType, convertSettings?.GetParameters());
                             }
                         }
                     }
@@ -177,7 +183,7 @@ namespace SAM.Analytical.Revit
                 {
                     Core.Revit.Modify.SetValues(space, spaceSimulationResult);
                     Core.Revit.Modify.SetValues(space, spaceSimulationResult, ActiveSetting.Setting);
-                    Modify.SetValues(space, spaceSimulationResult, ActiveSetting.Setting, spaceSimulationResult.LoadType());
+                    Modify.SetValues(space, spaceSimulationResult, ActiveSetting.Setting, spaceSimulationResult.LoadType(), convertSettings?.GetParameters());
                 }
             }
 

@@ -33,9 +33,9 @@ namespace SAM.Analytical.Revit
             return Core.Revit.Modify.SetValues(element, result, typeMap, parameters);
         }
 
-        public static bool SetValues(this Element element, Zone zone, Setting setting, ZoneType zoneType, Dictionary<string, object> parameters = null)
+        public static bool SetValues(this Element element, SAMObject sAMObject, Setting setting, ZoneType zoneType, Dictionary<string, object> parameters = null)
         {
-            if (element == null || zone == null)
+            if (element == null || sAMObject == null)
                 return false;
 
             string name = null;
@@ -61,7 +61,7 @@ namespace SAM.Analytical.Revit
             if (!setting.TryGetValue(name, out typeMap) || typeMap == null)
                 return false;
 
-            return Core.Revit.Modify.SetValues(element, zone, typeMap, parameters);
+            return Core.Revit.Modify.SetValues(element, sAMObject, typeMap, parameters);
         }
     }
 }

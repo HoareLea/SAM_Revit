@@ -96,6 +96,10 @@ namespace SAM.Analytical.Revit
                         List<Space> spaces = adjacencyCluster.GetSpaces(zone);
                         if (spaces != null)
                         {
+                            ZoneType zoneType = zone.ZoneType();
+                            if (zoneType == ZoneType.Undefined)
+                                continue;
+
                             List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
 
                             foreach (Space space in spaces)
@@ -114,12 +118,7 @@ namespace SAM.Analytical.Revit
                                 Core.Revit.Modify.SetValues(space_Revit, zoneSimulationResult);
                                 Core.Revit.Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting);
 
-
-                                //TODO: Fill correct parameters
-                                ZoneType zoneType = zone.ZoneType();
-                                LoadType loadType = zoneSimulationResult.LoadType();
-
-                                Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting, loadType, convertSettings?.GetParameters());
+                                Modify.SetValues(space_Revit, zoneSimulationResult, ActiveSetting.Setting, zoneType, convertSettings?.GetParameters());
                             }
                         }
                     }

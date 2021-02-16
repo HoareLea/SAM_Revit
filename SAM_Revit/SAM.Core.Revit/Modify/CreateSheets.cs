@@ -65,30 +65,56 @@ namespace SAM.Core.Revit
             if (elementIds == null || elementIds.Count == 0)
                 return null;
 
-            List<ViewSheet> result = new List<ViewSheet>();
+            Dictionary<ElementId, List<View>> dictionary = new Dictionary<ElementId, List<View>>();
             foreach(View view in views)
             {
                 if (!elementIds.Contains(view.ViewTemplateId))
                     continue;
 
-                View viewTemplate = document.GetElement(view.ViewTemplateId) as View;
-
-                ViewSheet viewSheet_New = ViewSheet.Create(document, elementId_TitleBlockType);
-                if (viewSheet_New == null)
+                if (view.GenLevel == null)
                     continue;
 
-                try
+                ElementId elementId = view.ViewTemplateId;
+                if (elementId == null)
+                    elementId = ElementId.InvalidElementId;
+
+                if (!dictionary.TryGetValue(elementId, out List<View> views_Template) || views_Template == null)
                 {
-                    viewSheet_New.Name = string.Format("{0}_{1}", viewTemplate.Name, view.GenLevel.Name);
+                    views_Template = new List<View>();
+                    dictionary[elementId] = views_Template;
                 }
-                catch(System.Exception exception)
+
+                views_Template.Add(view);
+            }
+
+            List<ViewSheet> result = new List<ViewSheet>();
+            foreach(KeyValuePair<ElementId, List<View>> keyValuePair in dictionary)
+            {
+                View viewTemplate = document.GetElement(keyValuePair.Key) as View;
+
+                List<View> views_Template = keyValuePair.Value;
+
+                views_Template.Sort((x, y) => x.GenLevel.Elevation.CompareTo(y.GenLevel.Elevation));
+
+                foreach (View view in views_Template)
                 {
+                    ViewSheet viewSheet_New = ViewSheet.Create(document, elementId_TitleBlockType);
+                    if (viewSheet_New == null)
+                        continue;
 
+                    try
+                    {
+                        viewSheet_New.Name = string.Format("{0}_{1}", viewTemplate.Name, view.GenLevel.Name);
+                    }
+                    catch (System.Exception exception)
+                    {
+
+                    }
+
+                    Viewport viewport_New = Viewport.Create(document, viewSheet_New.Id, view.Id, xyz);
+
+                    result.Add(viewSheet_New);
                 }
-
-                Viewport viewport_New = Viewport.Create(document, viewSheet_New.Id, view.Id, xyz);
-
-                result.Add(viewSheet_New);
             }
 
             return result;

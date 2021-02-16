@@ -156,6 +156,7 @@
     <Compile Include="Component\SAMAnalyticalCreateMaterialLibrary.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
+    <Compile Include="Component\SAMAnalyticalUpdateConstructions.cs" />
     <Compile Include="Component\SAMAnalyticalUpdatePanelType.cs" />
     <Compile Include="Component\SAMApertureRevit.cs" />
     <Compile Include="Component\SAMAnalyticalResultRevit.cs" />
@@ -167,7 +168,6 @@
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
     <Compile Include="Component\RevitLinkSAMAnalyticalByTypeName.cs" />
     <Compile Include="Component\RevitSAMAnalytical.cs" />
-    <Compile Include="Component\SAMAnalyticalUpdateConstruction.cs" />
     <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
     <Compile Include="Component\SAMPanelRevit.cs" />
     <Compile Include="Component\SAMAnalyticalTrimOrExtendWall.cs" />

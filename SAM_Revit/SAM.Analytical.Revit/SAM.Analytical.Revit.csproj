@@ -134,6 +134,7 @@
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Modify\UpdateConstructions.cs" />
     <Compile Include="Modify\MapZones.cs" />
     <Compile Include="Modify\SetValues.cs" />
     <Compile Include="Modify\TrimOrExtendWall.cs" />

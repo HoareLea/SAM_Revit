@@ -204,8 +204,10 @@
     <Compile Include="Create\RevitFilePreview.cs" />
     <Compile Include="Create\Log.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
+    <Compile Include="Enums\ViewType.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\RemoveExisting.cs" />
+    <Compile Include="Modify\DuplicateViews.cs" />
     <Compile Include="Modify\SetJson.cs" />
     <Compile Include="Modify\SetDefault.cs" />
     <Compile Include="Modify\UpdateParameterSets.cs" />

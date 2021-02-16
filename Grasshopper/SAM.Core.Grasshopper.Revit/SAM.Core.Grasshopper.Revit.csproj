@@ -153,12 +153,14 @@
     <Compile Include="Classes\SAMReconstructElementComponent.cs" />
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Classes\SAMTransactionComponent.cs" />
+    <Compile Include="Component\SAMCoreDuplicateViewsByTemplateName.cs" />
     <Compile Include="Component\SAMCoreDeleteElement.cs" />
     <Compile Include="Component\SAMCoreElementsByScopeBox.cs" />
     <Compile Include="Component\RevitUpdateParameters.cs" />
     <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />
     <Compile Include="Component\SAMCoreConvertSettings.cs" />
+    <Compile Include="Component\SAMCoreViewType.cs" />
     <Compile Include="Modify\UpdateSolutionEndEventHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -192,7 +194,7 @@
     </PackageReference>
     <PackageReference Include="Rhino.Inside">
       <Version>7.0.0</Version>
-	  <ExcludeAssets>runtime</ExcludeAssets>
+      <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -240,10 +242,10 @@ copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
 if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
 copy "$(SolutionDir)files\Grasshopper\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 
-echo #Order of files is important > "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
-echo %25SAM_REVIT_DIR%25\SAM.Core.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
-echo %25SAM_REVIT_DIR%25\SAM.Architectural.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
-echo %25SAM_REVIT_DIR%25\SAM.Analytical.Grasshopper.Revit.gha >> "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo #Order of files is important &gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Core.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Architectural.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+echo %25SAM_REVIT_DIR%25\SAM.Analytical.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 
 
 xcopy "$(SolutionDir)\files\resources" "$(APPDATA)\SAM\" /Y /I /E/S

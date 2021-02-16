@@ -21,6 +21,10 @@ namespace SAM.Core.Revit
             if (viewport == null)
                 return null;
 
+            View view_Source = document.GetElement(viewport.ViewId) as View;
+            if (view_Source == null)
+                return null;
+
             XYZ xyz = viewport.GetBoxCenter();
             if (xyz == null)
                 return null;
@@ -37,7 +41,10 @@ namespace SAM.Core.Revit
             List<View> views = new List<View>();
             foreach (View view in views_All)
             {
-                if (referenceViewSheet.ViewType != view.ViewType || referenceViewSheet.Id == view.Id)
+                if (view is ViewSheet)
+                    continue;
+
+                if (view_Source.ViewType != view.ViewType || view_Source.Id == view.Id)
                     continue;
 
                 if (view.IsTemplate)

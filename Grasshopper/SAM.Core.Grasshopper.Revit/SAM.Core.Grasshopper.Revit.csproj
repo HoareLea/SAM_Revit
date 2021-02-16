@@ -153,6 +153,7 @@
     <Compile Include="Classes\SAMReconstructElementComponent.cs" />
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Classes\SAMTransactionComponent.cs" />
+    <Compile Include="Component\SAMCoreDeleteViewsByTemplateName.cs" />
     <Compile Include="Component\SAMCoreDuplicateViewsByTemplateName.cs" />
     <Compile Include="Component\SAMCoreDeleteElement.cs" />
     <Compile Include="Component\SAMCoreElementsByScopeBox.cs" />

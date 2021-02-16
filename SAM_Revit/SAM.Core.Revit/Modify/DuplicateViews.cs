@@ -19,7 +19,7 @@ namespace SAM.Core.Revit
             List<View> views = new List<View>();
             foreach (View view in views_All)
             {
-                if (viewTypes != null && !viewTypes.Contains(view.ViewType))
+                if (viewTypes != null && viewTypes.Count() != 0 && !viewTypes.Contains(view.ViewType))
                     continue;
 
                 if (view.IsTemplate)

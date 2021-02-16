@@ -86,7 +86,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Core.ViewType> viewTypes = null;
 
             List<string> viewTypeNames = new List<string>();
-            if (!dataAccess.GetDataList(2, viewTypeNames))
+            if (dataAccess.GetDataList(2, viewTypeNames))
             {
                 if(viewTypeNames != null && viewTypeNames.Count != 0)
                 {

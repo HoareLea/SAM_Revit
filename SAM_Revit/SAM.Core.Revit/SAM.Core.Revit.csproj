@@ -204,6 +204,7 @@
     <Compile Include="Create\RevitFilePreview.cs" />
     <Compile Include="Create\Log.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
+    <Compile Include="Enums\WallKind.cs" />
     <Compile Include="Enums\ViewType.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\CreateSheets.cs" />
@@ -212,6 +213,8 @@
     <Compile Include="Modify\DuplicateViews.cs" />
     <Compile Include="Modify\SetJson.cs" />
     <Compile Include="Modify\SetDefault.cs" />
+    <Compile Include="Modify\TagElements.cs" />
+    <Compile Include="Modify\TagSpaces.cs" />
     <Compile Include="Modify\UpdateParameterSets.cs" />
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />
@@ -220,6 +223,7 @@
     <Compile Include="Query\ClosestLevel.cs" />
     <Compile Include="Query\BoundingBoxXYZ.cs" />
     <Compile Include="Query\ParameterNamePrefix.cs" />
+    <Compile Include="Query\IsValidTagCategory.cs" />
     <Compile Include="Query\UniqueId.cs" />
     <Compile Include="Query\Name.cs" />
     <Compile Include="Query\Location.cs" />

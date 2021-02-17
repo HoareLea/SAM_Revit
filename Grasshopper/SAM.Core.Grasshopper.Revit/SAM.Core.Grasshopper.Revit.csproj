@@ -154,6 +154,8 @@
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Classes\SAMTransactionComponent.cs" />
     <Compile Include="Component\SAMCoreCreateSheets.cs" />
+    <Compile Include="Component\SAMCoreGetWalls.cs" />
+    <Compile Include="Component\SAMCoreTagSpaces.cs" />
     <Compile Include="Component\SAMCoreDeleteViewsByTemplateName.cs" />
     <Compile Include="Component\SAMCoreDuplicateViewsByTemplateName.cs" />
     <Compile Include="Component\SAMCoreDeleteElement.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Component\SAMCoreGetLocation.cs" />
     <Compile Include="Component\SAMCoreFilterByElementIds.cs" />
     <Compile Include="Component\SAMCoreConvertSettings.cs" />
+    <Compile Include="Component\SAMCoreWallKind.cs" />
     <Compile Include="Component\SAMCoreViewType.cs" />
     <Compile Include="Modify\UpdateSolutionEndEventHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

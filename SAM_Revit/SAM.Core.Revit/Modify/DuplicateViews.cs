@@ -36,6 +36,17 @@ namespace SAM.Core.Revit
             if (views_Source == null || views_Source.Count == 0)
                 return null;
 
+            HashSet<ElementId> elementIds_Dependent = new HashSet<ElementId>();
+            foreach(View view_Source in views_Source)
+            {
+                IEnumerable<ElementId> elementIds_Dependent_Temp = view_Source.GetDependentViewIds();
+                if (elementIds_Dependent_Temp == null || elementIds_Dependent_Temp.Count() == 0)
+                    continue;
+
+                foreach (ElementId elementId in elementIds_Dependent_Temp)
+                    elementIds_Dependent.Add(elementId);
+            }
+
             List<View> views_Template_Destination = templateNames_Destionation.ToList().ConvertAll(x => views_Templates.Find(y => y.Name == x));
             if (views_Template_Destination == null)
                 return null;
@@ -47,6 +58,12 @@ namespace SAM.Core.Revit
             List<View> result = new List<View>();
             foreach (View view_Source in views_Source)
             {
+                if (view_Source == null)
+                    continue;
+
+                if (elementIds_Dependent.Contains(view_Source.Id))
+                    continue;
+                
                 ElementId elementId_Level = view_Source.GenLevel.Id;
                 ElementId elementId_ScopeBox = view_Source.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP)?.AsElementId();
 
@@ -72,7 +89,15 @@ namespace SAM.Core.Revit
 
                     view_New.ViewTemplateId = view_Template_Destination.Id;
                     view_New.ApplyViewTemplateParameters(view_Source);
-                    view_New.Name = string.Format("{0}_{1}", view_Source.GenLevel.Name, view_Template_Destination.Name);
+                    try
+                    {
+                        view_New.Name = string.Format("{0}_{1}", view_Source.GenLevel.Name, view_Template_Destination.Name);
+                    }
+                    catch
+                    {
+
+                    }
+                    
                     view_New.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP)?.Set(elementId_ScopeBox);
 
                     result.Add(view_New);
@@ -84,7 +109,7 @@ namespace SAM.Core.Revit
                             if (elementId_DependentView_ScopeBox == null || elementId_DependentView_ScopeBox == ElementId.InvalidElementId)
                                 continue;
 
-                            ElementId elementId_View_New_Dependent = view_Source.Duplicate(ViewDuplicateOption.AsDependent);
+                            ElementId elementId_View_New_Dependent = view_New.Duplicate(ViewDuplicateOption.AsDependent);
                             if (elementId_View_New_Dependent == null || elementId_View_New_Dependent == ElementId.InvalidElementId)
                                 continue;
 
@@ -93,6 +118,15 @@ namespace SAM.Core.Revit
                                 continue;
 
                             view_New_Dependent.get_Parameter(BuiltInParameter.VIEWER_VOLUME_OF_INTEREST_CROP)?.Set(elementId_DependentView_ScopeBox);
+
+                            try
+                            {
+                                view_New_Dependent.Name = string.Format("{0}_{1}_{2}", view_Source.GenLevel.Name, view_Template_Destination.Name, document.GetElement(elementId_DependentView_ScopeBox).Name);
+                            }
+                            catch
+                            {
+
+                            }
 
                             result.Add(view_New_Dependent);
                         }

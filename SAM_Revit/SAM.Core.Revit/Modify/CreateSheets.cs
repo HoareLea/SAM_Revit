@@ -25,7 +25,7 @@ namespace SAM.Core.Revit
             if (view_Source == null)
                 return null;
 
-            ElementId ElementId_scopeBox = matchScopeBox ? view_Source.ScopeBox()?.Id : null;
+            Element scopeBox = matchScopeBox ? view_Source.ScopeBox() : null;
 
             XYZ xyz = viewport.GetBoxCenter();
             if (xyz == null)
@@ -82,7 +82,7 @@ namespace SAM.Core.Revit
 
                 if (matchScopeBox)
                 {
-                    if (view.ScopeBox()?.Id != ElementId_scopeBox)
+                    if (view.ScopeBox()?.Id != scopeBox?.Id)
                         continue;
                 }
 
@@ -112,7 +112,10 @@ namespace SAM.Core.Revit
 
                     try
                     {
-                        viewSheet_New.Name = string.Format("{0}_{1}", viewTemplate.Name, view.GenLevel.Name);
+                        if(matchScopeBox && scopeBox != null && !string.IsNullOrWhiteSpace(scopeBox.Name))
+                            viewSheet_New.Name = string.Format("{0}_{1}_{2}", viewTemplate.Name, view.GenLevel.Name, scopeBox.Name);
+                        else
+                            viewSheet_New.Name = string.Format("{0}_{1}", viewTemplate.Name, view.GenLevel.Name);
                     }
                     catch (System.Exception exception)
                     {

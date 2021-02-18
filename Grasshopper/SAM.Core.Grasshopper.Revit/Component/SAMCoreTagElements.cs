@@ -162,6 +162,18 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 if(familySymbol == null)
                 {
+                    try
+                    {
+                        familySymbol = document.GetElement(@string) as FamilySymbol;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                if(familySymbol == null)
+                {
                     List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>().ToList();
                     familySymbols.RemoveAll(x => x.Category == null || !x.Category.IsTagCategory);
 
@@ -175,8 +187,12 @@ namespace SAM.Analytical.Grasshopper.Revit
                 if (familySymbol != null)
                     elementId = familySymbol.Id;
             }
+            else if (value is RhinoInside.Revit.GH.Types.Element)
+            {
+                elementId = ((RhinoInside.Revit.GH.Types.Element)value).Id;
+            }
 
-            if(elementId == null || elementId == ElementId.InvalidElementId)
+            if (elementId == null || elementId == ElementId.InvalidElementId)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

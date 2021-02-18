@@ -51,7 +51,7 @@ namespace SAM.Core.Revit
 
             foreach (ElementId elementId in elementIds_View)
             {
-                if (elementId == null || elementId != ElementId.InvalidElementId)
+                if (elementId == null || elementId == ElementId.InvalidElementId)
                     continue;
 
                 if (!elementIds.Contains(elementId))

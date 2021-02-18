@@ -133,7 +133,19 @@ namespace SAM.Analytical.Grasshopper.Revit
                     spaceTagType = document.GetElement(elementId) as Autodesk.Revit.DB.Mechanical.SpaceTagType;
                 }
 
-                if(spaceTagType == null)
+                if (spaceTagType == null)
+                {
+                    try
+                    {
+                        spaceTagType = document.GetElement(@string) as Autodesk.Revit.DB.Mechanical.SpaceTagType;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+
+                if (spaceTagType == null)
                 {
                     List<Autodesk.Revit.DB.Mechanical.SpaceTagType> spaceTagTypes = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Mechanical.SpaceTagType)).Cast<Autodesk.Revit.DB.Mechanical.SpaceTagType>().ToList();
                     spaceTagType = spaceTagTypes.Find(x => x.Name.Equals(@string));
@@ -145,6 +157,10 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 if (spaceTagType != null)
                     elementId = spaceTagType.Id;
+            }
+            else if(value is RhinoInside.Revit.GH.Types.Element)
+            {
+                elementId = ((RhinoInside.Revit.GH.Types.Element)value).Id;
             }
 
             if(elementId == null || elementId == ElementId.InvalidElementId)

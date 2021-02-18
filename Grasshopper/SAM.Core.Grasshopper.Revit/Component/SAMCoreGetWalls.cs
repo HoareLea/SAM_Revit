@@ -40,14 +40,14 @@ namespace SAM.Core.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            Param_String param_String = new Param_String();
+            Param_String param_String = new Param_String() { Optional = true};
             param_String.SetPersistentData(new string[] { WallKind.Basic.ToString() });
-            inputParamManager.AddParameter(param_String, "_wallKinds", "_wallKinds", "_wallKinds", GH_ParamAccess.list);
+            inputParamManager.AddParameter(param_String, "_wallKinds_", "_wallKinds_", "_wallKinds_", GH_ParamAccess.list);
 
 
-            Param_Boolean param_Boolean = new Param_Boolean();
+            Param_Boolean param_Boolean = new Param_Boolean() { Optional = true};
             param_Boolean.SetPersistentData(false);
-            inputParamManager.AddParameter(param_Boolean, "_inverted", "_inverted", "Inverted", GH_ParamAccess.item);
+            inputParamManager.AddParameter(param_Boolean, "_inverted_", "_inverted_", "Inverted_", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -79,6 +79,10 @@ namespace SAM.Core.Grasshopper.Revit
                             wallKinds.Add(wallKind);
                 }
             }
+            else
+            {
+                wallKinds = new List<WallKind>() { WallKind.Basic };
+            }
 
             bool inverted = false;
             dataAccess.GetData(1, ref inverted);
@@ -94,7 +98,7 @@ namespace SAM.Core.Grasshopper.Revit
                     walls = walls?.FindAll(x => wallKinds.Contains((WallKind)(int)x.WallType.Kind));
             }
 
-            dataAccess.SetData(0, walls);
+            dataAccess.SetDataList(0, walls);
         }
     }
 }

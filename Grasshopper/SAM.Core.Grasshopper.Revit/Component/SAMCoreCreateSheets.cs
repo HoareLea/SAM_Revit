@@ -46,6 +46,10 @@ namespace SAM.Analytical.Grasshopper.Revit
             inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.View(), "_referenceViewSheet", "_referenceViewSheet", "Elements to be deleted", GH_ParamAccess.item);
             inputParamManager.AddTextParameter("_templateNames", "_templateNames", "View Templates Names", GH_ParamAccess.list);
 
+            global::Grasshopper.Kernel.Parameters.Param_Boolean boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_matchScopeBox_", NickName = "_matchScopeBox_", Description = "Match Scope Box", Access = GH_ParamAccess.item };
+            boolean.SetPersistentData(false);
+            inputParamManager.AddParameter(boolean);
+
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
@@ -60,7 +64,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            if (!dataAccess.GetData(3, ref run) || !run)
                 return;
 
 
@@ -79,7 +83,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            List<ViewSheet> viewSheets = Core.Revit.Modify.CreateSheets((ViewSheet)view, templateNames);
+            bool matchScopeBox = false;
+            if (!dataAccess.GetData(2, ref matchScopeBox))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            List<ViewSheet> viewSheets = Core.Revit.Modify.CreateSheets((ViewSheet)view, templateNames, matchScopeBox);
 
             dataAccess.SetDataList(0, viewSheets);
         }

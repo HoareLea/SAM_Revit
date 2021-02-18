@@ -6,7 +6,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static List<ViewSheet> CreateSheets(this ViewSheet referenceViewSheet, IEnumerable<string> templateNames)
+        public static List<ViewSheet> CreateSheets(this ViewSheet referenceViewSheet, IEnumerable<string> templateNames, bool matchScopeBox)
         {
             if (referenceViewSheet == null || templateNames == null || templateNames.Count() == 0)
                 return null;
@@ -24,6 +24,8 @@ namespace SAM.Core.Revit
             View view_Source = document.GetElement(viewport.ViewId) as View;
             if (view_Source == null)
                 return null;
+
+            ElementId ElementId_scopeBox = matchScopeBox ? view_Source.ScopeBox()?.Id : null;
 
             XYZ xyz = viewport.GetBoxCenter();
             if (xyz == null)
@@ -77,6 +79,12 @@ namespace SAM.Core.Revit
                 ElementId elementId = view.ViewTemplateId;
                 if (elementId == null)
                     elementId = ElementId.InvalidElementId;
+
+                if (matchScopeBox)
+                {
+                    if (view.ScopeBox()?.Id != ElementId_scopeBox)
+                        continue;
+                }
 
                 if (!dictionary.TryGetValue(elementId, out List<View> views_Template) || views_Template == null)
                 {

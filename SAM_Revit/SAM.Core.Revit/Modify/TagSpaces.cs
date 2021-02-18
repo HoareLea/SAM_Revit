@@ -86,8 +86,21 @@ namespace SAM.Core.Revit
                 if (views_Temp == null || views_Temp.Count == 0)
                     continue;
 
-                foreach(View view in views_Temp)
+                List<ElementId> elementIds_DependentView = new List<ElementId>();
+                foreach (View view_Temp in views_Temp)
                 {
+                    IEnumerable<ElementId> elementIds_DependentView_Temp = view_Temp.GetDependentViewIds();
+                    if (elementIds_DependentView_Temp == null || elementIds_DependentView_Temp.Count() == 0)
+                        continue;
+
+                    elementIds_DependentView.AddRange(elementIds_DependentView_Temp);
+                }
+
+                foreach (View view in views_Temp)
+                {
+                    if (elementIds_DependentView.Contains(view.Id))
+                        continue;
+
                     List<SpaceTag> spaceTags = TagSpaces(view, elementId_Tag);
                     if (spaceTags != null)
                         result.AddRange(spaceTags);

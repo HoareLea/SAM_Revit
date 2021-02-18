@@ -135,13 +135,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 if (spaceTagType == null)
                 {
-                    try
+                    if (RhinoInside.Revit.External.DB.FullUniqueId.TryParse(@string, out Guid documentGuid, out string uniqueId))
                     {
-                        spaceTagType = document.GetElement(@string) as Autodesk.Revit.DB.Mechanical.SpaceTagType;
-                    }
-                    catch
-                    {
-
+                        spaceTagType = document.GetElement(uniqueId) as Autodesk.Revit.DB.Mechanical.SpaceTagType;
                     }
                 }
 

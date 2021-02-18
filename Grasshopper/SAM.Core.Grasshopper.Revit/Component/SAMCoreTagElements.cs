@@ -162,13 +162,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 if(familySymbol == null)
                 {
-                    try
+                    if(RhinoInside.Revit.External.DB.FullUniqueId.TryParse(@string, out Guid documentGuid, out string uniqueId))
                     {
-                        familySymbol = document.GetElement(@string) as FamilySymbol;
-                    }
-                    catch
-                    {
-
+                        familySymbol = document.GetElement(uniqueId) as FamilySymbol;
                     }
                 }
 

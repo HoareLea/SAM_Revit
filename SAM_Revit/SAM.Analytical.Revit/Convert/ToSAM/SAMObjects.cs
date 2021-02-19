@@ -47,7 +47,15 @@ namespace SAM.Analytical.Revit
                         result = new List<Core.SAMObject>() { apertureConstruction };
                 }
             }
-
+            else if (element is ModelCurve)
+            {
+                if(element.Category != null && (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_MEPSpaceSeparationLines || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_RoomSeparationLines))
+                {
+                    List<Panel> panels = ToSAM_Panels((ModelCurve)element, convertSettings);
+                    if (panels != null)
+                        result = panels.ConvertAll(x => x as Core.SAMObject);
+                }
+            }
             return result;
         }
     }

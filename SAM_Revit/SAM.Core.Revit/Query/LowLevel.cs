@@ -10,16 +10,24 @@ namespace SAM.Core.Revit
         {
             if (level == null)
                 return null;
+            
+            return LowLevel(level.Document, level.Elevation);
+        }
 
-            List<Level> levels = new FilteredElementCollector(level.Document).OfClass(typeof(Level)).Cast<Level>().ToList();
+        public static Level LowLevel(this Document document, double elevation)
+        {
+            if (document == null || double.IsNaN(elevation))
+                return null;
+
+            List<Level> levels = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
 
             levels.Sort((x, y) => x.Elevation.CompareTo(y.Elevation));
 
-            if (level.Elevation < levels.First().Elevation)
+            if (elevation < levels.First().Elevation)
                 return null;
 
             for (int i = 1; i < levels.Count; i++)
-                if (level.Elevation <= levels[i].Elevation)
+                if (elevation <= levels[i].Elevation)
                     return levels[i - 1];
 
             return levels[0];

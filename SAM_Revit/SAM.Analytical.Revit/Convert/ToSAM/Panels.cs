@@ -148,6 +148,7 @@ namespace SAM.Analytical.Revit
 
             Document document = modelCurve.Document;
 
+            result = new List<Panel>();
             foreach(Segment3D segment3D in segment3Ds)
             {
                 double elevation_Min = System.Math.Max(segment3D[0].Z, segment3D[1].Z);

@@ -88,8 +88,20 @@ namespace SAM.Core.Revit
                 if (xyz == null)
                     continue;
 
+
+
+#if Revit2017
+                IndependentTag independentTag = document.Create.NewTag(view, element, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
+                independentTag?.ChangeTypeId(elementId_Tag);
+#elif Revit2018
+                Reference reference = new Reference(element);
+                IndependentTag independentTag = IndependentTag.Create(document, view.Id, reference, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
+                independentTag?.ChangeTypeId(elementId_Tag);
+#else
                 Reference reference = new Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, elementId_Tag, view.Id, reference, addLeader, tagOrientation, xyz);
+#endif
+
                 if (independentTag != null)
                     result.Add(independentTag);
             }

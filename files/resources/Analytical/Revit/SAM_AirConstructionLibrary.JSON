@@ -14,7 +14,7 @@
           "Guid": "fbbd5ce9-757a-428f-bdde-a709200fe79a",
           "Parameters": [
             {
-              "Name": "SAM_BuildingElementType",
+              "Name": "Dafault Panel Type",
               "Value": "Floor"
             }
           ]
@@ -32,7 +32,7 @@
           "Guid": "fbbd5ce9-757a-428f-bdde-a709200fe79a",
           "Parameters": [
             {
-              "Name": "SAM_BuildingElementType",
+              "Name": "Dafault Panel Type",
               "Value": "Wall"
             }
           ]

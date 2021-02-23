@@ -11,7 +11,7 @@ namespace SAM.Core.Revit
         private string vendorId = "SAM";
         private AccessLevel readAccessLevel = AccessLevel.Vendor;
         private AccessLevel writeAccessLevel = AccessLevel.Vendor;
-        private string fieldName = "SAM Data";
+        private string fieldName = "Data";
         private string fieldDocumentation = "SAM Data Field";
 
         public SAMSchema(Guid guid)
@@ -93,7 +93,6 @@ namespace SAM.Core.Revit
                 return null;
 
             SchemaBuilder schemaBuilder = new SchemaBuilder(Guid);
-            schemaBuilder.SetSchemaName(Name);
             schemaBuilder.SetReadAccessLevel(readAccessLevel);
             schemaBuilder.SetWriteAccessLevel(writeAccessLevel);
             schemaBuilder.SetVendorId(vendorId);
@@ -105,6 +104,7 @@ namespace SAM.Core.Revit
                     fieldBuilder.SetDocumentation(fieldDocumentation);
             }
 
+            schemaBuilder.SetSchemaName(Name);
             return schemaBuilder.Finish();
         }
 
@@ -179,7 +179,11 @@ namespace SAM.Core.Revit
 
         public T GetIJSAMObject<T>(Autodesk.Revit.DB.Element element) where T : IJSAMObject
         {
-            return GetIJSAMObjects<T>(element).FirstOrDefault();
+            List<T> jSAMObjects = GetIJSAMObjects<T>(element);
+            if (jSAMObjects == null || jSAMObjects.Count == 0)
+                return default(T);
+
+            return jSAMObjects[0];
         }
 
         public bool SetIJSAMObject(Autodesk.Revit.DB.Element element, IJSAMObject jSAMObject)

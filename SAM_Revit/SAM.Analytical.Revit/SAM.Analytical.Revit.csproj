@@ -133,6 +133,7 @@
     <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Panels.cs" />
+    <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\UpdateConstructions.cs" />
     <Compile Include="Modify\MapZones.cs" />

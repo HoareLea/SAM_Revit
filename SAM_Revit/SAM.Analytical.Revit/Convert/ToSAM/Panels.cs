@@ -165,8 +165,8 @@ namespace SAM.Analytical.Revit
                 Face3D face3D = new Face3D(new Polygon3D(new Point3D[] { segment3D[0], segment3D[1], segment3D[1].GetMoved(vector3D) as Point3D, segment3D[0].GetMoved(vector3D) as Point3D}));
 
                 Panel panel = new Panel(construction, panelType, face3D);
-                panel.UpdateParameterSets(modelCurve, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
-
+                panel.UpdateParameterSets(modelCurve, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap), null, new string[] { "Length" }, true);
+                panel.SetValue(RevitPanelParameter.Length, segment3D.GetLength());
                 result.Add(panel);
             }
 

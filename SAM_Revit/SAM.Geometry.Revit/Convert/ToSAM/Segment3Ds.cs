@@ -24,7 +24,7 @@ namespace SAM.Geometry.Revit
             for (int i = 0; i < point3Ds.Count - 1; i++)
                 result.Add(new Segment3D(point3Ds[i], point3Ds[i + 1]));
 
-            if (curve.IsBound && point3Ds.Count > 2)
+            if (!curve.IsBound && point3Ds.Count > 2)
                 result.Add(new Segment3D(point3Ds.Last(), point3Ds.First()));
 
             return result;

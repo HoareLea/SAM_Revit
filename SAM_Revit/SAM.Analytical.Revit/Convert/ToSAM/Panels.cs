@@ -151,16 +151,18 @@ namespace SAM.Analytical.Revit
             result = new List<Panel>();
             foreach(Segment3D segment3D in segment3Ds)
             {
-                double elevation_Min = System.Math.Max(segment3D[0].Z, segment3D[1].Z);
+                //double elevation_Min = System.Math.Max(segment3D[0].Z, segment3D[1].Z);
+                double elevation_Min = (document.GetElement(modelCurve.LevelId) as Level).Elevation;
 
-                Level level_Max = Core.Revit.Query.HighLevel(document, UnitUtils.ConvertToInternalUnits(elevation_Min, DisplayUnitType.DUT_METERS));
+                //Level level_Max = Core.Revit.Query.HighLevel(document, UnitUtils.ConvertToInternalUnits(elevation_Min, DisplayUnitType.DUT_METERS));
+                Level level_Max = Core.Revit.Query.HighLevel(document, elevation_Min);
                 if (level_Max == null)
                     continue;
 
-                double elevation_Max = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation, DisplayUnitType.DUT_METERS);
-                Geometry.Spatial.Plane plane_Max = new Geometry.Spatial.Plane(new Point3D(0, 0, elevation_Max), new Vector3D(0, 0, 1));
+                double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, DisplayUnitType.DUT_METERS);
+                Vector3D vector3D = new Vector3D(0, 0, height);
 
-                Face3D face3D = new Face3D(new Polygon3D(new Point3D[] { segment3D[0], segment3D[1], plane_Max.Project(segment3D[1]), plane_Max.Project(segment3D[0]) }));
+                Face3D face3D = new Face3D(new Polygon3D(new Point3D[] { segment3D[0], segment3D[1], segment3D[1].GetMoved(vector3D) as Point3D, segment3D[0].GetMoved(vector3D) as Point3D}));
 
                 Panel panel = new Panel(construction, panelType, face3D);
                 panel.UpdateParameterSets(modelCurve, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));

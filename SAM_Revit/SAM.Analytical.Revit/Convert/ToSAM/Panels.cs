@@ -104,7 +104,7 @@ namespace SAM.Analytical.Revit
             }
 
             logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_MEPSpaceSeparationLines, BuiltInCategory.OST_RoomSeparationLines}).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
-            IEnumerable<ModelCurve> modelCurves = new FilteredElementCollector(document).WherePasses(logicalOrFilter).OfClass(typeof(ModelCurve)).WhereElementIsNotElementType().Cast<ModelCurve>();
+            IEnumerable<ModelCurve> modelCurves = new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsNotElementType()?.ToList().FindAll(x => x is ModelCurve).Cast<ModelCurve>();
             if (modelCurves != null && modelCurves.Count() != 0)
             {
                 foreach (ModelCurve modelCurve in modelCurves)

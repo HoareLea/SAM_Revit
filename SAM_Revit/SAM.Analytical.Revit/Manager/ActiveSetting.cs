@@ -57,7 +57,8 @@ namespace SAM.Analytical.Revit
             parameterMap_General.Add(ApertureConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
             parameterMap_General.Add(ApertureConstructionParameter.DefaultFrameWidth, typeof(FamilySymbol), "SAM_BuildingElementFrameWidth");
             parameterMap_General.Add(ApertureConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
-            parameterMap_General.Add(typeof(ApertureConstruction), typeof(FamilySymbol), "ApertureType", "SAM_BuildingElementType");
+            //MD 2021-02-25 this property will duplicate from default type
+            //parameterMap_General.Add(typeof(ApertureConstruction), typeof(FamilySymbol), "ApertureType", "SAM_BuildingElementType");
 
             //Construction
             parameterMap_General.Add(ConstructionParameter.Color, typeof(HostObjAttributes), "SAM_BuildingElementColor");

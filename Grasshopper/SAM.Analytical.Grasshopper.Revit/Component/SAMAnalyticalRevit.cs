@@ -74,27 +74,29 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (!dataAccess.GetData(0, ref sAMObject))
                 return;
 
-            Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+            Document document = RhinoInside.Revit.Revit.ActiveDBDocument;               
 
-            if (sAMObject is AnalyticalModel)
-            {
-                convertSettings.AddParameter("AnalyticalModel", (AnalyticalModel)sAMObject);
-                sAMObject = ((AnalyticalModel)sAMObject).AdjacencyCluster;
-            }
-                
-
-            if (!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster))
+            if (!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster) && !(sAMObject is AnalyticalModel))
             {
                 dataAccess.SetData(0, null);
                 return;
             }
 
+            AdjacencyCluster adjacencyCluster = null;
             if (sAMObject is AdjacencyCluster)
             {
-                AdjacencyCluster adjacencyCluster = (AdjacencyCluster)sAMObject;
-
+                adjacencyCluster = (AdjacencyCluster)sAMObject;
                 convertSettings.AddParameter("AdjacencyCluster", adjacencyCluster);
+            }
+            else if (sAMObject is AnalyticalModel)
+            {
+                adjacencyCluster = ((AnalyticalModel)sAMObject).AdjacencyCluster;
+                convertSettings.AddParameter("AnalyticalModel", (AnalyticalModel)sAMObject);
+            }
+                
 
+            if(adjacencyCluster != null)
+            {
                 adjacencyCluster.GetPanels()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
                 adjacencyCluster.GetSpaces()?.ForEach(x => Core.Revit.Modify.RemoveExisting(convertSettings, document, x));
             }
@@ -102,6 +104,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 Core.Revit.Modify.RemoveExisting(convertSettings, document, sAMObject);
             }
+
 
             object @object = Analytical.Revit.Convert.ToRevit(sAMObject as dynamic, document, convertSettings);
 

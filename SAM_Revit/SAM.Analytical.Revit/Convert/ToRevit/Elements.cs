@@ -136,5 +136,34 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
+
+        public static List<Element> ToRevit(this AnalyticalModel analyticalModel, Document document, ConvertSettings convertSettings)
+        {
+            if (analyticalModel == null || document == null)
+                return null;
+
+            List<Element> result = convertSettings?.GetObjects<Element>(analyticalModel.Guid);
+            if (result != null)
+                return result;
+
+            result = ToRevit(analyticalModel.AdjacencyCluster, document, convertSettings);
+
+            if (convertSettings.ConvertParameters)
+            {
+                ProjectInfo projectInfo = document.ProjectInformation;
+                if(projectInfo != null)
+                {
+                    if (result.Find(x => x.Id == projectInfo.Id) == null)
+                        result.Add(projectInfo);
+
+                    Core.Revit.Modify.SetValues(projectInfo, analyticalModel);
+                    Core.Revit.Modify.SetValues(projectInfo, analyticalModel, ActiveSetting.Setting);
+                }
+            }
+
+            convertSettings?.Add(analyticalModel.Guid, result);
+
+            return result;
+        }
     }
 }

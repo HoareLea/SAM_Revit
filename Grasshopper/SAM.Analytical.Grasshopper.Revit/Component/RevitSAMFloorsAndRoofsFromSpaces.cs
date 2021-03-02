@@ -125,9 +125,18 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Panel> panels_Temp = new List<Panel>();
             foreach (Panel panel in panels)
             {
-                PanelGroup panelGroup = Analytical.Query.PanelGroup(panel.PanelType);
-                if (panelGroup != PanelGroup.Floor && panelGroup != PanelGroup.Roof)
-                    continue;
+                PanelType panelType = panel.PanelType;
+                if(panelType == PanelType.Air)
+                {
+                    if (!panel.Normal.Collinear(Geometry.Spatial.Vector3D.WorldZ))
+                        continue;
+                }
+                else
+                {
+                    PanelGroup panelGroup = Analytical.Query.PanelGroup(panel.PanelType);
+                    if (panelGroup != PanelGroup.Floor && panelGroup != PanelGroup.Roof)
+                        continue;
+                }
 
                 ElementId elementId = panel.ElementId();
                 if (elementId == null || elementId == ElementId.InvalidElementId)

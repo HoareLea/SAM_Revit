@@ -85,13 +85,19 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
-        public static List<Panel> ToSAM_Panels(this Document document, ConvertSettings convertSettings)
+        public static List<Panel> ToSAM_Panels(this Document document, IEnumerable<ElementId> elementIds, ConvertSettings convertSettings)
         {
             LogicalOrFilter logicalOrFilter = null;
 
             logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs }).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
+            FilteredElementCollector filteredElementCollector = null;
+            if (elementIds != null && elementIds.Count() > 0)
+                filteredElementCollector = new FilteredElementCollector(document, new List<ElementId>(elementIds));
+            else
+                filteredElementCollector = new FilteredElementCollector(document);
 
-            IEnumerable<HostObject> hostObjects = new FilteredElementCollector(document).WherePasses(logicalOrFilter).OfClass(typeof(HostObject)).WhereElementIsNotElementType().Cast<HostObject>();
+            IEnumerable<HostObject> hostObjects = filteredElementCollector.WherePasses(logicalOrFilter).OfClass(typeof(HostObject)).WhereElementIsNotElementType().Cast<HostObject>();
+
             if (hostObjects == null || hostObjects.Count() == 0)
                 return null;
 
@@ -103,7 +109,7 @@ namespace SAM.Analytical.Revit
                     result.AddRange(panels);
             }
 
-            logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_MEPSpaceSeparationLines, BuiltInCategory.OST_RoomSeparationLines}).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
+            logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_MEPSpaceSeparationLines, BuiltInCategory.OST_RoomSeparationLines }).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
             IEnumerable<ModelCurve> modelCurves = new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsNotElementType()?.ToList().FindAll(x => x is ModelCurve).Cast<ModelCurve>();
             if (modelCurves != null && modelCurves.Count() != 0)
             {
@@ -116,6 +122,11 @@ namespace SAM.Analytical.Revit
             }
 
             return result;
+        }
+
+        public static List<Panel> ToSAM_Panels(this Document document, ConvertSettings convertSettings)
+        {
+            return ToSAM_Panels(document, null, convertSettings);
         }
 
         public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, ConvertSettings convertSettings)

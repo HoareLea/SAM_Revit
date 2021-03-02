@@ -66,7 +66,7 @@ namespace SAM.Architectural.Grasshopper.Revit
             dataAccess.GetData(1, ref convertSettings);
 
             if (convertSettings == null)
-                convertSettings = Query.ConvertSettings();
+                convertSettings = Core.Revit.Query.ConvertSettings();
 
             Level level = null;
             if (!dataAccess.GetData(0, ref level))

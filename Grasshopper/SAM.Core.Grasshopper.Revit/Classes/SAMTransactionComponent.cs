@@ -1,5 +1,4 @@
 ﻿using Grasshopper.Kernel;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace SAM.Core.Grasshopper.Revit
@@ -19,7 +18,7 @@ namespace SAM.Core.Grasshopper.Revit
 
             get
             {
-                return Query.Obsolete(this);
+                return Grasshopper.Query.Obsolete(this);
             }
         }
 

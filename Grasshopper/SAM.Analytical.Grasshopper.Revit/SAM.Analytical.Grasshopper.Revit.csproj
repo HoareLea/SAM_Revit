@@ -151,6 +151,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\RevitSAMAnalyticalByView.cs" />
     <Compile Include="Component\SAMAnalyticalMapZones.cs" />
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
     <Compile Include="Component\SAMAnalyticalCreateMaterialLibrary.cs" />

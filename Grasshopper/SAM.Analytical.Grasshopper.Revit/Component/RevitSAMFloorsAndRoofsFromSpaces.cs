@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -53,6 +53,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             outputParamManager.AddParameter(new GooPanelParam(), "Floors", "Floors", "SAM Analytical Floor Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "Roofs", "Roofs", "SAM Analytical Roof Panels", GH_ParamAccess.list);
+            outputParamManager.AddParameter(new GooPanelParam(), "Air", "Air", "SAM Analytical Air Panels", GH_ParamAccess.list);
             outputParamManager.AddParameter(new GooPanelParam(), "RedundantPanels", "RedundantPanels", "RedundantPanels", GH_ParamAccess.list);
         }
 
@@ -115,7 +116,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Panel> panels = Analytical.Revit.Create.Panels(space, convertSettings);
             if (panels == null || panels.Count == 0)
             {
-                message = "Panels ould not be generated";
+                message = "Panels could not be generated";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
                 return;
             }
@@ -180,7 +181,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             dataAccess.SetDataList(0, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Floor));
             dataAccess.SetDataList(1, panels_Temp.FindAll(x => Analytical.Query.PanelGroup(x.PanelType) == PanelGroup.Roof));
-            dataAccess.SetDataList(2, redundantPanels);
+            dataAccess.SetDataList(2, panels_Temp.FindAll(x => x.PanelType == PanelType.Air));
+            dataAccess.SetDataList(3, redundantPanels);
         }
     }
 }

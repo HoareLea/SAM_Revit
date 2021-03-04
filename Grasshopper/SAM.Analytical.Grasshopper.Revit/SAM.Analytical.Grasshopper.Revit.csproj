@@ -155,6 +155,7 @@
     <Compile Include="Component\SAMAnalyticalMapZones.cs" />
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />
     <Compile Include="Component\SAMAnalyticalCreateMaterialLibrary.cs" />
+    <Compile Include="Component\SAMAnalyticalRevitSetUpperLimit.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
     <Compile Include="Component\SAMAnalyticalUpdateConstructions.cs" />

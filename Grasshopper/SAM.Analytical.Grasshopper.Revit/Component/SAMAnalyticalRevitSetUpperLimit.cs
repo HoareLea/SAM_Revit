@@ -64,7 +64,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             Element element = null;
-            if (!dataAccess.GetData(1, ref element))
+            if (!dataAccess.GetData(0, ref element))
                 return;
 
             if(element == null)

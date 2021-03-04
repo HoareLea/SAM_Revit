@@ -123,9 +123,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                     Outline outline = Core.Revit.Query.Outline(viewPlan, revitLinkInstance.GetTotalTransform());
                     if(outline != null)
                     {
-                        LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
+                        //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
+                        //elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
 
-                        elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
+                        BoundingBoxIsInsideFilter boundingBoxIsInsideFilter = new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance);
+                        elementIds = new FilteredElementCollector(document_Linked).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
                     }
                 }
             }

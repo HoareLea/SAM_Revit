@@ -94,6 +94,11 @@ namespace SAM.Analytical.Revit
                 if (segment3Ds == null || segment3Ds.Count == 0)
                     return null;
 
+                string path = System.IO.Path.GetTempFileName();
+                string value = Core.Convert.ToString(segment3Ds);
+                System.IO.File.WriteAllText(path, value);
+                System.IO.File.Delete(path);
+
                 foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
                 {
                     curveArray_Sloped.Append(segment3D.ToRevit_Line());

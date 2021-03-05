@@ -6,7 +6,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static List<Space> RenameSpaces(this IEnumerable<Space> spaces, TextMap textMap)
+        public static List<Space> RenameSpaces(this IEnumerable<Space> spaces, TextMap textMap, int maxLength = int.MaxValue)
         {
             if (spaces == null || textMap == null)
                 return null;
@@ -23,6 +23,9 @@ namespace SAM.Core.Revit
                     continue;
 
                 string name_New = textMap.Replace(name);
+                if (name_New.Length > maxLength)
+                    name_New = name_New.Substring(0, maxLength);
+
                 if (name_New == name)
                     continue;
 

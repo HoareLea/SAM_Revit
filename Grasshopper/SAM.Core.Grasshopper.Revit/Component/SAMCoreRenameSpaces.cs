@@ -47,6 +47,10 @@ namespace SAM.Analytical.Grasshopper.Revit
             int index = inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.SpatialElement(), "_spaces_", "_spaces_", "Revit Spaces", GH_ParamAccess.list);
             inputParamManager[index].Optional = true;
 
+            global::Grasshopper.Kernel.Parameters.Param_Integer param_Integer = new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "maxLength_", NickName = "maxLength_", Description = "Max Length of the name", Access = GH_ParamAccess.item};
+            param_Integer.SetPersistentData(int.MaxValue);
+            inputParamManager.AddParameter(param_Integer);
+
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
@@ -61,7 +65,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            if (!dataAccess.GetData(3, ref run) || !run)
                 return;
 
             TextMap textMap = null;
@@ -74,7 +78,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Autodesk.Revit.DB.Mechanical.Space> spaces = new List<Autodesk.Revit.DB.Mechanical.Space>();
             dataAccess.GetDataList(1, spaces);
 
-            if(spaces == null || spaces.Count == 0)
+            int maxLength = int.MaxValue;
+            if (!dataAccess.GetData(2, ref maxLength))
+                maxLength = int.MaxValue;
+
+            if (spaces == null || spaces.Count == 0)
             {
                 Document document = RhinoInside.Revit.Revit.ActiveUIDocument.Document;
                 spaces = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
@@ -86,7 +94,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            spaces = Core.Revit.Modify.RenameSpaces(spaces, textMap);
+            spaces = Core.Revit.Modify.RenameSpaces(spaces, textMap, maxLength);
 
             dataAccess.SetDataList(0, spaces);
         }

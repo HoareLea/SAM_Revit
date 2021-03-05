@@ -31,7 +31,7 @@ namespace SAM.Core.Revit
             boundingBoxXYZ.Max = new XYZ(boundingBoxXYZ.Max.X, boundingBoxXYZ.Max.Y, level_TopClipPlane.Elevation + offset_TopClipPlane);
             
             if (transform != null)
-                boundingBoxXYZ.Transform = transform;
+                boundingBoxXYZ.Transform = transform.Inverse;
 
             return new Outline(boundingBoxXYZ.Min, boundingBoxXYZ.Max);
         }

@@ -85,10 +85,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                         Level level = levels.Find(x => x.Elevation.AlmostEqual(boundingBoxXYZ.Max.Z, Core.Tolerance.MacroDistance));
                         if(level != null)
                         {
-                            Parameter parameter = element.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
+                            Wall wall = (Wall)element;
+                            Parameter parameter = wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
                             if (parameter != null)
                             {
-                                successful = parameter.SetValue(level.Id);
+                                successful = parameter.Set(level.Id);
                             }
                                 
                         }
@@ -100,16 +101,20 @@ namespace SAM.Analytical.Grasshopper.Revit
                 List<Level> levels = new FilteredElementCollector(element.Document).OfClass(typeof(Level)).Cast<Level>().ToList();
                 if (levels != null && levels.Count != 0)
                 {
-                    Level level = levels.Find(x => x.Elevation.AlmostEqual(((Autodesk.Revit.DB.Mechanical.Space)element).UnboundedHeight, Core.Tolerance.MacroDistance));
+                    Autodesk.Revit.DB.Mechanical.Space space = (Autodesk.Revit.DB.Mechanical.Space)element;
+
+                    double elevation = space.UnboundedHeight + levels.Find(x => x.Id == space.LevelId).Elevation;
+
+                    Level level = levels.Find(x => x.Elevation.AlmostEqual(elevation, Core.Tolerance.MacroDistance));
                     if (level != null)
                     {
-                        Parameter parameter = element.get_Parameter(BuiltInParameter.ROOM_UPPER_LEVEL);
+                        Parameter parameter = space.get_Parameter(BuiltInParameter.ROOM_UPPER_LEVEL);
                         if (parameter != null)
                         {
                             if (parameter.AsElementId() != level.Id)
                             {
-                                successful = parameter.SetValue(level.Id);
-                                parameter = element.get_Parameter(BuiltInParameter.ROOM_UPPER_OFFSET);
+                                successful = parameter.Set(level.Id);
+                                parameter = space.get_Parameter(BuiltInParameter.ROOM_UPPER_OFFSET);
                                 if (parameter != null)
                                     parameter.Set(0.0);
                             }

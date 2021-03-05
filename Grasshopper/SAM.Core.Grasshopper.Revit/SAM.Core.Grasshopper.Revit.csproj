@@ -154,6 +154,7 @@
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Classes\SAMTransactionComponent.cs" />
     <Compile Include="Component\SAMCoreCreateSheets.cs" />
+    <Compile Include="Component\SAMCoreRenameSpaces.cs" />
     <Compile Include="Component\SAMCoreGetWalls.cs" />
     <Compile Include="Component\SAMCoreTagElements.cs" />
     <Compile Include="Component\SAMCoreTagSpaces.cs" />

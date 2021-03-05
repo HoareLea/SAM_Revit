@@ -215,6 +215,7 @@
     <Compile Include="Modify\RemoveExisting.cs" />
     <Compile Include="Modify\DuplicateViews.cs" />
     <Compile Include="Modify\EarseSchema.cs" />
+    <Compile Include="Modify\RenameSpaces.cs" />
     <Compile Include="Modify\SetJson.cs" />
     <Compile Include="Modify\SetDefault.cs" />
     <Compile Include="Modify\TagElements.cs" />

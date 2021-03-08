@@ -80,7 +80,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Autodesk.Revit.DB.Mechanical.Space> result = new List<Autodesk.Revit.DB.Mechanical.Space>();
             List<string> numbers = new List<string>();
 
-            if (spaces == null || spaces.Count == 0)
+            if (spaces != null && spaces.Count != 0)
             {
                 Dictionary<string, List<Autodesk.Revit.DB.Mechanical.Space>> dictionary = new Dictionary<string, List<Autodesk.Revit.DB.Mechanical.Space>>();
                 foreach(Autodesk.Revit.DB.Mechanical.Space space in spaces)
@@ -120,7 +120,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         tuples.Add(new Tuple<double, Autodesk.Revit.DB.Mechanical.Space>(xyz.DistanceTo(xyz_Min), space_Temp));
                     }
 
-                    tuples.Sort((x, y) => x.Item1.CompareTo(x.Item2));
+                    tuples.Sort((x, y) => x.Item1.CompareTo(y.Item1));
 
                     int count = 1;
                     string levelName = keyValuePair.Key.Replace("Level", string.Empty).Trim();

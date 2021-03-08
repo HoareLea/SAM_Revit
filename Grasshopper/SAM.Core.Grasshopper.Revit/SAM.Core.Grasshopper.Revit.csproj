@@ -257,7 +257,7 @@ echo %25SAM_REVIT_DIR%25\SAM.Architectural.Grasshopper.Revit.gha &gt;&gt; "$(APP
 echo %25SAM_REVIT_DIR%25\SAM.Analytical.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 
 
-xcopy "$(SolutionDir)\files\resources" "$(APPDATA)\SAM\" /Y /I /E/S
+xcopy "$(SolutionDir)\files\resources" "$(APPDATA)\SAM\resources" /Y /I /E/S
 
 if Exist "$(SolutionDir)\files\Grasshopper\UserObjects" (
 xcopy "$(SolutionDir)\files\Grasshopper\UserObjects" "$(APPDATA)\Grasshopper\UserObjects\SAM" /Y /I /E/S

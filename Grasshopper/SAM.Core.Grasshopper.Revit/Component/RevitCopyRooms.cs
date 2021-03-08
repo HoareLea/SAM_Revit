@@ -110,8 +110,20 @@ namespace SAM.Core.Grasshopper.Revit
                     if (xyz == null)
                         continue;
 
-                    levels.Sort((x, y) => (x.Elevation - xyz.Z).CompareTo(y.Elevation - xyz.Z));
-                    Level level = levels[0];
+                    double min = double.MaxValue;
+                    Level level = null;
+                    foreach (Level level_Temp in levels)
+                    {
+                        double min_Temp = Math.Abs(level_Temp.Elevation - xyz.Z);
+                        if(min_Temp < min)
+                        {
+                            min = min_Temp;
+                            level = level_Temp;
+                        }
+                    }
+
+                    if (level == null)
+                        continue;
 
                     Autodesk.Revit.DB.Mechanical.Space space = document.Create.NewSpace(level, new UV(xyz.X, xyz.Y));
                     if (space == null)
@@ -119,6 +131,8 @@ namespace SAM.Core.Grasshopper.Revit
 
                     if (textMap != null)
                         Core.Revit.Modify.CopyValues(room, space, textMap);
+
+                    result.Add(space);
                 }
             }
 

@@ -26,7 +26,7 @@ namespace SAM.Core.Revit
                     if (string.IsNullOrWhiteSpace(value))
                         continue;
 
-                    IEnumerable<Parameter> parameters_Destination = element_Source.GetParameters(value);
+                    IEnumerable<Parameter> parameters_Destination = element_Destionation.GetParameters(value);
                     if(parameters_Destination != null && parameters_Destination.Count() != 0)
                     {
                         foreach(Parameter parameter_Destination in parameters_Destination)

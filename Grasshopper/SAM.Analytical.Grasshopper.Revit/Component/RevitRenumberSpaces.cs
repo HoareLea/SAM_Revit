@@ -127,6 +127,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                     foreach(Autodesk.Revit.DB.Mechanical.Space space in tuples.ConvertAll(x => x.Item2))
                     {
                         string number = count.ToString();
+                        while (number.Length < 3)
+                            number = "0" + number;
+
                         if (!string.IsNullOrWhiteSpace(levelName))
                             number = string.Format("{0}_{1}", levelName, number);
 

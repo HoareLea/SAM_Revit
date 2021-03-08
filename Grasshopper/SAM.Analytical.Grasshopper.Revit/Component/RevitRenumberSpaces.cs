@@ -145,7 +145,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             dataAccess.SetDataList(0, result);
             dataAccess.SetDataList(1, numbers);
-            dataAccess.SetData(2, successful);
+            dataAccess.SetData(2, result != null && result.Count != 0);
 
         }
     }

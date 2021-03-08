@@ -44,6 +44,8 @@ namespace SAM.Core.Grasshopper.Revit
 
             GooTextMapParam gooTextMapParam = new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item };
             inputParamManager.AddParameter(gooTextMapParam);
+
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -64,6 +66,10 @@ namespace SAM.Core.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             dataAccess.SetData(1, false);
+
+            bool run = false;
+            if (!dataAccess.GetData(2, ref run) || !run)
+                return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 

@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitSAMAnalyticalByView.cs" />
+    <Compile Include="Component\RevitRenumberSpaces.cs" />
     <Compile Include="Component\RevitSpaceSnapUpperLimit.cs" />
     <Compile Include="Component\SAMAnalyticalMapZones.cs" />
     <Compile Include="Component\SAMAdjacencyClusterRevit.cs" />

@@ -45,7 +45,7 @@ namespace SAM.Core.Grasshopper.Revit
             GooTextMapParam gooTextMapParam = new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item };
             inputParamManager.AddParameter(gooTextMapParam);
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-            List<Level> levels = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_Levels).Cast<Level>().ToList();
+            List<Level> levels = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
             if(levels == null || levels.Count == 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");

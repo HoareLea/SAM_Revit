@@ -83,7 +83,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     foreach (Autodesk.Revit.DB.Mechanical.Space space_Temp in spaces)
                     {
                         List<Geometry.Planar.Face2D> face2Ds_Temp = Geometry.Revit.Query.BoundaryFace2Ds(space_Temp);
-                        if (face2Ds_Temp == null && face2Ds_Temp.Count == 0)
+                        if (face2Ds_Temp == null || face2Ds_Temp.Count == 0)
                             continue;
 
                         Level level_Temp = null;

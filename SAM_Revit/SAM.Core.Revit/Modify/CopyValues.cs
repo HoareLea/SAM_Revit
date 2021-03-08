@@ -11,6 +11,7 @@ namespace SAM.Core.Revit
             if (element_Source == null || element_Destionation == null || textMap == null)
                 return null;
 
+            List<string> result = new List<string>();
             foreach(string key in textMap.Keys)
             {
                 if (string.IsNullOrWhiteSpace(key))
@@ -26,8 +27,21 @@ namespace SAM.Core.Revit
                         continue;
 
                     IEnumerable<Parameter> parameters_Destination = element_Source.GetParameters(value);
+                    if(parameters_Destination != null && parameters_Destination.Count() != 0)
+                    {
+                        foreach(Parameter parameter_Destination in parameters_Destination)
+                        {
+                            if (parameter_Destination == null || parameter_Destination.IsReadOnly)
+                                continue;
+
+                            if (CopyValue(parameter_Source, parameter_Destination))
+                                result.Add(parameter_Destination.Definition.Name);
+                        }
+                    }
                 }
             }
+
+            return result;
         }
     }
 }

@@ -41,6 +41,9 @@ namespace SAM.Core.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "_revitLinkedModel", "_revitLinkedModel", "SAM Revit Linked Model", GH_ParamAccess.item);
+
+            GooTextMapParam gooTextMapParam = new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item };
+            inputParamManager.AddParameter(gooTextMapParam);
         }
 
         /// <summary>
@@ -78,6 +81,9 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
+            TextMap textMap = null;
+            dataAccess.GetData(1, ref textMap);
+
 
             Transform transform = revitLinkInstance.GetTotalTransform();
             Document document_Linked = revitLinkInstance.GetLinkDocument();
@@ -105,8 +111,8 @@ namespace SAM.Core.Grasshopper.Revit
                     if (space == null)
                         continue;
 
-
-
+                    if (textMap != null)
+                        Core.Revit.Modify.CopyValues(room, space, textMap);
                 }
             }
 

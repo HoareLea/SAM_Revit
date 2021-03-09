@@ -44,10 +44,10 @@ namespace SAM.Geometry.Revit
             List<int> indexes = null;
             do
             {
-                if(point3Ds.Count > 2)
-                {
-                    indexes = new List<int>();
+                indexes = new List<int>();
 
+                if (point3Ds.Count > 2)
+                {
                     for (int i = 1; i < point3Ds.Count; i = i + 2)
                     {
                         if (point3Ds[i - 1].Distance(point3Ds[i]) < minLength)

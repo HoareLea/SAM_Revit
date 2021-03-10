@@ -27,35 +27,36 @@ namespace SAM.Analytical.Revit
             BuiltInParameter[] builtInParameters = null;
             if (hostObjAttributes is WallType)
             {
-                List<Curve> curveList = new List<Curve>();
-                //List<Line> lines = face3D.GetExternalEdge3D()?.ToRevit();
-                //if (lines == null)
-                //    return null;
-
-                //curveList.AddRange(lines);
-
-                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
-                {
-                    if (Geometry.Spatial.Query.Clockwise(closedPlanar3D))
-                        closedPlanar3D.Reverse();
-
-                    List<Line> lines = closedPlanar3D.ToRevit();
-                    if (lines == null)
-                        continue;
-
-                    curveList.AddRange(lines);
-                }
-
-                if (curveList == null || curveList.Count == 0)
-                    return null;
-
                 double lowElevation = panel.LowElevation();
 
                 Level level = document.LowLevel(lowElevation);
-                if (level == null)
-                    return null;
 
-                Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
+                Wall wall = ToRevit_Wall(face3D, document, (WallType)hostObjAttributes, level);
+                
+
+                //List<Curve> curveList = new List<Curve>();
+                //foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
+                //{
+                //    if (Geometry.Spatial.Query.Clockwise(closedPlanar3D))
+                //        closedPlanar3D.Reverse();
+
+                //    List<Line> lines = closedPlanar3D.ToRevit();
+                //    if (lines == null)
+                //        continue;
+
+                //    curveList.AddRange(lines);
+                //}
+
+                //if (curveList == null || curveList.Count == 0)
+                //    return null;
+
+                //double lowElevation = panel.LowElevation();
+
+                //Level level = document.LowLevel(lowElevation);
+                //if (level == null)
+                //    return null;
+
+                //Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
 
                 Parameter parameter = null;
 

@@ -54,6 +54,34 @@ namespace SAM.Analytical.Revit
 
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
 
+                List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdge3Ds();
+                if (closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
+                {
+                    Geometry.Spatial.Plane plane = face3D.GetPlane();
+
+                    //Requires to be regenerated before inserting openings
+                    //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
+                    document.Regenerate();
+
+                    foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdge3Ds())
+                    {
+                        List<Geometry.Spatial.Segment3D> segment3Ds_Internal = Geometry.Revit.Query.Segment3Ds(closedPlanar3D_Internal);
+                        if (segment3Ds_Internal == null || segment3Ds_Internal.Count == 0)
+                            continue;
+
+                        CurveArray curveArray_Plane = new CurveArray();
+                        foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds_Internal)
+                        {
+                            Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                            if (segment3D_Temp == null)
+                                continue;
+
+                            curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
+                        }
+
+                        Opening opening = document.Create.NewOpening(wall, curveArray_Plane, true);
+                    }
+                }
 
                 Parameter parameter = null;
 
@@ -101,11 +129,6 @@ namespace SAM.Analytical.Revit
                 if (segment3Ds == null || segment3Ds.Count == 0)
                     return null;
 
-                string path = System.IO.Path.GetTempFileName();
-                string value = Core.Convert.ToString(segment3Ds);
-                System.IO.File.WriteAllText(path, value);
-                System.IO.File.Delete(path);
-
                 foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
                 {
                     curveArray_Sloped.Append(segment3D.ToRevit_Line());
@@ -137,7 +160,8 @@ namespace SAM.Analytical.Revit
                                 continue;
 
                             curveArray_Plane = new CurveArray();
-                            foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
+                            //foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
+                            foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds_Internal)
                             {
                                 curveArray_Sloped.Append(segment3D.ToRevit_Line());
 

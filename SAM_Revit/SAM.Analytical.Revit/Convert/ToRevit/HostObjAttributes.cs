@@ -37,11 +37,14 @@ namespace SAM.Analytical.Revit
             if (filteredElementCollector == null)
                 return null;
 
-            if(normal != null && panelType == PanelType.Air)
+            if(normal != null)
             {
-                BuiltInCategory builtInCategory = normal.BuiltInCategory();
-                if (builtInCategory == BuiltInCategory.OST_Walls)
-                    filteredElementCollector.OfCategory(builtInCategory);
+                if(panelType == PanelType.Air || panelType == PanelType.Shade)
+                {
+                    BuiltInCategory builtInCategory = normal.BuiltInCategory();
+                    if (builtInCategory == BuiltInCategory.OST_Walls)
+                        filteredElementCollector.OfCategory(builtInCategory);
+                }
             }
 
             //FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document).OfClass(typeof(HostObjAttributes));

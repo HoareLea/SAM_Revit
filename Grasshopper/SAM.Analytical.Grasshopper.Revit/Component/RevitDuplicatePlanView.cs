@@ -14,12 +14,12 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("2e88344e-24d3-4300-828b-8d128d5d25ec");
+        public override Guid ComponentGuid => new Guid("f4e701fd-37e2-430d-9b7f-4315476854db");
 
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.0";
 
         /// <summary>
         /// Provides an Icon for the component.

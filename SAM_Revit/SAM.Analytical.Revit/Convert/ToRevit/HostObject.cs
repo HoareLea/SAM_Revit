@@ -28,14 +28,20 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
-                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
-                {
-                    List<Line> lines = closedPlanar3D.ToRevit();
-                    if (lines == null)
-                        continue;
+                List<Line> lines = face3D.GetExternalEdge3D()?.ToRevit();
+                if (lines == null)
+                    return null;
 
-                    curveList.AddRange(lines);
-                }
+                curveList.AddRange(lines);
+
+                //foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
+                //{
+                //    List<Line> lines = closedPlanar3D.ToRevit();
+                //    if (lines == null)
+                //        continue;
+
+                //    curveList.AddRange(lines);
+                //}
 
                 if (curveList == null || curveList.Count == 0)
                     return null;
@@ -47,6 +53,7 @@ namespace SAM.Analytical.Revit
                     return null;
 
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
+
 
                 Parameter parameter = null;
 

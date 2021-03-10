@@ -186,5 +186,104 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
+        
+        /// <summary>
+        /// Gets Walls Panel from Spatial Element base on its Boundary
+        /// </summary>
+        /// <param name="spatialElement"></param>
+        /// <param name="elevation_Bottom"></param>
+        /// <param name="elevation_Top"></param>
+        /// <param name="spatialElementBoundaryOptions"></param>
+        /// <returns></returns>
+        public static List<Panel> Panels(this SpatialElement spatialElement, double elevation_Bottom, double elevation_Top, Core.Revit.ConvertSettings convertSettings, SpatialElementBoundaryOptions spatialElementBoundaryOptions = null)
+        {
+            if (spatialElement == null || double.IsNaN(elevation_Top) || double.IsNaN(elevation_Bottom))
+                return null;
+            
+            if(spatialElementBoundaryOptions == null)
+            {
+                spatialElementBoundaryOptions = new SpatialElementBoundaryOptions();
+                spatialElementBoundaryOptions.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center;
+            }
+
+            Document document = spatialElement.Document;
+
+            Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.WorldXY;
+            Geometry.Spatial.Plane plane_Top = plane.GetMoved(new Geometry.Spatial.Vector3D(0, 0, elevation_Top)) as Geometry.Spatial.Plane;
+            Geometry.Spatial.Plane plane_Bottom = plane.GetMoved(new Geometry.Spatial.Vector3D(0, 0, elevation_Bottom)) as Geometry.Spatial.Plane;
+
+            List<Panel> panels = new List<Panel>();
+
+            IList<IList<BoundarySegment>> boundaries = spatialElement.GetBoundarySegments(spatialElementBoundaryOptions);
+            foreach(IList<BoundarySegment> boundarySegments in boundaries)
+            {
+                if (boundarySegments == null)
+                    continue;
+
+                foreach (BoundarySegment boundarySegment in boundarySegments)
+                {
+                    if (boundarySegment == null)
+                        continue;
+
+                    Curve curve = boundarySegment.GetCurve();
+                    if (curve == null)
+                        continue;
+
+                    HostObject hostObject = null;
+                    if (boundarySegment.ElementId != null && boundarySegment.ElementId != ElementId.InvalidElementId)
+                    {
+                        if (boundarySegment.LinkElementId == null || boundarySegment.LinkElementId == ElementId.InvalidElementId)
+                        {
+                            hostObject = document.GetElement(boundarySegment.ElementId) as HostObject;
+                        }
+                        else
+                        {
+                            RevitLinkInstance revitLinkInstance = document.GetElement(boundarySegment.LinkElementId) as RevitLinkInstance;
+                            if (revitLinkInstance != null)
+                            {
+                                Document document_Linked = revitLinkInstance.GetLinkDocument();
+                                if (document_Linked != null)
+                                    hostObject = document_Linked.GetElement(boundarySegment.ElementId) as HostObject;
+                            }
+                        }
+                    }
+
+                    Panel panel_Temp = null;
+
+                    if (hostObject != null)
+                    {
+                        List<Panel> panels_Temp = hostObject.ToSAM(convertSettings);
+                        if (panels_Temp != null && panels_Temp.Count > 0)
+                            panel_Temp = panels_Temp[0];
+                    }
+
+                    List<Geometry.Spatial.Segment3D> segment3Ds = Geometry.Revit.Convert.ToSAM_Segment3Ds(curve);
+                    if (segment3Ds == null || segment3Ds.Count == 0)
+                        continue;
+
+                    foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
+                    {
+                        Geometry.Spatial.Segment3D segment3D_Top = plane_Top.Project(segment3D);
+                        Geometry.Spatial.Segment3D segment3D_Bottom = plane_Bottom.Project(segment3D);
+
+                        Geometry.Spatial.Polygon3D polygon3D = Geometry.Spatial.Create.Polygon3D(new Geometry.Spatial.Point3D[] { segment3D_Top[0], segment3D_Top[1], segment3D_Bottom[1], segment3D_Bottom[0] });
+                        if (polygon3D == null)
+                            continue;
+
+                        Panel panel = null;
+                        //if(panel_Temp != null)
+                        //    panel = new Panel(Guid.NewGuid, panel_Temp, )
+
+                        throw new NotImplementedException();
+
+
+                        if (panel != null)
+                            panels.Add(panel);
+                    }
+                }
+            }
+
+            return panels;
+        }
     }
 }

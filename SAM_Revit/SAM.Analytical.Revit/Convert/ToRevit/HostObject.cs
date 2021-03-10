@@ -28,20 +28,23 @@ namespace SAM.Analytical.Revit
             if (hostObjAttributes is WallType)
             {
                 List<Curve> curveList = new List<Curve>();
-                List<Line> lines = face3D.GetExternalEdge3D()?.ToRevit();
-                if (lines == null)
-                    return null;
+                //List<Line> lines = face3D.GetExternalEdge3D()?.ToRevit();
+                //if (lines == null)
+                //    return null;
 
-                curveList.AddRange(lines);
+                //curveList.AddRange(lines);
 
-                //foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
-                //{
-                //    List<Line> lines = closedPlanar3D.ToRevit();
-                //    if (lines == null)
-                //        continue;
+                foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
+                {
+                    if (Geometry.Spatial.Query.Clockwise(closedPlanar3D))
+                        closedPlanar3D.Reverse();
 
-                //    curveList.AddRange(lines);
-                //}
+                    List<Line> lines = closedPlanar3D.ToRevit();
+                    if (lines == null)
+                        continue;
+
+                    curveList.AddRange(lines);
+                }
 
                 if (curveList == null || curveList.Count == 0)
                     return null;
@@ -53,35 +56,6 @@ namespace SAM.Analytical.Revit
                     return null;
 
                 Wall wall = Wall.Create(document, curveList, hostObjAttributes.Id, level.Id, false, panel.Normal.ToRevit(false));
-
-                List<Geometry.Spatial.IClosedPlanar3D> closedPlanar3Ds_Internal = face3D.GetInternalEdge3Ds();
-                if (closedPlanar3Ds_Internal != null && closedPlanar3Ds_Internal.Count > 0)
-                {
-                    Geometry.Spatial.Plane plane = face3D.GetPlane();
-
-                    //Requires to be regenerated before inserting openings
-                    //https://thebuildingcoder.typepad.com/blog/2013/07/create-a-floor-with-an-opening-or-complex-boundary.html
-                    document.Regenerate();
-
-                    foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D_Internal in face3D.GetInternalEdge3Ds())
-                    {
-                        List<Geometry.Spatial.Segment3D> segment3Ds_Internal = Geometry.Revit.Query.Segment3Ds(closedPlanar3D_Internal);
-                        if (segment3Ds_Internal == null || segment3Ds_Internal.Count == 0)
-                            continue;
-
-                        CurveArray curveArray_Plane = new CurveArray();
-                        foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds_Internal)
-                        {
-                            Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
-                            if (segment3D_Temp == null)
-                                continue;
-
-                            curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
-                        }
-
-                        Opening opening = document.Create.NewOpening(wall, curveArray_Plane, true);
-                    }
-                }
 
                 Parameter parameter = null;
 

@@ -186,15 +186,16 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
-        
+
         /// <summary>
-        /// Gets Walls Panel from Spatial Element base on its Boundary
+        /// Gets Wall Panels from Spatial Element base on its Boundary
         /// </summary>
-        /// <param name="spatialElement"></param>
-        /// <param name="elevation_Bottom"></param>
-        /// <param name="elevation_Top"></param>
-        /// <param name="spatialElementBoundaryOptions"></param>
-        /// <returns></returns>
+        /// <param name="spatialElement">Revit Spatial Element such as Space or Room</param>
+        /// <param name="elevation_Bottom">Bottom Elevation</param>
+        /// <param name="elevation_Top">Top Elevation</param>
+        /// <param name="convertSettings">Convert Settings</param>
+        /// <param name="spatialElementBoundaryOptions">Revit SpactialElementBoundaryOptions. Center Spatial Element Boundary Location will be used when set to null</param>
+        /// <returns>Wall Panels</returns>
         public static List<Panel> Panels(this SpatialElement spatialElement, double elevation_Bottom, double elevation_Top, Core.Revit.ConvertSettings convertSettings, SpatialElementBoundaryOptions spatialElementBoundaryOptions = null)
         {
             if (spatialElement == null || double.IsNaN(elevation_Top) || double.IsNaN(elevation_Bottom))
@@ -270,12 +271,20 @@ namespace SAM.Analytical.Revit
                         if (polygon3D == null)
                             continue;
 
+                        Geometry.Spatial.Face3D face3D = new Geometry.Spatial.Face3D(polygon3D);
+
                         Panel panel = null;
-                        //if(panel_Temp != null)
-                        //    panel = new Panel(Guid.NewGuid, panel_Temp, )
+                        if (panel_Temp != null)
+                            panel = new Panel(Guid.NewGuid(), panel_Temp, face3D);
 
-                        throw new NotImplementedException();
+                        if (panel_Temp != null)
+                        {
+                            Geometry.Spatial.Vector3D normal = polygon3D.GetPlane()?.Normal;
+                            PanelType panelType = Analytical.Query.PanelType(normal);
 
+                            Construction construction = Query.DefaultAirConstruction(panelType.PanelGroup());
+                            panel = new Panel(construction, panelType, face3D);
+                        }
 
                         if (panel != null)
                             panels.Add(panel);

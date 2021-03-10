@@ -63,9 +63,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (!dataAccess.GetData(2, ref run) || !run)
                 return;
 
-            ViewPlan viewPlan = null;
-            if (!dataAccess.GetData(1, ref viewPlan))
+            View view = null;
+            if (!dataAccess.GetData(0, ref view) || !(view is ViewPlan))
                 return;
+
+            ViewPlan viewPlan = (ViewPlan)view;
 
             if(viewPlan == null)
             {
@@ -74,7 +76,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             List<Level> levels = new List<Level>();
-            if (!dataAccess.GetDataList(2, levels))
+            if (!dataAccess.GetDataList(1, levels))
                 levels = null;
 
             List<ViewPlan> result = Core.Revit.Modify.DuplicateViewPlan(viewPlan, levels);

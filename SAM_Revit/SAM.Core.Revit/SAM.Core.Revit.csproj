@@ -209,9 +209,10 @@
     <Compile Include="Enums\ViewType.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\CopyValue.cs" />
-    <Compile Include="Modify\CreateSheets.cs" />
+    <Compile Include="Create\Sheets.cs" />
     <Compile Include="Modify\CopyValues.cs" />
     <Compile Include="Modify\DeleteViews.cs" />
+    <Compile Include="Modify\DuplicateView.cs" />
     <Compile Include="Modify\SetJArray.cs" />
     <Compile Include="Modify\SetJObject.cs" />
     <Compile Include="Modify\RemoveExisting.cs" />

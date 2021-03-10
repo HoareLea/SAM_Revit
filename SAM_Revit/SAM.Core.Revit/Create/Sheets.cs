@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SAM.Core.Revit
 {
-    public static partial class Modify
+    public static partial class Create
     {
-        public static List<ViewSheet> CreateSheets(this ViewSheet referenceViewSheet, IEnumerable<string> templateNames, bool matchScopeBox)
+        public static List<ViewSheet> Sheets(this ViewSheet referenceViewSheet, IEnumerable<string> templateNames, bool matchScopeBox)
         {
             if (referenceViewSheet == null || templateNames == null || templateNames.Count() == 0)
                 return null;

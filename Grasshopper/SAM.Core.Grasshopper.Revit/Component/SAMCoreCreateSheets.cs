@@ -90,7 +90,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            List<ViewSheet> viewSheets = Core.Revit.Modify.CreateSheets((ViewSheet)view, templateNames, matchScopeBox);
+            List<ViewSheet> viewSheets = Core.Revit.Create.Sheets((ViewSheet)view, templateNames, matchScopeBox);
 
             dataAccess.SetDataList(0, viewSheets);
         }

@@ -29,6 +29,8 @@ namespace SAM.Core.Revit
                 if (level.Id == viewPlan.GenLevel.Id)
                     continue;
 
+                List<ViewPlan> viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
+
                 ViewPlan viewPlan_New = ViewPlan.Create(document, viewPlan.GetTypeId(), level.Id);
                 foreach(Parameter parameter in viewPlan.ParametersMap)
                 {
@@ -49,7 +51,6 @@ namespace SAM.Core.Revit
                 string name = level.Name;
 
                 // Check name uniqueness
-                List<ViewPlan> viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
                 string name_Temp = name;
                 int count = 0;
                 while (viewPlans.Find(x => x.Name == name_Temp) != null)
@@ -70,6 +71,8 @@ namespace SAM.Core.Revit
                         ViewPlan viewPlan_Dependent = document.GetElement(elementId_Dependent) as ViewPlan;
                         if (viewPlan_Dependent == null)
                             continue;
+
+                        viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
 
                         ElementId elementId_Dependent_New = viewPlan_New.Duplicate(ViewDuplicateOption.AsDependent);
                         if (elementId_Dependent_New == null || elementId_Dependent_New == ElementId.InvalidElementId)
@@ -108,7 +111,6 @@ namespace SAM.Core.Revit
                         }
 
                         // Check name uniqueness
-                        viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
                         string name_Dependent_Temp = name_Dependent;
                         count = 0;
                         while (viewPlans.Find(x => x.Name == name_Dependent_Temp) != null)

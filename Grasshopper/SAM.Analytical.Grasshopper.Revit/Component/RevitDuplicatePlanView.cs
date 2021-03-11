@@ -81,7 +81,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<ViewPlan> result = Core.Revit.Modify.DuplicateViewPlan(viewPlan, levels);
 
-            dataAccess.SetData(0, result);
+            dataAccess.SetDataList(0, result);
         }
     }
 }

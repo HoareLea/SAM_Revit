@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -46,6 +46,10 @@ namespace SAM.Analytical.Grasshopper.Revit
             RhinoInside.Revit.GH.Parameters.Level level = new RhinoInside.Revit.GH.Parameters.Level() { Name = "levels_", NickName = "levels_", Description = "Revit Levels", Access = GH_ParamAccess.list, Optional = true };
             inputParamManager.AddParameter(level);
 
+            global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean();
+            param_Boolean.SetPersistentData(true);
+            inputParamManager.AddParameter(param_Boolean, "useExisting_", "useExisting_", "Use Existing views and create missing only", GH_ParamAccess.item);
+
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
@@ -60,7 +64,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            if (!dataAccess.GetData(3, ref run) || !run)
                 return;
 
             View view = null;
@@ -79,7 +83,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (!dataAccess.GetDataList(1, levels))
                 levels = null;
 
-            List<ViewPlan> result = Core.Revit.Modify.DuplicateViewPlan(viewPlan, levels);
+            bool useExisting = true;
+            if (!dataAccess.GetData(2, ref useExisting))
+                return;
+
+            List<ViewPlan> result = Core.Revit.Modify.DuplicateViewPlan(viewPlan, levels, useExisting);
 
             dataAccess.SetDataList(0, result);
         }

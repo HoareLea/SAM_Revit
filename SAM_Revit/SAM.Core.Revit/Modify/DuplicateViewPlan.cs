@@ -28,10 +28,13 @@ namespace SAM.Core.Revit
             {
                 if (level.Id == viewPlan.GenLevel.Id)
                     continue;
-                
+
                 ViewPlan viewPlan_New = ViewPlan.Create(document, viewPlan.GetTypeId(), level.Id);
                 foreach(Parameter parameter in viewPlan.ParametersMap)
                 {
+                    if (parameter.Id.IntegerValue == (int)BuiltInParameter.VIEW_NAME)
+                        continue;
+
                     Definition definition = parameter?.Definition;
                     if (definition == null)
                         continue;
@@ -42,6 +45,20 @@ namespace SAM.Core.Revit
 
                     CopyValue(parameter, parameter_New);
                 }
+
+                string name = level.Name;
+
+                // Check name uniqueness
+                List<ViewPlan> viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
+                string name_Temp = name;
+                int count = 0;
+                while (viewPlans.Find(x => x.Name == name_Temp) != null)
+                {
+                    count++;
+                    name_Temp = string.Format("{0} {1}", name, count);
+                }
+
+                viewPlan_New.Name = name_Temp;
 
                 result.Add(viewPlan_New);
 
@@ -64,6 +81,9 @@ namespace SAM.Core.Revit
 
                         foreach (Parameter parameter in viewPlan_Dependent.ParametersMap)
                         {
+                            if (parameter.Id.IntegerValue == (int)BuiltInParameter.VIEW_NAME)
+                                continue;
+
                             Definition definition = parameter?.Definition;
                             if (definition == null)
                                 continue;
@@ -74,6 +94,30 @@ namespace SAM.Core.Revit
 
                             CopyValue(parameter, parameter_New);
                         }
+
+                        string name_Dependent = name;
+                        if (viewPlan_Dependent.Name.StartsWith(viewPlan.Name))
+                        {
+                            name_Dependent = level.Name + viewPlan_Dependent.Name.Substring(viewPlan.Name.Length);
+                        }
+                        else
+                        {
+                            Element scopeBox = viewPlan_Dependent.ScopeBox();
+                            if (scopeBox != null)
+                                name_Dependent = level.Name + " - " + scopeBox.Name;
+                        }
+
+                        // Check name uniqueness
+                        viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
+                        string name_Dependent_Temp = name_Dependent;
+                        count = 0;
+                        while (viewPlans.Find(x => x.Name == name_Dependent_Temp) != null)
+                        {
+                            count++;
+                            name_Dependent_Temp = string.Format("{0} {1}", name_Dependent, count);
+                        }
+
+                        viewPlan_Dependent_New.Name = name_Dependent_Temp;
 
                         result.Add(viewPlan_Dependent_New);
                     }

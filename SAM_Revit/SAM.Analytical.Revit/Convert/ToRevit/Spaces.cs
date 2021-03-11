@@ -31,15 +31,19 @@ namespace SAM.Analytical.Revit
                 {
                     List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
 
-                    foreach (Space space in spaces)
+                    foreach (Space space_SAM in spaces)
                     {
-                        Autodesk.Revit.DB.Mechanical.Space space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space);
+                        Autodesk.Revit.DB.Mechanical.Space space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, zone);
+
                         if (space_Revit == null)
-                        {
-                            string name = space.Name;
-                            if (name != null)
-                                space_Revit = spaces_Revit?.Find(x => x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString() == name);
-                        }
+                            space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space_SAM);
+
+                        if (space_Revit == null)
+                            space_Revit = spaces_Revit?.Find(x => x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString() == space_SAM.Name);
+
+                        if (space_Revit == null)
+                            space_Revit = spaces_Revit?.Find(x => space_SAM.Name.EndsWith(x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString()) && space_SAM.Name.StartsWith(x.get_Parameter(BuiltInParameter.ROOM_NUMBER)?.AsString()));
+
 
                         if (space_Revit == null)
                             continue;
@@ -102,15 +106,18 @@ namespace SAM.Analytical.Revit
 
                             List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
 
-                            foreach (Space space in spaces)
+                            foreach (Space space_SAM in spaces)
                             {
-                                Autodesk.Revit.DB.Mechanical.Space space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space);
+                                Autodesk.Revit.DB.Mechanical.Space space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, zoneSimulationResult_Temp);
+
                                 if (space_Revit == null)
-                                {
-                                    string name = space.Name;
-                                    if (name != null)
-                                        space_Revit = spaces_Revit?.Find(x => x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString() == name);
-                                }
+                                    space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space_SAM);
+
+                                if (space_Revit == null)
+                                    space_Revit = spaces_Revit?.Find(x => x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString() == space_SAM.Name);
+
+                                if (space_Revit == null)
+                                    space_Revit = spaces_Revit?.Find(x => space_SAM.Name.EndsWith(x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString()) && space_SAM.Name.StartsWith(x.get_Parameter(BuiltInParameter.ROOM_NUMBER)?.AsString()));
 
                                 if (space_Revit == null)
                                     continue;
@@ -149,8 +156,15 @@ namespace SAM.Analytical.Revit
                     foreach(Space space_SAM in spaces_SAM)
                     {
                         Autodesk.Revit.DB.Mechanical.Space space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, spaceSimulationResult);
-                        if(space_Revit == null)
+                        
+                        if (space_Revit == null)
+                            space_Revit = Core.Revit.Query.Element<Autodesk.Revit.DB.Mechanical.Space>(document, space_SAM);
+
+                        if (space_Revit == null)
                             space_Revit = spaces_Revit?.Find(x => x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString() == space_SAM.Name);
+
+                        if (space_Revit == null)
+                            space_Revit = spaces_Revit?.Find(x => space_SAM.Name.EndsWith(x.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString()) && space_SAM.Name.StartsWith(x.get_Parameter(BuiltInParameter.ROOM_NUMBER)?.AsString()));
 
                         if (space_Revit == null)
                             continue;

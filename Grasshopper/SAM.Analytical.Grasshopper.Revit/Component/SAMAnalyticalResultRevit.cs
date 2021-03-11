@@ -98,7 +98,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             if (results == null)
-                results = adjacencyCluster.GetObjects<IResult>();
+            {
+                results = new List<IResult>();
+                adjacencyCluster.GetObjects<SpaceSimulationResult>()?.ForEach(x => results.Add(x));
+                adjacencyCluster.GetObjects<ZoneSimulationResult>()?.ForEach(x => results.Add(x));
+                adjacencyCluster.GetObjects<AdjacencyClusterSimulationResult>()?.ForEach(x => results.Add(x));
+            }
+                
 
 
             if (results == null || results.Count == 0)

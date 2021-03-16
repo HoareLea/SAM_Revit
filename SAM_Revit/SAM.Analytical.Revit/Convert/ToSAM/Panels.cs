@@ -53,7 +53,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            foreach (Geometry.Spatial.Face3D face3D in face3Ds)
+            foreach (Face3D face3D in face3Ds)
             {
                 if (face3D == null)
                     continue;

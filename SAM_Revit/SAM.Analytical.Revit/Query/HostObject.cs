@@ -15,8 +15,32 @@ namespace SAM.Analytical.Revit
             {
                 case PanelGroup.Wall:
                     IEnumerable<Wall> walls = Geometry.Revit.Query.Elements<Wall>(document, aperture.GetBoundingBox());
+                    
                     if (walls != null && walls.Count() != 0)
-                        result = walls.First();
+                    {
+                        Geometry.Spatial.Point3D point3D = Geometry.Spatial.Query.InternalPoint3D(aperture.GetFace3D());
+                        double distance = double.MaxValue;
+                        Wall wall = null;
+                        foreach (Wall wall_Temp in walls)
+                        {
+                            List<Panel> panels = Convert.ToSAM(wall_Temp, new Core.Revit.ConvertSettings(true, false, false));
+                            if(panels != null)
+                            {
+                                foreach (Panel panel in panels)
+                                {
+                                    double distance_Temp = panel.GetFace3D().Distance(point3D);
+                                    if(distance_Temp < distance)
+                                    {
+                                        distance = distance_Temp;
+                                        wall = wall_Temp;
+                                    }
+                                }
+                            }
+
+                        }
+                        result = wall;
+                    }
+                    
                     break;
                 case PanelGroup.Floor:
                     IEnumerable<Element> elements_Floor = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), Autodesk.Revit.DB.BuiltInCategory.OST_Floors);

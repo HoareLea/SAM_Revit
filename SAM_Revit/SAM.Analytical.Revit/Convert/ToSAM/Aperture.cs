@@ -72,8 +72,12 @@ namespace SAM.Analytical.Revit
             if (point3D_Location == null)
             {
                 List<Solid> solids = Core.Revit.Query.Solids(familyInstance, new Options());
+                solids?.RemoveAll(x => x.Volume == 0);
                 if (solids == null || solids.Count == 0)
                     return null;
+
+                if (solids.Count > 1)
+                    solids.Sort((x, y) => y.Volume.CompareTo(x.Volume));
 
                 point3D_Location = solids[0].ComputeCentroid()?.ToSAM();
             }

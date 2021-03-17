@@ -30,10 +30,7 @@ namespace SAM.Analytical.Revit
 				{
 					elementId = document.GetDefaultFamilyTypeId(elementId);
 					if (elementId != null && elementId != ElementId.InvalidElementId)
-					{
 						wallType = document.GetElement(elementId) as WallType;
-
-					}
 				}
 			}
 
@@ -112,20 +109,6 @@ namespace SAM.Analytical.Revit
 			if (curves == null || curves.Count == 0)
 				return null;
 
-			//TODO: REMOVE THIS CODE START
-
-			//List<SAM.Geometry.Spatial.Segment3D> segment3Ds = new List<Geometry.Spatial.Segment3D>();
-			//foreach(Curve curve in curves)
-			//	segment3Ds.Add(Geometry.Revit.Convert.ToSAM_Segment3D(curve));
-
-			//if(segment3Ds != null && segment3Ds.Count > 0)
-   //         {
-			//	string path = System.IO.Path.GetTempFileName();
-			//	Core.Convert.ToFile(segment3Ds, path);
-			//	System.IO.File.Delete(path);
-   //         }
-
-			//REMOVE THIS CODE END
 			return Wall.Create(document, curves, wallType.Id, level.Id, false, xyz_Normal);
 
 		}

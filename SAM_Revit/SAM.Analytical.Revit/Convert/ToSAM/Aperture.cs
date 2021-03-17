@@ -48,8 +48,8 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
-
-        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, Core.Revit.ConvertSettings convertSettings)
+        
+        public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null)
                 return null;
@@ -66,10 +66,18 @@ namespace SAM.Analytical.Revit
                     convertSettings?.Add(familyInstance.Id, result);
                     return result;
                 }
-                    
             }
 
             Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
+            if (point3D_Location == null)
+            {
+                List<Solid> solids = Core.Revit.Query.Solids(familyInstance, new Options());
+                if (solids == null || solids.Count == 0)
+                    return null;
+
+                point3D_Location = solids[0].ComputeCentroid()?.ToSAM();
+            }
+
             if (point3D_Location == null)
                 return null;
 

@@ -33,7 +33,7 @@ namespace SAM.Analytical.Revit
             if (panelType_Temp != PanelType.Undefined)
                 panelType = panelType_Temp;
 
-            List<Geometry.Spatial.Face3D> face3Ds = hostObject.Profiles();
+            List<Face3D> face3Ds = hostObject.Profiles();
             if (face3Ds == null || face3Ds.Count == 0)
                 return null;
 

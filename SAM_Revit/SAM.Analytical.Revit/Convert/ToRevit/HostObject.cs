@@ -217,18 +217,23 @@ namespace SAM.Analytical.Revit
             List<Aperture> apertures = panel.Apertures;
             if (apertures != null)
             {
-                Geometry.Spatial.Plane plane_Panel = panel.PlanarBoundary3D?.Plane;
-
-                foreach (Aperture aperture in apertures)
+                if(result is Wall && ((Wall)result).WallType.Kind == WallKind.Curtain)
                 {
-                    Geometry.Spatial.Plane plane_Aperture = aperture?.PlanarBoundary3D?.Plane;
-                    if (plane_Aperture == null)
-                        continue;
 
-                    //bool flipHand = !plane_Panel.AxisX.SameHalf(plane_Aperture.AxisX);
-                    //bool flipFacing = !plane_Panel.Normal.SameHalf(plane_Aperture.Normal);
+                }
+                else
+                {
+                    foreach (Aperture aperture in apertures)
+                    {
+                        Geometry.Spatial.Plane plane_Aperture = aperture?.PlanarBoundary3D?.Plane;
+                        if (plane_Aperture == null)
+                            continue;
 
-                    FamilyInstance failyInstance_Aperture = aperture.ToRevit(document, result, convertSettings);
+                        //bool flipHand = !plane_Panel.AxisX.SameHalf(plane_Aperture.AxisX);
+                        //bool flipFacing = !plane_Panel.Normal.SameHalf(plane_Aperture.Normal);
+
+                        FamilyInstance failyInstance_Aperture = aperture.ToRevit(document, result, convertSettings);
+                    }
                 }
             }
 

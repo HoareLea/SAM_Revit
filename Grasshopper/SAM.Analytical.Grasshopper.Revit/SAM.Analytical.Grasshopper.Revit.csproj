@@ -140,6 +140,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Geometry.Grasshopper, Version=1.0.7746.21778, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Geometry.Grasshopper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -152,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Component\RevitDuplicatePlanView.cs" />
+    <Compile Include="Component\SAMAnalyticalShellsBySpaces.cs" />
     <Compile Include="Component\SAMAnalyticalPanelsByBoundaries.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByView.cs" />
     <Compile Include="Component\RevitRenumberSpaces.cs" />

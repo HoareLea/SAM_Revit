@@ -103,7 +103,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     XYZ xyz_Min = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
                     foreach(Autodesk.Revit.DB.Mechanical.Space space_Temp in keyValuePair.Value)
                     {
-                        XYZ xyz = (space_Temp.Location as LocationPoint).Point;
+                        XYZ xyz = (space_Temp.Location as LocationPoint)?.Point;
                         if (xyz == null)
                             continue;
 
@@ -113,7 +113,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     List<Tuple<double, Autodesk.Revit.DB.Mechanical.Space>> tuples = new List<Tuple<double, Autodesk.Revit.DB.Mechanical.Space>>();
                     foreach (Autodesk.Revit.DB.Mechanical.Space space_Temp in keyValuePair.Value)
                     {
-                        XYZ xyz = (space_Temp.Location as LocationPoint).Point;
+                        XYZ xyz = (space_Temp.Location as LocationPoint)?.Point;
                         if (xyz == null)
                             continue;
 

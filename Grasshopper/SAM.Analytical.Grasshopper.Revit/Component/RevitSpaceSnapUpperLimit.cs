@@ -120,7 +120,23 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             if(level == null)
+            {
+                BoundingBoxXYZ boundingBoxXYZ = space.get_BoundingBox(null);
+                if(boundingBoxXYZ != null)
+                {
+                    List<Level> levels = new FilteredElementCollector(space.Document).OfClass(typeof(Level)).Cast<Level>().ToList();
+                    double elevation = boundingBoxXYZ.Max.Z;
+                    if(levels.Find(x => Math.Abs(x.Elevation - elevation) < Tolerance.Distance) != null)
+                    {
+                        dataAccess.SetData(0, space);
+                        dataAccess.SetData(1, false);
+                        return;
+                    }
+                }
+                
                 level = Core.Revit.Query.HighLevel(space.Level);
+            }
+                
 
             if(level != null)
             {

@@ -31,12 +31,16 @@ namespace SAM.Analytical.Revit
                 if (panels_Wall == null || panels_Wall.Count == 0)
                     continue;
 
-                panels.AddRange(panels);
+                panels.AddRange(panels_Wall);
             }
 
             List<Shell> shells = new List<Shell>();
             foreach (Autodesk.Revit.DB.Mechanical.Space space in spaces_Temp)
             {
+                XYZ xyz = (space.Location as LocationPoint)?.Point;
+                if (xyz == null)
+                    continue;
+
                 BoundingBoxXYZ boundingBoxXYZ = space.get_BoundingBox(null);
                 if (boundingBoxXYZ == null || boundingBoxXYZ.Min.Z == boundingBoxXYZ.Max.Z)
                     continue;
@@ -46,7 +50,7 @@ namespace SAM.Analytical.Revit
 
                 Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, elevation_Bottom + offset)) as Geometry.Spatial.Plane;
 
-                Point3D point3D = Geometry.Revit.Convert.ToSAM((space.Location as LocationPoint)?.Point);
+                Point3D point3D = Geometry.Revit.Convert.ToSAM(xyz);
                 if (point3D == null)
                     continue;
 

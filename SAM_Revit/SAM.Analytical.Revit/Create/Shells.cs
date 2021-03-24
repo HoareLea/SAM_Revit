@@ -15,7 +15,16 @@ namespace SAM.Analytical.Revit
 
             List<Autodesk.Revit.DB.Mechanical.Space> spaces_Temp = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
             if(spaces != null)
-                spaces_Temp.RemoveAll(x => !spaces.Contains(x));
+            {
+                List<Autodesk.Revit.DB.Mechanical.Space> spaces_New = new List<Autodesk.Revit.DB.Mechanical.Space>();
+                foreach (Autodesk.Revit.DB.Mechanical.Space space in spaces)
+                {
+                    int index = spaces_Temp.FindIndex(x => x.Id.IntegerValue == space.Id.IntegerValue);
+                    if (index != -1)
+                        spaces_New.Add(spaces_Temp[index]);
+                }
+                spaces_Temp = spaces_New;
+            }
 
             if (spaces_Temp == null || spaces_Temp.Count == 0)
                 return null;

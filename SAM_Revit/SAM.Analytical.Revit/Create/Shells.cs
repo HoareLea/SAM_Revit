@@ -50,12 +50,28 @@ namespace SAM.Analytical.Revit
                 if (xyz == null)
                     continue;
 
+                double elevation_Top = double.NaN;
+
+                Parameter parameter = space.get_Parameter(BuiltInParameter.ROOM_UPPER_LEVEL);
+                if(parameter != null && parameter.HasValue)
+                {
+                    ElementId elementId = parameter.AsElementId();
+                    if(elementId != null && elementId != ElementId.InvalidElementId)
+                    {
+                        Level level = document.GetElement(elementId) as Level;
+                        if(level != null)
+                            elevation_Top = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
+                    }
+                }
+
                 BoundingBoxXYZ boundingBoxXYZ = space.get_BoundingBox(null);
                 if (boundingBoxXYZ == null || boundingBoxXYZ.Min.Z == boundingBoxXYZ.Max.Z)
                     continue;
 
-                double elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS) ;
-                double elevation_Top = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
+                if (double.IsNaN(elevation_Top))
+                    elevation_Top = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
+
+                double elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
 
                 Geometry.Spatial.Plane plane = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, elevation_Bottom + offset)) as Geometry.Spatial.Plane;
 

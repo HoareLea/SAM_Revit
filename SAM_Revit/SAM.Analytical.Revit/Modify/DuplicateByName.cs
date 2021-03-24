@@ -37,5 +37,41 @@ namespace SAM.Analytical.Revit
 
             return elementType;
         }
+
+        public static ElementType DuplicateByName(this Document document, string name_Old, PanelType panelType, Construction construction_New)
+        {
+            if (construction_New == null || document == null || string.IsNullOrWhiteSpace(name_Old))
+                return null;
+
+            string name_New = construction_New.Name;
+            if (string.IsNullOrWhiteSpace(name_New))
+                return null;
+
+            BuiltInCategory builtInCategory = panelType.BuiltInCategory();
+            if (builtInCategory == BuiltInCategory.INVALID)
+                return null;
+
+            List<ElementType> elementTypes = new FilteredElementCollector(document).OfClass(typeof(ElementType)).OfCategory(builtInCategory).Cast<ElementType>().ToList();
+            if (elementTypes == null || elementTypes.Count == 0)
+                return null;
+
+            ElementType elementType = elementTypes.Find(x => x.Name.Equals(name_New));
+            if (elementType == null)
+            {
+                ElementType elementType_ToBeDuplicated = elementTypes.Find(x => x.Name.Equals(name_Old));
+                if (elementType_ToBeDuplicated == null)
+                    return null;
+
+                elementType = elementType_ToBeDuplicated.Duplicate(name_New);
+            }
+
+            if (elementType == null)
+                return null;
+
+            Core.Revit.Modify.SetValues(elementType, construction_New);
+            Core.Revit.Modify.SetValues(elementType, construction_New, ActiveSetting.Setting);
+
+            return elementType;
+        }
     }
 }

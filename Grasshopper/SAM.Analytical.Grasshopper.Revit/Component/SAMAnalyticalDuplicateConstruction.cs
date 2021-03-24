@@ -16,7 +16,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -39,10 +39,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             int index;
 
-            index = inputParamManager.AddParameter(new GooPanelParam(), "_panel_", "_panel_", "SAM Analytical Panel", GH_ParamAccess.item);
-            inputParamManager[index].Optional = false;
-
-            inputParamManager.AddTextParameter("_name_", "_name_", "Name", GH_ParamAccess.item);
+            inputParamManager.AddParameter(new GooPanelParam(), "_panel", "_panel", "SAM Analytical Panel", GH_ParamAccess.item);
+            inputParamManager.AddTextParameter("_name", "_name", "Name", GH_ParamAccess.item);
+            
+            index = inputParamManager.AddBooleanParameter("inverted_", "inverted_", "if inverted then name is source type and panel construction is destination type", GH_ParamAccess.item, false);
+            inputParamManager[index].Optional = true;
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
@@ -73,7 +74,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name));
+            bool inverted = false;
+            if (!dataAccess.GetData(2, ref inverted))
+                inverted = false;
+
+            if (inverted)
+                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction));
+            else
+                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name));
         }
     }
 }

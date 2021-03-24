@@ -16,7 +16,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -44,6 +44,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             
             index = inputParamManager.AddBooleanParameter("inverted_", "inverted_", "if inverted then name is source type and panel construction is destination type", GH_ParamAccess.item, false);
             inputParamManager[index].Optional = true;
+
+            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
@@ -53,6 +55,10 @@ namespace SAM.Analytical.Grasshopper.Revit
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            bool run = false;
+            if (!dataAccess.GetData(3, ref run) || !run)
+                return;
+
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
             if (document == null)
             {

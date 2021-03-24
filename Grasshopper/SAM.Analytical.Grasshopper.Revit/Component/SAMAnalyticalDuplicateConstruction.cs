@@ -3,6 +3,7 @@ using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -45,6 +46,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             index = inputParamManager.AddBooleanParameter("inverted_", "inverted_", "if inverted then name is source type and panel construction is destination type", GH_ParamAccess.item, false);
             inputParamManager[index].Optional = true;
 
+            index = inputParamManager.AddTextParameter("_parameterNames_", "_parameterNames_", "Parameter Names will be copied from construction to new construction", GH_ParamAccess.list);
+            inputParamManager[index].Optional = true;
+
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
@@ -56,7 +60,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            if (!dataAccess.GetData(4, ref run) || !run)
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
@@ -84,10 +88,14 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (!dataAccess.GetData(2, ref inverted))
                 inverted = false;
 
+            List<string> parameterNames = new List<string>();
+            if (!dataAccess.GetDataList(3, parameterNames) || parameterNames.Count == 0)
+                parameterNames = null;
+
             if (inverted)
-                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction));
+                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction, parameterNames));
             else
-                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name));
+                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name, parameterNames));
         }
     }
 }

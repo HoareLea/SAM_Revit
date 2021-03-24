@@ -77,7 +77,7 @@ namespace SAM.Core.Revit
             return true;
         }
 
-        public static bool SetValues(this Element element, SAMObject sAMObject, Setting setting, Dictionary<string, object> parameters = null)
+        public static bool SetValues(this Element element, SAMObject sAMObject, Setting setting, Dictionary<string, object> parameters = null, IEnumerable<string> parameterNames_Included = null, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (element == null)
                 return false;
@@ -86,10 +86,10 @@ namespace SAM.Core.Revit
             if (!setting.TryGetValue(ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
                 return false;
 
-            return SetValues(element, sAMObject, typeMap, parameters);
+            return SetValues(element, sAMObject, typeMap, parameters, parameterNames_Included, parameterNames_Excluded);
         }
 
-        public static bool SetValues(this Element element, SAMObject sAMObject, TypeMap typeMap, Dictionary<string, object> parameters = null)
+        public static bool SetValues(this Element element, SAMObject sAMObject, TypeMap typeMap, Dictionary<string, object> parameters = null, IEnumerable<string> parameterNames_Included = null, IEnumerable<string> parameterNames_Excluded = null)
         {
             if (element == null || typeMap == null)
                 return false;
@@ -145,6 +145,12 @@ namespace SAM.Core.Revit
                                     name_Revit = name_Revit_Temp;
                             }
 
+                            if (parameterNames_Excluded != null && parameterNames_Excluded.Contains(name_Revit))
+                                continue;
+
+                            if (parameterNames_Included != null && !parameterNames_Included.Contains(name_Revit))
+                                continue;
+
                             Parameter parameter = element.LookupParameter(name_Revit);
                             if (parameter == null)
                                 return false;
@@ -182,7 +188,7 @@ namespace SAM.Core.Revit
 
             Setting setting = ActiveSetting.Setting;
 
-            if (!element.SetValues(sAMObject, setting))
+            if (!element.SetValues(sAMObject, setting, null, parameterNames_Included, parameterNames_Excluded))
                 return false;
 
             return true;

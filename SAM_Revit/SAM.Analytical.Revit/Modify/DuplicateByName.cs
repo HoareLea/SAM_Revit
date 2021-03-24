@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Modify
     {
-        public static ElementType DuplicateByName(this Document document, Construction construction_Old, PanelType panelType, string name_New)
+        public static ElementType DuplicateByName(this Document document, Construction construction_Old, PanelType panelType, string name_New, IEnumerable<string> parameterNames = null)
         {
             if (construction_Old == null || document == null || string.IsNullOrWhiteSpace(name_New))
                 return null;
@@ -32,13 +32,13 @@ namespace SAM.Analytical.Revit
             if (elementType == null)
                 return null;
 
-            Core.Revit.Modify.SetValues(elementType, construction_Old);
-            Core.Revit.Modify.SetValues(elementType, construction_Old, ActiveSetting.Setting);
+            Core.Revit.Modify.SetValues(elementType, construction_Old, parameterNames);
+            Core.Revit.Modify.SetValues(elementType, construction_Old, ActiveSetting.Setting, null, parameterNames);
 
             return elementType;
         }
 
-        public static ElementType DuplicateByName(this Document document, string name_Old, PanelType panelType, Construction construction_New)
+        public static ElementType DuplicateByName(this Document document, string name_Old, PanelType panelType, Construction construction_New, IEnumerable<string> parameterNames = null)
         {
             if (construction_New == null || document == null || string.IsNullOrWhiteSpace(name_Old))
                 return null;
@@ -68,8 +68,8 @@ namespace SAM.Analytical.Revit
             if (elementType == null)
                 return null;
 
-            Core.Revit.Modify.SetValues(elementType, construction_New);
-            Core.Revit.Modify.SetValues(elementType, construction_New, ActiveSetting.Setting);
+            Core.Revit.Modify.SetValues(elementType, construction_New, parameterNames);
+            Core.Revit.Modify.SetValues(elementType, construction_New, ActiveSetting.Setting, null, parameterNames);
 
             return elementType;
         }

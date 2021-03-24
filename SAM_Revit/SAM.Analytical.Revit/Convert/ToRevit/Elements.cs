@@ -157,7 +157,7 @@ namespace SAM.Analytical.Revit
                         result.Add(projectInfo);
 
                     Core.Revit.Modify.SetValues(projectInfo, analyticalModel);
-                    Core.Revit.Modify.SetValues(projectInfo, analyticalModel, ActiveSetting.Setting);
+                    Core.Revit.Modify.SetValues(projectInfo, analyticalModel, ActiveSetting.Setting, convertSettings.GetParameters());
                 }
             }
 

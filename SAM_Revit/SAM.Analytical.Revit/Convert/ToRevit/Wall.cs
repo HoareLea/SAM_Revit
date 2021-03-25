@@ -19,6 +19,9 @@ namespace SAM.Analytical.Revit
 			if (face3D == null || document == null)
 				return null;
 
+			if (face3D.GetArea() < Core.Tolerance.MacroDistance)
+				return null;
+
 			Geometry.Spatial.Vector3D normal = face3D.GetPlane().Normal;
 			if (normal == null)
 				return null;

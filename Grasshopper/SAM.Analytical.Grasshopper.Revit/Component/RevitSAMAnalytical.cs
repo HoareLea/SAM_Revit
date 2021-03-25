@@ -111,7 +111,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (element == null)
             {
                 message = "Invalid Element";
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 dataAccess.SetData(1, message);
 
                 return;
@@ -120,7 +120,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
                 message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 dataAccess.SetData(1, message);
 
                 return;

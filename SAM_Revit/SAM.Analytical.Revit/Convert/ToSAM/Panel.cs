@@ -10,7 +10,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, Core.Revit.ConvertSettings convertSettings, Shell shell = null, double silverSpacing = Core.Tolerance.MacroDistance, double tolerance = Core.Tolerance.Distance)
+        public static Panel ToSAM(this EnergyAnalysisSurface energyAnalysisSurface, ConvertSettings convertSettings, Shell shell = null, double silverSpacing = Core.Tolerance.MacroDistance, double tolerance = Core.Tolerance.Distance)
         {
             if (energyAnalysisSurface == null)
                 return null;

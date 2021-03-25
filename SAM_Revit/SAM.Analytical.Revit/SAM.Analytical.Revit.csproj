@@ -131,6 +131,7 @@
     <Compile Include="Convert\ToRevit\Spaces.cs" />
     <Compile Include="Convert\ToRevit\Wall.cs" />
     <Compile Include="Convert\ToSAM\AnalyticalModel.cs" />
+    <Compile Include="Convert\ToSAM\Material.cs" />
     <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Shells.cs" />

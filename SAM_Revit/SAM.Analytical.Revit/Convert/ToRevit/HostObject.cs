@@ -108,7 +108,7 @@ namespace SAM.Analytical.Revit
                 {
                     curveArray_Sloped.Append(segment3D.ToRevit_Line());
 
-                    Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                    Geometry.Spatial.Segment3D segment3D_Temp = Geometry.Spatial.Query.Project(plane, segment3D);
                     if (segment3D_Temp == null)
                         continue;
 
@@ -140,7 +140,7 @@ namespace SAM.Analytical.Revit
                             {
                                 curveArray_Sloped.Append(segment3D.ToRevit_Line());
 
-                                Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                                Geometry.Spatial.Segment3D segment3D_Temp = Geometry.Spatial.Query.Project(plane, segment3D);
                                 if (segment3D_Temp == null)
                                     continue;
 

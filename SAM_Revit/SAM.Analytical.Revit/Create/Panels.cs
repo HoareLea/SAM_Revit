@@ -264,8 +264,8 @@ namespace SAM.Analytical.Revit
 
                     foreach (Geometry.Spatial.Segment3D segment3D in segment3Ds)
                     {
-                        Geometry.Spatial.Segment3D segment3D_Top = plane_Top.Project(segment3D);
-                        Geometry.Spatial.Segment3D segment3D_Bottom = plane_Bottom.Project(segment3D);
+                        Geometry.Spatial.Segment3D segment3D_Top = Geometry.Spatial.Query.Project(plane_Top, segment3D);
+                        Geometry.Spatial.Segment3D segment3D_Bottom = Geometry.Spatial.Query.Project(plane_Bottom, segment3D);
 
                         Geometry.Spatial.Polygon3D polygon3D = Geometry.Spatial.Create.Polygon3D(new Geometry.Spatial.Point3D[] { segment3D_Top[0], segment3D_Top[1], segment3D_Bottom[1], segment3D_Bottom[0] });
                         if (polygon3D == null)

@@ -151,7 +151,9 @@ namespace SAM.Analytical.Revit
 
                 dictionary[tuple.Item1].Item2.Add(tuple_Overlap.Item3);
                 dictionary[tuple_Overlap.Item1] = new Tuple<Panel, List<Space>>(new Panel(dictionary[tuple_Overlap.Item1].Item1, PanelType.Shade), null);
-                tuples_External.RemoveAt(tuples_External.IndexOf(tuple_Overlap));
+                int index = tuples_External.IndexOf(tuple_Overlap);
+                if (index != -1)
+                    tuples_External.RemoveAt(index);
             }
             #endregion
 

@@ -32,7 +32,8 @@ namespace SAM.Analytical.Revit
                 Level level = document.LowLevel(lowElevation);
 
                 Wall wall = ToRevit_Wall(face3D, document, (WallType)hostObjAttributes, level);
-                
+                if (wall == null)
+                    return result;
 
                 //List<Curve> curveList = new List<Curve>();
                 //foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())

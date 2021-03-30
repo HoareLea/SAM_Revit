@@ -87,6 +87,9 @@ namespace SAM.Analytical.Revit
 
         public static List<Panel> ToSAM_Panels(this Document document, IEnumerable<ElementId> elementIds, ConvertSettings convertSettings)
         {
+            if (document == null)
+                return null;
+            
             LogicalOrFilter logicalOrFilter = null;
 
             logicalOrFilter = new LogicalOrFilter((new List<BuiltInCategory> { BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs }).ConvertAll(x => (ElementFilter)(new ElementCategoryFilter(x))));
@@ -126,14 +129,40 @@ namespace SAM.Analytical.Revit
 
         public static List<Panel> ToSAM_Panels(this Document document, ConvertSettings convertSettings)
         {
+            if (document == null)
+                return null;
+            
             return ToSAM_Panels(document, null, convertSettings);
         }
 
         public static List<Panel> ToSAM_Panels(this RevitLinkInstance revitLinkInstance, ConvertSettings convertSettings)
         {
-            Document document = revitLinkInstance.GetLinkDocument();
+            if (revitLinkInstance == null)
+                return null;
 
-            return ToSAM_Panels(document, convertSettings);
+            Document document = null;
+
+            try
+            {
+                document = revitLinkInstance.GetLinkDocument();
+            }
+            catch
+            {
+                return null;
+            }
+
+            if (document == null)
+                return null;
+
+            List<Panel> result = ToSAM_Panels(document, convertSettings);
+            if (result == null)
+                return result;
+
+            Transform transform = revitLinkInstance.GetTotalTransform();
+            if (transform != null && !transform.IsIdentity)
+                result = result.ConvertAll(x => Query.Transform(transform, x));
+
+            return result;
         }
 
         public static List<Panel> ToSAM_Panels(this ModelCurve modelCurve, ConvertSettings convertSettings)

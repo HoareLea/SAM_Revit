@@ -138,6 +138,7 @@
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />
     <Compile Include="Query\Segment3Ds.cs" />
+    <Compile Include="Query\Transform.cs" />
     <Compile Include="Query\TopProfiles.cs" />
     <Compile Include="Query\Profiles.cs" />
     <Compile Include="Convert\ToRevit\Line.cs" />

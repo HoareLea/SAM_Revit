@@ -5,9 +5,17 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static Point3D ToSAM(this XYZ XYZ)
+        public static Point3D ToSAM(this XYZ xyz)
         {
-            return new Point3D(XYZ.X * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Y * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Z * Units.Revit.Query.Factor_FromFeetToMeter);
+            return ToSAM(xyz, true);
+        }
+
+        public static Point3D ToSAM(this XYZ xyz, bool convertUnits)
+        {
+            if (convertUnits)
+                return new Point3D(xyz.X * Units.Revit.Query.Factor_FromFeetToMeter, xyz.Y * Units.Revit.Query.Factor_FromFeetToMeter, xyz.Z * Units.Revit.Query.Factor_FromFeetToMeter);
+
+            return new Point3D(xyz.X, xyz.Y, xyz.Z);
         }
     }
 }

@@ -80,7 +80,14 @@ namespace SAM.Analytical.Revit
             if (document == null)
                 return null;
 
-            return ToSAM(document, type, convertSettings, revitLinkInstance.GetTotalTransform());
+            Transform transform = revitLinkInstance.GetTotalTransform();
+            if (transform == null)
+                transform = Transform.Identity;
+
+            if (!transform.IsIdentity)
+                transform = transform.Inverse;
+
+            return ToSAM(document, type, convertSettings, transform);
         }
     
         public static IEnumerable<Core.SAMObject> ToSAM(this Document document, System.Type type, Core.Revit.ConvertSettings convertSettings, Transform transform = null)

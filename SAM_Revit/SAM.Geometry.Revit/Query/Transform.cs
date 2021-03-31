@@ -14,9 +14,9 @@ namespace SAM.Geometry.Revit
             if (transform.IsIdentity)
                 return new Vector3D(vector3D);
 
-            XYZ xyz = vector3D.ToRevit(false);
+            XYZ xyz = vector3D.ToRevit(true);
 
-            return transform.OfVector(xyz)?.ToSAM_Vector3D(false);
+            return transform.OfVector(xyz)?.ToSAM_Vector3D(true);
         }
 
         public static Point3D Transform(this Transform transform, Point3D point3D)
@@ -27,9 +27,9 @@ namespace SAM.Geometry.Revit
             if (transform.IsIdentity)
                 return new Point3D(point3D);
 
-            XYZ xyz = point3D.ToRevit(false);
+            XYZ xyz = point3D.ToRevit(true);
 
-            return transform.OfPoint(xyz)?.ToSAM(false);
+            return transform.OfPoint(xyz)?.ToSAM(true);
         }
 
         public static Spatial.Plane Transform(this Transform transform, Spatial.Plane plane)

@@ -4,10 +4,8 @@ using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
 using SAM.Core.Revit;
-using SAM.Geometry.Revit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -32,7 +30,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public RevitLinkSAMAnalyticalByType()
-          : base("RevitLink.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
+          : base("RevitLink.SAMAnalyticalByType", "Revit.SAMAnalyticalByType",
               "Convert Revit Link Instance To SAM Analytical Object ie. Panel, Construction, Aperture, ApertureConstruction, Space",
               "SAM", "Revit")
         {
@@ -45,7 +43,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             int index;
 
-            inputParamManager.AddTextParameter("_typeName_", "_typeName_", "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", GH_ParamAccess.item, "Panel");
+            inputParamManager.AddTextParameter("_type_", "_type_", "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", GH_ParamAccess.item, "Panel");
 
             index = inputParamManager.AddGenericParameter("_revitLinkInstance", "_revitLinkInstance", "RevitLinkInstance", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
@@ -58,8 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AnalyticalObject", "AnalyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
-            outputParamManager.AddTextParameter("Report", "Report", "Report", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("AnalyticalObjects", "AnalyticalObjects", "SAM Analytical Objects", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -99,8 +96,6 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Transform transform = Transform.Identity;
 
-            string message = null;
-
             GH_ObjectWrapper objectWrapper = null;
 
             dataAccess.GetData(1, ref objectWrapper);
@@ -113,9 +108,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 Element element = (obj.Document as Document).GetElement(aId);
                 if (element == null || !(element is RevitLinkInstance))
                 {
-                    message = "Invalid Element";
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
-                    dataAccess.SetData(1, message);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid Element");
                     return;
                 }
 
@@ -125,45 +118,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                 transform = revitLinkInstance.GetTotalTransform();
             }
 
-            FilteredElementCollector filteredElementCollector = Analytical.Revit.Query.FilteredElementCollector(document, type);
-            if (filteredElementCollector == null)
-            {
-                message = "Could not create proper FilteredElementCollector";
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
-                dataAccess.SetData(1, message);
-                return;
-            }
-
-            List<Core.SAMObject> sAMObjects = new List<Core.SAMObject>();
-
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 
-            List<Element> elementList = filteredElementCollector.ToList();
-            foreach (Element element in elementList)
-            {
-                IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element, convertSettings);
-                if (sAMObjects_Temp != null && sAMObjects_Temp.Count() != 0)
-                {
-                    List<Core.SAMObject> sAMObjects_Transform = new List<Core.SAMObject>();
-                    foreach(Core.SAMObject sAMObject in sAMObjects_Temp)
-                    {
-                        if(!transform.IsIdentity && (sAMObject is Panel || sAMObject is Aperture || sAMObject is Space))
-                            sAMObjects_Transform.Add(Analytical.Revit.Query.Transform(transform, sAMObject as dynamic));
-                        else
-                            sAMObjects_Transform.Add(sAMObject);
-                    }
-                    
-                    sAMObjects.AddRange(sAMObjects_Transform);
-                    message += "\n" + string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-                }
-                else
-                {
-                    message += "\n" + string.Format("Element not converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-                }
-            }
+            IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform);
 
-            dataAccess.SetDataList(0, sAMObjects);
-            dataAccess.SetData(1, message);
+            dataAccess.SetDataList(0, result);
         }
     }
 }

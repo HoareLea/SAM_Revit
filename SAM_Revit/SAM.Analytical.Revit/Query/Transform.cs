@@ -61,5 +61,19 @@ namespace SAM.Analytical.Revit
 
             return new Space(space, space.Name, Geometry.Revit.Query.Transform(transform, space.Location));
         }
+
+        public static Core.SAMObject Transform(this Transform transform, Core.SAMObject sAMObject)
+        {
+            if (transform == null || sAMObject == null)
+                return null;
+
+            if (transform.IsIdentity)
+                return Core.Query.Clone(sAMObject);
+
+            if (sAMObject is Panel || sAMObject is Aperture || sAMObject is Space)
+                return Transform(transform, sAMObject as dynamic);
+
+            return Core.Query.Clone(sAMObject);
+        }
     }
 }

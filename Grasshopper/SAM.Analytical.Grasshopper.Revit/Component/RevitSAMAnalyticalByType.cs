@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitLinkSAMAnalyticalByTypeName : GH_SAMComponent
+    public class RevitLinkSAMAnalyticalByType : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -21,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -31,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitLinkSAMAnalyticalByTypeName()
+        public RevitLinkSAMAnalyticalByType()
           : base("RevitLink.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
               "Convert Revit Link Instance To SAM Analytical Object ie. Panel, Construction, Aperture, ApertureConstruction, Space",
               "SAM", "Revit")
@@ -97,6 +97,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            Transform transform = Transform.Identity;
+
             string message = null;
 
             GH_ObjectWrapper objectWrapper = null;
@@ -120,6 +122,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 RevitLinkInstance revitLinkInstance = element as RevitLinkInstance;
 
                 document = revitLinkInstance.GetLinkDocument();
+                transform = revitLinkInstance.GetTotalTransform();
             }
 
             FilteredElementCollector filteredElementCollector = Analytical.Revit.Query.FilteredElementCollector(document, type);
@@ -139,9 +142,18 @@ namespace SAM.Analytical.Grasshopper.Revit
             foreach (Element element in elementList)
             {
                 IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element, convertSettings);
-                if (sAMObjects_Temp != null && sAMObjects_Temp.Count() > 0)
+                if (sAMObjects_Temp != null && sAMObjects_Temp.Count() != 0)
                 {
-                    sAMObjects.AddRange(sAMObjects_Temp);
+                    List<Core.SAMObject> sAMObjects_Transform = new List<Core.SAMObject>();
+                    foreach(Core.SAMObject sAMObject in sAMObjects_Temp)
+                    {
+                        if(!transform.IsIdentity && (sAMObject is Panel || sAMObject is Aperture || sAMObject is Space))
+                            sAMObjects_Transform.Add(Analytical.Revit.Query.Transform(transform, sAMObject as dynamic));
+                        else
+                            sAMObjects_Transform.Add(sAMObject);
+                    }
+                    
+                    sAMObjects.AddRange(sAMObjects_Transform);
                     message += "\n" + string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
                 }
                 else

@@ -92,8 +92,8 @@ namespace SAM.Geometry.Revit
                         if (curve3D == null)
                             continue;
 
-                        ICurve3D maxCurve = plane_max.Project(curve3D);
-                        ICurve3D minCurve = plane_min.Project(curve3D);
+                        ICurve3D maxCurve = Spatial.Query.Project(plane_max, curve3D);
+                        ICurve3D minCurve = Spatial.Query.Project(plane_min, curve3D);
 
                         Point3D point3D_1 = minCurve.GetEnd();
                         Point3D point3D_2 = maxCurve.GetStart();

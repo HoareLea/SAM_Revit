@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMAnalytical : GH_SAMComponent
+    public class RevitSAMAnalyticalByElement : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -30,8 +30,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitSAMAnalytical()
-          : base("Revit.SAMAnalytical", "Revit.SAMAnalytical",
+        public RevitSAMAnalyticalByElement()
+          : base("Revit.SAMAnalyticalByElement", "Revit.SAMAnalyticalByElement",
               "Convert Revit To SAM Analytical Object ie. Panel, Space",
               "SAM", "Revit")
         {

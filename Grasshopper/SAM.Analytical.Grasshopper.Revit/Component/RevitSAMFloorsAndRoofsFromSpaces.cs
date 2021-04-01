@@ -169,7 +169,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     continue;
                 }
 
-                Geometry.Spatial.Point3D point3D_Projected = plane_Face3D.Project(plane.Origin);
+                Geometry.Spatial.Point3D point3D_Projected = Geometry.Spatial.Query.Project(plane_Face3D, plane.Origin);
 
                 panel.Move(new Geometry.Spatial.Vector3D(plane.Origin, point3D_Projected));
                 panels_Temp.Add(panel);

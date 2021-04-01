@@ -32,7 +32,8 @@ namespace SAM.Analytical.Revit
                 Level level = document.LowLevel(lowElevation);
 
                 Wall wall = ToRevit_Wall(face3D, document, (WallType)hostObjAttributes, level);
-                
+                if (wall == null)
+                    return result;
 
                 //List<Curve> curveList = new List<Curve>();
                 //foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
@@ -108,7 +109,7 @@ namespace SAM.Analytical.Revit
                 {
                     curveArray_Sloped.Append(segment3D.ToRevit_Line());
 
-                    Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                    Geometry.Spatial.Segment3D segment3D_Temp = Geometry.Spatial.Query.Project(plane, segment3D);
                     if (segment3D_Temp == null)
                         continue;
 
@@ -140,7 +141,7 @@ namespace SAM.Analytical.Revit
                             {
                                 curveArray_Sloped.Append(segment3D.ToRevit_Line());
 
-                                Geometry.Spatial.Segment3D segment3D_Temp = plane.Project(segment3D);
+                                Geometry.Spatial.Segment3D segment3D_Temp = Geometry.Spatial.Query.Project(plane, segment3D);
                                 if (segment3D_Temp == null)
                                     continue;
 

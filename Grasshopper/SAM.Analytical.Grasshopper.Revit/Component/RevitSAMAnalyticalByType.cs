@@ -4,14 +4,12 @@ using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
 using SAM.Core.Revit;
-using SAM.Geometry.Revit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitLinkSAMAnalyticalByTypeName : GH_SAMComponent
+    public class RevitLinkSAMAnalyticalByType : GH_SAMComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -21,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -31,8 +29,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public RevitLinkSAMAnalyticalByTypeName()
-          : base("RevitLink.SAMAnalyticalByTypeName", "Revit.SAMAnalyticalByTypeName",
+        public RevitLinkSAMAnalyticalByType()
+          : base("RevitLink.SAMAnalyticalByType", "Revit.SAMAnalyticalByType",
               "Convert Revit Link Instance To SAM Analytical Object ie. Panel, Construction, Aperture, ApertureConstruction, Space",
               "SAM", "Revit")
         {
@@ -45,7 +43,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             int index;
 
-            inputParamManager.AddTextParameter("_typeName_", "_typeName_", "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", GH_ParamAccess.item, "Panel");
+            inputParamManager.AddTextParameter("_type_", "_type_", "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", GH_ParamAccess.item, "Panel");
 
             index = inputParamManager.AddGenericParameter("_revitLinkInstance", "_revitLinkInstance", "RevitLinkInstance", GH_ParamAccess.item);
             inputParamManager[index].Optional = true;
@@ -58,8 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AnalyticalObject", "AnalyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
-            outputParamManager.AddTextParameter("Report", "Report", "Report", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("AnalyticalObjects", "AnalyticalObjects", "SAM Analytical Objects", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -97,7 +94,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            string message = null;
+            Transform transform = Transform.Identity;
 
             GH_ObjectWrapper objectWrapper = null;
 
@@ -111,47 +108,21 @@ namespace SAM.Analytical.Grasshopper.Revit
                 Element element = (obj.Document as Document).GetElement(aId);
                 if (element == null || !(element is RevitLinkInstance))
                 {
-                    message = "Invalid Element";
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
-                    dataAccess.SetData(1, message);
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid Element");
                     return;
                 }
 
                 RevitLinkInstance revitLinkInstance = element as RevitLinkInstance;
 
                 document = revitLinkInstance.GetLinkDocument();
+                transform = revitLinkInstance.GetTotalTransform();
             }
-
-            FilteredElementCollector filteredElementCollector = Analytical.Revit.Query.FilteredElementCollector(document, type);
-            if (filteredElementCollector == null)
-            {
-                message = "Could not create proper FilteredElementCollector";
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, message);
-                dataAccess.SetData(1, message);
-                return;
-            }
-
-            List<Core.SAMObject> sAMObjects = new List<Core.SAMObject>();
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 
-            List<Element> elementList = filteredElementCollector.ToList();
-            foreach (Element element in elementList)
-            {
-                IEnumerable<Core.SAMObject> sAMObjects_Temp = Analytical.Revit.Convert.ToSAM(element, convertSettings);
-                if (sAMObjects_Temp != null && sAMObjects_Temp.Count() > 0)
-                {
-                    sAMObjects.AddRange(sAMObjects_Temp);
-                    message += "\n" + string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-                }
-                else
-                {
-                    message += "\n" + string.Format("Element not converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-                }
-            }
+            IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform);
 
-            dataAccess.SetDataList(0, sAMObjects);
-            dataAccess.SetData(1, message);
+            dataAccess.SetDataList(0, result);
         }
     }
 }

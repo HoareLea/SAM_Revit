@@ -10,7 +10,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Aperture ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, Core.Revit.ConvertSettings convertSettings)
+        public static Aperture ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, ConvertSettings convertSettings)
         {
             if (energyAnalysisOpening == null)
                 return null;

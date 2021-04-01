@@ -64,6 +64,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (!dataAccess.GetData(0, ref element))
                 return;
 
+            Transform transform;
+
             if(element == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");

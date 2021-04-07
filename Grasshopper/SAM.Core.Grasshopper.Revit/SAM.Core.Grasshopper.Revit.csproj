@@ -155,6 +155,7 @@
     <Compile Include="Classes\SAMTransactionComponent.cs" />
     <Compile Include="Component\RevitCopyRooms.cs" />
     <Compile Include="Component\SAMCoreCreateSheets.cs" />
+    <Compile Include="Component\SAMCoreDuplicatedUniqueIds.cs" />
     <Compile Include="Component\SAMCoreDuplicatedElementIds.cs" />
     <Compile Include="Component\SAMCoreRenameSpaces.cs" />
     <Compile Include="Component\SAMCoreGetWalls.cs" />

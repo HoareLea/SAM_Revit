@@ -106,7 +106,7 @@ namespace SAM.Core.Grasshopper.Revit
                     if (locationPoint == null)
                         continue;
 
-                    XYZ xyz = transform?.Inverse?.OfPoint(locationPoint.Point);
+                    XYZ xyz = transform?.OfPoint(locationPoint.Point);
                     if (xyz == null)
                         continue;
 

@@ -7,7 +7,7 @@ using System;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMSpaceRevit : SAMTransactionComponent
+    public class SAMAnalyticalSpaceRevit : SAMTransactionComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -27,8 +27,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMSpaceRevit()
-          : base("SAMSpace.Revit", "SAMSpace.Revit",
+        public SAMAnalyticalSpaceRevit()
+          : base("SAMAnalytical.SpaceRevit", "SAMAnalytical.SpaceRevit",
               "Convert SAM Space to Revit Space",
               "SAM", "Revit")
         {

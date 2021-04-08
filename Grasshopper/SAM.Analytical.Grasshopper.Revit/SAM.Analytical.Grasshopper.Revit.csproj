@@ -170,9 +170,9 @@
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
     <Compile Include="Component\SAMAnalyticalUpdateConstructions.cs" />
     <Compile Include="Component\SAMAnalyticalUpdatePanelType.cs" />
-    <Compile Include="Component\SAMApertureRevit.cs" />
+    <Compile Include="Component\SAMAnalyticalApertureRevit.cs" />
     <Compile Include="Component\SAMAnalyticalResultRevit.cs" />
-    <Compile Include="Component\SAMSpaceRevit.cs" />
+    <Compile Include="Component\SAMAnalyticalSpaceRevit.cs" />
     <Compile Include="Component\RevitOverlapWalls.cs" />
     <Compile Include="Component\RevitAlignWalls.cs" />
     <Compile Include="Component\RevitSAMAnalyticalModel.cs" />
@@ -181,7 +181,7 @@
     <Compile Include="Component\RevitSAMAnalyticalByType.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByElement.cs" />
     <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
-    <Compile Include="Component\SAMPanelRevit.cs" />
+    <Compile Include="Component\SAMAnalyticalPanelRevit.cs" />
     <Compile Include="Component\SAMAnalyticalTrimOrExtendWall.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

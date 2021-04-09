@@ -310,7 +310,7 @@ namespace SAM.Analytical.Revit
                     Geometry.Planar.Point2D point2D = tuple.Item2;
 
                     List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_External = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance));
-                    tuples_Polygon2D_External.Sort((x, y) => x.Item1.GetArea().CompareTo(y.Item1));
+                    tuples_Polygon2D_External.Sort((x, y) => x.Item1.GetArea().CompareTo(y.Item1.GetArea()));
 
                     Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D_External = tuples_Polygon2D_External.FirstOrDefault();
                     if (tuple_Polygon2D_External == null)

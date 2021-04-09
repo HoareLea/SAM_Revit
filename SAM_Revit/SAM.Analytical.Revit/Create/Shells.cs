@@ -299,6 +299,40 @@ namespace SAM.Analytical.Revit
 
                 Geometry.Spatial.Plane plane_Bottom = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, elevation_Bottom)) as Geometry.Spatial.Plane;
 
+                List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>> tuples_Space = keyValuePair.Value;
+                while(tuples_Space.Count > 0)
+                {
+                    Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space> tuple = tuples_Space[0];
+                    tuples_Space.RemoveAt(0);
+
+                    Geometry.Spatial.Plane plane_Top = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, tuple.Item1)) as Geometry.Spatial.Plane;
+
+                    Geometry.Planar.Point2D point2D = tuple.Item2;
+
+                    List<Geometry.Planar.Polygon2D> polygon2Ds = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance)).ConvertAll(x => x.Item2);
+                    if (polygon2Ds == null || polygon2Ds.Count == 0)
+                        continue;
+
+                    List<Geometry.Planar.Face2D> face2Ds = Geometry.Planar.Create.Face2Ds(polygon2Ds, true);
+                    if (face2Ds == null || face2Ds.Count == 0)
+                        continue;
+
+                    foreach(Geometry.Planar.Face2D face2D in face2Ds)
+                    {
+                        tuples_Space.RemoveAll(x => face2D.Inside(x.Item2, tolerance));
+                    }
+
+                    List<Face3D> face3Ds = new List<Face3D>();
+                    face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Bottom, x)));
+                    face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Top, x)));
+
+                    List<Shell> shells_Temp = Geometry.Spatial.Create.Shells(face3Ds, tolerance);
+                    if (shells_Temp == null || shells_Temp.Count == 0)
+                        continue;
+
+                    result.AddRange(shells_Temp);
+                }
+
                 foreach (Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space> tuple in keyValuePair.Value)
                 {
                     Geometry.Spatial.Plane plane_Top = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, tuple.Item1)) as Geometry.Spatial.Plane;

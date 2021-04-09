@@ -339,9 +339,35 @@ namespace SAM.Analytical.Revit
 
                     Geometry.Planar.Point2D point2D = tuple.Item2;
 
-                    List<Geometry.Planar.Polygon2D> polygon2Ds = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance)).ConvertAll(x => x.Item2);
-                    if (polygon2Ds == null || polygon2Ds.Count == 0)
+                    List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_External = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance));
+                    if (tuples_Polygon2D_External == null)
+                    {
                         continue;
+                    }
+
+                    int count = tuples_Polygon2D_External.Count;
+                    if(count == 0)
+                    {
+                        continue;
+                    }
+
+                    List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_Internal = new List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>>();
+                    foreach (Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D in tuples_Polygon2D)
+                    {
+                        if(tuples_Polygon2D_External.Contains(tuple_Polygon2D))
+                        {
+                            continue;
+                        }
+
+                        Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D_Temp = tuples_Polygon2D_External.Find(x => x.Item1.Inside(tuple_Polygon2D.Item1, tolerance) && x.Item2.Inside(tuple_Polygon2D.Item2, tolerance));
+                        if(tuple_Polygon2D_Temp != null)
+                        {
+                            tuples_Polygon2D_Internal.Add(tuple_Polygon2D);
+                        }
+                    }
+
+                    List<Geometry.Planar.Polygon2D> polygon2Ds = tuples_Polygon2D_External.ConvertAll(x => x.Item2);
+                    polygon2Ds.AddRange(tuples_Polygon2D_Internal.ConvertAll(x => x.Item2));
 
                     List<Geometry.Planar.Face2D> face2Ds = Geometry.Planar.Create.Face2Ds(polygon2Ds, true);
                     if (face2Ds == null || face2Ds.Count == 0)

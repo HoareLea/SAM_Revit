@@ -310,13 +310,10 @@ namespace SAM.Analytical.Revit
                     Geometry.Planar.Point2D point2D = tuple.Item2;
 
                     List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_External = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance));
-                    if (tuples_Polygon2D_External == null)
-                    {
-                        continue;
-                    }
+                    tuples_Polygon2D_External.Sort((x, y) => x.Item1.GetArea().CompareTo(y.Item1));
 
-                    int count = tuples_Polygon2D_External.Count;
-                    if (count == 0)
+                    Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D_External = tuples_Polygon2D_External.FirstOrDefault();
+                    if (tuple_Polygon2D_External == null)
                     {
                         continue;
                     }
@@ -324,28 +321,23 @@ namespace SAM.Analytical.Revit
                     List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_Internal = new List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>>();
                     foreach (Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D in tuples_Polygon2D)
                     {
-                        if (tuples_Polygon2D_External.Contains(tuple_Polygon2D))
+                        if (tuple_Polygon2D == tuple_Polygon2D_External)
                         {
                             continue;
                         }
-
-                        Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D_Temp = tuples_Polygon2D_External.Find(x => x.Item1.Inside(tuple_Polygon2D.Item1, tolerance) && x.Item2.Inside(tuple_Polygon2D.Item2, tolerance));
-                        if (tuple_Polygon2D_Temp != null)
+                        
+                        if (tuple_Polygon2D_External.Item1.Inside(tuple_Polygon2D.Item1, tolerance) && tuple_Polygon2D_External.Item2.Inside(tuple_Polygon2D.Item2, tolerance))
                         {
                             tuples_Polygon2D_Internal.Add(tuple_Polygon2D);
                         }
                     }
 
-                    List<Geometry.Planar.Face2D> face2Ds = new List<Geometry.Planar.Face2D>();
-                    foreach (Geometry.Planar.Polygon2D polygon2D in tuples_Polygon2D_External.ConvertAll(x => x.Item2))
+                    List<Geometry.Planar.Face2D> face2Ds = Geometry.Planar.Query.Difference(new Geometry.Planar.Face2D(tuple_Polygon2D_External.Item2), tuples_Polygon2D_Internal.ConvertAll(x => new Geometry.Planar.Face2D(x.Item2)), tolerance);
+                    if (face2Ds == null || face2Ds.Count == 0)
                     {
-
-                        List<Geometry.Planar.Face2D> face2Ds_Temp = Geometry.Planar.Query.Difference(new Geometry.Planar.Face2D(polygon2D), tuples_Polygon2D_Internal.ConvertAll(x => new Geometry.Planar.Face2D(x.Item2)), tolerance);
-                        if(face2Ds_Temp != null)
-                        {
-                            face2Ds.AddRange(face2Ds_Temp);
-                        }
+                        continue;
                     }
+
 
                     foreach (Geometry.Planar.Face2D face2D in face2Ds)
                     {

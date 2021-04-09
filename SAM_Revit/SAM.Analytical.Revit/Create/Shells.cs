@@ -309,36 +309,6 @@ namespace SAM.Analytical.Revit
 
                     Geometry.Planar.Point2D point2D = tuple.Item2;
 
-                    List<Geometry.Planar.Polygon2D> polygon2Ds = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance)).ConvertAll(x => x.Item2);
-                    if (polygon2Ds == null || polygon2Ds.Count == 0)
-                        continue;
-
-                    List<Geometry.Planar.Face2D> face2Ds = Geometry.Planar.Create.Face2Ds(polygon2Ds, true);
-                    if (face2Ds == null || face2Ds.Count == 0)
-                        continue;
-
-                    foreach(Geometry.Planar.Face2D face2D in face2Ds)
-                    {
-                        tuples_Space.RemoveAll(x => face2D.Inside(x.Item2, tolerance));
-                    }
-
-                    List<Face3D> face3Ds = new List<Face3D>();
-                    face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Bottom, x)));
-                    face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Top, x)));
-
-                    List<Shell> shells_Temp = Geometry.Spatial.Create.Shells(face3Ds, tolerance);
-                    if (shells_Temp == null || shells_Temp.Count == 0)
-                        continue;
-
-                    result.AddRange(shells_Temp);
-                }
-
-                foreach (Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space> tuple in keyValuePair.Value)
-                {
-                    Geometry.Spatial.Plane plane_Top = Geometry.Spatial.Plane.WorldXY.GetMoved(new Vector3D(0, 0, tuple.Item1)) as Geometry.Spatial.Plane;
-
-                    Geometry.Planar.Point2D point2D = tuple.Item2;
-
                     List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_External = tuples_Polygon2D.FindAll(x => x.Item1.Inside(point2D, tolerance)).FindAll(x => x.Item2.Inside(point2D, tolerance));
                     if (tuples_Polygon2D_External == null)
                     {
@@ -346,7 +316,7 @@ namespace SAM.Analytical.Revit
                     }
 
                     int count = tuples_Polygon2D_External.Count;
-                    if(count == 0)
+                    if (count == 0)
                     {
                         continue;
                     }
@@ -354,24 +324,33 @@ namespace SAM.Analytical.Revit
                     List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D_Internal = new List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>>();
                     foreach (Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D in tuples_Polygon2D)
                     {
-                        if(tuples_Polygon2D_External.Contains(tuple_Polygon2D))
+                        if (tuples_Polygon2D_External.Contains(tuple_Polygon2D))
                         {
                             continue;
                         }
 
                         Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D> tuple_Polygon2D_Temp = tuples_Polygon2D_External.Find(x => x.Item1.Inside(tuple_Polygon2D.Item1, tolerance) && x.Item2.Inside(tuple_Polygon2D.Item2, tolerance));
-                        if(tuple_Polygon2D_Temp != null)
+                        if (tuple_Polygon2D_Temp != null)
                         {
                             tuples_Polygon2D_Internal.Add(tuple_Polygon2D);
                         }
                     }
 
-                    List<Geometry.Planar.Polygon2D> polygon2Ds = tuples_Polygon2D_External.ConvertAll(x => x.Item2);
-                    polygon2Ds.AddRange(tuples_Polygon2D_Internal.ConvertAll(x => x.Item2));
+                    List<Geometry.Planar.Face2D> face2Ds = new List<Geometry.Planar.Face2D>();
+                    foreach (Geometry.Planar.Polygon2D polygon2D in tuples_Polygon2D_External.ConvertAll(x => x.Item2))
+                    {
 
-                    List<Geometry.Planar.Face2D> face2Ds = Geometry.Planar.Create.Face2Ds(polygon2Ds, true);
-                    if (face2Ds == null || face2Ds.Count == 0)
-                        continue;
+                        List<Geometry.Planar.Face2D> face2Ds_Temp = Geometry.Planar.Query.Difference(new Geometry.Planar.Face2D(polygon2D), tuples_Polygon2D_Internal.ConvertAll(x => new Geometry.Planar.Face2D(x.Item2)), tolerance);
+                        if(face2Ds_Temp != null)
+                        {
+                            face2Ds.AddRange(face2Ds_Temp);
+                        }
+                    }
+
+                    foreach (Geometry.Planar.Face2D face2D in face2Ds)
+                    {
+                        tuples_Space.RemoveAll(x => face2D.Inside(x.Item2, tolerance));
+                    }
 
                     List<Face3D> face3Ds = new List<Face3D>();
                     face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Bottom, x)));

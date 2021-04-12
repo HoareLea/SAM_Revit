@@ -157,7 +157,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                         foreach (Wall wall in dictionary.Keys)
                             wall.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(0);
 
+                        document.Regenerate();
+
                         subTransaction.Commit();
+
+                        subTransaction.Start();
 
                         foreach (KeyValuePair<Wall, int> keyValuePair in dictionary)
                             keyValuePair.Key.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(keyValuePair.Value);

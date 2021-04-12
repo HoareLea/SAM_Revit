@@ -29,7 +29,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
 
-        private HashSet<ElementId> elementIds = new HashSet<ElementId>();
+        //private HashSet<ElementId> elementIds = new HashSet<ElementId>();
 
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
@@ -116,60 +116,60 @@ namespace SAM.Analytical.Grasshopper.Revit
             else
                 elements = new List<Element>() { @object as Element };
 
-            if(elements != null)
-            {
-                foreach(Element element in elements)
-                {
-                    ElementId elementId = element.Id;
-                    if (elementId == null)
-                        continue;
+            //if(elements != null)
+            //{
+            //    foreach(Element element in elements)
+            //    {
+            //        ElementId elementId = element.Id;
+            //        if (elementId == null)
+            //            continue;
 
-                    elementIds.Add(elementId);
-                }
-            }
+            //        elementIds.Add(elementId);
+            //    }
+            //}
 
             dataAccess.SetDataList(0, elements);
         }
 
-        protected override void OnAfterStart(Document document, string strTransactionName)
-        {
-            base.OnAfterStart(document, strTransactionName);
+        //protected override void OnAfterStart(Document document, string strTransactionName)
+        //{
+        //    base.OnAfterStart(document, strTransactionName);
 
-            elementIds = new HashSet<ElementId>();
-        }
+        //    elementIds = new HashSet<ElementId>();
+        //}
 
-        protected override void OnBeforeCommit(Document document, string strTransactionName)
-        {
-            base.OnBeforeCommit(document, strTransactionName);
+        //protected override void OnBeforeCommit(Document document, string strTransactionName)
+        //{
+        //    base.OnBeforeCommit(document, strTransactionName);
 
-            if(elementIds != null && elementIds.Count != 0)
-            {
-                List<Wall> walls = new FilteredElementCollector(document, elementIds).OfClass(typeof(Wall)).Cast<Wall>().ToList();
-                if(walls != null && walls.Count != 0)
-                {
-                    Dictionary<Wall, int> dictionary = new Dictionary<Wall, int>();
-                    walls.ForEach(x => dictionary[x] = x.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).AsInteger());
+        //    if(elementIds != null && elementIds.Count != 0)
+        //    {
+        //        List<Wall> walls = new FilteredElementCollector(document, elementIds).OfClass(typeof(Wall)).Cast<Wall>().ToList();
+        //        if(walls != null && walls.Count != 0)
+        //        {
+        //            Dictionary<Wall, int> dictionary = new Dictionary<Wall, int>();
+        //            walls.ForEach(x => dictionary[x] = x.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).AsInteger());
 
-                    using (SubTransaction subTransaction = new SubTransaction(document))
-                    {
-                        subTransaction.Start();
+        //            using (SubTransaction subTransaction = new SubTransaction(document))
+        //            {
+        //                subTransaction.Start();
                         
-                        foreach (Wall wall in dictionary.Keys)
-                            wall.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(0);
+        //                foreach (Wall wall in dictionary.Keys)
+        //                    wall.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(0);
 
-                        document.Regenerate();
+        //                document.Regenerate();
 
-                        subTransaction.Commit();
+        //                subTransaction.Commit();
 
-                        subTransaction.Start();
+        //                subTransaction.Start();
 
-                        foreach (KeyValuePair<Wall, int> keyValuePair in dictionary)
-                            keyValuePair.Key.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(keyValuePair.Value);
+        //                foreach (KeyValuePair<Wall, int> keyValuePair in dictionary)
+        //                    keyValuePair.Key.get_Parameter(BuiltInParameter.WALL_ATTR_ROOM_BOUNDING).Set(keyValuePair.Value);
 
-                        subTransaction.Commit();
-                    }
-                }
-            }
-        }
+        //                subTransaction.Commit();
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

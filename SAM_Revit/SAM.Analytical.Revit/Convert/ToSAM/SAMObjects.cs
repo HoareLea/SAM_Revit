@@ -103,24 +103,23 @@ namespace SAM.Analytical.Revit
             if (elements == null)
                 return null;
 
-            List<List<Core.SAMObject>> sAMObjects = Enumerable.Repeat<List<Core.SAMObject>>(null, elements.Count).ToList();
-            Parallel.For(0, elements.Count, (int i) => 
-            {
-                IEnumerable<Core.SAMObject> sAMObjects_Temp = ToSAM(elements[i], convertSettings);
-                if (sAMObjects_Temp == null || sAMObjects_Temp.Count() == 0)
-                    return;
-
-                sAMObjects[i] = new List<Core.SAMObject>();
-                foreach (Core.SAMObject sAMObject in sAMObjects_Temp)
-                    sAMObjects[i].Add(Query.Transform(transform, sAMObject));
-
-            });
-
             List<Core.SAMObject> result = new List<Core.SAMObject>();
-            foreach(List<Core.SAMObject> sAMObjects_Temp in sAMObjects)
+            for (int i = 0; i < elements.Count; i++)
             {
-                if (sAMObjects_Temp != null && sAMObjects_Temp.Count != 0)
-                    result.AddRange(sAMObjects_Temp);
+                IEnumerable<Core.SAMObject> sAMObjects = ToSAM(elements[i], convertSettings);
+                if (sAMObjects == null || sAMObjects.Count() == 0)
+                    continue;
+
+                foreach (Core.SAMObject sAMObject in sAMObjects)
+                    result.Add(sAMObject);
+            };
+
+            if(transform != null && transform != Transform.Identity)
+            {
+                Parallel.For(0, result.Count, (int i) =>
+                {
+                    result[i] = Query.Transform(transform, result[i]);
+                });
             }
 
             return result;

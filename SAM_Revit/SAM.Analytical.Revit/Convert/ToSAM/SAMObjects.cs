@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SAM.Analytical.Revit
 {
@@ -102,15 +103,24 @@ namespace SAM.Analytical.Revit
             if (elements == null)
                 return null;
 
-            List<Core.SAMObject> result = new List<Core.SAMObject>();
-            foreach (Element element in elements)
+            List<List<Core.SAMObject>> sAMObjects = Enumerable.Repeat<List<Core.SAMObject>>(null, elements.Count).ToList();
+            Parallel.For(0, elements.Count, (int i) => 
             {
-                IEnumerable<Core.SAMObject> sAMObjects = ToSAM(element, convertSettings);
-                if (sAMObjects == null || sAMObjects.Count() == 0)
-                    continue;
+                IEnumerable<Core.SAMObject> sAMObjects_Temp = ToSAM(elements[i], convertSettings);
+                if (sAMObjects_Temp == null || sAMObjects_Temp.Count() == 0)
+                    return;
 
-                foreach (Core.SAMObject sAMObject in sAMObjects)
-                    result.Add(Query.Transform(transform, sAMObject));
+                sAMObjects[i] = new List<Core.SAMObject>();
+                foreach (Core.SAMObject sAMObject in sAMObjects_Temp)
+                    sAMObjects[i].Add(Query.Transform(transform, sAMObject));
+
+            });
+
+            List<Core.SAMObject> result = new List<Core.SAMObject>();
+            foreach(List<Core.SAMObject> sAMObjects_Temp in sAMObjects)
+            {
+                if (sAMObjects_Temp != null && sAMObjects_Temp.Count != 0)
+                    result.AddRange(sAMObjects_Temp);
             }
 
             return result;

@@ -43,6 +43,7 @@ namespace SAM.Core.Grasshopper.Revit
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
                 result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "type_", NickName = "type_", Description = "Typet", Access = GH_ParamAccess.item, Optional = false }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_revitLinkInstance_", NickName = "_revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
                 return result.ToArray();
             }
         }
@@ -76,13 +77,29 @@ namespace SAM.Core.Grasshopper.Revit
             }
 
             GH_ObjectWrapper objectWrapper = null;
+            index = Params.IndexOfInputParam("_revitLinkInstance_");
+            if (index != -1)
+                dataAccess.GetData(index, ref objectWrapper);
+
+            Document document = null;
+            if(objectWrapper != null && objectWrapper.TryGetElement(out RevitLinkInstance revitLinkInstance) && revitLinkInstance != null)
+            {
+                document = revitLinkInstance.GetLinkDocument();
+            }
+
+            if(document == null)
+            {
+                document = RhinoInside.Revit.Revit.ActiveDBDocument;
+            }
+
+            objectWrapper = null;
             if (!dataAccess.GetData(index, ref objectWrapper) || objectWrapper == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            if(!objectWrapper.TryGetElement(out ElementType elementType) || elementType == null)
+            if(!objectWrapper.TryGetElement(out ElementType elementType, document) || elementType == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

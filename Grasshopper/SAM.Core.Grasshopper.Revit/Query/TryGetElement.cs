@@ -5,7 +5,7 @@ namespace SAM.Core.Grasshopper.Revit
 {
     public static partial class Query
     {
-        public static bool TryGetElement<T>(this GH_ObjectWrapper objectWrapper, out T element) where T: Element
+        public static bool TryGetElement<T>(this GH_ObjectWrapper objectWrapper,  out T element, Document document = null) where T: Element
         {
             element = null;
 
@@ -18,7 +18,8 @@ namespace SAM.Core.Grasshopper.Revit
 
             if(obj is SAMObject)
             {
-                Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+                if (document == null)
+                    document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
                 SAMObject sAMObject = obj as SAMObject;
                 string uniqueId = Core.Revit.Query.UniqueId(sAMObject);

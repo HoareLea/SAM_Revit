@@ -93,6 +93,7 @@ namespace SAM.Core.Grasshopper.Revit
             }
 
             objectWrapper = null;
+            index = Params.IndexOfInputParam("type_");
             if (!dataAccess.GetData(index, ref objectWrapper) || objectWrapper == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");

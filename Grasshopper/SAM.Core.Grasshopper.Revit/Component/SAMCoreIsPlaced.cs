@@ -31,7 +31,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
         public SAMCoreIsPlaced()
-          : base("SAM", "SAMCoreIsPlaced",
+          : base("SAMCore.IsPlaced", "SAMCore.IsPlaced",
               "Check if given Type is placed",
               "SAM", "Revit")
         {

@@ -42,7 +42,7 @@ namespace SAM.Core.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "type_", NickName = "type_", Description = "Typet", Access = GH_ParamAccess.item, Optional = false }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "type_", NickName = "type_", Description = "Typet", Access = GH_ParamAccess.item, Optional = false }, ParamVisibility.Binding));
                 return result.ToArray();
             }
         }

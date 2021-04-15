@@ -233,6 +233,7 @@
     <Compile Include="Query\BoundingBoxXYZ.cs" />
     <Compile Include="Query\DocumentGuid.cs" />
     <Compile Include="Query\HasSchema.cs" />
+    <Compile Include="Query\InstancesCount.cs" />
     <Compile Include="Query\ParameterNamePrefix.cs" />
     <Compile Include="Query\IsValidTagCategory.cs" />
     <Compile Include="Query\ScopeBox.cs" />

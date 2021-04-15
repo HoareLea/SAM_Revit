@@ -16,9 +16,33 @@ namespace SAM.Core.Grasshopper.Revit
             if (obj is RhinoInside.Revit.GH.Types.ProjectDocument)
                 return false;
 
-            ElementId aId = obj.Id as ElementId;
+            if(obj is SAMObject)
+            {
+                Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
-            element = (obj.Document as Document).GetElement(aId) as T;
+                SAMObject sAMObject = obj as SAMObject;
+                string uniqueId = Core.Revit.Query.UniqueId(sAMObject);
+                if(!string.IsNullOrWhiteSpace(uniqueId))
+                {
+                    element = document.GetElement(uniqueId) as T;
+                }
+
+                if(element == null)
+                {
+                    ElementId elementId = Core.Revit.Query.ElementId(sAMObject);
+                    if(elementId != null && elementId != ElementId.InvalidElementId)
+                    {
+                        element = document.GetElement(elementId) as T;
+                    }
+                }
+            }
+            else
+            {
+                ElementId elementId = obj.Id as ElementId;
+
+                element = (obj.Document as Document).GetElement(elementId) as T;
+            }
+
             return element != null;
         }
     }

@@ -293,7 +293,7 @@ namespace SAM.Analytical.Revit
 
                 segment2Ds = Geometry.Planar.Query.Snap(segment2Ds, true, snapTolerance);
 
-                List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D = Geometry.Planar.Create.Polygon2Ds(segment2Ds, tolerance)?.ConvertAll(x => new Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>(x.GetBoundingBox(tolerance), x));
+                List<Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>> tuples_Polygon2D = Geometry.Planar.Create.Polygon2Ds(segment2Ds)?.ConvertAll(x => new Tuple<Geometry.Planar.BoundingBox2D, Geometry.Planar.Polygon2D>(x.GetBoundingBox(tolerance), x));
                 if (tuples_Polygon2D == null || tuples_Polygon2D.Count == 0)
                     continue;
 

@@ -145,6 +145,9 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_RoofBase(this RoofBase roofBase)
         {
+#if Revit2017
+            return null;
+#else
             List<Face3D> face3Ds = TopProfiles(roofBase);
 
             IEnumerable<ElementId> elementIds = roofBase.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Windows));
@@ -183,6 +186,7 @@ namespace SAM.Geometry.Revit
             }
 
             return face3Ds;
+#endif
         }
 
         private static List<Face3D> Profiles_Ceiling(this Ceiling ceiling)
@@ -192,6 +196,9 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_FromSketch(this HostObject hostObject, bool flip = false)
         {
+#if Revit2017
+            return null;
+#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
                 return null;
@@ -235,6 +242,7 @@ namespace SAM.Geometry.Revit
 
 
             return result;
+#endif
         }
     }
 }

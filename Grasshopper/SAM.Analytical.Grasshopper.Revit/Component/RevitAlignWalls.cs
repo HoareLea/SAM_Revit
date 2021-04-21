@@ -103,7 +103,13 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = level.Document;
 
-            IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
+            using (Transaction transaction = new Transaction(document, "transaction"))
+            {
+                transaction.Start();
+                transaction.Commit();
+            }
+
+                IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
             if (walls_All == null || walls_All.Count() == 0)
                 return;
 

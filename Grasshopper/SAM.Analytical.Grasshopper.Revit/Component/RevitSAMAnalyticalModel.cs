@@ -8,7 +8,7 @@ using System;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMAnalyticalModel : SAMTransactionalComponent
+    public class RevitSAMAnalyticalModel : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -82,6 +82,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             AnalyticalModel analyticalModel = null;
 
+
             using (Transaction transaction = new Transaction(document, "GetAnalyticalModel"))
             {
                 FailureHandlingOptions failureHandlingOptions = transaction.GetFailureHandlingOptions();
@@ -95,14 +96,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     analyticalModel = Analytical.Revit.Convert.ToSAM_AnalyticalModel(document, convertSettings);
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
-                    if(exception.Message.Contains("spatial bounding elements"))
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Check your setting in Export Category: Rooms/Spaces in Export gbXML settings");
+                    if (exception.Message.Contains("spatial bounding elements"))
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Check your setting in Export Category: Rooms/Spaces in Export gbXML settings");
                     else
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Error, exception.Message);
                 }
-                
+
 
                 transaction.RollBack();
             }

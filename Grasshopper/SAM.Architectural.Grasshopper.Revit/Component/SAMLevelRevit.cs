@@ -4,10 +4,11 @@ using SAM.Architectural.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
-    public class SAMLevelRevit : SAMTransactionComponent
+    public class SAMLevelRevit : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +18,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,45 +39,67 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new GooLevelParam(), "_level", "_level", "SAM Architectural Level", GH_ParamAccess.item);
-            
-            int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
-            
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "_level", NickName = "_level", Description = "SAM Architectural Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                
+                global::Grasshopper.Kernel.Parameters.Param_GenericObject param_GenericObject = new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_convertSettings_", NickName = "_convertSettings_", Description = "SAM ConvertSettings", Access = GH_ParamAccess.item, Optional = true};
+                result.Add(ParamDefinition.FromParam(param_GenericObject, ParamVisibility.Voluntary));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "Level", "Level", "Revit Level", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "level", NickName = "level", Description = "Revit Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             ConvertSettings convertSettings = null;
-            dataAccess.GetData(1, ref convertSettings);
+            index = Params.IndexOfInputParam("_convertSettings_");
+            if (index != -1)
+                dataAccess.GetData(index, ref convertSettings);
 
             if (convertSettings == null)
                 convertSettings = Core.Revit.Query.ConvertSettings();
 
             Level level = null;
-            if (!dataAccess.GetData(0, ref level))
+            index = Params.IndexOfInputParam("level");
+            if (index == -1 || !dataAccess.GetData(index, ref level))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            StartTransaction(document);
+
             Autodesk.Revit.DB.Level level_Revit = Architectural.Revit.Convert.ToRevit(level, document, convertSettings);
 
-            dataAccess.SetData(0, level_Revit);
+            index = Params.IndexOfOutputParam("level");
+            if (index != -1)
+                dataAccess.SetData(index, level_Revit);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 using SAM.Core;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Grasshopper.Revit.Properties;
@@ -10,7 +9,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMCoreRenameSpaces : SAMTransactionComponent
+    public class SAMCoreRenameSpaces : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -41,45 +40,63 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new Core.Grasshopper.GooTextMapParam(), "_textMap", "_textMap", "SAM Core Text Map", GH_ParamAccess.item);
-            int index = inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.SpatialElement(), "_spaces_", "_spaces_", "Revit Spaces", GH_ParamAccess.list);
-            inputParamManager[index].Optional = true;
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new Core.Grasshopper.GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_spaces_", NickName = "_spaces_", Description = "Revit Spaces", Optional = true, Access = GH_ParamAccess.list }, ParamVisibility.Voluntary));
 
-            global::Grasshopper.Kernel.Parameters.Param_Integer param_Integer = new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "maxLength_", NickName = "maxLength_", Description = "Max Length of the name", Access = GH_ParamAccess.item};
-            param_Integer.SetPersistentData(int.MaxValue);
-            inputParamManager.AddParameter(param_Integer);
+                global::Grasshopper.Kernel.Parameters.Param_Integer param_Integer = new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "maxLength_", NickName = "maxLength_", Description = "Max Length of the name", Access = GH_ParamAccess.item };
+                param_Integer.SetPersistentData(int.MaxValue);
+                result.Add(ParamDefinition.FromParam(param_Integer, ParamVisibility.Voluntary));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.SpatialElement(), "Spaces", "Spaces", "Spaces", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces", NickName = "spaces", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             TextMap textMap = null;
-            if(!dataAccess.GetData(0, ref textMap) || textMap == null)
+            index = Params.IndexOfInputParam("_spaces_");
+            if(index == -1 || !dataAccess.GetData(index, ref textMap) || textMap == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             List<Autodesk.Revit.DB.Mechanical.Space> spaces = new List<Autodesk.Revit.DB.Mechanical.Space>();
-            dataAccess.GetDataList(1, spaces);
+            index = Params.IndexOfOutputParam("_spaces_");
+            if (index != -1)
+                dataAccess.GetDataList(index, spaces);
 
             int maxLength = int.MaxValue;
-            if (!dataAccess.GetData(2, ref maxLength))
+            index = Params.IndexOfInputParam("maxLength_");
+            if (index == -1 || !dataAccess.GetData(index, ref maxLength))
                 maxLength = int.MaxValue;
 
             if (spaces == null || spaces.Count == 0)
@@ -94,9 +111,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            spaces.ForEach(x => StartTransaction(x.Document));
+
             spaces = Core.Revit.Modify.RenameSpaces(spaces, textMap, maxLength);
 
-            dataAccess.SetDataList(0, spaces);
+            index = Params.IndexOfOutputParam("spaces");
+            if (index != -1)
+                dataAccess.SetDataList(index, spaces);
         }
     }
 }

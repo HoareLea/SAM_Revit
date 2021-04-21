@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalDuplicateConstruction : SAMTransactionComponent
+    public class SAMAnalyticalDuplicateConstruction : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -36,31 +36,53 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
         }
 
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        /// <summary>
+        /// Registers all the input parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Inputs
         {
-            int index;
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panel", NickName = "_panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_name", NickName = "_name", Description = "Name", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
 
-            inputParamManager.AddParameter(new GooPanelParam(), "_panel", "_panel", "SAM Analytical Panel", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_name", "_name", "Name", GH_ParamAccess.item);
-            
-            index = inputParamManager.AddBooleanParameter("inverted_", "inverted_", "if inverted then name is source type and panel construction is destination type", GH_ParamAccess.item, false);
-            inputParamManager[index].Optional = true;
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean;
 
-            index = inputParamManager.AddTextParameter("_parameterNames_", "_parameterNames_", "Parameter Names will be copied from construction to new construction", GH_ParamAccess.list);
-            inputParamManager[index].Optional = true;
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "inverted_", NickName = "inverted_", Description = "If inverted then name is source type and panel construction is destination type", Optional = true, Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(true);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_parameterNames_", NickName = "_parameterNames_", Description = "Parameter Names", Optional = true, Access = GH_ParamAccess.list }, ParamVisibility.Voluntary));
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        /// <summary>
+        /// Registers all the output parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddGenericParameter("ElementType", "ElementType", "Revit ElementType", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elemenType", NickName = "elemenType", Description = "Revit ElemenType", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+
+            
             bool run = false;
-            if (!dataAccess.GetData(4, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
@@ -71,31 +93,42 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             Panel panel = null;
-            if (!dataAccess.GetData(0, ref panel) || panel == null)
+            index = Params.IndexOfInputParam("_panel");
+            if (index == -1 || !dataAccess.GetData(index, ref panel) || panel == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string name = null;
-            if (!dataAccess.GetData(1, ref name) || string.IsNullOrWhiteSpace(name))
+            index = Params.IndexOfInputParam("_name");
+            if (index == -1 || !dataAccess.GetData(index, ref name) || string.IsNullOrWhiteSpace(name))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             bool inverted = false;
-            if (!dataAccess.GetData(2, ref inverted))
+            index = Params.IndexOfInputParam("inverted_");
+            if (index == -1 || !dataAccess.GetData(index, ref inverted))
                 inverted = false;
 
             List<string> parameterNames = new List<string>();
-            if (!dataAccess.GetDataList(3, parameterNames) || parameterNames.Count == 0)
+            index = Params.IndexOfInputParam("_parameterNames_");
+            if (index == -1 || !dataAccess.GetDataList(index, parameterNames) || parameterNames.Count == 0)
                 parameterNames = null;
 
+            StartTransaction(document);
+
+            ElementType elementType = null;
             if (inverted)
-                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction, parameterNames));
+                elementType = Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction, parameterNames);
             else
-                dataAccess.SetData(0, Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name, parameterNames));
+                elementType = Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name, parameterNames);
+
+            index = Params.IndexOfOutputParam("elemenType");
+            if (index != -1)
+                dataAccess.SetData(index, elementType);
         }
     }
 }

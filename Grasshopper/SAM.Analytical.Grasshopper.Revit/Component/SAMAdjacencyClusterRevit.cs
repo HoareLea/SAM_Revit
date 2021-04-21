@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAdjacencyClusterRevit : SAMTransactionComponent
+    public class SAMAdjacencyClusterRevit : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -39,45 +39,66 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new GooAdjacencyClusterParam(), "_adjacencyCluster", "_adjacencyCluster", "SAM Analytical AdjacencyCluster", GH_ParamAccess.item);
-            
-            int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
-            
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooAdjacencyClusterParam() { Name = "_adjacencyCluster", NickName = "_adjacencyCluster", Description = "SAM Analytical AdjacencyCluster", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_convertSettings_", NickName = "_convertSettings_", Description = "SAM ConvertSettings", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Elements", "Elements", "Revit Elements", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             ConvertSettings convertSettings = null;
-            dataAccess.GetData(1, ref convertSettings);
+            index = Params.IndexOfInputParam("_convertSettings_");
+            if (index != -1)
+                dataAccess.GetData(index, ref convertSettings);
+
             convertSettings = this.UpdateSolutionEndEventHandler(convertSettings);
 
             AdjacencyCluster adjacencyCluster = null;
-            if (!dataAccess.GetData(0, ref adjacencyCluster))
+            index = Params.IndexOfInputParam("_adjacencyCluster");
+            if (index == -1 || !dataAccess.GetData(index, ref adjacencyCluster))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+
+            StartTransaction(document);
 
             convertSettings.AddParameter("AdjacencyCluster", adjacencyCluster);
 
             List<Element> elements = Analytical.Revit.Convert.ToRevit(adjacencyCluster, document, convertSettings);
 
-            dataAccess.SetDataList(0, elements);
+            index = Params.IndexOfOutputParam("elements");
+            if (index != -1)
+                dataAccess.SetDataList(index, elements);
         }
     }
 }

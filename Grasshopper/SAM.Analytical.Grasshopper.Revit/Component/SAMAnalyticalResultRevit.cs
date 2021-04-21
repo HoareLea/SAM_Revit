@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalResultRevit : SAMTransactionComponent
+    public class SAMAnalyticalResultRevit : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -42,20 +42,32 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new Param_GenericObject(), "_analytical", "_analytical", "SAM Analytical Object", GH_ParamAccess.item);
-            inputParamManager.AddParameter(new Param_GenericObject() { Optional = true}, "_results_", "_results_", "SAM Analytical Results", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new Param_GenericObject() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new Param_GenericObject() { Name = "_results_", NickName = "_results_", Description = "SAM Analytical Results", Optional = true, Access = GH_ParamAccess.list }, ParamVisibility.Voluntary));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                Param_Boolean param_Boolean = new Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Elements", "Element", "Revit Elements", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
@@ -114,6 +126,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            StartTransaction(document);
 
             Dictionary<ElementId, Element> dictionary = new Dictionary<ElementId, Element>();
             foreach (IResult result in results)
@@ -133,7 +146,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 elements?.ForEach(x => dictionary[x.Id] = x);
             }
 
-            dataAccess.SetDataList(0, dictionary.Values.ToList());
+            index = Params.IndexOfOutputParam("elements");
+            if (index != -1)
+                dataAccess.SetDataList(index, dictionary.Values.ToList());
         }
     }
 }

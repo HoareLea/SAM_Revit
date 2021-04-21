@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitDuplicatePlanView : SAMTransactionComponent
+    public class RevitDuplicatePlanView : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -39,36 +39,52 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.View(), "_viewPlan", "_viewPlan", "Revit ViewPlan", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.View() { Name = "_viewPlan", NickName = "_viewPlan", Description = "Revit ViewPlan", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.View() { Name = "levels_", NickName = "levels_", Description = "Revit Levels", Access = GH_ParamAccess.list, Optional = true }, ParamVisibility.Voluntary));
 
-            RhinoInside.Revit.GH.Parameters.Level level = new RhinoInside.Revit.GH.Parameters.Level() { Name = "levels_", NickName = "levels_", Description = "Revit Levels", Access = GH_ParamAccess.list, Optional = true };
-            inputParamManager.AddParameter(level);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean;
 
-            global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean();
-            param_Boolean.SetPersistentData(true);
-            inputParamManager.AddParameter(param_Boolean, "useExisting_", "useExisting_", "Use Existing views and create missing only", GH_ParamAccess.item);
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "useExisting_", NickName = "useExisting_", Description = "Use Existing views and create missing only", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(true);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.View(), "ViewPlans", "ViewPlans", "Revit ViewPlans", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.View() { Name = "viewPlans", NickName = "viewPlans", Description = "Revit ViewPlans", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             View view = null;
-            if (!dataAccess.GetData(0, ref view) || !(view is ViewPlan))
+            index = Params.IndexOfInputParam("_viewPlan");
+            if (index == -1 || !dataAccess.GetData(index, ref view) || !(view is ViewPlan))
                 return;
 
             ViewPlan viewPlan = (ViewPlan)view;
@@ -80,16 +96,22 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             List<Level> levels = new List<Level>();
-            if (!dataAccess.GetDataList(1, levels))
+            index = Params.IndexOfInputParam("levels_");
+            if (index == -1 || !dataAccess.GetDataList(index, levels))
                 levels = null;
 
             bool useExisting = true;
-            if (!dataAccess.GetData(2, ref useExisting))
+            index = Params.IndexOfInputParam("useExisting_");
+            if (index == -1 || !dataAccess.GetData(index, ref useExisting))
                 return;
+
+            StartTransaction(viewPlan.Document);
 
             List<ViewPlan> result = Core.Revit.Modify.DuplicateViewPlan(viewPlan, levels, useExisting);
 
-            dataAccess.SetDataList(0, result);
+            index = Params.IndexOfOutputParam("viewPlans");
+            if (index != -1)
+                dataAccess.SetDataList(index, result);
         }
     }
 }

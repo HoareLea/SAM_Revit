@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class RevitCopyRooms : SAMTransactionComponent
+    public class RevitCopyRooms : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +18,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,23 +38,33 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "_revitLinkedModel", "_revitLinkedModel", "SAM Revit Linked Model", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() {Name = "_revitLinkInstance", NickName = "_revitLinkInstance", Description = "Revit Link Instance", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
 
-            GooTextMapParam gooTextMapParam = new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item };
-            inputParamManager.AddParameter(gooTextMapParam);
-
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.SpatialElement(), "Spaces", "Spaces", "Revit Spaces", GH_ParamAccess.list);
-            outputParamManager.AddBooleanParameter("Successful", "Successful", "Parameters Updated", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces", NickName = "spaces", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -65,16 +75,23 @@ namespace SAM.Core.Grasshopper.Revit
         /// </param>
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
-            dataAccess.SetData(1, false);
+            int index = -1;
+            int index_Successful = -1;
+
+            index_Successful = Params.IndexOfOutputParam("successful");
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, false);
 
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             RevitLinkInstance revitLinkInstance = null;
-            if (!dataAccess.GetData(0, ref revitLinkInstance) || revitLinkInstance == null)
+            index = Params.IndexOfInputParam("_revitLinkInstance");
+            if (index == -1 || !dataAccess.GetData(0, ref revitLinkInstance) || revitLinkInstance == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -87,8 +104,12 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
+            StartTransaction(document);
+
             TextMap textMap = null;
-            dataAccess.GetData(1, ref textMap);
+            index = Params.IndexOfInputParam("_textMap_");
+            if (index != -1)
+                dataAccess.GetData(index, ref textMap);
 
 
             Transform transform = revitLinkInstance.GetTotalTransform();
@@ -136,8 +157,12 @@ namespace SAM.Core.Grasshopper.Revit
                 }
             }
 
-            dataAccess.SetDataList(0, result);
-            dataAccess.SetData(1, result != null && result.Count > 0);
+            index = Params.IndexOfOutputParam("spaces");
+            if (index != -1)
+                dataAccess.SetDataList(0, result);
+
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, result != null && result.Count > 0);
         }
     }
 }

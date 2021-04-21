@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitAlignWalls : SAMTransactionComponent
+    public class RevitAlignWalls : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -44,41 +44,63 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "_level", "_level", "Revit Level", GH_ParamAccess.item);
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Level(), "_referenceLevel", "_refLvl", "Revit Reference Level", GH_ParamAccess.item);
-            inputParamManager.AddNumberParameter("_maxDistance", "_max", "Max Distance", GH_ParamAccess.item, 0.2);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_level", NickName = "_level", Description = "Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_referenceLevel", NickName = "_referenceLevel", Description = "Reference Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_maxDistance", NickName = "_maxDistance", Description = "Max Distance", Access = GH_ParamAccess.item };
+                param_Number.SetPersistentData(0.2);
+                result.Add(ParamDefinition.FromParam(param_Number, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "Walls", "Walls", "Revit Walls", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "walls", NickName = "walls", Description = "Revit Walls", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
-            double maxDistance = 0.5;
-            if (!dataAccess.GetData(2, ref maxDistance))
+            double maxDistance = 0.2;
+            index = Params.IndexOfInputParam("_maxDistance");
+            if (index == -1 || !dataAccess.GetData(index, ref maxDistance))
                 return;
 
             RhinoInside.Revit.GH.Types.Level level_GH = null;
-            if (!dataAccess.GetData(0, ref level_GH))
+            index = Params.IndexOfInputParam("_level");
+            if (index == -1 || !dataAccess.GetData(index, ref level_GH))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             RhinoInside.Revit.GH.Types.Level referenceLevel_GH = null;
-            if (!dataAccess.GetData(1, ref referenceLevel_GH))
+            index = Params.IndexOfInputParam("_referenceLevel");
+            if (index == -1 || !dataAccess.GetData(index, ref referenceLevel_GH))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -103,15 +125,11 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = level.Document;
 
-            using (Transaction transaction = new Transaction(document, "transaction"))
-            {
-                transaction.Start();
-                transaction.Commit();
-            }
-
-                IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
+            IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
             if (walls_All == null || walls_All.Count() == 0)
                 return;
+
+            StartTransaction(document);
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 
@@ -292,7 +310,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 result.Add(wall);
             }
 
-            dataAccess.SetDataList(0, result);
+            index = Params.IndexOfOutputParam("walls");
+            if (index != -1)
+                dataAccess.SetDataList(index, result);
         }
     }
 }

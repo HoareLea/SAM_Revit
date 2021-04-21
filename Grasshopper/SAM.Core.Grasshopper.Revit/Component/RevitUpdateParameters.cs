@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class RevitUpdateParameters : SAMTransactionComponent
+    public class RevitUpdateParameters : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +17,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,19 +37,29 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new GooSAMObjectParam<SAMObject>(), "_sAMObject", "_sAMObject", "SAM Object", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_names", "_names", "Names", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_sAMObject", NickName = "_sAMObject", Description = "SAM Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_names", NickName = "_names", Description = "Names", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Element", "Element", "Revit Element", GH_ParamAccess.item);
-            outputParamManager.AddBooleanParameter("Successful", "Successful", "Parameters Updated", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "element", NickName = "element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -60,12 +70,18 @@ namespace SAM.Core.Grasshopper.Revit
         /// </param>
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
-            dataAccess.SetData(1, false);
+            int index = -1;
+            int index_Successful = -1;
+
+            index_Successful = Params.IndexOfOutputParam("successful");
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, false);
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             SAMObject sAMObject = null;
-            if (!dataAccess.GetData(0, ref sAMObject) || sAMObject == null)
+            index = Params.IndexOfInputParam("_sAMObject");
+            if (index == -1 || !dataAccess.GetData(index, ref sAMObject) || sAMObject == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -86,18 +102,24 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
-
             List<string> names = new List<string>();
-            if (!dataAccess.GetDataList(1, names) || names == null)
+            index = Params.IndexOfInputParam("_names");
+            if (index == -1 || !dataAccess.GetDataList(index, names) || names == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            StartTransaction(document);
+
             Core.Revit.Modify.SetValues(element, sAMObject, names, null);
 
-            dataAccess.SetData(0, element);
-            dataAccess.SetData(1, true);
+            index = Params.IndexOfOutputParam("element");
+            if (index != -1)
+                dataAccess.SetData(0, element);
+
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, true);
         }
     }
 }

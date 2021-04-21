@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMCoreDeleteElement : SAMTransactionComponent
+    public class SAMCoreDeleteElement : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -41,28 +41,45 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddGenericParameter("_elements", "_elements", "Elements to be deleted", GH_ParamAccess.list);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_elements", NickName = "_elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddIntegerParameter("Ids", "Ids", "Ids", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "ids", NickName = "ids", Description = "Revit ELement Ids", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             List<GH_ObjectWrapper> objectWrappers = new List<GH_ObjectWrapper>();
-            if (!dataAccess.GetDataList(0, objectWrappers))
+            index = Params.IndexOfInputParam("_elements");
+            if (index == -1 || !dataAccess.GetDataList(index, objectWrappers))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -115,9 +132,15 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (elementIds == null || elementIds.Count == 0)
                 return;
 
-            IEnumerable<ElementId> result = RhinoInside.Revit.Revit.ActiveUIDocument.Document.Delete(elementIds);
+            Document document = RhinoInside.Revit.Revit.ActiveUIDocument.Document;
 
-            dataAccess.SetDataList(0, result?.ToList().ConvertAll(x => x.IntegerValue));
+            StartTransaction(document);
+
+            IEnumerable<ElementId> result = document.Delete(elementIds);
+
+            index = Params.IndexOfOutputParam("ids");
+            if(index != -1)
+                dataAccess.SetDataList(index, result?.ToList().ConvertAll(x => x.IntegerValue));
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
-    public class SAMArchitecturalLevelDispatchExisting : SAMTransactionComponent
+    public class SAMArchitecturalLevelDispatchExisting : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -19,7 +19,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -40,33 +40,52 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new GooLevelParam(), "_levels", "_levels", "SAM Architectural Levels", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "_levels", NickName = "_levels", Description = "SAM Architectural Levels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new GooLevelParam(), "New", "New", "New Levels that do not exisit in Revit model", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new GooLevelParam(), "Existing", "Existing", "Existing Levels in Revit model", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "new", NickName = "new", Description = "New Levels that do not exisit in Revit model", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "existing", NickName = "exisiting", Description = "Existing Levels in Revit model", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             List<Level> levels_SAM = new List<Level>();
-            if (!dataAccess.GetDataList(0, levels_SAM))
+            index = Params.IndexOfInputParam("_levels");
+            if (index == -1 || !dataAccess.GetDataList(index, levels_SAM))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            int index_New = Params.IndexOfOutputParam("new");
+            int index_Existing = Params.IndexOfOutputParam("existing");
+
             List<Autodesk.Revit.DB.Level> levels_Revit = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Level)).Cast<Autodesk.Revit.DB.Level>().ToList();
-            if(levels_Revit == null || levels_Revit.Count() == 0)
-            {                
-                dataAccess.SetDataList(0, null);
-                dataAccess.SetDataList(1, null);
+            if (levels_Revit == null || levels_Revit.Count() == 0)
+            {
+                if (index_New != -1)
+                    dataAccess.SetDataList(index_New, null);
+
+                if (index_Existing != -1)
+                    dataAccess.SetDataList(index_Existing, null);
                 return;
             }
 
@@ -83,8 +102,11 @@ namespace SAM.Architectural.Grasshopper.Revit
                     gooLevels_Existing.Add(new GooLevel(level_SAM));
             }
 
-            dataAccess.SetDataList(0, gooLevels_New);
-            dataAccess.SetDataList(1, gooLevels_Existing);
+            if (index_New != -1)
+                dataAccess.SetDataList(index_New, gooLevels_New);
+
+            if (index_Existing != -1)
+                dataAccess.SetDataList(index_Existing, gooLevels_Existing);
         }
     }
 }

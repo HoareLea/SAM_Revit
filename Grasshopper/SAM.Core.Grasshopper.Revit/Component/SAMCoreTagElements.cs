@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMCoreTagElements : SAMTransactionComponent
+    public class SAMCoreTagElements : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -41,61 +41,85 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddTextParameter("_templateNames", "_templateNames", "View Template Names", GH_ParamAccess.list);
-            
-            inputParamManager.AddGenericParameter("_tagType", "_tagType", "Revit tagType", GH_ParamAccess.item);
-            
-            inputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "_elements", "_elements", "Revit Elements", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_templateNames", NickName = "_templateNames", Description = "Revit View Template Names", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_tagType", NickName = "_tagType", Description = "Revit Tag Type", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_elements", NickName = "_elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_addLeader_", "_addLeader_", "Add Leader", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_horizontal_", "_horizontal_", "Is Horizontal", GH_ParamAccess.item, true);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean;
 
-            global::Grasshopper.Kernel.Parameters.Param_String @string = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
-            @string.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
-            inputParamManager.AddParameter(@string);
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_addLeader_", NickName = "_addLeader_", Description = "Add Leader", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_horizontal_", NickName = "_horizontal_", Description = "Horizontal", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(true);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_String param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
+                param_String.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Tags", "Tags", "Tags", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "tags", NickName = "tags", Description = "Revit Tags", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+
             bool run = false;
-            if (!dataAccess.GetData(6, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             List<string> templateNames = new List<string>();
-            if (!dataAccess.GetDataList(0, templateNames))
+            index = Params.IndexOfInputParam("_templateNames");
+            if (index == -1 || !dataAccess.GetDataList(index, templateNames))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             List<Element> elements = new List<Element>();
-            if (!dataAccess.GetDataList(2, elements))
+            index = Params.IndexOfInputParam("_elements");
+            if (index == -1 || !dataAccess.GetDataList(index, elements))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             bool addLeader = false;
-            if (!dataAccess.GetData(3, ref addLeader))
+            index = Params.IndexOfInputParam("_addLeader_");
+            if (index == -1 || !dataAccess.GetData(index, ref addLeader))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             bool horizontal = true;
-            if (!dataAccess.GetData(4, ref horizontal))
+            index = Params.IndexOfInputParam("_horizontal_");
+            if (index == -1 || !dataAccess.GetData(index, ref horizontal))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -104,7 +128,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Core.ViewType> viewTypes = null;
 
             List<string> viewTypeNames = new List<string>();
-            if (dataAccess.GetDataList(5, viewTypeNames))
+            index = Params.IndexOfInputParam("_viewTypes_");
+            if (index != -1 && dataAccess.GetDataList(index, viewTypeNames))
             {
                 if (viewTypeNames != null && viewTypeNames.Count != 0)
                 {
@@ -116,14 +141,15 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             GH_ObjectWrapper objectWrapper = null;
-            if (!dataAccess.GetData(1, ref objectWrapper))
+            index = Params.IndexOfInputParam("_tagType");
+            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             object value = objectWrapper?.Value;
-            if(value == null)
+            if (value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -141,15 +167,15 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 elementId = ((Element)value).Id;
             }
-            else if(value is ElementId)
+            else if (value is ElementId)
             {
                 elementId = (ElementId)value;
             }
-            else if(value is int)
+            else if (value is int)
             {
                 elementId = new ElementId((int)value);
             }
-            else if(value is string)
+            else if (value is string)
             {
                 string @string = (string)value;
 
@@ -160,21 +186,21 @@ namespace SAM.Analytical.Grasshopper.Revit
                     familySymbol = document.GetElement(elementId) as FamilySymbol;
                 }
 
-                if(familySymbol == null)
+                if (familySymbol == null)
                 {
-                    if(RhinoInside.Revit.External.DB.FullUniqueId.TryParse(@string, out Guid documentGuid, out string uniqueId))
+                    if (RhinoInside.Revit.External.DB.FullUniqueId.TryParse(@string, out Guid documentGuid, out string uniqueId))
                     {
                         familySymbol = document.GetElement(uniqueId) as FamilySymbol;
                     }
                 }
 
-                if(familySymbol == null)
+                if (familySymbol == null)
                 {
                     List<FamilySymbol> familySymbols = new FilteredElementCollector(document).OfClass(typeof(FamilySymbol)).Cast<FamilySymbol>().ToList();
                     familySymbols.RemoveAll(x => x.Category == null || !x.Category.IsTagCategory);
 
                     familySymbol = familySymbols.Find(x => x.Name.Equals(@string));
-                    if(familySymbol == null)
+                    if (familySymbol == null)
                     {
                         familySymbol = familySymbols.Find(x => @string.Contains(x.Name) || x.Name.Contains(@string));
                     }
@@ -194,9 +220,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            StartTransaction(document);
+
             List<IndependentTag> independentTags = Core.Revit.Modify.TagElements(document, templateNames, elementId, elements.ConvertAll(x => x.Id), addLeader, horizontal ? TagOrientation.Horizontal : TagOrientation.Vertical, viewTypes?.ConvertAll(x => (Autodesk.Revit.DB.ViewType)(int)x));
 
-            dataAccess.SetDataList(0, independentTags);
+            index = Params.IndexOfOutputParam("tags");
+            if (index != -1)
+                dataAccess.SetDataList(index, independentTags);
         }
     }
 }

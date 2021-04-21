@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public abstract class SAMTransactionalComponent : RhinoInside.Revit.GH.Components.TransactionalComponent, IGH_SAMComponent
+    public abstract class SAMTransactionalChainComponent : RhinoInside.Revit.GH.Components.TransactionalChainComponent, IGH_SAMComponent
     {
-        public SAMTransactionalComponent(string name, string nickname, string description, string category, string subCategory) 
+        public SAMTransactionalChainComponent(string name, string nickname, string description, string category, string subCategory) 
             : base(name, nickname, description, category, subCategory)
         {
             SetValue("SAM_SAMVersion", Core.Query.CurrentVersion());

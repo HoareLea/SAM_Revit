@@ -4,10 +4,11 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalSpaceRevit : SAMTransactionComponent
+    public class SAMAnalyticalSpaceRevit : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -37,45 +38,66 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddParameter(new GooSpaceParam(), "_space", "_space", "SAM Analytical Space", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooSpaceParam() { Name = "_space", NickName = "_space", Description = "SAM Analytical Space", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_convertSettings_", NickName = "_convertSettings_", Description = "SAM ConvertSettings", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
 
-            int index = inputParamManager.AddGenericParameter("_convertSettings_", "_convertSettings_", "SAM Convert Settings", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
-
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.SpatialElement(), "Space", "Space", "Revit Space", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "space", NickName = "space", Description = "Revit Space", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             ConvertSettings convertSettings = null;
-            dataAccess.GetData(1, ref convertSettings);
+            index = Params.IndexOfInputParam("_convertSettings_");
+            if (index != -1)
+                dataAccess.GetData(index, ref convertSettings);
+
             convertSettings = this.UpdateSolutionEndEventHandler(convertSettings);
 
             Space space = null;
-            if (!dataAccess.GetData(0, ref space))
+            index = Params.IndexOfInputParam("_space");
+            if (index == -1 || !dataAccess.GetData(index, ref space))
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+
+            StartTransaction(document);
 
             Core.Revit.Modify.RemoveExisting(convertSettings, document, space);
 
             Autodesk.Revit.DB.Mechanical.Space space_Revit = Analytical.Revit.Convert.ToRevit(space, document, convertSettings);
 
-            dataAccess.SetData(0, space_Revit);
+            index = Params.IndexOfOutputParam("space");
+            if (index != -1)
+                dataAccess.SetData(index, space_Revit);
         }
     }
 }

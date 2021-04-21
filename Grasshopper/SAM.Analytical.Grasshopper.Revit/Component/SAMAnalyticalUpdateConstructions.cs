@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalUpdateConstructions : SAMTransactionComponent
+    public class SAMAnalyticalUpdateConstructions : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -34,48 +34,75 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
         }
 
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        /// <summary>
+        /// Registers all the input parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Inputs
         {
-            int index;
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panels_", NickName = "_panels_", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "constructionLibrary_", NickName = "constructionLibrary_", Description = "SAM Analytical ContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
+                result.Add(ParamDefinition.FromParam(new GooApertureConstructionLibraryParam() { Name = "apertureConstructionLibrary_", NickName = "apertureConstructionLibrary_", Description = "SAM Analytical ApertureContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
 
-            inputParamManager.AddParameter(new GooPanelParam(), "_panels_", "_panels_", "SAM Analytical Panels", GH_ParamAccess.list);
-            index = inputParamManager.AddParameter(new GooConstructionLibraryParam(), "constructionLibrary_", "constructionLibrary_", "SAM Analytical ContructionLibrary", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
+                result.Add(ParamDefinition.FromParam(new Core.Grasshopper.GooDelimitedFileTableParam() { Name = "_delimitedFileTable", NickName = "_delimitedFileTable", Description = "SAM Analytical DelimitedFileTable", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
 
-            index = inputParamManager.AddParameter(new GooApertureConstructionLibraryParam(), "apertureConstructionLibrary_", "apertureConstructionLibrary_", "SAM Analytical ApertureContructionLibrary", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
+                global::Grasshopper.Kernel.Parameters.Param_String param_String;
 
-            inputParamManager.AddParameter(new Core.Grasshopper.GooDelimitedFileTableParam(), "_delimitedFileTable", "_delimitedFileTable", "SAM Core DelimitedFileTable", GH_ParamAccess.item);
-            inputParamManager.AddTextParameter("_sourceColumn_", "_sourceColumn_", "Column with Source Name of Construction or ApertureConstruction", GH_ParamAccess.item, "Name");
-            inputParamManager.AddTextParameter("_defaultColumn_", "_defaultColumn_", "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", GH_ParamAccess.item, "template Family");
-            inputParamManager.AddTextParameter("_destinationColumn_", "_destinationColumn_", "Column with destination Name for Construction or ApertureConstruction", GH_ParamAccess.item, "New Name Family");
-            inputParamManager.AddTextParameter("_typeColumn_", "_typeColumn_", "Column with Type Name for Construction or ApertureConstruction", GH_ParamAccess.item, "Category Name");
-            inputParamManager.AddTextParameter("_thicknessColumn_", "_thicknessColumn_", "Column with thickness for Construction or ApertureConstruction", GH_ParamAccess.item, "Width");
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_sourceColumn_", NickName = "_sourceColumn_", Description = "Column with Source Name of Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("Name");
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_defaultColumn_", NickName = "_defaultColumn_", Description = "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("template Family");
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_destinationColumn_", NickName = "_destinationColumn_", Description = "Column with destination Name for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("New Name Family");
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_typeColumn_", NickName = "_typeColumn_", Description = "Column with Type Name for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("Category Name");
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_thicknessColumn_", NickName = "_thicknessColumn_", Description = "Column with thickness for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("Width");
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        /// <summary>
+        /// Registers all the output parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddGenericParameter("ElementTypes_Panels", "ElementTypes", "Revit ElementTypes", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("ElementTypes_Apertures", "ElementTypes", "Revit ElementTypes", GH_ParamAccess.list);
-            
-            outputParamManager.AddGenericParameter("Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Apertures", "Apertures", "SAM Analytical Apertures", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Panels", NickName = "elementTypes_Panels", Description = "Revit ElementTypes for Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Apertures", NickName = "elementTypes_Apertures", Description = "Revit ElementTypes for Apertures", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "panels", NickName = "panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooApertureParam() { Name = "apertures", NickName = "apertures", Description = "SAM Analytical Apertures", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
 
-            outputParamManager.AddParameter(new GooConstructionLibraryParam(), "ConstructionLibrary", "ConstructionLibrary", "SAM Analytical ConstructionLibrary", GH_ParamAccess.item);
-            outputParamManager.AddParameter(new GooApertureConstructionLibraryParam(), "ApertureConstructionLibrary", "ApertureConstructionLibrary", "SAM Analytical ApertureConstructionLibrary", GH_ParamAccess.item);
+                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "constructionLibrary", NickName = "constructionLibrary", Description = "SAM Analytical ConstructionLibrary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "apertureConstructionLibrary", NickName = "apertureConstructionLibrary", Description = "SAM Analytical ApertureConstructionLibrary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(9, ref run))
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(3, false);
-                return;
-            }
-            if (!run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
@@ -86,59 +113,73 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             List<Panel> panels = new List<Panel>();
-            if (!dataAccess.GetDataList(0, panels))
+            index = Params.IndexOfInputParam("_panels_");
+            if (index == -1 || !dataAccess.GetDataList(index, panels))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             ConstructionLibrary constructionLibrary = null;
-            dataAccess.GetData(1, ref constructionLibrary);
+            index = Params.IndexOfInputParam("constructionLibrary_");
+            if (index != -1)
+                dataAccess.GetData(index, ref constructionLibrary);
+
             if (constructionLibrary == null)
                 constructionLibrary = ActiveSetting.Setting.GetValue<ConstructionLibrary>(AnalyticalSettingParameter.DefaultConstructionLibrary);
 
             ApertureConstructionLibrary apertureConstructionLibrary = null;
-            dataAccess.GetData(2, ref apertureConstructionLibrary);
+            index = Params.IndexOfInputParam("apertureConstructionLibrary_");
+            if (index != -1)
+                dataAccess.GetData(index, ref apertureConstructionLibrary);
+
             if (apertureConstructionLibrary == null)
                 apertureConstructionLibrary = ActiveSetting.Setting.GetValue<ApertureConstructionLibrary>(AnalyticalSettingParameter.DefaultApertureConstructionLibrary);
 
             Core.DelimitedFileTable delimitedFileTable = null;
-            if (!dataAccess.GetData(3, ref delimitedFileTable) || delimitedFileTable == null)
+            index = Params.IndexOfInputParam("_delimitedFileTable");
+            if (index == -1 || !dataAccess.GetData(index, ref delimitedFileTable) || delimitedFileTable == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string sourceColumn = null;
-            if (!dataAccess.GetData(4, ref sourceColumn) || string.IsNullOrWhiteSpace(sourceColumn))
+            index = Params.IndexOfInputParam("_sourceColumn_");
+            if (index != -1 || !dataAccess.GetData(index, ref sourceColumn) || string.IsNullOrWhiteSpace(sourceColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string templateColumn = null;
-            if (!dataAccess.GetData(5, ref templateColumn) || string.IsNullOrWhiteSpace(templateColumn))
+            index = Params.IndexOfInputParam("_defaultColumn_");
+            if (index == -1 || !dataAccess.GetData(index, ref templateColumn) || string.IsNullOrWhiteSpace(templateColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string destinationColumn = null;
-            if (!dataAccess.GetData(6, ref destinationColumn) || string.IsNullOrWhiteSpace(destinationColumn))
+            index = Params.IndexOfInputParam("_destinationColumn_");
+            if (index == -1 ||!dataAccess.GetData(index, ref destinationColumn) || string.IsNullOrWhiteSpace(destinationColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string typeColumn = null;
-            if (!dataAccess.GetData(7, ref typeColumn) || string.IsNullOrWhiteSpace(typeColumn))
+            index = Params.IndexOfInputParam("_typeColumn_");
+            if (index == -1 || !dataAccess.GetData(index, ref typeColumn) || string.IsNullOrWhiteSpace(typeColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             string thicknessColumn = null;
-            dataAccess.GetData(8, ref thicknessColumn);
+            index = Params.IndexOfInputParam("_thicknessColumn_");
+            if (index != -1)
+                dataAccess.GetData(index, ref thicknessColumn);
 
             ConstructionLibrary constructionLibrary_Result = null;
             ApertureConstructionLibrary apertureConstructionLibrary_Result = null;
@@ -147,7 +188,9 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Aperture> apertures_Result = new List<Aperture>();
             List<ElementType> elementTypes_Panels= new List<ElementType>();
             List<ElementType> elementTypes_Apertures = new List<ElementType>();
-            
+
+            StartTransaction(document);
+
             Analytical.Revit.Modify.UpdateConstructions(
                 document,
                 panels,
@@ -166,12 +209,29 @@ namespace SAM.Analytical.Grasshopper.Revit
                 typeColumn,
                 thicknessColumn);
 
-            dataAccess.SetDataList(0, elementTypes_Panels);
-            dataAccess.SetDataList(1, elementTypes_Apertures);
-            dataAccess.SetDataList(2, panels_Result.ConvertAll(x => new GooPanel(x)));
-            dataAccess.SetDataList(3, apertures_Result.ConvertAll(x => new GooAperture(x)));
-            dataAccess.SetData(4, new GooConstructionLibrary(constructionLibrary_Result));
-            dataAccess.SetData(5, new GooApertureConstructionLibrary(apertureConstructionLibrary_Result));
+            index = Params.IndexOfOutputParam("elementTypes_Panels");
+            if(index != -1)
+            dataAccess.SetDataList(index, elementTypes_Panels);
+
+            index = Params.IndexOfOutputParam("elementTypes_Apertures");
+            if (index != -1)
+                dataAccess.SetDataList(index, elementTypes_Apertures);
+
+            index = Params.IndexOfOutputParam("panels");
+            if (index != -1)
+                dataAccess.SetDataList(index, panels_Result.ConvertAll(x => new GooPanel(x)));
+
+            index = Params.IndexOfOutputParam("apertures");
+            if (index != -1)
+                dataAccess.SetDataList(index, apertures_Result.ConvertAll(x => new GooAperture(x)));
+
+            index = Params.IndexOfOutputParam("constructionLibrary");
+            if (index != -1)
+                dataAccess.SetData(index, new GooConstructionLibrary(constructionLibrary_Result));
+
+            index = Params.IndexOfOutputParam("apertureConstructionLibrary");
+            if (index != -1)
+                dataAccess.SetData(index, new GooApertureConstructionLibrary(apertureConstructionLibrary_Result));
         }
     }
 }

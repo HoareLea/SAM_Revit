@@ -4,11 +4,10 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalUpdatePanelType : SAMTransactionComponent
+    public class SAMAnalyticalUpdatePanelType : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -35,21 +34,37 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
         }
 
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        /// <summary>
+        /// Registers all the input parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Inputs
         {
-            int index;
-
-            inputParamManager.AddParameter(new GooPanelParam(), "_panel_", "_panel_", "SAM Analytical Panel", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panel", NickName = "_panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        /// <summary>
+        /// Registers all the output parameters for this component.
+        /// </summary>
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new GooPanelParam(), "Panel", "Panels", "SAM Analytical Panel", GH_ParamAccess.item);
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObjectType(), "Type", "Type", "Revit Type", GH_ParamAccess.item);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "panel", NickName = "panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+
             Document document = RhinoInside.Revit. Revit.ActiveDBDocument;
             if (document == null)
             {
@@ -58,27 +73,41 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             Panel panel = null;
-            if (!dataAccess.GetData(0, ref panel))
+            index = Params.IndexOfInputParam("_panel");
+            if (index == -1 || !dataAccess.GetData(index, ref panel))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            StartTransaction(document);
+
+            int index_Panel = Params.IndexOfOutputParam("panel");
+            int index_ElementType = Params.IndexOfOutputParam("elementType");
+
             Geometry.Spatial.Vector3D normal = panel.Normal;
 
             PanelType panelType = panel.PanelType;
-            if(panelType == PanelType.Air || panelType == PanelType.Undefined)
+            if (panelType == PanelType.Air || panelType == PanelType.Undefined)
             {
-                dataAccess.SetData(0, new GooPanel(new Panel(panel)));
-                dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                if (index_Panel != -1)
+                    dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+             
+                if (index_ElementType != -1)
+                    dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                
                 return;
             }
 
             PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
             if(panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
             {
-                dataAccess.SetData(0, new GooPanel(new Panel(panel)));
-                dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                if (index_Panel != -1)
+                    dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+
+                if (index_ElementType != -1)
+                    dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                
                 return;
             }
 
@@ -87,8 +116,12 @@ namespace SAM.Analytical.Grasshopper.Revit
                 double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
                 if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
                 {
-                    dataAccess.SetData(0, new GooPanel(new Panel(panel)));
-                    dataAccess.SetData(1, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                    if (index_Panel != -1)
+                        dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+
+                    if (index_ElementType != -1)
+                        dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+
                     return;
                 }
             }
@@ -100,8 +133,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            dataAccess.SetData(0, new Panel(panel, panelType_Normal));
-            dataAccess.SetData(1, hostObjAttributes);
+            if (index_Panel != -1)
+                dataAccess.SetData(index_Panel, new Panel(panel, panelType_Normal));
+
+            if (index_ElementType != -1)
+                dataAccess.SetData(index_ElementType, hostObjAttributes);
 
         }
     }

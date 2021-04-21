@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMCoreTagSpaces : SAMTransactionComponent
+    public class SAMCoreTagSpaces : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -41,41 +41,58 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            inputParamManager.AddTextParameter("_templateNames", "_templateNames", "View Template Names", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("_spaceTagType", "_spaceTagType", "Revit SpaceTagType", GH_ParamAccess.item);
-            
-            global::Grasshopper.Kernel.Parameters.Param_String @string = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
-            @string.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
-            inputParamManager.AddParameter(@string);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_templateNames", NickName = "_templateNames", Description = "View Template Names", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_spaceTagType", NickName = "_spaceTagType", Description = "Revit SpaceTagType", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                
+                global::Grasshopper.Kernel.Parameters.Param_String param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
+                param_String.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "SpaceTags", "SpaceTags", "SpaceTags", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "spaceTags", NickName = "spaceTags", Description = "Revit SpaceTags", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             List<string> templateNames = new List<string>();
-            if (!dataAccess.GetDataList(0, templateNames))
+            index = Params.IndexOfInputParam("_templateNames");
+            if (index == -1 || !dataAccess.GetDataList(index, templateNames))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             GH_ObjectWrapper objectWrapper = null;
-            if (!dataAccess.GetData(1, ref objectWrapper))
+            index = Params.IndexOfInputParam("_spaceTagType");
+            if (index ==-1 || !dataAccess.GetData(index, ref objectWrapper))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -91,7 +108,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Core.ViewType> viewTypes = null;
 
             List<string> viewTypeNames = new List<string>();
-            if (dataAccess.GetDataList(2, viewTypeNames))
+            index = Params.IndexOfInputParam("_viewTypes_");
+            if (index != -1 && dataAccess.GetDataList(index, viewTypeNames))
             {
                 if (viewTypeNames != null && viewTypeNames.Count != 0)
                 {
@@ -165,9 +183,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            StartTransaction(document);
+
             List<Autodesk.Revit.DB.Mechanical.SpaceTag> spaceTags = Core.Revit.Modify.TagSpaces(document, templateNames, elementId, viewTypes?.ConvertAll(x => (Autodesk.Revit.DB.ViewType)((int)x)));
 
-            dataAccess.SetDataList(0, spaceTags);
+            index = Params.IndexOfOutputParam("spaceTags");
+            if (index != -1)
+                dataAccess.SetDataList(index, spaceTags);
         }
     }
 }

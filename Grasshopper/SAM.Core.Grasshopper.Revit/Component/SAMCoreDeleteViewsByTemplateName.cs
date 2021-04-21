@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMCoreDeleteViewsByTemplateName : SAMTransactionComponent
+    public class SAMCoreDeleteViewsByTemplateName : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,46 +38,63 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override ParamDefinition[] Inputs
         {
-            int index = -1;
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_templateName", NickName = "_templateName", Description = "Source Template Name", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
 
-            inputParamManager.AddTextParameter("_templateName", "_templateName_Source", "Source Template Name", GH_ParamAccess.item);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = null;
 
-            global::Grasshopper.Kernel.Parameters.Param_Boolean boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_inverted_", NickName = "_inverted_", Description = "Inverted", Access = GH_ParamAccess.item };
-            boolean.SetPersistentData(true);
-            inputParamManager.AddParameter(boolean);
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_inverted_", NickName = "_inverted_", Description = "Inverted", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(true);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
 
-            global::Grasshopper.Kernel.Parameters.Param_String @string = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
-            @string.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
-            inputParamManager.AddParameter(@string);
-            
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_String param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
+                param_String.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
+                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override ParamDefinition[] Outputs
         {
-            outputParamManager.AddGenericParameter("ElementIds", "ElementIds", "ElementIds", GH_ParamAccess.list);
+            get
+            {
+                List<ParamDefinition> result = new List<ParamDefinition>();
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "ids", NickName = "ids", Description = "Revit Element Ids", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void TrySolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = -1;
+            
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            index = Params.IndexOfInputParam("_run");
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
             string templateName = null;
-            if (!dataAccess.GetData(0, ref templateName))
+            index = Params.IndexOfInputParam("_templateName");
+            if (index == -1|| !dataAccess.GetData(index, ref templateName))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
             bool inverted = true;
-            if (!dataAccess.GetData(1, ref inverted))
+            index = Params.IndexOfInputParam("_inverted_");
+            if (index == -1 || !dataAccess.GetData(index, ref inverted))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -86,7 +103,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Core.ViewType> viewTypes = null;
 
             List<string> viewTypeNames = new List<string>();
-            if (dataAccess.GetDataList(2, viewTypeNames))
+            index = Params.IndexOfInputParam("_viewTypes_");
+            if (index != -1 && dataAccess.GetDataList(index, viewTypeNames))
             {
                 if(viewTypeNames != null && viewTypeNames.Count != 0)
                 {
@@ -99,9 +117,13 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            StartTransaction(document);
+
             List<ElementId> elementIds = Core.Revit.Modify.DeleteViews(document, templateName, inverted, viewTypes?.ConvertAll(x => (ViewType)((int)x)));
 
-            dataAccess.SetDataList(0, elementIds);
+            index = Params.IndexOfOutputParam("ids");
+            if (index != -1)
+                dataAccess.SetDataList(index, elementIds?.ConvertAll(x => x.IntegerValue));
         }
     }
 }

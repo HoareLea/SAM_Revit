@@ -58,13 +58,24 @@ namespace SAM.Analytical.Revit
                 }
 
                 BoundingBoxXYZ boundingBoxXYZ = space.get_BoundingBox(null);
-                if (boundingBoxXYZ == null || boundingBoxXYZ.Min.Z == boundingBoxXYZ.Max.Z)
-                    continue;
 
-                if (double.IsNaN(elevation_Top))
+                if (double.IsNaN(elevation_Top) && boundingBoxXYZ != null)
                     elevation_Top = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
 
-                double elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
+                double elevation_Bottom = double.NaN;
+
+                if (boundingBoxXYZ != null)
+                    elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
+
+                if(double.IsNaN(elevation_Bottom))
+                {
+                    ElementId elementId = space.LevelId;
+                    if (elementId != null && elementId != ElementId.InvalidElementId)
+                    {
+                        Level level = document.GetElement(elementId) as Level;
+                        elevation_Bottom = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
+                    }
+                }
 
                 Point3D point3D = Geometry.Revit.Convert.ToSAM(xyz);
                 if (point3D == null)
@@ -74,7 +85,7 @@ namespace SAM.Analytical.Revit
                 if (point2D == null)
                     continue;
 
-                cutElevations.Add(boundingBoxXYZ.Min.Z + UnitUtils.ConvertToInternalUnits(offset, DisplayUnitType.DUT_METERS));
+                cutElevations.Add(elevation_Bottom + UnitUtils.ConvertToInternalUnits(offset, DisplayUnitType.DUT_METERS));
                 if(!dictionary.TryGetValue(elevation_Bottom, out List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>> tuples))
                 {
                     tuples = new List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>>();

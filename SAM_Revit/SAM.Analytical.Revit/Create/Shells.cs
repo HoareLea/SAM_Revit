@@ -85,7 +85,7 @@ namespace SAM.Analytical.Revit
                 if (point2D == null)
                     continue;
 
-                cutElevations.Add(elevation_Bottom + UnitUtils.ConvertToInternalUnits(offset, DisplayUnitType.DUT_METERS));
+                cutElevations.Add(UnitUtils.ConvertToInternalUnits(elevation_Bottom + offset, DisplayUnitType.DUT_METERS));
                 if(!dictionary.TryGetValue(elevation_Bottom, out List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>> tuples))
                 {
                     tuples = new List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>>();

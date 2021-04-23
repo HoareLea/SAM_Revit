@@ -50,23 +50,22 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 global::Grasshopper.Kernel.Parameters.Param_String param_String;
 
-                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_sourceColumn_", NickName = "_sourceColumn_", Description = "Column with Source Name of Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_sourceColumn_", NickName = "_sourceColumn_", Description = "Column with Source Name of Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Name");
                 result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 
-                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_defaultColumn_", NickName = "_defaultColumn_", Description = "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", Access = GH_ParamAccess.item };
-                param_String.SetPersistentData("template Family");
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_defaultColumn_", NickName = "_defaultColumn_", Description = "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", Optional = true, Access = GH_ParamAccess.item };                param_String.SetPersistentData("template Family");
                 result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 
-                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_destinationColumn_", NickName = "_destinationColumn_", Description = "Column with destination Name for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_destinationColumn_", NickName = "_destinationColumn_", Description = "Column with destination Name for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("New Name Family");
                 result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 
-                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_typeColumn_", NickName = "_typeColumn_", Description = "Column with Type Name for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_typeColumn_", NickName = "_typeColumn_", Description = "Column with Type Name for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Category Name");
                 result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 
-                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_thicknessColumn_", NickName = "_thicknessColumn_", Description = "Column with thickness for Construction or ApertureConstruction", Access = GH_ParamAccess.item };
+                param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_thicknessColumn_", NickName = "_thicknessColumn_", Description = "Column with thickness for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Width");
                 result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
 

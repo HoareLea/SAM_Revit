@@ -145,7 +145,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             string sourceColumn = null;
             index = Params.IndexOfInputParam("_sourceColumn_");
-            if (index != -1 || !dataAccess.GetData(index, ref sourceColumn) || string.IsNullOrWhiteSpace(sourceColumn))
+            if (index == -1 || !dataAccess.GetData(index, ref sourceColumn) || string.IsNullOrWhiteSpace(sourceColumn))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

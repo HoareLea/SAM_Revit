@@ -39,7 +39,7 @@ namespace SAM.Analytical.Revit
         {
             Setting result = new Setting(Assembly.GetExecutingAssembly());
 
-            TypeMap parameterMap_General = new TypeMap();
+            TypeMap parameterMap_General = Core.Create.TypeMap();
 
             //AnalyticalModel
             parameterMap_General.Add(AnalyticalModelParameter.NorthAngle, typeof(ProjectInfo), "SAM_NorthAngle");
@@ -183,13 +183,13 @@ namespace SAM.Analytical.Revit
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, parameterMap_General);
 
-            TextMap textMap_Zone = new TextMap("Zone Map");
+            TextMap textMap_Zone = Core.Create.TextMap("Zone Map");
             textMap_Zone.Add(ZoneType.Cooling.Text(), "SAM_ZoneCoolingReference");
             textMap_Zone.Add(ZoneType.Heating.Text(), "SAM_ZoneHeatingReference");
             textMap_Zone.Add(ZoneType.Ventilation.Text(), "SAM_ZoneVentilationReference");
             result.Add(Name.ZoneMap, textMap_Zone);
 
-            TypeMap parameterMap_Cooling = new TypeMap();
+            TypeMap parameterMap_Cooling = Core.Create.TypeMap();
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.UnmetHours, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHoursCooling");
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.UnmetHourFirstIndex, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHourCoolingFirstInst");
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.OccupiedHours, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHoursCoolingOccupied");
@@ -226,7 +226,7 @@ namespace SAM.Analytical.Revit
             parameterMap_Cooling.Add(ZoneSimulationResultParameter.MaxSensibleLoadIndex, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_ZoneCLGCoolingSensLoadPeakDate", null, "[SAM.Analytical.Convert.ToString(Value)]");
             result.Add(Name.ParameterMap_Cooling, parameterMap_Cooling);
 
-            TypeMap parameterMap_Heating= new TypeMap();
+            TypeMap parameterMap_Heating= Core.Create.TypeMap();
             parameterMap_Heating.Add(SpaceSimulationResultParameter.UnmetHours, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHoursHeating");
             parameterMap_Heating.Add(SpaceSimulationResultParameter.UnmetHourFirstIndex, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHourHeatingFirstInst");
             parameterMap_Heating.Add(SpaceSimulationResultParameter.OccupiedHours, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_UnmetHoursHeatingOccupied");
@@ -253,7 +253,7 @@ namespace SAM.Analytical.Revit
             parameterMap_Heating.Add(ZoneSimulationResultParameter.MaxSensibleLoadIndex, typeof(Autodesk.Revit.DB.Mechanical.Space), "SAM_ZoneHTGCoolingSensLoadPeakDate", null, "[SAM.Analytical.Convert.ToString(Value)]");
             result.Add(Name.ParameterMap_Heating, parameterMap_Heating);
 
-            TypeMap parameterMap_Ventilation = new TypeMap();
+            TypeMap parameterMap_Ventilation = Core.Create.TypeMap();
             parameterMap_Ventilation.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneVNTTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirflow(AdjacencyCluster, Object_1)]");
             parameterMap_Ventilation.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneVNTSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirflow(AdjacencyCluster, Object_1)]");
             parameterMap_Ventilation.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneVNTSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirflow(AdjacencyCluster, Object_1)]");

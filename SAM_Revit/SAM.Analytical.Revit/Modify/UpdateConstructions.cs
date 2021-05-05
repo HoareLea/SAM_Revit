@@ -159,9 +159,9 @@ namespace SAM.Analytical.Revit
                     hostObjAttributes = DuplicateByType(document, name_Template, panelType, construction_New) as HostObjAttributes;
                 }
 
-                Panel panel_New = new Panel(panel, construction_New);
+                Panel panel_New = Analytical.Create.Panel(panel, construction_New);
                 if (panel_New.PanelType != panelType)
-                    panel_New = new Panel(panel_New, panelType);
+                    panel_New = Analytical.Create.Panel(panel_New, panelType);
 
                 List<Aperture> apertures = panel_New.Apertures;
                 if (apertures != null && apertures.Count != 0)

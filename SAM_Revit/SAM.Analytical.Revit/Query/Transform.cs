@@ -33,7 +33,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             if (transform.IsIdentity)
-                return new Panel(panel);
+                return Analytical.Create.Panel(panel);
 
             List<Aperture> apertures = panel.Apertures;
             if(apertures != null)
@@ -42,7 +42,7 @@ namespace SAM.Analytical.Revit
                     apertures[i] = Transform(transform, apertures[i]);
             }
 
-            Panel result = new Panel(panel.Guid, panel, Transform(transform, panel.PlanarBoundary3D));
+            Panel result = Analytical.Create.Panel(panel.Guid, panel, Transform(transform, panel.PlanarBoundary3D));
             result.RemoveApertures();
 
             if (apertures != null)

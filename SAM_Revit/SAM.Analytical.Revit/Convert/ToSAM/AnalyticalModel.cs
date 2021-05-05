@@ -150,7 +150,7 @@ namespace SAM.Analytical.Revit
                 Tuple<string, Panel, Space, Face3D> tuple_Overlap = tuples_Overlap[1];
 
                 dictionary[tuple.Item1].Item2.Add(tuple_Overlap.Item3);
-                dictionary[tuple_Overlap.Item1] = new Tuple<Panel, List<Space>>(new Panel(dictionary[tuple_Overlap.Item1].Item1, PanelType.Shade), null);
+                dictionary[tuple_Overlap.Item1] = new Tuple<Panel, List<Space>>(Analytical.Create.Panel(dictionary[tuple_Overlap.Item1].Item1, PanelType.Shade), null);
                 int index = tuples_External.IndexOf(tuple_Overlap);
                 if (index != -1)
                     tuples_External.RemoveAt(index);
@@ -176,7 +176,7 @@ namespace SAM.Analytical.Revit
                     if (panel == null)
                         continue;
 
-                    panel = new Panel(panel, PanelType.Shade);
+                    panel = Analytical.Create.Panel(panel, PanelType.Shade);
 
                     adjacencyCluster.AddObject(panel);
                 }

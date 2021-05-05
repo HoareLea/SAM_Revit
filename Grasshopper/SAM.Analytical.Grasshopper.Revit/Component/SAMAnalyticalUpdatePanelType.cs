@@ -91,7 +91,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (panelType == PanelType.Air || panelType == PanelType.Undefined)
             {
                 if (index_Panel != -1)
-                    dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+                    dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
              
                 if (index_ElementType != -1)
                     dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
@@ -103,7 +103,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             if(panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
             {
                 if (index_Panel != -1)
-                    dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+                    dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
 
                 if (index_ElementType != -1)
                     dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
@@ -117,7 +117,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
                 {
                     if (index_Panel != -1)
-                        dataAccess.SetData(index_Panel, new GooPanel(new Panel(panel)));
+                        dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
 
                     if (index_ElementType != -1)
                         dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
@@ -134,7 +134,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             if (index_Panel != -1)
-                dataAccess.SetData(index_Panel, new Panel(panel, panelType_Normal));
+                dataAccess.SetData(index_Panel, Create.Panel(panel, panelType_Normal));
 
             if (index_ElementType != -1)
                 dataAccess.SetData(index_ElementType, hostObjAttributes);

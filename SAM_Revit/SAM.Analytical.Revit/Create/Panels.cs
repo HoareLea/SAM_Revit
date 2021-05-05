@@ -173,11 +173,11 @@ namespace SAM.Analytical.Revit
 
                     if (panel == null)
                     {
-                        panel = new Panel(construction, panelType, face3D);
+                        panel = Analytical.Create.Panel(construction, panelType, face3D);
                     }
                     else
                     {
-                        panel = new Panel(panel.Guid, panel, face3D);
+                        panel = Analytical.Create.Panel(panel.Guid, panel, face3D);
                     }
 
                     result.Add(panel);
@@ -275,7 +275,7 @@ namespace SAM.Analytical.Revit
 
                         Panel panel = null;
                         if (panel_Temp != null)
-                            panel = new Panel(Guid.NewGuid(), panel_Temp, face3D);
+                            panel = Analytical.Create.Panel(Guid.NewGuid(), panel_Temp, face3D);
 
                         if (panel_Temp != null)
                         {
@@ -283,7 +283,7 @@ namespace SAM.Analytical.Revit
                             PanelType panelType = Analytical.Query.PanelType(normal);
 
                             Construction construction = Query.DefaultAirConstruction(panelType.PanelGroup());
-                            panel = new Panel(construction, panelType, face3D);
+                            panel = Analytical.Create.Panel(construction, panelType, face3D);
                         }
 
                         if (panel != null)

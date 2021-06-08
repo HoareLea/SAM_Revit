@@ -159,10 +159,11 @@ namespace SAM.Analytical.Revit
                     hostObjAttributes = DuplicateByType(document, name_Template, panelType, construction_New) as HostObjAttributes;
                 }
 
-                construction_New = new Construction(hostObjAttributes.ToSAM(new Core.Revit.ConvertSettings(false, true, false)), construction_New.Guid);
-                constructionLibrary_Result.Add(construction_New);
+                Construction construction_New_Temp = new Construction(hostObjAttributes.ToSAM(new Core.Revit.ConvertSettings(false, true, false)), construction_New.Guid);
+                construction_New_Temp = new Construction(construction_New_Temp, construction_New.ConstructionLayers);
+                constructionLibrary_Result.Add(construction_New_Temp);
 
-                Panel panel_New = Analytical.Create.Panel(panel, construction_New);
+                Panel panel_New = Analytical.Create.Panel(panel, construction_New_Temp);
                 if (panel_New.PanelType != panelType)
                     panel_New = Analytical.Create.Panel(panel_New, panelType);
 

@@ -14,5 +14,27 @@ namespace SAM.Geometry.Revit
 
             return new Polyline3D(point3Ds);
         }
+
+        public static Polyline3D ToSAM_Polyline3D(this Curve curve)
+        {
+            if (curve == null)
+            {
+                return null;
+            }
+
+            List<Point3D> point3Ds = new List<Point3D>();
+            if (curve is Line)
+            {
+                point3Ds.Add(curve.GetEndPoint(0).ToSAM());
+                point3Ds.Add(curve.GetEndPoint(1).ToSAM());
+            }
+            else
+            {
+                foreach (XYZ xyz in curve.Tessellate())
+                    point3Ds.Add(xyz.ToSAM());
+            }
+
+            return new Polyline3D(point3Ds);
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace SAM.Analytical.Revit
             if (hostObject == null)
                 return Analytical.PanelType.Undefined;
 
-            PanelType panelType = PanelType(hostObject?.Document?.GetElement(hostObject.GetTypeId()) as HostObjAttributes);
+            PanelType panelType = PanelType(hostObject.Document?.GetElement(hostObject.GetTypeId()) as HostObjAttributes);
             if (panelType != Analytical.PanelType.Undefined)
                 return panelType;
 

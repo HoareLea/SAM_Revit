@@ -207,6 +207,10 @@
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />
+    <Compile Include="Query\ConnectorProfileType.cs" />
+    <Compile Include="Query\Plane.cs" />
+    <Compile Include="Query\Profile.cs" />
+    <Compile Include="Query\Segmentable3D.cs" />
     <Compile Include="Query\Segment3Ds.cs" />
     <Compile Include="Query\Transform.cs" />
     <Compile Include="Query\TopProfiles.cs" />

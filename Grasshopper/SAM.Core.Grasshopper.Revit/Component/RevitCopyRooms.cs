@@ -91,7 +91,7 @@ namespace SAM.Core.Grasshopper.Revit
 
             RevitLinkInstance revitLinkInstance = null;
             index = Params.IndexOfInputParam("_revitLinkInstance");
-            if (index == -1 || !dataAccess.GetData(0, ref revitLinkInstance) || revitLinkInstance == null)
+            if (index == -1 || !dataAccess.GetData(index, ref revitLinkInstance) || revitLinkInstance == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

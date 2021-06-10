@@ -24,6 +24,10 @@ namespace SAM.Geometry.Revit
             foreach (CurveLoop curveLoop in curveLoops)
             {
                 Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop, tolerance);
+                if(!Spatial.Query.IsValid(polygon3D))
+                {
+                    continue;
+                }
 
                 List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D, tolerance);
                 if (polygon3Ds_Intersection != null)

@@ -180,7 +180,7 @@
     <Compile Include="Component\RevitSAMPanelsFromSpaces.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByType.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByElement.cs" />
-    <Compile Include="Component\SAMAnalyticalDuplicateConstruction.cs" />
+    <Compile Include="Component\SAMAnalyticalDuplicateType.cs" />
     <Compile Include="Component\SAMAnalyticalPanelRevit.cs" />
     <Compile Include="Component\SAMAnalyticalTrimOrExtendWall.cs" />
     <Compile Include="Kernel\AssemblyInfo.cs" />

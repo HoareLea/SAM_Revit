@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalDuplicateConstruction : SAMTransactionalChainComponent
+    public class SAMAnalyticalDuplicateType : SAMTransactionalChainComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -29,9 +29,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
         /// </summary>
-        public SAMAnalyticalDuplicateConstruction()
-          : base("SAMAnalytical.DuplicateConstruction", "SAManalytical.DuplicateConstruction",
-              "Modify Duplicate Analytical Object",
+        public SAMAnalyticalDuplicateType()
+          : base("SAMAnalytical.DuplicateType", "SAManalytical.DuplicateType",
+              "Modify Duplicate Analytical Object Type",
               "SAM", "Revit")
         {
         }

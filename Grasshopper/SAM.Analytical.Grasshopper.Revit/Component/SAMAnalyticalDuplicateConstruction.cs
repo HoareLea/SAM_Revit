@@ -17,7 +17,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.3";
+        public override string LatestComponentVersion => "1.0.4";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -44,7 +44,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panel", NickName = "_panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
                 result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_name", NickName = "_name", Description = "Name", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean;
@@ -92,14 +92,6 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Panel panel = null;
-            index = Params.IndexOfInputParam("_panel");
-            if (index == -1 || !dataAccess.GetData(index, ref panel) || panel == null)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
-            }
-
             string name = null;
             index = Params.IndexOfInputParam("_name");
             if (index == -1 || !dataAccess.GetData(index, ref name) || string.IsNullOrWhiteSpace(name))
@@ -118,13 +110,52 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (index == -1 || !dataAccess.GetDataList(index, parameterNames) || parameterNames.Count == 0)
                 parameterNames = null;
 
+            Core.SAMObject sAMObject = null;
+            index = Params.IndexOfInputParam("_analytical");
+            if (index == -1 || !dataAccess.GetData(index, ref sAMObject) || sAMObject == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
             StartTransaction(document);
 
             ElementType elementType = null;
-            if (inverted)
-                elementType = Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction, parameterNames);
-            else
-                elementType = Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name, parameterNames);
+
+            if(sAMObject is Panel)
+            {
+                Panel panel = (Panel)sAMObject;
+
+                if (inverted)
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, name, panel.PanelType, panel.Construction, parameterNames);
+                else
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, panel.Construction, panel.PanelType, name, parameterNames);
+            }
+            else if(sAMObject is ApertureConstruction)
+            {
+                ApertureConstruction apertureConstruction = (ApertureConstruction)sAMObject;
+
+                if (inverted)
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, name, apertureConstruction, parameterNames);
+                else
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, apertureConstruction, name, parameterNames);
+            }
+            else if (sAMObject is Construction)
+            {
+                Construction construction = (Construction)sAMObject;
+
+                if(construction.TryGetValue(ConstructionParameter.DefaultPanelType, out string panelTypeString))
+                {
+                    PanelType panelType = Analytical.Query.PanelType(panelTypeString);
+                    if(panelType != PanelType.Undefined)
+                    {
+                        if (inverted)
+                            elementType = Analytical.Revit.Modify.DuplicateByName(document, name, panelType, construction, parameterNames);
+                        else
+                            elementType = Analytical.Revit.Modify.DuplicateByName(document, construction, panelType, name, parameterNames);
+                    }
+                }
+            }
 
             index = Params.IndexOfOutputParam("elemenType");
             if (index != -1)

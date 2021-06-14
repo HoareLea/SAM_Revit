@@ -156,6 +156,15 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                 }
             }
+            else if (sAMObject is Aperture)
+            {
+                ApertureConstruction apertureConstruction = ((Aperture)sAMObject).ApertureConstruction;
+
+                if (inverted)
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, name, apertureConstruction, parameterNames);
+                else
+                    elementType = Analytical.Revit.Modify.DuplicateByName(document, apertureConstruction, name, parameterNames);
+            }
 
             index = Params.IndexOfOutputParam("elemenType");
             if (index != -1)

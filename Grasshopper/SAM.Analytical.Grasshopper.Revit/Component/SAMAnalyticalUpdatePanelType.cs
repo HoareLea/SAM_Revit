@@ -4,6 +4,7 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -17,7 +18,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -42,7 +43,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panel", NickName = "_panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
                 return result.ToArray();
             }
         }
@@ -55,8 +56,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "panel", NickName = "panel", Description = "SAM Analytical Panel", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analytical", NickName = "analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
                 return result.ToArray();
             }
         }
@@ -72,9 +73,29 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Panel panel = null;
-            index = Params.IndexOfInputParam("_panel");
-            if (index == -1 || !dataAccess.GetData(index, ref panel))
+            Core.SAMObject sAMObject = null;
+            index = Params.IndexOfInputParam("_analytical");
+            if (index == -1 || !dataAccess.GetData(index, ref sAMObject))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            List<Panel> panels = null;
+            if(sAMObject is Panel)
+            {
+                panels = new List<Panel>() { (Panel)sAMObject };
+            }
+            else if(sAMObject is AdjacencyCluster)
+            {
+                panels = ((AdjacencyCluster)sAMObject).GetPanels();
+            }
+            else if(sAMObject is AnalyticalModel)
+            {
+                panels = ((AnalyticalModel)sAMObject).GetPanels();
+            }
+
+            if(panels == null || panels.Count == 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -82,63 +103,100 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             StartTransaction(document);
 
-            int index_Panel = Params.IndexOfOutputParam("panel");
-            int index_ElementType = Params.IndexOfOutputParam("elementType");
+            List<ElementType> elementTypes = new List<ElementType>();
 
-            Geometry.Spatial.Vector3D normal = panel.Normal;
-
-            PanelType panelType = panel.PanelType;
-            if (panelType == PanelType.Air || panelType == PanelType.Undefined)
+            for(int i=0; i < panels.Count; i++)
             {
-                if (index_Panel != -1)
-                    dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
-             
-                if (index_ElementType != -1)
-                    dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
-                
-                return;
-            }
-
-            PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
-            if(panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
-            {
-                if (index_Panel != -1)
-                    dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
-
-                if (index_ElementType != -1)
-                    dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
-                
-                return;
-            }
-
-            if(panelType.PanelGroup() == PanelGroup.Floor || panelType.PanelGroup() == PanelGroup.Roof)
-            {
-                double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
-                if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
+                Panel panel = panels[i];
+                if(panel == null)
                 {
-                    if (index_Panel != -1)
-                        dataAccess.SetData(index_Panel, new GooPanel(Create.Panel(panel)));
+                    continue;
+                }
 
-                    if (index_ElementType != -1)
-                        dataAccess.SetData(index_ElementType, Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false)));
+                Geometry.Spatial.Vector3D normal = panel.Normal;
+                PanelType panelType = panel.PanelType;
 
-                    return;
+                if (panelType == PanelType.Air || panelType == PanelType.Undefined)
+                {
+                    panels[i] = Create.Panel(panel);
+                    ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
+                    if(elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
+                    {
+                        elementTypes.Add(elementType);
+                    }
+
+                    continue;
+                }
+
+                PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
+                if (panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
+                {
+                    panels[i] = Create.Panel(panel);
+                    ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
+                    if (elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
+                    {
+                        elementTypes.Add(elementType);
+                    }
+
+                    continue;
+                }
+
+                if (panelType.PanelGroup() == PanelGroup.Floor || panelType.PanelGroup() == PanelGroup.Roof)
+                {
+                    double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
+                    if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
+                    {
+                        panels[i] = Create.Panel(panel);
+                        ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
+                        if (elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
+                        {
+                            elementTypes.Add(elementType);
+                        }
+
+                        continue;
+                    }
+                }
+
+                HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, panelType_Normal, panel.Construction) as HostObjAttributes;
+                if (hostObjAttributes == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for {0} panel (Guid: {1}).", panel.Name, panel.Guid));
+                    continue;
+                }
+
+                panels[i] = Create.Panel(panel, panelType_Normal);
+
+                if (elementTypes.Find(x => x.Id == hostObjAttributes.Id) == null)
+                    elementTypes.Add(hostObjAttributes);
+            }
+
+
+            int index_Analytical = Params.IndexOfOutputParam("analytical");
+            if(index_Analytical != -1)
+            {
+                if(sAMObject is Panel)
+                {
+                    dataAccess.SetData(index_Analytical, panels?.FirstOrDefault());
+                }
+                else if(sAMObject is AnalyticalModel)
+                {
+                    AnalyticalModel analyticalModel = new AnalyticalModel((AnalyticalModel)sAMObject);
+                    panels.ForEach(x => analyticalModel.AddPanel(x));
+                    dataAccess.SetData(index_Analytical, analyticalModel);
+                }
+                else if (sAMObject is AdjacencyCluster)
+                {
+                    AdjacencyCluster adjacencyCluster = new AdjacencyCluster((AdjacencyCluster)sAMObject);
+                    panels.ForEach(x => adjacencyCluster.AddObject(x));
+                    dataAccess.SetData(index_Analytical, adjacencyCluster);
                 }
             }
 
-            HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, panelType_Normal, panel.Construction) as HostObjAttributes;
-            if (hostObjAttributes == null)
+            int index_ElementType = Params.IndexOfOutputParam("elementType");
+            if(index_ElementType != -1)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for {0} panel (Guid: {1}).", panel.Name, panel.Guid));
-                return;
+                dataAccess.SetDataList(index_ElementType, elementTypes);
             }
-
-            if (index_Panel != -1)
-                dataAccess.SetData(index_Panel, Create.Panel(panel, panelType_Normal));
-
-            if (index_ElementType != -1)
-                dataAccess.SetData(index_ElementType, hostObjAttributes);
-
         }
     }
 }

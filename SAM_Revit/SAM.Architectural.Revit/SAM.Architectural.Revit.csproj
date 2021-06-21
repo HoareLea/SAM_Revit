@@ -134,6 +134,10 @@
     <Reference Include="SAM.Core">
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Geometry, Version=1.0.7842.14601, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -145,6 +149,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert\ToRevit\Level.cs" />
+    <Compile Include="Convert\ToSAM\Opening.cs" />
+    <Compile Include="Convert\ToSAM\HostBuildingElement.cs" />
+    <Compile Include="Convert\ToSAM\OpeningType.cs" />
+    <Compile Include="Convert\ToSAM\HostBuildingElementType.cs" />
     <Compile Include="Convert\ToSAM\Level.cs" />
     <Compile Include="Create\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -161,6 +169,10 @@
     <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj">
       <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
       <Name>SAM.Core.Revit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj">
+      <Project>{33206e35-bc18-4ea3-9fb4-3473ef99f3be}</Project>
+      <Name>SAM.Geometry.Revit</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

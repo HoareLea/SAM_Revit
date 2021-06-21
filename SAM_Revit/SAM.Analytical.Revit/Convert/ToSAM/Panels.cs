@@ -42,7 +42,7 @@ namespace SAM.Analytical.Revit
 
             if (hostObject is Wall || hostObject is CurtainSystem)
             {
-                List<Autodesk.Revit.DB.Panel> panels = Create.Panels(hostObject as dynamic);
+                List<Autodesk.Revit.DB.Panel> panels = Core.Revit.Query.Panels(hostObject as dynamic);
                 if (panels != null && panels.Count > 0)
                 {
                     List<ElementId> elementIds_Temp = panels.ConvertAll(x => x.Id);

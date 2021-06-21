@@ -7,7 +7,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Create
     {
-        public static List<Autodesk.Revit.DB.Panel> Panels(this Wall wall, Core.Revit.ConvertSettings convertSettings)
+        public static List<Autodesk.Revit.DB.Panel> Panels(this Wall wall)
         {
             if (wall == null)
                 return null;
@@ -16,14 +16,47 @@ namespace SAM.Analytical.Revit
             if (curtainGrid == null)
                 return null;
 
-            IEnumerable<ElementId> elementIds = curtainGrid.GetPanelIds();
-            if (elementIds == null || elementIds.Count() == 0)
+            return Panels(wall.Document, curtainGrid);
+        }
+
+        public static List<Autodesk.Revit.DB.Panel> Panels(this CurtainSystem curtainSystem)
+        {
+            CurtainGridSet curtainGridSet = curtainSystem?.CurtainGrids;
+            if (curtainGridSet == null)
+            {
                 return null;
+            }
+
+            List<Autodesk.Revit.DB.Panel> result = new List<Autodesk.Revit.DB.Panel>();
+            foreach (CurtainGrid curtainGrid in curtainGridSet)
+            {
+                List<Autodesk.Revit.DB.Panel> panels = Panels(curtainSystem.Document, curtainGrid);
+                if (panels != null && panels.Count != 0)
+                {
+                    result.AddRange(panels);
+                }
+            }
+
+            return result;
+        }
+
+        public static List<Autodesk.Revit.DB.Panel> Panels(this Document document, CurtainGrid curtainGrid)
+        {
+            if(document == null)
+            {
+                return null;
+            }
+
+            IEnumerable<ElementId> elementIds = curtainGrid?.GetPanelIds();
+            if (elementIds == null || elementIds.Count() == 0)
+            {
+                return null;
+            }
 
             List<Autodesk.Revit.DB.Panel> result = new List<Autodesk.Revit.DB.Panel>();
             foreach (ElementId elementId in elementIds)
             {
-                Autodesk.Revit.DB.Panel panel = wall.Document.GetElement(elementId) as Autodesk.Revit.DB.Panel;
+                Autodesk.Revit.DB.Panel panel = document.GetElement(elementId) as Autodesk.Revit.DB.Panel;
                 if (panel == null)
                     continue;
 
@@ -34,7 +67,7 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-                List<Autodesk.Revit.DB.Panel> panels = Panels(wall.Document.GetElement(elementId_Host) as Wall, convertSettings);
+                List<Autodesk.Revit.DB.Panel> panels = Panels(document.GetElement(elementId_Host) as Wall);
                 if (panels != null && panels.Count > 0)
                     result.AddRange(panels);
             }

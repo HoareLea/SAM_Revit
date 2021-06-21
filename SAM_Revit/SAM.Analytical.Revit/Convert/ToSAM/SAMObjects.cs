@@ -10,7 +10,7 @@ namespace SAM.Analytical.Revit
         public static IEnumerable<Core.SAMObject> ToSAM(this Element element, Core.Revit.ConvertSettings convertSettings)
         {
             IEnumerable<Core.SAMObject> result = null;
-            if (element is Wall || element is Floor || element is RoofBase)
+            if (element is HostObject)
             {
                 List<Panel> panels = ToSAM((HostObject)element, convertSettings);
                 if (panels != null)

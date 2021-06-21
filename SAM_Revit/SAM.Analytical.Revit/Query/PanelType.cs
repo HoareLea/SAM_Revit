@@ -13,6 +13,9 @@ namespace SAM.Analytical.Revit
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Walls:
                     return Analytical.PanelType.Wall;
 
+                case Autodesk.Revit.DB.BuiltInCategory.OST_CurtaSystem:
+                    return Analytical.PanelType.CurtainWall;
+
                 case Autodesk.Revit.DB.BuiltInCategory.OST_Roofs:
                     return Analytical.PanelType.Roof;
 

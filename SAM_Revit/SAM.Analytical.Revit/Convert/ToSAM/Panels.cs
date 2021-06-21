@@ -40,9 +40,9 @@ namespace SAM.Analytical.Revit
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
 
-            if (hostObject is Wall)
+            if (hostObject is Wall || hostObject is CurtainSystem)
             {
-                List<Autodesk.Revit.DB.Panel> panels = Create.Panels((Wall)hostObject, convertSettings);
+                List<Autodesk.Revit.DB.Panel> panels = Create.Panels(hostObject as dynamic);
                 if (panels != null && panels.Count > 0)
                 {
                     List<ElementId> elementIds_Temp = panels.ConvertAll(x => x.Id);
@@ -197,9 +197,16 @@ namespace SAM.Analytical.Revit
                 //Level level_Max = Core.Revit.Query.HighLevel(document, UnitUtils.ConvertToInternalUnits(elevation_Min, DisplayUnitType.DUT_METERS));
                 Level level_Max = Core.Revit.Query.HighLevel(document, elevation_Min);
                 if (level_Max == null)
+                {
                     continue;
+                }
 
                 double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, DisplayUnitType.DUT_METERS);
+                if(height == 0)
+                {
+                    continue;
+                }
+
                 Vector3D vector3D = new Vector3D(0, 0, height);
 
                 Face3D face3D = new Face3D(new Polygon3D(new Point3D[] { segment3D[0], segment3D[1], segment3D[1].GetMoved(vector3D) as Point3D, segment3D[0].GetMoved(vector3D) as Point3D}));

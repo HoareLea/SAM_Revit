@@ -29,10 +29,13 @@ namespace SAM.Geometry.Revit
             if (hostObject is FaceWall)
                 return Profiles_FaceWall((FaceWall)hostObject);
 
+            if(hostObject is CurtainSystem)
+                return Profiles_CurtainSystem((CurtainSystem)hostObject);
+
             return null;
         }
 
-        public static List<Face3D> Profiles_FaceWall(this FaceWall faceWall)
+        private static List<Face3D> Profiles_FaceWall(this FaceWall faceWall)
         {
             GeometryElement geometryElement = faceWall.get_Geometry(new Options());
             if (geometryElement == null)
@@ -57,7 +60,7 @@ namespace SAM.Geometry.Revit
             return null;
         }
 
-        public static List<Face3D> Profiles_Wall(this Wall wall)
+        private static List<Face3D> Profiles_Wall(this Wall wall)
         {
             if (wall == null)
                 return null;
@@ -192,6 +195,41 @@ namespace SAM.Geometry.Revit
         private static List<Face3D> Profiles_Ceiling(this Ceiling ceiling)
         {
             return BottomProfiles(ceiling);
+        }
+
+        private static List<Face3D> Profiles_CurtainSystem(this CurtainSystem curtainSystem)
+        {
+            CurtainGridSet curtainGridSet = curtainSystem?.CurtainGrids;
+            if(curtainGridSet == null)
+            {
+                return null;
+            }
+
+            List<Face3D> result = new List<Face3D>();
+            foreach (CurtainGrid curtainGrid in curtainGridSet)
+            {
+                IEnumerable<CurtainCell> curtainCells = curtainGrid.GetCurtainCells();
+                if(curtainCells == null || curtainCells.Count() == 0)
+                {
+                    continue;
+                }
+
+                List<Polygon3D> polygon3Ds = new List<Polygon3D>(); 
+                foreach(CurtainCell curtainCell in curtainCells)
+                {
+                    foreach (CurveArray curveArray in curtainCell.PlanarizedCurveLoops)
+                    {
+                        Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D();
+                        if (polygon3D == null && !polygon3D.IsValid())
+                            continue;
+
+                        polygon3Ds.Add(polygon3D);
+                        result.Add(new Face3D(polygon3D));
+                    }
+                }
+            }
+
+            return result;
         }
 
         private static List<Face3D> Profiles_FromSketch(this HostObject hostObject, bool flip = false)

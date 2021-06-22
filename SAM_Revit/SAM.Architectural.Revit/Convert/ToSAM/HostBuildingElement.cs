@@ -59,7 +59,7 @@ namespace SAM.Architectural.Revit
                 if (face3D == null)
                     continue;
 
-                HostBuildingElement hostBuildingElement = Architectural.Create.HostBuildingElement(hostBuildingElementType, face3D);
+                HostBuildingElement hostBuildingElement = Architectural.Create.HostBuildingElement(face3D, hostBuildingElementType);
                 hostBuildingElement.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
 
                 if (elementIds != null && elementIds.Count() > 0)

@@ -43,7 +43,7 @@ namespace SAM.Geometry.Revit
             segment3Ds.RemoveAt(count);
 
             if (oriented)
-                return Spatial.Create.Polygon3D(segment3Ds.ConvertAll(x => x.GetStart()));
+                return Spatial.Create.Polygon3D(segment3Ds.ConvertAll(x => x.GetStart()), Core.Tolerance.MacroDistance);
 
             List<Point3D> point3Ds = new List<Point3D>();
             foreach (Segment3D segment3D in segment3Ds)
@@ -59,16 +59,16 @@ namespace SAM.Geometry.Revit
             if (plane == null)
                 return null;
 
-            List<Planar.Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(plane.Project(x)));
+            List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(plane.Project(x)));
             if (segment2Ds == null || segment2Ds.Count < 3)
                 return null;
 
-            List<Planar.Polygon2D> polygon2Ds = Planar.Create.Polygon2Ds(segment2Ds, tolerance);
+            List<Polygon2D> polygon2Ds = Planar.Create.Polygon2Ds(segment2Ds, tolerance);
             if (polygon2Ds == null || polygon2Ds.Count == 0)
             {
                 //Extra case for situation where segment2Ds does not are not properly sorted
-                List<Planar.Point2D> point2Ds = new List<Planar.Point2D>();
-                List<Planar.Segment2D> segment2Ds_Temp = new List<Planar.Segment2D>(segment2Ds);
+                List<Point2D> point2Ds = new List<Point2D>();
+                List<Segment2D> segment2Ds_Temp = new List<Segment2D>(segment2Ds);
                 point2Ds.Add(segment2Ds_Temp[0][0]);
                 point2Ds.Add(segment2Ds_Temp[0][1]);
                 segment2Ds_Temp.RemoveAt(0);

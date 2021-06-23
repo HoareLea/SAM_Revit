@@ -239,7 +239,7 @@ namespace SAM.Analytical.Revit
 
             IEnumerable<ElementId> elementIds = wallSweep.GetHostIds();
 
-            
+            List<Shell> shells = Geometry.Revit.Convert.ToSAM_Shells(wallSweep);
 
 
             convertSettings?.Add(wallSweep.Id, result);

@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
+using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
@@ -22,10 +23,16 @@ namespace SAM.Analytical.Revit
             if (elementId_Type == null || elementId_Type == ElementId.InvalidElementId)
                 return null;
 
+            Document document = hostObject.Document;
+            if(document == null)
+            {
+                return null;
+            }
+
             result = new List<Panel>();
 
             PanelType panelType = Query.PanelType(hostObject);
-            Construction construction = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
+            Construction construction = ((HostObjAttributes)document.GetElement(elementId_Type)).ToSAM(convertSettings);
             if (construction == null)
                 construction = Analytical.Query.DefaultConstruction(panelType); //Default Construction
 
@@ -65,7 +72,7 @@ namespace SAM.Analytical.Revit
                 {
                     foreach (ElementId elementId in elementIds)
                     {
-                        Element element = hostObject.Document.GetElement(elementId);
+                        Element element = document.GetElement(elementId);
                         if (element == null)
                             continue;
 
@@ -85,7 +92,22 @@ namespace SAM.Analytical.Revit
             elementIds = hostObject.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Cornices));
             if(elementIds != null && elementIds.Count() != 0)
             {
+                foreach(ElementId elementId in elementIds)
+                {
+                    WallSweep wallSweep = document.GetElement(elementId) as WallSweep;
+                    if(wallSweep == null)
+                    {
+                        continue;
+                    }
 
+                    List<Panel> panels_WallSweep = wallSweep.ToSAM(convertSettings);
+                    if(panels_WallSweep == null || panels_WallSweep.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    result.AddRange(panels_WallSweep);
+                }
             }
 
             return result;
@@ -238,9 +260,93 @@ namespace SAM.Analytical.Revit
                 return result;
 
             IEnumerable<ElementId> elementIds = wallSweep.GetHostIds();
+            if (elementIds == null || elementIds.Count() == 0)
+            {
+                return null;
+            }
 
-            List<Shell> shells = Geometry.Revit.Convert.ToSAM_Shells(wallSweep);
+            Document document = wallSweep.Document;
+            if(document == null)
+            {
+                return null;
+            }
 
+            HostObject hostObject = null;
+            foreach(ElementId elementId in elementIds)
+            {
+                hostObject = document.GetElement(elementId) as HostObject;
+                if(hostObject != null)
+                {
+                    break;
+                }
+            }
+
+            List<Face3D> face3Ds = hostObject?.Profiles();
+            if(face3Ds == null || face3Ds.Count == 0)
+            {
+                return null;
+            }
+
+            Geometry.Spatial.Plane plane = face3Ds[0]?.GetPlane();
+            if(plane == null)
+            {
+                return null;
+            }
+
+            List<Face3D> face3Ds_WallSweep = Geometry.Revit.Convert.ToSAM_Face3Ds(wallSweep);
+            if(face3Ds_WallSweep == null || face3Ds_WallSweep.Count == 0)
+            {
+                return null;
+            }
+
+            List<Face2D> face2Ds = new List<Face2D>();
+            foreach(Face3D face3D_WallSweep in face3Ds_WallSweep)
+            {
+                Geometry.Spatial.Plane plane_WallSweep = face3D_WallSweep?.GetPlane();
+                if (plane_WallSweep == null || plane.Perpendicular(plane_WallSweep))
+                {
+                    continue;
+                }
+
+                Face3D face3D = plane.Project(face3D_WallSweep);
+                if(face3D == null || !face3D.IsValid())
+                {
+                    continue;
+                }
+
+                Face2D face2D = plane.Convert(face3D);
+                if(face2D == null || !face2D.IsValid())
+                {
+                    continue;
+                }
+
+                face2Ds.Add(face2D);
+            }
+
+            face2Ds = face2Ds.Union();
+            if(face2Ds == null || face2Ds.Count == 0)
+            {
+                return null;
+            }
+
+            Construction construction = ToSAM_Construction(document.GetElement(wallSweep.GetTypeId()) as ElementType, convertSettings);
+
+            foreach(Face2D face2D in face2Ds)
+            {
+                Face3D face3D = plane.Convert(face2D);
+                if(face3D == null || !face3D.IsValid())
+                {
+                    continue;
+                }
+
+                Panel panel = Analytical.Create.Panel(construction, PanelType.Wall, face3D);
+                if(panel == null)
+                {
+                    continue;
+                }
+
+                result.Add(panel);
+            }
 
             convertSettings?.Add(wallSweep.Id, result);
 

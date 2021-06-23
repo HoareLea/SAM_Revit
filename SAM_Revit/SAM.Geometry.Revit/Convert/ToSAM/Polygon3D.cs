@@ -9,7 +9,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static Polygon3D ToSAM_Polygon3D(this CurveLoop curveLoop, double tolerance = Core.Tolerance.Distance)
+        public static Polygon3D ToSAM_Polygon3D(this CurveLoop curveLoop, XYZ normal = null, double tolerance = Core.Tolerance.Distance)
         {
             List<Segment3D> segment3Ds = new List<Segment3D>();
             foreach (Curve curve in curveLoop)
@@ -42,8 +42,19 @@ namespace SAM.Geometry.Revit
 
             segment3Ds.RemoveAt(count);
 
+            Vector3D vector3D = normal?.ToSAM_Vector3D(false);
+
             if (oriented)
-                return Spatial.Create.Polygon3D(segment3Ds.ConvertAll(x => x.GetStart()), Core.Tolerance.MacroDistance);
+            {
+                if(vector3D != null)
+                {
+                    return Spatial.Create.Polygon3D(vector3D, segment3Ds.ConvertAll(x => x.GetStart()));
+                }
+                else
+                {
+                    return Spatial.Create.Polygon3D(segment3Ds.ConvertAll(x => x.GetStart()), Core.Tolerance.MacroDistance);
+                }
+            }
 
             List<Point3D> point3Ds = new List<Point3D>();
             foreach (Segment3D segment3D in segment3Ds)
@@ -55,7 +66,16 @@ namespace SAM.Geometry.Revit
             if (point3Ds == null || point3Ds.Count < 3)
                 return null;
 
-            Spatial.Plane plane = Spatial.Create.Plane(point3Ds, tolerance);
+            Spatial.Plane plane = null;
+            if (vector3D != null)
+            {
+                plane = new Spatial.Plane(point3Ds.Average(), vector3D);
+            }
+            else
+            {
+                plane = Spatial.Create.Plane(point3Ds, Core.Tolerance.MacroDistance);
+            }
+
             if (plane == null)
                 return null;
 

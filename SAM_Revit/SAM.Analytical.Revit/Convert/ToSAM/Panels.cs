@@ -82,6 +82,12 @@ namespace SAM.Analytical.Revit
 
             convertSettings?.Add(hostObject.Id, result);
 
+            elementIds = hostObject.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Cornices));
+            if(elementIds != null && elementIds.Count() != 0)
+            {
+
+            }
+
             return result;
         }
 
@@ -220,6 +226,11 @@ namespace SAM.Analytical.Revit
             convertSettings?.Add(modelCurve.Id, result);
 
             return result;
+        }
+
+        public static List<Panel> ToSAM_Panels(this WallSweep wallSweep, ConvertSettings convertSettings)
+        {
+
         }
     }
 }

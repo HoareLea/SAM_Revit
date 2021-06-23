@@ -198,6 +198,7 @@
     <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToRevit\CurveLoops.cs" />
     <Compile Include="Convert\ToSAM\Segment3Ds.cs" />
+    <Compile Include="Convert\ToSAM\Shells.cs" />
     <Compile Include="Convert\ToSAM\Shell.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
     <Compile Include="Query\BoundaryFace2Ds.cs" />

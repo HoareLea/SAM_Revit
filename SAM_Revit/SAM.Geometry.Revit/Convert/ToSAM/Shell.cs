@@ -31,5 +31,32 @@ namespace SAM.Geometry.Revit
             return new Shell(face3Ds);
 
         }
+
+        public static Shell ToSAM(this Solid solid)
+        {
+            if(solid == null)
+            {
+                return null;
+            }
+
+            FaceArray faceArray = solid.Faces;
+            if (faceArray == null)
+            {
+                return null;
+            }
+
+            List<Face3D> face3Ds = new List<Face3D>();
+            foreach (Autodesk.Revit.DB.Face face in faceArray)
+            {
+                List<Face3D> face3Ds_Temp = face.ToSAM();
+                if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    face3Ds.AddRange(face3Ds_Temp);
+            }
+
+            if (face3Ds == null || face3Ds.Count == 0)
+                return null;
+
+            return new Shell(face3Ds);
+        }
     }
 }

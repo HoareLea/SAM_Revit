@@ -230,7 +230,21 @@ namespace SAM.Analytical.Revit
 
         public static List<Panel> ToSAM_Panels(this WallSweep wallSweep, ConvertSettings convertSettings)
         {
-            throw new System.NotImplementedException();
+            if (wallSweep == null || !wallSweep.IsValidObject)
+                return null;
+
+            List<Panel> result = convertSettings?.GetObjects<Panel>(wallSweep.Id);
+            if (result != null)
+                return result;
+
+            IEnumerable<ElementId> elementIds = wallSweep.GetHostIds();
+
+            
+
+
+            convertSettings?.Add(wallSweep.Id, result);
+
+            return result;
         }
     }
 }

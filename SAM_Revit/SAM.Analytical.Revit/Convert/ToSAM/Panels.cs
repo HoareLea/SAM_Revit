@@ -92,6 +92,7 @@ namespace SAM.Analytical.Revit
             elementIds = hostObject.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Cornices));
             if(elementIds != null && elementIds.Count() != 0)
             {
+                //Fix it
                 foreach(ElementId elementId in elementIds)
                 {
                     WallSweep wallSweep = document.GetElement(elementId) as WallSweep;
@@ -100,7 +101,7 @@ namespace SAM.Analytical.Revit
                         continue;
                     }
 
-                    List<Panel> panels_WallSweep = wallSweep.ToSAM(convertSettings);
+                    List<Panel> panels_WallSweep = wallSweep.ToSAM_Panels(convertSettings);
                     if(panels_WallSweep == null || panels_WallSweep.Count == 0)
                     {
                         continue;
@@ -329,8 +330,9 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            Construction construction = ToSAM_Construction(document.GetElement(wallSweep.GetTypeId()) as ElementType, convertSettings);
+            Construction construction = ToSAM_Construction((ElementType)document.GetElement(wallSweep.GetTypeId()), convertSettings);
 
+            result = new List<Panel>();
             foreach(Face2D face2D in face2Ds)
             {
                 Face3D face3D = plane.Convert(face2D);

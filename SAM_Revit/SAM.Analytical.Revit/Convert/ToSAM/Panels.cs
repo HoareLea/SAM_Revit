@@ -89,27 +89,31 @@ namespace SAM.Analytical.Revit
 
             convertSettings?.Add(hostObject.Id, result);
 
-            elementIds = hostObject.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Cornices));
-            if(elementIds != null && elementIds.Count() != 0)
-            {
-                //Fix it
-                foreach(ElementId elementId in elementIds)
-                {
-                    WallSweep wallSweep = document.GetElement(elementId) as WallSweep;
-                    if(wallSweep == null)
-                    {
-                        continue;
-                    }
+            //Handling WallSweeps
+            //if(hostObject is Wall)
+            //{
+            //    elementIds = hostObject.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Cornices));
+            //    if (elementIds != null && elementIds.Count() != 0)
+            //    {
+            //        //Fix it
+            //        foreach (ElementId elementId in elementIds)
+            //        {
+            //            WallSweep wallSweep = document.GetElement(elementId) as WallSweep;
+            //            if (wallSweep == null)
+            //            {
+            //                continue;
+            //            }
 
-                    List<Panel> panels_WallSweep = wallSweep.ToSAM_Panels(convertSettings);
-                    if(panels_WallSweep == null || panels_WallSweep.Count == 0)
-                    {
-                        continue;
-                    }
+            //            List<Panel> panels_WallSweep = wallSweep.ToSAM_Panels(convertSettings);
+            //            if (panels_WallSweep == null || panels_WallSweep.Count == 0)
+            //            {
+            //                continue;
+            //            }
 
-                    result.AddRange(panels_WallSweep);
-                }
-            }
+            //            result.AddRange(panels_WallSweep);
+            //        }
+            //    }
+            //}
 
             return result;
         }
@@ -251,6 +255,12 @@ namespace SAM.Analytical.Revit
             return result;
         }
 
+        /// <summary>
+        /// Conversion of WallSweep to panels. WARNING! Method does not handle more complex WallSweep
+        /// </summary>
+        /// <param name="wallSweep">Revit WallSweep</param>
+        /// <param name="convertSettings">SAM Revit ConvertSettings</param>
+        /// <returns>SAM Analytical Panels (Panels projected on host (Wall) plane)</returns>
         public static List<Panel> ToSAM_Panels(this WallSweep wallSweep, ConvertSettings convertSettings)
         {
             if (wallSweep == null || !wallSweep.IsValidObject)

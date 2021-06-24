@@ -198,6 +198,8 @@
     <Compile Include="Accuracy\Tolerance.cs" />
     <Compile Include="Classes\RevitFilePreview.cs" />
     <Compile Include="Classes\RevitFilePreviewParameter.cs" />
+    <Compile Include="Classes\RevitType.cs" />
+    <Compile Include="Classes\RevitInstance.cs" />
     <Compile Include="Classes\SAMSchema.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />

@@ -22,14 +22,14 @@ namespace SAM.Geometry.Revit
 
             double levelElevation = UnitUtils.ConvertFromInternalUnits(levels.First().Elevation, DisplayUnitType.DUT_METERS);
 
-            if (Math.Abs(elevation - levelElevation) < Core.Tolerance.MacroDistance)
+            if (System.Math.Abs(elevation - levelElevation) < Core.Tolerance.MacroDistance)
                 return levels.First();
 
             for (int i = 1; i < levels.Count; i++)
             {
                 levelElevation = UnitUtils.ConvertFromInternalUnits(levels[i].Elevation, DisplayUnitType.DUT_METERS);
 
-                if (Math.Round(elevation, 3, MidpointRounding.AwayFromZero) <= Math.Round(levelElevation, 3, MidpointRounding.AwayFromZero))
+                if (System.Math.Round(elevation, 3, MidpointRounding.AwayFromZero) <= System.Math.Round(levelElevation, 3, MidpointRounding.AwayFromZero))
                     return levels[i];
             }
 

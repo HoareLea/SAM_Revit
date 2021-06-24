@@ -181,6 +181,10 @@
     <Reference Include="SAM.Geometry">
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Math, Version=1.0.7845.19671, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Math.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Units, Version=1.0.7607.16769, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Units.dll</HintPath>
@@ -195,6 +199,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\RevitType3D.cs" />
+    <Compile Include="Classes\RevitInstance3D.cs" />
     <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToRevit\CurveLoops.cs" />
     <Compile Include="Convert\ToSAM\Segment3Ds.cs" />
@@ -236,6 +242,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj">
+      <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
+      <Name>SAM.Core.Revit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj">
       <Project>{44356aa4-67fe-4c4f-bf7d-8404ca7bcee1}</Project>
       <Name>SAM.Units.Revit</Name>

@@ -277,7 +277,22 @@ namespace SAM.Geometry.Revit
                         result.Add(face);
             }
 
+            //List<Shell> shells = hostObject.ToSAM_Shells();
+            //if(shells != null && result != null && result.Count != 0)
+            //{
+            //    List<Face3D> face3Ds_Internal = new List<Face3D>();
 
+            //    foreach (Face3D face3D in result)
+            //    {
+            //        List<Face3D> face3Ds_Temp = face3D.InternalFace3Ds(shells);
+            //        if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+            //        {
+            //            face3Ds_Internal.AddRange(face3Ds_Temp);
+            //        }
+            //    }
+
+            //    result.AddRange(face3Ds_Internal);
+            //}
 
             return result;
 #endif

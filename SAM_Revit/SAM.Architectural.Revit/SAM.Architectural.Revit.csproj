@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert\ToRevit\Level.cs" />
+    <Compile Include="Create\MaterialLayers.cs" />
     <Compile Include="Convert\ToSAM\Opening.cs" />
     <Compile Include="Convert\ToSAM\HostBuildingElement.cs" />
     <Compile Include="Convert\ToSAM\OpeningType.cs" />

@@ -34,6 +34,14 @@ namespace SAM.Geometry.Revit
             }
         }
 
+        public List<ISAMGeometry3D> Geometries
+        {
+            get
+            {
+                return geometries?.ConvertAll(x => x?.Clone() as ISAMGeometry3D);
+            }
+        }
+
         public override bool FromJObject(JObject jObject)
         {
             if (!base.FromJObject(jObject))

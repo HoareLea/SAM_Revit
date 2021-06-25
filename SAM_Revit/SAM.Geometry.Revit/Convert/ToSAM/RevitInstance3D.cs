@@ -6,45 +6,38 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static RevitInstance ToSAM(this FamilyInstance familyInstance, ConvertSettings convertSettings)
+        public static RevitInstance3D ToSAM(this WallSweep wallSweep, ConvertSettings convertSettings)
         {
-            if (familyInstance == null || !familyInstance.IsValidObject)
+            if (wallSweep == null || !wallSweep.IsValidObject)
             {
                 return null;
             }
 
-            RevitInstance result = convertSettings?.GetObject<RevitInstance>(familyInstance.Id);
+            RevitInstance3D result = convertSettings?.GetObject<RevitInstance3D>(wallSweep.Id);
             if (result != null)
             {
                 return result;
             }
 
-            Document document = familyInstance.Document;
+            Document document = wallSweep.Document;
             if(document == null)
             {
                 return result;
             }
 
-            ElementType elementType = document.GetElement(familyInstance.GetTypeId()) as ElementType;
+            ElementType elementType = document.GetElement(wallSweep.GetTypeId()) as ElementType;
             if(elementType == null)
             {
                 return null;
             }
 
-            RevitType revitType = elementType.ToSAM(convertSettings);
-            if(revitType == null)
+            RevitType3D revitType3D = elementType.ToSAM(convertSettings) as RevitType3D;
+            if(revitType3D == null)
             {
                 return null;
             }
 
-            if(revitType is RevitType3D)
-            {
-                result = new RevitInstance3D((RevitType3D)revitType, familyInstance.ToSAM_Geometries<Spatial.ISAMGeometry3D>());
-            }
-            else if(revitType is RevitType2D)
-            {
-                result = new RevitInstance2D((RevitType2D)revitType, familyInstance.ToSAM_Geometries<Planar.ISAMGeometry2D>());
-            }
+            result = new RevitInstance3D(revitType3D, wallSweep.ToSAM_Geometries<Spatial.ISAMGeometry3D>());
 
             if (result != null)
             {

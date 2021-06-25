@@ -364,5 +364,57 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
+
+        public static List<Panel> ToSAM_Panels(this RevitInstance3D revitInstance3D)
+        {
+            if(revitInstance3D == null)
+            {
+                return null;
+            }
+
+            RevitType3D revitType3D = revitInstance3D.SAMType as RevitType3D;
+            Construction construction = revitType3D.ToSAM_Construction();
+
+            List<Face3D> face3Ds = new List<Face3D>();
+            List<ISAMGeometry3D> sAMGeometry3Ds = revitInstance3D.Geometries;
+            foreach(ISAMGeometry3D sAMGeometry3D in sAMGeometry3Ds)
+            {
+                if(sAMGeometry3D is Shell)
+                {
+                    List<Face3D> face3Ds_Temp = ((Shell)sAMGeometry3D).Face3Ds;
+                    if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    {
+                        face3Ds.AddRange(face3Ds_Temp);
+                    }
+                }
+                else if(sAMGeometry3D is Face3D)
+                {
+                    face3Ds.Add((Face3D)sAMGeometry3D);
+                }
+            }
+
+            List<Panel> result = new List<Panel>();
+            foreach(Face3D face3D in face3Ds)
+            {
+                Panel panel = Analytical.Create.Panel(construction, PanelType.Shade, face3D);
+                if(panel == null)
+                {
+                    continue;
+                }
+
+                List<Core.ParameterSet> parameterSets = revitType3D.GetParamaterSets();
+                if (parameterSets != null)
+                {
+                    foreach (Core.ParameterSet parameterSet in parameterSets)
+                    {
+                        panel.Add(parameterSet);
+                    }
+                }
+
+                result.Add(panel);
+            }
+
+            return result;
+        }
     }
 }

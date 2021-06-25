@@ -1,5 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
+using SAM.Geometry.Revit;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit
 {
@@ -71,6 +73,27 @@ namespace SAM.Analytical.Revit
             convertSettings?.Add(elementType.Id, result);
             return result;
 
+        }
+
+        public static Construction ToSAM_Construction(this RevitType3D revitType3D)
+        {
+            if(revitType3D == null)
+            {
+                return null;
+            }
+
+            Construction result = new Construction(revitType3D.Guid, revitType3D.Name);
+
+            List<Core.ParameterSet> parameterSets = revitType3D.GetParamaterSets();
+            if(parameterSets != null)
+            {
+                foreach(Core.ParameterSet parameterSet in parameterSets)
+                {
+                    result.Add(parameterSet);
+                }
+            }
+
+            return result;
         }
     }
 }

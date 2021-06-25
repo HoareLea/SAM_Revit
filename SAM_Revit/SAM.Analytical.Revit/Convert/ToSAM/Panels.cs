@@ -15,6 +15,11 @@ namespace SAM.Analytical.Revit
             if (hostObject == null || !hostObject.IsValidObject)
                 return null;
 
+            if(hostObject is WallSweep)
+            {
+                return ((WallSweep)hostObject).ToSAM_Panels(convertSettings);
+            }
+
             List<Panel> result = convertSettings?.GetObjects<Panel>(hostObject.Id);
             if (result != null)
                 return result;

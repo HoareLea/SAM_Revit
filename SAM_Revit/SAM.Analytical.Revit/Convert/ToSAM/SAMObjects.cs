@@ -10,7 +10,13 @@ namespace SAM.Analytical.Revit
         public static IEnumerable<Core.SAMObject> ToSAM(this Element element, Core.Revit.ConvertSettings convertSettings)
         {
             IEnumerable<Core.SAMObject> result = null;
-            if (element is HostObject)
+            if (element is WallSweep)
+            {
+                List<Panel> panels = ToSAM_Panels((WallSweep)element, convertSettings);
+                if (panels != null)
+                    result = panels.ConvertAll(x => x as Core.SAMObject);
+            }
+            else if (element is HostObject)
             {
                 List<Panel> panels = ToSAM((HostObject)element, convertSettings);
                 if (panels != null)
@@ -60,12 +66,6 @@ namespace SAM.Analytical.Revit
                     if (panels != null)
                         result = panels.ConvertAll(x => x as Core.SAMObject);
                 }
-            }
-            else if(element is WallSweep)
-            {
-                List<Panel> panels = ToSAM_Panels((WallSweep)element, convertSettings);
-                if (panels != null)
-                    result = panels.ConvertAll(x => x as Core.SAMObject);
             }
             return result;
         }

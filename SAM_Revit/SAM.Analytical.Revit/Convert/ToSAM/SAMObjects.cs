@@ -30,13 +30,17 @@ namespace SAM.Analytical.Revit
             }
             else if (element is FamilyInstance)
             {
+                FamilyInstance familyInstance = (FamilyInstance)element;
+
                 if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
                 {
-                    FamilyInstance familyInstance = (FamilyInstance)element;
-
                     Aperture aperture = ToSAM_Aperture(familyInstance, convertSettings);
                     if (aperture != null)
                         result = new List<Core.SAMObject>() { aperture };
+                }
+                else
+                {
+                    result = familyInstance.ToSAM_Panels(convertSettings);
                 }
             }
             else if (element is FamilySymbol)
@@ -56,6 +60,12 @@ namespace SAM.Analytical.Revit
                     if (panels != null)
                         result = panels.ConvertAll(x => x as Core.SAMObject);
                 }
+            }
+            else if(element is WallSweep)
+            {
+                List<Panel> panels = ToSAM_Panels((WallSweep)element, convertSettings);
+                if (panels != null)
+                    result = panels.ConvertAll(x => x as Core.SAMObject);
             }
             return result;
         }

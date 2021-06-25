@@ -263,106 +263,132 @@ namespace SAM.Analytical.Revit
         /// <returns>SAM Analytical Panels (Panels projected on host (Wall) plane)</returns>
         public static List<Panel> ToSAM_Panels(this WallSweep wallSweep, ConvertSettings convertSettings)
         {
-            if (wallSweep == null || !wallSweep.IsValidObject)
+            if(wallSweep == null)
+            {
                 return null;
+            }
 
             List<Panel> result = convertSettings?.GetObjects<Panel>(wallSweep.Id);
             if (result != null)
+            {
                 return result;
+            }
 
-            IEnumerable<ElementId> elementIds = wallSweep.GetHostIds();
-            if (elementIds == null || elementIds.Count() == 0)
+            RevitInstance3D revitInstance3D = Geometry.Revit.Convert.ToSAM(wallSweep, convertSettings);
+            if (revitInstance3D == null)
             {
                 return null;
             }
 
-            Document document = wallSweep.Document;
-            if(document == null)
+            result = ToSAM_Panels(revitInstance3D);
+
+            if(result != null)
             {
-                return null;
+                convertSettings?.Add(wallSweep.Id, result);
             }
-
-            HostObject hostObject = null;
-            foreach(ElementId elementId in elementIds)
-            {
-                hostObject = document.GetElement(elementId) as HostObject;
-                if(hostObject != null)
-                {
-                    break;
-                }
-            }
-
-            List<Face3D> face3Ds = hostObject?.Profiles();
-            if(face3Ds == null || face3Ds.Count == 0)
-            {
-                return null;
-            }
-
-            Geometry.Spatial.Plane plane = face3Ds[0]?.GetPlane();
-            if(plane == null)
-            {
-                return null;
-            }
-
-            List<Face3D> face3Ds_WallSweep = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(wallSweep);
-            if(face3Ds_WallSweep == null || face3Ds_WallSweep.Count == 0)
-            {
-                return null;
-            }
-
-            List<Face2D> face2Ds = new List<Face2D>();
-            foreach(Face3D face3D_WallSweep in face3Ds_WallSweep)
-            {
-                Geometry.Spatial.Plane plane_WallSweep = face3D_WallSweep?.GetPlane();
-                if (plane_WallSweep == null || plane.Perpendicular(plane_WallSweep))
-                {
-                    continue;
-                }
-
-                Face3D face3D = plane.Project(face3D_WallSweep);
-                if(face3D == null || !face3D.IsValid())
-                {
-                    continue;
-                }
-
-                Face2D face2D = plane.Convert(face3D);
-                if(face2D == null || !face2D.IsValid())
-                {
-                    continue;
-                }
-
-                face2Ds.Add(face2D);
-            }
-
-            face2Ds = face2Ds.Union();
-            if(face2Ds == null || face2Ds.Count == 0)
-            {
-                return null;
-            }
-
-            Construction construction = ToSAM_Construction((ElementType)document.GetElement(wallSweep.GetTypeId()), convertSettings);
-
-            result = new List<Panel>();
-            foreach(Face2D face2D in face2Ds)
-            {
-                Face3D face3D = plane.Convert(face2D);
-                if(face3D == null || !face3D.IsValid())
-                {
-                    continue;
-                }
-
-                Panel panel = Analytical.Create.Panel(construction, PanelType.Wall, face3D);
-                if(panel == null)
-                {
-                    continue;
-                }
-
-                result.Add(panel);
-            }
-
-            convertSettings?.Add(wallSweep.Id, result);
 
             return result;
+
+            //if (wallSweep == null || !wallSweep.IsValidObject)
+            //    return null;
+
+            //List<Panel> result = convertSettings?.GetObjects<Panel>(wallSweep.Id);
+            //if (result != null)
+            //    return result;
+
+            //IEnumerable<ElementId> elementIds = wallSweep.GetHostIds();
+            //if (elementIds == null || elementIds.Count() == 0)
+            //{
+            //    return null;
+            //}
+
+            //Document document = wallSweep.Document;
+            //if(document == null)
+            //{
+            //    return null;
+            //}
+
+            //HostObject hostObject = null;
+            //foreach(ElementId elementId in elementIds)
+            //{
+            //    hostObject = document.GetElement(elementId) as HostObject;
+            //    if(hostObject != null)
+            //    {
+            //        break;
+            //    }
+            //}
+
+            //List<Face3D> face3Ds = hostObject?.Profiles();
+            //if(face3Ds == null || face3Ds.Count == 0)
+            //{
+            //    return null;
+            //}
+
+            //Geometry.Spatial.Plane plane = face3Ds[0]?.GetPlane();
+            //if(plane == null)
+            //{
+            //    return null;
+            //}
+
+            //List<Face3D> face3Ds_WallSweep = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(wallSweep);
+            //if(face3Ds_WallSweep == null || face3Ds_WallSweep.Count == 0)
+            //{
+            //    return null;
+            //}
+
+            //List<Face2D> face2Ds = new List<Face2D>();
+            //foreach(Face3D face3D_WallSweep in face3Ds_WallSweep)
+            //{
+            //    Geometry.Spatial.Plane plane_WallSweep = face3D_WallSweep?.GetPlane();
+            //    if (plane_WallSweep == null || plane.Perpendicular(plane_WallSweep))
+            //    {
+            //        continue;
+            //    }
+
+            //    Face3D face3D = plane.Project(face3D_WallSweep);
+            //    if(face3D == null || !face3D.IsValid())
+            //    {
+            //        continue;
+            //    }
+
+            //    Face2D face2D = plane.Convert(face3D);
+            //    if(face2D == null || !face2D.IsValid())
+            //    {
+            //        continue;
+            //    }
+
+            //    face2Ds.Add(face2D);
+            //}
+
+            //face2Ds = face2Ds.Union();
+            //if(face2Ds == null || face2Ds.Count == 0)
+            //{
+            //    return null;
+            //}
+
+            //Construction construction = ToSAM_Construction((ElementType)document.GetElement(wallSweep.GetTypeId()), convertSettings);
+
+            //result = new List<Panel>();
+            //foreach(Face2D face2D in face2Ds)
+            //{
+            //    Face3D face3D = plane.Convert(face2D);
+            //    if(face3D == null || !face3D.IsValid())
+            //    {
+            //        continue;
+            //    }
+
+            //    Panel panel = Analytical.Create.Panel(construction, PanelType.Wall, face3D);
+            //    if(panel == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    result.Add(panel);
+            //}
+
+            //convertSettings?.Add(wallSweep.Id, result);
+
+            //return result;
         }
 
         public static List<Panel> ToSAM_Panels(this RevitInstance3D revitInstance3D)
@@ -412,6 +438,35 @@ namespace SAM.Analytical.Revit
                 }
 
                 result.Add(panel);
+            }
+
+            return result;
+        }
+
+        public static List<Panel> ToSAM_Panels(this FamilyInstance familyInstance, ConvertSettings convertSettings)
+        {
+            if (familyInstance == null)
+            {
+                return null;
+            }
+
+            List<Panel> result = convertSettings?.GetObjects<Panel>(familyInstance.Id);
+            if (result != null)
+            {
+                return result;
+            }
+
+            RevitInstance3D revitInstance3D = Geometry.Revit.Convert.ToSAM(familyInstance, convertSettings) as RevitInstance3D;
+            if(revitInstance3D == null)
+            {
+                return null;
+            }
+
+            result = ToSAM_Panels(revitInstance3D);
+
+            if (result != null)
+            {
+                convertSettings?.Add(familyInstance.Id, result);
             }
 
             return result;

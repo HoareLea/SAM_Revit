@@ -27,6 +27,7 @@ namespace SAM.Geometry.Revit
                     break;
 
                 case CategoryType.Annotation:
+                    result = new RevitType2D(elementType.Name);
                     break;
             }
 

@@ -6,14 +6,14 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static RevitInstance3D ToSAM(this FamilyInstance familyInstance, ConvertSettings convertSettings)
+        public static RevitInstance ToSAM(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null || !familyInstance.IsValidObject)
             {
                 return null;
             }
 
-            RevitInstance3D result = convertSettings?.GetObject<RevitInstance3D>(familyInstance.Id);
+            RevitInstance result = convertSettings?.GetObject<RevitInstance>(familyInstance.Id);
             if (result != null)
             {
                 return result;
@@ -40,6 +40,10 @@ namespace SAM.Geometry.Revit
             if(revitType is RevitType3D)
             {
                 result = new RevitInstance3D((RevitType3D)revitType, familyInstance.ToSAM_Geometries<Spatial.ISAMGeometry3D>());
+            }
+            else if(revitType is RevitType2D)
+            {
+                result = new RevitInstance2D((RevitType2D)revitType, familyInstance.ToSAM_Geometries<Planar.ISAMGeometry2D>());
             }
 
             if (result != null)

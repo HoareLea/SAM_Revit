@@ -10,6 +10,12 @@ namespace SAM.Core.Revit
 
         }
 
+        public RevitType(string name)
+            : base(name)
+        {
+
+        }
+
         public RevitType(JObject jObject)
             : base(jObject)
         {

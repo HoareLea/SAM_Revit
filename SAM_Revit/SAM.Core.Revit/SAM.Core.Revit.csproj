@@ -203,6 +203,7 @@
     <Compile Include="Classes\SAMSchema.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
+    <Compile Include="Convert\ToSAM\RevitInstance.cs" />
     <Compile Include="Convert\ToSAM\Material.cs" />
     <Compile Include="Create\RevitFilePreviewParameter.cs" />
     <Compile Include="Create\RevitFilePreview.cs" />

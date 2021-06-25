@@ -11,6 +11,12 @@ namespace SAM.Geometry.Revit
 
         }
 
+        public RevitType3D(string name)
+            : base(name)
+        {
+
+        }
+
         public RevitType3D(JObject jObject)
             : base(jObject)
         {

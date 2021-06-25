@@ -304,7 +304,7 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            List<Face3D> face3Ds_WallSweep = Geometry.Revit.Convert.ToSAM_Face3Ds(wallSweep);
+            List<Face3D> face3Ds_WallSweep = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(wallSweep);
             if(face3Ds_WallSweep == null || face3Ds_WallSweep.Count == 0)
             {
                 return null;

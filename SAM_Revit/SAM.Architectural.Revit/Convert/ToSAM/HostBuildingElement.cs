@@ -60,7 +60,7 @@ namespace SAM.Architectural.Revit
                     continue;
 
                 HostBuildingElement hostBuildingElement = Architectural.Create.HostBuildingElement(face3D, hostBuildingElementType);
-                hostBuildingElement.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
+                hostBuildingElement.UpdateParameterSets(hostObject, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
                 if (elementIds != null && elementIds.Count() > 0)
                 {

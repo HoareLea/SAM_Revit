@@ -47,7 +47,7 @@ namespace SAM.Architectural.Revit
             }
 
             result = Architectural.Create.Opening(openingType, face3D);
-            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);
 
@@ -125,7 +125,7 @@ namespace SAM.Architectural.Revit
             if (!plane.Normal.SameHalf(normal))
                 plane.FlipZ(false);
 
-            List<Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
+            List<Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(familyInstance);
             if (face3Ds == null || face3Ds.Count == 0)
                 return null;
 
@@ -150,7 +150,7 @@ namespace SAM.Architectural.Revit
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
             result = Architectural.Create.Opening(openingType, new Face3D(plane, rectangle2D));
-            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             convertSettings?.Add(familyInstance.Id, result);
 

@@ -36,25 +36,9 @@ namespace SAM.Geometry.Revit
             return result;
         }
 
-        public static List<Face3D> ToSAM_Face3Ds(this Element element)
+        public static List<Face3D> ToSAM_Face3Ds(this Solid solid)
         {
-            List<Shell> shells = ToSAM_Shells(element);
-            if (shells == null)
-            {
-                return null;
-            }
-
-            List<Face3D> result = new List<Face3D>();
-            foreach(Shell shell in shells)
-            {
-                List<Face3D> face3Ds = shell?.Face3Ds;
-                if(face3Ds != null && face3Ds.Count != 0)
-                {
-                    result.AddRange(face3Ds);
-                }
-            }
-
-            return result;
+            return solid?.ToSAM()?.Face3Ds;
         }
 
     }

@@ -136,7 +136,7 @@ namespace SAM.Analytical.Revit
             if (!plane.Normal.SameHalf(normal))
                 plane.FlipZ(false);
 
-            List<Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Face3Ds(familyInstance);
+            List<Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(familyInstance);
             if (face3Ds == null || face3Ds.Count == 0)
                 return null;
 

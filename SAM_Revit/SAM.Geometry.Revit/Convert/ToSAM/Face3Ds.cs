@@ -29,9 +29,11 @@ namespace SAM.Geometry.Revit
             if (profile == null)
                 return null;
 
+            XYZ normal = sketch.SketchPlane?.GetPlane()?.Normal;
+
             List<Face3D> result = new List<Face3D>();
             foreach (CurveArray curveArray in sketch.Profile)
-                result.Add(curveArray.ToSAM_Face3D(flip));
+                result.Add(curveArray.ToSAM_Face3D(normal, flip));
 
             return result;
         }

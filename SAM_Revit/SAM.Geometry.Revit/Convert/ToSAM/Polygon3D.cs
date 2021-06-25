@@ -112,13 +112,52 @@ namespace SAM.Geometry.Revit
             return plane.Convert(polygon2Ds[0]);
         }
 
-        public static Polygon3D ToSAM_Polygon3D(this CurveArray curveArray)
+        public static Polygon3D ToSAM_Polygon3D(this CurveArray curveArray, XYZ normal = null)
         {
             List<Point3D> point3Ds = new List<Point3D>();
             foreach (Curve curve in curveArray)
-                point3Ds.Add(curve.ToSAM().GetStart());
+            {
+                ISegmentable3D segmentable3D = curve.ToSAM(0.2) as ISegmentable3D;
+                if(segmentable3D == null)
+                {
+                    continue;
+                }
 
-            return Spatial.Create.Polygon3D(point3Ds);
+                List<Point3D> point3Ds_Temp = segmentable3D.GetPoints();
+                if(point3Ds_Temp == null || point3Ds_Temp.Count == 0)
+                {
+                    continue;
+                }
+
+                if(point3Ds_Temp.Count == 1)
+                {
+                    point3Ds.Add(point3Ds_Temp[0]);
+                    continue;
+                }
+
+                point3Ds_Temp.RemoveAt(point3Ds_Temp.Count - 1);
+
+                point3Ds_Temp.ForEach(x => point3Ds.Add(x));
+            }
+
+            if(point3Ds == null || point3Ds.Count == 0)
+            {
+                return null;
+            }
+
+            Polygon3D result = null;
+
+            if(normal != null)
+            {
+                result = Spatial.Create.Polygon3D(normal.ToSAM_Vector3D(false), point3Ds);
+            }
+
+            if(result == null)
+            {
+                result =Spatial.Create.Polygon3D(point3Ds);
+            }
+
+            return result;
         }
 
         public static Polygon3D ToSAM(this Polyloop polyloop)

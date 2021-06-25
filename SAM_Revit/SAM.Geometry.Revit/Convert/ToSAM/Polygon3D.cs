@@ -117,7 +117,7 @@ namespace SAM.Geometry.Revit
             List<Point3D> point3Ds = new List<Point3D>();
             foreach (Curve curve in curveArray)
             {
-                ISegmentable3D segmentable3D = curve.ToSAM(0.2) as ISegmentable3D;
+                ISegmentable3D segmentable3D = curve.ToSAM() as ISegmentable3D;
                 if(segmentable3D == null)
                 {
                     continue;

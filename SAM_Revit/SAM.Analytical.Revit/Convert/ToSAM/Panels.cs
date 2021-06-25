@@ -70,7 +70,7 @@ namespace SAM.Analytical.Revit
                 if (face3D == null)
                     continue;
 
-                Panel panel = Analytical.Create.Panel(construction, panelType, face3D);
+                Panel panel = Analytical.Create.Panel(construction, panelType, face3D.Reduce(0.2));
                 panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
                 if (elementIds != null && elementIds.Count() > 0)

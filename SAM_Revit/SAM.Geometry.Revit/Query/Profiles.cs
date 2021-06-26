@@ -118,7 +118,11 @@ namespace SAM.Geometry.Revit
                     }
 
                     if (result != null && result.Count > 0)
+                    {
+                        //TODO: Implement Cutting by GeneratingElements
                         return result;
+                    }
+                        
                 }
             }
 

@@ -1,6 +1,5 @@
 ﻿using SAM.Geometry.Spatial;
 using Autodesk.Revit.DB;
-using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {

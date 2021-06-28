@@ -355,7 +355,7 @@ namespace SAM.Geometry.Revit
                     }
                 }
 
-                List<Face2D> face2Ds = Profiles(segment2D, height, segment2Ds_Intersection, tolerance_Distance);
+                List<Face2D> face2Ds = Profiles_From2D(segment2D, height, segment2Ds_Intersection, tolerance_Distance);
                 if(face2Ds != null && face2Ds.Count > 0)
                 {
                     result.AddRange(face2Ds.ConvertAll(x => plane.Convert(x)));
@@ -403,7 +403,7 @@ namespace SAM.Geometry.Revit
             return result;
         }
 
-        private static List<Face2D> Profiles(this Segment2D segment2D, double height, IEnumerable<Segment2D> segment2Ds, double tolerance = Core.Tolerance.Distance)
+        private static List<Face2D> Profiles_From2D(this Segment2D segment2D, double height, IEnumerable<Segment2D> segment2Ds, double tolerance = Core.Tolerance.Distance)
         {
             if (segment2D == null)
             {

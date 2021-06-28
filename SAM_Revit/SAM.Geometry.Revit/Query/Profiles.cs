@@ -355,7 +355,7 @@ namespace SAM.Geometry.Revit
                     }
                 }
 
-                List<Face2D> face2Ds = Profiles_From2D(segment2D, height, segment2Ds_Intersection, tolerance_Distance);
+                List<Face2D> face2Ds = Profiles_From2D(segment2D, -height, segment2Ds_Intersection, tolerance_Distance);
                 if(face2Ds != null && face2Ds.Count > 0)
                 {
                     result.AddRange(face2Ds.ConvertAll(x => plane.Convert(x)));
@@ -405,17 +405,18 @@ namespace SAM.Geometry.Revit
 
         private static List<Face2D> Profiles_From2D(this Segment2D segment2D, double height, IEnumerable<Segment2D> segment2Ds, double tolerance = Core.Tolerance.Distance)
         {
-            if (segment2D == null)
+            if (segment2D == null || height < tolerance)
             {
                 return null;
             }
 
             Vector2D vector2D = new Vector2D(0, height);
             Polygon2D polygon2D = new Polygon2D(new Point2D[] { segment2D[0], segment2D[0].GetMoved(vector2D), segment2D[1].GetMoved(vector2D), segment2D[1] });
+            Face2D face2D = new Face2D(polygon2D);
 
             if (segment2Ds == null || segment2Ds.Count() == 0)
             {
-                return new List<Face2D>() { new Face2D(polygon2D) };
+                return new List<Face2D>() { face2D };
             }
 
             List<Segment2D> segment2Ds_Temp = new List<Segment2D>(segment2Ds);
@@ -426,13 +427,11 @@ namespace SAM.Geometry.Revit
 
             Vector2D vector2D_Max = new Vector2D(0, boundingBox2D.Max.Y);
             Segment2D segment2D_Max = new Segment2D(segment2D[0].GetMoved(vector2D_Max), segment2D[1].GetMoved(vector2D_Max));
-            Polygon2D polygon2D_Max = new Polygon2D(new Point2D[] { segment2D[0], segment2D_Max[0], segment2D_Max[1], segment2D[1] });
-
 
             List<Point2D> point2Ds = new List<Point2D>();
             point2Ds.AddRange(polygon2D.GetPoints());
 
-            List<Polygon2D> polygon2Ds = new List<Polygon2D>();
+            List<Face2D> face2Ds= new List<Face2D>();
             foreach (Segment2D segment2D_Temp in segment2Ds)
             {
                 Point2D point2D_1 = segment2D_Temp[0];
@@ -451,10 +450,10 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                polygon2Ds.Add(polygon2D_Temp);
+                face2Ds.Add(new Face2D(polygon2D_Temp));
             }
 
-            return polygon2D.Difference(polygon2Ds, tolerance)?.ConvertAll(x => new Face2D(x));
+            return face2D.Difference(face2Ds, tolerance);
         }
     }
 }

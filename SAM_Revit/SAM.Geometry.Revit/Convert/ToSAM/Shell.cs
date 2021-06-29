@@ -48,9 +48,19 @@ namespace SAM.Geometry.Revit
             List<Face3D> face3Ds = new List<Face3D>();
             foreach (Autodesk.Revit.DB.Face face in faceArray)
             {
-                List<Face3D> face3Ds_Temp = face.ToSAM();
+                List<Face3D> face3Ds_Temp = null;
+                if (face is PlanarFace)
+                {
+                    face3Ds_Temp = face.ToSAM();
+                }
+                else
+                {
+                    face3Ds_Temp = face.Triangulate()?.ToSAM_Face3Ds();
+                }
+
                 if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
                     face3Ds.AddRange(face3Ds_Temp);
+
             }
 
             if (face3Ds == null || face3Ds.Count == 0)

@@ -43,5 +43,16 @@ namespace SAM.Geometry.Revit
             return solid?.ToSAM()?.Face3Ds;
         }
 
+        public static List<Face3D> ToSAM_Face3Ds(this Mesh mesh)
+        {
+            List<Triangle3D> triangle3Ds = ToSAM_Triangle3Ds(mesh);
+            if(triangle3Ds == null)
+            {
+                return null;
+            }
+
+            return triangle3Ds.ConvertAll(x => new Face3D(x));
+        }
+
     }
 }

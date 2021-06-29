@@ -24,7 +24,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             FamilyInstance familyInstance = Core.Revit.Query.Element(energyAnalysisOpening) as FamilyInstance;
-            if(familyInstance == null)
+            if (familyInstance == null)
                 return new Aperture(null, polygon3D);
 
             if (Core.Revit.Query.Simplified(familyInstance))
@@ -48,7 +48,7 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
-        
+
         public static Aperture ToSAM_Aperture(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null)
@@ -95,7 +95,7 @@ namespace SAM.Analytical.Revit
                     builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
 
                     List<Face3D> face3Ds_Temp = hostObject.Profiles();
-                    if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
                     {
                         Geometry.Spatial.Plane plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
                         if (plane_Host != null)
@@ -103,7 +103,7 @@ namespace SAM.Analytical.Revit
                     }
 
                     HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
-                    if(hostObjAttributes != null)
+                    if (hostObjAttributes != null)
                         panelType_Host = hostObjAttributes.PanelType();
 
                     if (panelType_Host == PanelType.Undefined)
@@ -136,27 +136,74 @@ namespace SAM.Analytical.Revit
             if (!plane.Normal.SameHalf(normal))
                 plane.FlipZ(false);
 
-            List<Face3D> face3Ds = Geometry.Revit.Convert.ToSAM_Geometries<Face3D>(familyInstance);
-            if (face3Ds == null || face3Ds.Count == 0)
+            List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
+            if (shells == null || shells.Count == 0)
                 return null;
 
             List<Point2D> point2Ds = new List<Point2D>();
-            foreach (Face3D face3D_Temp in face3Ds)
+
+            foreach (Shell shell in shells)
             {
-                IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
-                if (closedPlanar3D is ICurvable3D)
+                List<Face3D> face3Ds = shell?.Face3Ds;
+                if (face3Ds == null || face3Ds.Count == 0)
                 {
-                    List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
-                    foreach (ICurve3D curve3D in curve3Ds)
+                    continue;
+                }
+
+                foreach (Face3D face3D_Temp in face3Ds)
+                {
+                    IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
+                    if (closedPlanar3D is ICurvable3D)
                     {
-                        ICurve3D curve3D_Temp = plane.Project(curve3D);
-                        point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+                        List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
+                        foreach (ICurve3D curve3D in curve3Ds)
+                        {
+                            ICurve3D curve3D_Temp = plane.Project(curve3D);
+                            point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+                        }
                     }
                 }
             }
 
             if (point2Ds == null || point2Ds.Count == 0)
                 return null;
+
+            Face3D face3D = null;
+            if(face3D == null)
+            {
+                List<Face3D> face3Ds_Temp = new List<Face3D>();
+                foreach (Shell shell in shells)
+                {
+                    List<Face3D> face3Ds = shell?.Face3Ds;
+                    if (face3Ds == null || face3Ds.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    foreach(Face3D face3D_Temp in face3Ds)
+                    {
+                        Face3D face3D_Project = plane.Project(face3D_Temp);
+                        if (face3D_Project == null || !face3D_Project.IsValid() || face3D_Project.GetArea() < Core.Tolerance.MacroDistance)
+                        {
+                            continue;
+                        }
+
+                        face3Ds_Temp.Add(face3D_Project);
+                    }
+                }
+
+                if (face3Ds_Temp != null && face3Ds_Temp.Count > 0)
+                {
+                    face3Ds_Temp = face3Ds_Temp.Union();
+                    face3Ds_Temp.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+                    face3D = new Face3D(face3Ds_Temp[0].GetExternalEdge3D());
+                }
+            }
+
+            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
+            {
+                face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+            }
 
             //TODO: Working on SAM Families (requested by Michal)
 
@@ -179,9 +226,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
-
-            result = new Aperture(apertureConstruction, new Face3D(plane, rectangle2D));
+            result = new Aperture(apertureConstruction, face3D);
             result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             convertSettings?.Add(familyInstance.Id, result);

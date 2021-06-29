@@ -142,6 +142,9 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_CurtainSystem(this CurtainSystem curtainSystem)
         {
+
+            List<Shell> shells = Convert.ToSAM_Geometries<Shell>(curtainSystem);
+
             CurtainGridSet curtainGridSet = curtainSystem?.CurtainGrids;
             if(curtainGridSet == null)
             {
@@ -159,7 +162,7 @@ namespace SAM.Geometry.Revit
 
                 List<Polygon3D> polygon3Ds = new List<Polygon3D>(); 
                 foreach(CurtainCell curtainCell in curtainCells)
-                {
+                {                    
                     foreach (CurveArray curveArray in curtainCell.PlanarizedCurveLoops)
                     {
                         Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D();

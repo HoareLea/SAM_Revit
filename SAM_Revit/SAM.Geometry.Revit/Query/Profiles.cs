@@ -142,8 +142,11 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_CurtainSystem(this CurtainSystem curtainSystem)
         {
-
-            List<Shell> shells = Convert.ToSAM_Geometries<Shell>(curtainSystem);
+            Document document = curtainSystem?.Document;
+            if(document == null)
+            {
+                return null;
+            }
 
             CurtainGridSet curtainGridSet = curtainSystem?.CurtainGrids;
             if(curtainGridSet == null)
@@ -154,22 +157,76 @@ namespace SAM.Geometry.Revit
             List<Face3D> result = new List<Face3D>();
             foreach (CurtainGrid curtainGrid in curtainGridSet)
             {
+                List<ElementId> elementIds_GridLine = new List<ElementId>();
+
+                ICollection<ElementId> elementIds_Temp = null;
+
+                elementIds_Temp= curtainGrid.GetUGridLineIds();
+                if (elementIds_Temp != null)
+                    elementIds_GridLine.AddRange(elementIds_Temp);
+
+                elementIds_Temp = curtainGrid.GetVGridLineIds();
+                if (elementIds_Temp != null)
+                    elementIds_GridLine.AddRange(elementIds_Temp);
+
+                List<Segment3D> segment3Ds = new List<Segment3D>();
+                foreach(ElementId elementId in elementIds_GridLine)
+                {
+                    CurtainGridLine curtainGridLine = document.GetElement(elementId) as CurtainGridLine;
+                    if(curtainGridLine == null)
+                    {
+                        continue;
+                    }
+
+                    ISegmentable3D segmentable3D = curtainGridLine.FullCurve.ToSAM() as ISegmentable3D;
+                    if(segmentable3D == null)
+                    {
+                        continue;
+                    }
+
+                    segment3Ds.AddRange(segmentable3D.GetSegments());
+                }
+
                 IEnumerable<CurtainCell> curtainCells = curtainGrid.GetCurtainCells();
                 if(curtainCells == null || curtainCells.Count() == 0)
                 {
                     continue;
                 }
 
-                List<Polygon3D> polygon3Ds = new List<Polygon3D>(); 
                 foreach(CurtainCell curtainCell in curtainCells)
-                {                    
+                {
                     foreach (CurveArray curveArray in curtainCell.PlanarizedCurveLoops)
                     {
                         Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D();
                         if (polygon3D == null && !polygon3D.IsValid())
+                        {
                             continue;
+                        }
+                            
 
-                        polygon3Ds.Add(polygon3D);
+                        Spatial.Plane plane = polygon3D.GetPlane();
+                        if(plane == null)
+                        {
+                            continue;
+                        }
+
+                        Polygon2D polygon2D = plane.Convert(polygon3D);
+                        if(polygon2D != null)
+                        {
+                            List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(plane.Project(x)));
+                            segment2Ds.RemoveAll(x => x == null || x.GetLength() < Core.Tolerance.MacroDistance);
+                            List<Polygon2D> polygon2Ds = Planar.Create.Polygon2Ds(segment2Ds);
+                            if (polygon2Ds != null)
+                            {
+                                polygon2Ds = polygon2Ds.FindAll(x => x.Inside(polygon2D));
+                                if(polygon2Ds != null && polygon2Ds.Count > 0)
+                                {
+                                    polygon2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+                                    polygon3D = plane.Convert(polygon2Ds[0]);
+                                }
+                            }
+                        }
+
                         result.Add(new Face3D(polygon3D));
                     }
                 }

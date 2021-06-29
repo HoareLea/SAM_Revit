@@ -405,7 +405,7 @@ namespace SAM.Geometry.Revit
 
         private static List<Face2D> Profiles_From2D(this Segment2D segment2D, double height, IEnumerable<Segment2D> segment2Ds, double tolerance = Core.Tolerance.Distance)
         {
-            if (segment2D == null || height < tolerance)
+            if (segment2D == null || System.Math.Abs(height) < tolerance)
             {
                 return null;
             }
@@ -426,17 +426,17 @@ namespace SAM.Geometry.Revit
             BoundingBox2D boundingBox2D = new BoundingBox2D(segment2Ds_Temp.ConvertAll(x => x.GetBoundingBox()));
 
             Vector2D vector2D_Max = new Vector2D(0, boundingBox2D.Max.Y);
-            Segment2D segment2D_Max = new Segment2D(segment2D[0].GetMoved(vector2D_Max), segment2D[1].GetMoved(vector2D_Max));
+            Segment2D segment2D_max = new Segment2D(segment2D[0].GetMoved(vector2D_Max), segment2D[1].GetMoved(vector2D_Max));
 
             List<Point2D> point2Ds = new List<Point2D>();
             point2Ds.AddRange(polygon2D.GetPoints());
 
-            List<Face2D> face2Ds= new List<Face2D>();
+            List<Face2D> result = new List<Face2D>();
             foreach (Segment2D segment2D_Temp in segment2Ds)
             {
                 Point2D point2D_1 = segment2D_Temp[0];
-                Point2D point2D_2 = segment2D_Max.Project(segment2D_Temp[0]);
-                Point2D point2D_3 = segment2D_Max.Project(segment2D_Temp[1]);
+                Point2D point2D_2 = segment2D_max.Project(segment2D_Temp[0]);
+                Point2D point2D_3 = segment2D_max.Project(segment2D_Temp[1]);
                 Point2D point2D_4 = segment2D_Temp[1];
 
                 if (point2D_1.Distance(point2D_2) < tolerance && point2D_3.Distance(point2D_4) < tolerance)
@@ -450,10 +450,19 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                face2Ds.Add(new Face2D(polygon2D_Temp));
+                Face2D face2D_Temp = new Face2D(polygon2D_Temp);
+                List<Face2D> face2Ds = face2D_Temp.Intersection(face2D);
+                if (face2Ds == null || face2Ds.Count == 0)
+                {
+                    continue;
+                }
+
+                result.AddRange(face2Ds);
             }
 
-            return face2D.Difference(face2Ds, tolerance);
+
+            //return face2D.Difference(face2Ds, tolerance);
+            return result;
         }
     }
 }

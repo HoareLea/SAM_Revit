@@ -158,44 +158,14 @@ namespace SAM.Geometry.Revit
             List<Face3D> result = new List<Face3D>();
             foreach (CurtainGrid curtainGrid in curtainGridSet)
             {
-                List<ElementId> elementIds_GridLine = new List<ElementId>();
-
-                ICollection<ElementId> elementIds_Temp = null;
-
-                elementIds_Temp= curtainGrid.GetUGridLineIds();
-                if (elementIds_Temp != null)
-                    elementIds_GridLine.AddRange(elementIds_Temp);
-
-                elementIds_Temp = curtainGrid.GetVGridLineIds();
-                if (elementIds_Temp != null)
-                    elementIds_GridLine.AddRange(elementIds_Temp);
-
-                List<Segment3D> segment3Ds = new List<Segment3D>();
-                foreach(ElementId elementId in elementIds_GridLine)
-                {
-                    CurtainGridLine curtainGridLine = document.GetElement(elementId) as CurtainGridLine;
-                    if(curtainGridLine == null)
-                    {
-                        continue;
-                    }
-
-                    ISegmentable3D segmentable3D = curtainGridLine.FullCurve.ToSAM() as ISegmentable3D;
-                    if(segmentable3D == null)
-                    {
-                        continue;
-                    }
-
-                    segment3Ds.AddRange(segmentable3D.GetSegments());
-                }
-
                 IEnumerable<CurtainCell> curtainCells = curtainGrid.GetCurtainCells();
-                if(curtainCells == null || curtainCells.Count() == 0)
+                if (curtainCells == null || curtainCells.Count() == 0)
                 {
                     continue;
                 }
 
                 List<CurveArrArray> curveArrArrays = new List<CurveArrArray>();
-                foreach(CurtainCell curtainCell in curtainCells)
+                foreach (CurtainCell curtainCell in curtainCells)
                 {
                     CurveArrArray curveArrArray = curtainCell?.PlanarizedCurveLoops;
                     if (curveArrArray == null || curveArrArray.Size == 0)
@@ -204,6 +174,56 @@ namespace SAM.Geometry.Revit
                     }
 
                     curveArrArrays.Add(curveArrArray);
+                }
+
+                List<Segment3D> segment3Ds = new List<Segment3D>();
+                List<ISegmentable3D> segmentable3Ds_U = new List<ISegmentable3D>();
+                List<ISegmentable3D> segmentable3Ds_V = new List<ISegmentable3D>();
+
+                ICollection<ElementId> elementIds = null;
+
+                elementIds = curtainGrid.GetUGridLineIds();
+                if (elementIds != null)
+                {
+                    foreach (ElementId elementId in elementIds)
+                    {
+                        CurtainGridLine curtainGridLine = document.GetElement(elementId) as CurtainGridLine;
+                        if (curtainGridLine == null)
+                        {
+                            continue;
+                        }
+
+                        ISegmentable3D segmentable3D = curtainGridLine.FullCurve.ToSAM() as ISegmentable3D;
+                        if (segmentable3D == null)
+                        {
+                            continue;
+                        }
+
+                        segmentable3Ds_U.Add(segmentable3D);
+                        segment3Ds.AddRange(segmentable3D.GetSegments());
+                    }
+                }
+
+                elementIds = curtainGrid.GetVGridLineIds();
+                if (elementIds != null)
+                {
+                    foreach (ElementId elementId in elementIds)
+                    {
+                        CurtainGridLine curtainGridLine = document.GetElement(elementId) as CurtainGridLine;
+                        if (curtainGridLine == null)
+                        {
+                            continue;
+                        }
+
+                        ISegmentable3D segmentable3D = curtainGridLine.FullCurve.ToSAM() as ISegmentable3D;
+                        if (segmentable3D == null)
+                        {
+                            continue;
+                        }
+
+                        segmentable3Ds_V.Add(segmentable3D);
+                        segment3Ds.AddRange(segmentable3D.GetSegments());
+                    }
                 }
 
                 List<List<Face3D>> face3Ds = Enumerable.Repeat<List<Face3D>>(null, curveArrArrays.Count).ToList();
@@ -243,6 +263,41 @@ namespace SAM.Geometry.Revit
                                 {
                                     polygon2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
                                     polygon3D = plane.Convert(polygon2Ds[0]);
+                                }
+                                else
+                                {
+                                    Point3D point3D = polygon3D.InternalPoint3D();
+                                    if(point3D != null)
+                                    {
+                                        ISegmentable3D segmentable3D_U = segmentable3Ds_U.Closest(point3D);
+                                        if(segmentable3Ds_U != null)
+                                        {
+                                            ISegmentable3D segmentable3D_V = segmentable3Ds_V.Closest(point3D);
+                                            if(segmentable3D_V != null)
+                                            {
+                                                List<Point3D> point3Ds = segmentable3D_U.Intersections(segmentable3D_V);
+                                                if(point3Ds != null && point3Ds.Count != 0)
+                                                {
+                                                    Point3D point3D_Intersection = point3Ds.ClosestPoint3D(point3D);
+                                                    Point3D point3D_U = (segmentable3D_U as ICurve3D)?.ClosestEnd(point3D_Intersection);
+                                                    Point3D point3D_V = (segmentable3D_V as ICurve3D)?.ClosestEnd(point3D_Intersection);
+                                                    if (point3D_Intersection != null && point3D_U != null && point3D_V != null)
+                                                    {
+                                                        point3D = point3D_V.GetMoved(new Vector3D(point3D_Intersection, point3D_U)) as Point3D;
+
+                                                        polygon3D = new Polygon3D(plane, new List<Point2D>() { 
+                                                            plane.Convert(plane.Project(point3D_Intersection)),
+                                                            plane.Convert(plane.Project(point3D_V)),
+                                                            plane.Convert(plane.Project(point3D)),
+                                                            plane.Convert(plane.Project(point3D_U))
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+                                    }
                                 }
                             }
                         }

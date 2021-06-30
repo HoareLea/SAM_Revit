@@ -194,15 +194,28 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                List<List<Face3D>> face3Ds = Enumerable.Repeat(new List<Face3D>(), curtainCells.Count()).ToList();
-                Parallel.For(0, curtainCells.Count(), (int i) =>
+                List<CurveArrArray> curveArrArrays = new List<CurveArrArray>();
+                foreach(CurtainCell curtainCell in curtainCells)
                 {
-                    CurveArrArray curveArrArray = curtainCells.ElementAt(i)?.PlanarizedCurveLoops;
+                    CurveArrArray curveArrArray = curtainCell?.PlanarizedCurveLoops;
                     if (curveArrArray == null || curveArrArray.Size == 0)
+                    {
+                        continue;
+                    }
+
+                    curveArrArrays.Add(curveArrArray);
+                }
+
+                List<List<Face3D>> face3Ds = Enumerable.Repeat<List<Face3D>>(null, curveArrArrays.Count).ToList();
+                Parallel.For(0, curveArrArrays.Count, (int i) =>
+                {
+                    CurveArrArray curveArrArray = curveArrArrays[i];
+                    if(curveArrArray == null || curveArrArray.Size == 0)
                     {
                         return;
                     }
 
+                    face3Ds[i] = new List<Face3D>();
                     foreach (CurveArray curveArray in curveArrArray)
                     {
                         Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D();

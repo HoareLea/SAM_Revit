@@ -5,6 +5,7 @@ using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SAM.Geometry.Revit
 {
@@ -193,25 +194,31 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                foreach(CurtainCell curtainCell in curtainCells)
+                List<List<Face3D>> face3Ds = Enumerable.Repeat(new List<Face3D>(), curtainCells.Count()).ToList();
+                Parallel.For(0, curtainCells.Count(), (int i) =>
                 {
-                    foreach (CurveArray curveArray in curtainCell.PlanarizedCurveLoops)
+                    CurveArrArray curveArrArray = curtainCells.ElementAt(i)?.PlanarizedCurveLoops;
+                    if (curveArrArray == null || curveArrArray.Size == 0)
+                    {
+                        return;
+                    }
+
+                    foreach (CurveArray curveArray in curveArrArray)
                     {
                         Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D();
                         if (polygon3D == null && !polygon3D.IsValid())
                         {
                             continue;
                         }
-                            
 
                         Spatial.Plane plane = polygon3D.GetPlane();
-                        if(plane == null)
+                        if (plane == null)
                         {
                             continue;
                         }
 
                         Polygon2D polygon2D = plane.Convert(polygon3D);
-                        if(polygon2D != null)
+                        if (polygon2D != null)
                         {
                             List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(plane.Project(x)));
                             segment2Ds.RemoveAll(x => x == null || x.GetLength() < Core.Tolerance.MacroDistance);
@@ -219,7 +226,7 @@ namespace SAM.Geometry.Revit
                             if (polygon2Ds != null)
                             {
                                 polygon2Ds = polygon2Ds.FindAll(x => x.Inside(polygon2D));
-                                if(polygon2Ds != null && polygon2Ds.Count > 0)
+                                if (polygon2Ds != null && polygon2Ds.Count > 0)
                                 {
                                     polygon2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
                                     polygon3D = plane.Convert(polygon2Ds[0]);
@@ -227,7 +234,15 @@ namespace SAM.Geometry.Revit
                             }
                         }
 
-                        result.Add(new Face3D(polygon3D));
+                        face3Ds[i].Add(new Face3D(polygon3D));
+                    }
+                });
+
+                foreach(List<Face3D> face3Ds_Temp in face3Ds)
+                {
+                    if(face3Ds_Temp != null && face3Ds_Temp.Count > 0)
+                    {
+                        result.AddRange(face3Ds_Temp);
                     }
                 }
             }

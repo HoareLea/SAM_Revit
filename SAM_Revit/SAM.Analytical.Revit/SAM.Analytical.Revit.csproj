@@ -144,6 +144,8 @@
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
     <Compile Include="Modify\DuplicateByType.cs" />
+    <Compile Include="Query\Polygon3Ds.cs" />
+    <Compile Include="Query\CurtainCell.cs" />
     <Compile Include="Query\Transform.cs" />
     <Compile Include="Query\BuiltInCategories.cs" />
     <Compile Include="Query\DefaultAirConstructionLibraryPath.cs" />

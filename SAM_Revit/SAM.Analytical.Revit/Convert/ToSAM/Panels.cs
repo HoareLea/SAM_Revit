@@ -65,6 +65,28 @@ namespace SAM.Analytical.Revit
                 }
             }
 
+            List<Aperture> apertures = new List<Aperture>();
+            if (elementIds != null && elementIds.Count() > 0)
+            {
+                foreach (ElementId elementId in elementIds)
+                {
+                    FamilyInstance familyInstance = document.GetElement(elementId) as FamilyInstance;
+                    if (familyInstance == null)
+                    {
+                        continue;
+                    }
+                    
+                    Aperture aperture = ToSAM_Aperture(familyInstance, convertSettings);
+                    if(aperture == null)
+                    {
+                        continue;
+                    }
+
+                    apertures.Add(aperture);
+                }
+            }
+
+
             foreach (Face3D face3D in face3Ds)
             {
                 if (face3D == null)
@@ -73,20 +95,9 @@ namespace SAM.Analytical.Revit
                 Panel panel = Analytical.Create.Panel(construction, panelType, face3D.Reduce(0.2));
                 panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
-                if (elementIds != null && elementIds.Count() > 0)
+                foreach(Aperture aperture in apertures)
                 {
-                    foreach (ElementId elementId in elementIds)
-                    {
-                        Element element = document.GetElement(elementId);
-                        if (element == null)
-                            continue;
-
-                        if (!(element is FamilyInstance))
-                            continue;
-
-                        Aperture aperture = ToSAM_Aperture((FamilyInstance)element, convertSettings);
-                        panel.AddAperture(aperture);
-                    }
+                    panel.AddAperture(aperture);
                 }
 
                 result.Add(panel);

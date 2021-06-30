@@ -94,13 +94,35 @@ namespace SAM.Analytical.Revit
                 {
                     builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
 
-                    List<Face3D> face3Ds_Temp = hostObject.Profiles();
-                    if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    Geometry.Spatial.Plane plane_Host = null;
+                    if (hostObject is CurtainSystem && familyInstance is Autodesk.Revit.DB.Panel)
                     {
-                        Geometry.Spatial.Plane plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
-                        if (plane_Host != null)
-                            point3D_Location = plane_Host.Project(point3D_Location);
+                        Autodesk.Revit.DB.Panel panel = (Autodesk.Revit.DB.Panel)familyInstance;
+                        ElementId uGridLineElementId = null;
+                        ElementId vGridLineElementId = null;
+
+                        panel.GetRefGridLines(ref uGridLineElementId, ref vGridLineElementId);
+
+                        CurtainSystem curtainSystem = (CurtainSystem)hostObject;
+
+                        List<Polygon3D> polygon3Ds = curtainSystem.CurtainCell(uGridLineElementId, vGridLineElementId)?.Polygon3Ds();
+                        if(polygon3Ds != null && polygon3Ds.Count != 0)
+                        {
+                            polygon3Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+                            plane_Host = polygon3Ds[0].GetPlane();
+                        }
                     }
+                    else
+                    {
+                        List<Face3D> face3Ds_Temp = hostObject.Profiles();
+                        if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                        {
+                            plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
+                        }
+                    }
+
+                    if (plane_Host != null)
+                        point3D_Location = plane_Host.Project(point3D_Location);
 
                     HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
                     if (hostObjAttributes != null)

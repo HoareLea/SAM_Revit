@@ -226,6 +226,7 @@
     <Compile Include="Query\Profile.cs" />
     <Compile Include="Query\Segmentable3D.cs" />
     <Compile Include="Query\Segment3Ds.cs" />
+    <Compile Include="Query\ExtremeSegmentable3Ds.cs" />
     <Compile Include="Query\Transform.cs" />
     <Compile Include="Query\TopProfiles.cs" />
     <Compile Include="Query\Profiles.cs" />

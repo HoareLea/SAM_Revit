@@ -226,6 +226,35 @@ namespace SAM.Geometry.Revit
                     }
                 }
 
+                List<ISegmentable3D> segmentable3Ds = null;
+
+                segmentable3Ds = ExtremeSegmentable3Ds(segmentable3Ds_U, segmentable3Ds_V);
+                if(segmentable3Ds != null && segmentable3Ds.Count > 0)
+                {
+                    foreach(ISegmentable3D segmentable3D in segmentable3Ds)
+                    {
+                        List<Segment3D> segment3Ds_Temp = segmentable3D?.GetSegments();
+                        if(segment3Ds_Temp != null && segment3Ds_Temp.Count != 0)
+                        {
+                            segment3Ds.AddRange(segment3Ds_Temp);
+                        }
+                    }
+                }
+
+                segmentable3Ds = ExtremeSegmentable3Ds(segmentable3Ds_V, segmentable3Ds_U);
+                if (segmentable3Ds != null && segmentable3Ds.Count > 0)
+                {
+                    foreach (ISegmentable3D segmentable3D in segmentable3Ds)
+                    {
+                        List<Segment3D> segment3Ds_Temp = segmentable3D?.GetSegments();
+                        if (segment3Ds_Temp != null && segment3Ds_Temp.Count != 0)
+                        {
+                            segment3Ds.AddRange(segment3Ds_Temp);
+                        }
+                    }
+                }
+
+
                 List<List<Face3D>> face3Ds = Enumerable.Repeat<List<Face3D>>(null, curveArrArrays.Count).ToList();
                 Parallel.For(0, curveArrArrays.Count, (int i) =>
                 {
@@ -255,6 +284,8 @@ namespace SAM.Geometry.Revit
                         {
                             List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(plane.Project(x)));
                             segment2Ds.RemoveAll(x => x == null || x.GetLength() < Core.Tolerance.MacroDistance);
+                            segment2Ds = segment2Ds.Split();
+
                             List<Polygon2D> polygon2Ds = Planar.Create.Polygon2Ds(segment2Ds);
                             if (polygon2Ds != null)
                             {
@@ -266,38 +297,38 @@ namespace SAM.Geometry.Revit
                                 }
                                 else
                                 {
-                                    Point3D point3D = polygon3D.InternalPoint3D();
-                                    if(point3D != null)
-                                    {
-                                        ISegmentable3D segmentable3D_U = segmentable3Ds_U.Closest(point3D);
-                                        if(segmentable3Ds_U != null)
-                                        {
-                                            ISegmentable3D segmentable3D_V = segmentable3Ds_V.Closest(point3D);
-                                            if(segmentable3D_V != null)
-                                            {
-                                                List<Point3D> point3Ds = segmentable3D_U.Intersections(segmentable3D_V);
-                                                if(point3Ds != null && point3Ds.Count != 0)
-                                                {
-                                                    Point3D point3D_Intersection = point3Ds.ClosestPoint3D(point3D);
-                                                    Point3D point3D_U = (segmentable3D_U as ICurve3D)?.ClosestEnd(point3D_Intersection);
-                                                    Point3D point3D_V = (segmentable3D_V as ICurve3D)?.ClosestEnd(point3D_Intersection);
-                                                    if (point3D_Intersection != null && point3D_U != null && point3D_V != null)
-                                                    {
-                                                        point3D = point3D_V.GetMoved(new Vector3D(point3D_Intersection, point3D_U)) as Point3D;
+                                    //Point3D point3D = polygon3D.InternalPoint3D();
+                                    //if(point3D != null)
+                                    //{
+                                    //    ISegmentable3D segmentable3D_U = segmentable3Ds_U.Closest(point3D);
+                                    //    if(segmentable3Ds_U != null)
+                                    //    {
+                                    //        ISegmentable3D segmentable3D_V = segmentable3Ds_V.Closest(point3D);
+                                    //        if(segmentable3D_V != null)
+                                    //        {
+                                    //            List<Point3D> point3Ds = segmentable3D_U.Intersections(segmentable3D_V);
+                                    //            if(point3Ds != null && point3Ds.Count != 0)
+                                    //            {
+                                    //                Point3D point3D_Intersection = point3Ds.ClosestPoint3D(point3D);
+                                    //                Point3D point3D_U = (segmentable3D_U as ICurve3D)?.ClosestEnd(point3D_Intersection);
+                                    //                Point3D point3D_V = (segmentable3D_V as ICurve3D)?.ClosestEnd(point3D_Intersection);
+                                    //                if (point3D_Intersection != null && point3D_U != null && point3D_V != null)
+                                    //                {
+                                    //                    point3D = point3D_V.GetMoved(new Vector3D(point3D_Intersection, point3D_U)) as Point3D;
 
-                                                        polygon3D = new Polygon3D(plane, new List<Point2D>() { 
-                                                            plane.Convert(plane.Project(point3D_Intersection)),
-                                                            plane.Convert(plane.Project(point3D_V)),
-                                                            plane.Convert(plane.Project(point3D)),
-                                                            plane.Convert(plane.Project(point3D_U))
-                                                        });
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    //                    polygon3D = new Polygon3D(plane, new List<Point2D>() { 
+                                    //                        plane.Convert(plane.Project(point3D_Intersection)),
+                                    //                        plane.Convert(plane.Project(point3D_V)),
+                                    //                        plane.Convert(plane.Project(point3D)),
+                                    //                        plane.Convert(plane.Project(point3D_U))
+                                    //                    });
+                                    //                }
+                                    //            }
+                                    //        }
+                                    //    }
 
 
-                                    }
+                                    //}
                                 }
                             }
                         }

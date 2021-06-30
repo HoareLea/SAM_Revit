@@ -151,7 +151,7 @@ namespace SAM.Analytical.Revit
                     if (closedPlanar3D == null)
                         continue;
 
-                    PlanarIntersectionResult planarIntersectionResult = plane_Cut.Intersection(closedPlanar3D);
+                    PlanarIntersectionResult planarIntersectionResult = plane_Cut.PlanarIntersectionResult(closedPlanar3D);
                     if (planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
                     {
                         continue;

@@ -1,7 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using SAM.Core.Revit;
 
-namespace SAM.Analytical.Grasshopper.Revit
+namespace SAM.Core.Grasshopper.Revit
 {
     public static partial class Modify
     {

@@ -152,6 +152,7 @@
     <Compile Include="Classes\GooConvertSettings.cs" />
     <Compile Include="Classes\SAMReconstructElementComponent.cs" />
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
+    <Compile Include="Component\RevitSAMCoreDesignOption.cs" />
     <Compile Include="Component\SAMCoreIsPlaced.cs" />
     <Compile Include="Component\RevitCopyRooms.cs" />
     <Compile Include="Component\SAMCoreCreateSheets.cs" />

@@ -127,6 +127,7 @@ namespace SAM.Core.Revit
 
             UpdateParameterSets(sAMObject, element.GetType(), parameters, typeMap, includeGenericParameters);
 
+            sAMObject.SetValue(ElementParameter.Reference, new Reference(element).ConvertToStableRepresentation(element.Document));
             sAMObject.SetValue(ElementParameter.ElementId, element.Id.IntegerValue);
             sAMObject.SetValue(ElementParameter.UniqueId, element.UniqueId);
             sAMObject.SetValue(ElementParameter.CategoryName, element.Category?.Name);

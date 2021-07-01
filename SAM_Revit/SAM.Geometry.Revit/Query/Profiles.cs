@@ -295,41 +295,6 @@ namespace SAM.Geometry.Revit
                                     polygon2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
                                     polygon3D = plane.Convert(polygon2Ds[0]);
                                 }
-                                else
-                                {
-                                    //Point3D point3D = polygon3D.InternalPoint3D();
-                                    //if(point3D != null)
-                                    //{
-                                    //    ISegmentable3D segmentable3D_U = segmentable3Ds_U.Closest(point3D);
-                                    //    if(segmentable3Ds_U != null)
-                                    //    {
-                                    //        ISegmentable3D segmentable3D_V = segmentable3Ds_V.Closest(point3D);
-                                    //        if(segmentable3D_V != null)
-                                    //        {
-                                    //            List<Point3D> point3Ds = segmentable3D_U.Intersections(segmentable3D_V);
-                                    //            if(point3Ds != null && point3Ds.Count != 0)
-                                    //            {
-                                    //                Point3D point3D_Intersection = point3Ds.ClosestPoint3D(point3D);
-                                    //                Point3D point3D_U = (segmentable3D_U as ICurve3D)?.ClosestEnd(point3D_Intersection);
-                                    //                Point3D point3D_V = (segmentable3D_V as ICurve3D)?.ClosestEnd(point3D_Intersection);
-                                    //                if (point3D_Intersection != null && point3D_U != null && point3D_V != null)
-                                    //                {
-                                    //                    point3D = point3D_V.GetMoved(new Vector3D(point3D_Intersection, point3D_U)) as Point3D;
-
-                                    //                    polygon3D = new Polygon3D(plane, new List<Point2D>() { 
-                                    //                        plane.Convert(plane.Project(point3D_Intersection)),
-                                    //                        plane.Convert(plane.Project(point3D_V)),
-                                    //                        plane.Convert(plane.Project(point3D)),
-                                    //                        plane.Convert(plane.Project(point3D_U))
-                                    //                    });
-                                    //                }
-                                    //            }
-                                    //        }
-                                    //    }
-
-
-                                    //}
-                                }
                             }
                         }
 
@@ -351,8 +316,11 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_FromSketch(this HostObject hostObject, bool flip = false)
         {
+
 #if Revit2017
+
             return null;
+
 #else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
@@ -393,23 +361,6 @@ namespace SAM.Geometry.Revit
                     if (face != null)
                         result.Add(face);
             }
-
-            //List<Shell> shells = hostObject.ToSAM_Shells();
-            //if(shells != null && result != null && result.Count != 0)
-            //{
-            //    List<Face3D> face3Ds_Internal = new List<Face3D>();
-
-            //    foreach (Face3D face3D in result)
-            //    {
-            //        List<Face3D> face3Ds_Temp = face3D.InternalFace3Ds(shells);
-            //        if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
-            //        {
-            //            face3Ds_Internal.AddRange(face3Ds_Temp);
-            //        }
-            //    }
-
-            //    result.AddRange(face3Ds_Internal);
-            //}
 
             return result;
 #endif
@@ -634,8 +585,6 @@ namespace SAM.Geometry.Revit
                 result.AddRange(face2Ds);
             }
 
-
-            //return face2D.Difference(face2Ds, tolerance);
             return result;
         }
     }

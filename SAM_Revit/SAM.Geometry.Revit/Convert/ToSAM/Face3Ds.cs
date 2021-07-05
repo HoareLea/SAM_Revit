@@ -8,7 +8,7 @@ namespace SAM.Geometry.Revit
     {
         public static List<Face3D> ToSAM(this Autodesk.Revit.DB.Face face)
         {
-            return Spatial.Create.Face3Ds(face.ToSAM_Polygon3Ds(), false);
+            return Spatial.Create.Face3Ds(face.ToSAM_Polygon3Ds(), EdgeOrientationMethod.Undefined);
         }
 
         public static List<Face3D> ToSAM_Face3Ds(this Sketch sketch, bool flip = false)

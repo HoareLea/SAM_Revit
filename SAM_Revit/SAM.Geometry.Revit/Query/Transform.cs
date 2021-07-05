@@ -152,7 +152,7 @@ namespace SAM.Geometry.Revit
                 }
             }
 
-            return Face3D.Create(plane, externalEdge2D, internalEdges2D, false);
+            return Face3D.Create(plane, externalEdge2D, internalEdges2D, EdgeOrientationMethod.Undefined);
         }
 
         public static IClosedPlanar3D Transform(this Transform transform, IClosedPlanar3D closedPlanar3D, bool convertUnits = true)

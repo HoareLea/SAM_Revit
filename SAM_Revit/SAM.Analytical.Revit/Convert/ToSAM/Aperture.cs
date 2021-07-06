@@ -158,79 +158,119 @@ namespace SAM.Analytical.Revit
             if (!plane.Normal.SameHalf(normal))
                 plane.FlipZ(false);
 
+            List<Point2D> point2Ds = null;
+            Face3D face3D = null;
+
             List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
             if(segmentable3Ds != null)
             {
-
-            }
-
-            List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
-            if (shells == null || shells.Count == 0)
-                return null;
-
-            List<Point2D> point2Ds = new List<Point2D>();
-
-            foreach (Shell shell in shells)
-            {
-                List<Face3D> face3Ds = shell?.Face3Ds;
-                if (face3Ds == null || face3Ds.Count == 0)
+                point2Ds = new List<Point2D>();
+                List<ISegmentable2D> segmentable2Ds = new List<ISegmentable2D>();
+                foreach (ISegmentable3D segmentable3D in segmentable3Ds)
                 {
-                    continue;
-                }
-
-                foreach (Face3D face3D_Temp in face3Ds)
-                {
-                    IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
-                    if (closedPlanar3D is ICurvable3D)
-                    {
-                        List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
-                        foreach (ICurve3D curve3D in curve3Ds)
-                        {
-                            ICurve3D curve3D_Temp = plane.Project(curve3D);
-                            point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
-                        }
-                    }
-                }
-            }
-
-            if (point2Ds == null || point2Ds.Count == 0)
-                return null;
-
-            Face3D face3D = null;
-            if(face3D == null)
-            {
-                List<Face3D> face3Ds_Temp = new List<Face3D>();
-                foreach (Shell shell in shells)
-                {
-                    List<Face3D> face3Ds = shell?.Face3Ds;
-                    if (face3Ds == null || face3Ds.Count == 0)
+                    ICurve3D curve3D = plane.Project(segmentable3D as ICurve3D);
+                    if(curve3D == null)
                     {
                         continue;
                     }
-
-                    foreach(Face3D face3D_Temp in face3Ds)
+                    
+                    ISegmentable2D segmentable2D = plane.Convert(curve3D) as ISegmentable2D;
+                    if(segmentable2D == null)
                     {
-                        Face3D face3D_Project = plane.Project(face3D_Temp);
-                        if (face3D_Project == null || !face3D_Project.IsValid() || face3D_Project.GetArea() < Core.Tolerance.MacroDistance)
-                        {
-                            continue;
-                        }
-
-                        face3Ds_Temp.Add(face3D_Project);
+                        continue;
                     }
+                    
+                    
+                    List<Point2D> point2Ds_Temp = segmentable2D?.GetPoints();
+                    if (point2Ds_Temp != null && point2Ds_Temp.Count > 0)
+                    {
+                        point2Ds_Temp.ForEach(x => point2Ds.Add(x));
+                    }
+
+                    segmentable2Ds.Add(segmentable2D);
                 }
 
-                if (face3Ds_Temp != null && face3Ds_Temp.Count > 0)
+                List<Face2D> face2Ds = segmentable2Ds.Face2Ds()?.Union();
+                if(face2Ds != null && face2Ds.Count > 0)
                 {
-                    face3Ds_Temp = face3Ds_Temp.Union();
-                    face3Ds_Temp.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
-                    face3D = new Face3D(face3Ds_Temp[0].GetExternalEdge3D());
+                    face2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+
+                    face3D = plane.Convert(face2Ds[0]);
                 }
             }
 
-            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
+            //List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
+            //if (shells == null || shells.Count == 0)
+            //    return null;
+
+            //List<Point2D> point2Ds = new List<Point2D>();
+
+            //foreach (Shell shell in shells)
+            //{
+            //    List<Face3D> face3Ds = shell?.Face3Ds;
+            //    if (face3Ds == null || face3Ds.Count == 0)
+            //    {
+            //        continue;
+            //    }
+
+            //    foreach (Face3D face3D_Temp in face3Ds)
+            //    {
+            //        IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
+            //        if (closedPlanar3D is ICurvable3D)
+            //        {
+            //            List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
+            //            foreach (ICurve3D curve3D in curve3Ds)
+            //            {
+            //                ICurve3D curve3D_Temp = plane.Project(curve3D);
+            //                point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+            //            }
+            //        }
+            //    }
+            //}
+
+            //if (point2Ds == null || point2Ds.Count == 0)
+            //    return null;
+
+            //Face3D face3D = null;
+            //if(face3D == null)
+            //{
+            //    List<Face3D> face3Ds_Temp = new List<Face3D>();
+            //    foreach (Shell shell in shells)
+            //    {
+            //        List<Face3D> face3Ds = shell?.Face3Ds;
+            //        if (face3Ds == null || face3Ds.Count == 0)
+            //        {
+            //            continue;
+            //        }
+
+            //        foreach(Face3D face3D_Temp in face3Ds)
+            //        {
+            //            Face3D face3D_Project = plane.Project(face3D_Temp);
+            //            if (face3D_Project == null || !face3D_Project.IsValid() || face3D_Project.GetArea() < Core.Tolerance.MacroDistance)
+            //            {
+            //                continue;
+            //            }
+
+            //            face3Ds_Temp.Add(face3D_Project);
+            //        }
+            //    }
+
+            //    if (face3Ds_Temp != null && face3Ds_Temp.Count > 0)
+            //    {
+            //        face3Ds_Temp = face3Ds_Temp.Union();
+            //        face3Ds_Temp.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+            //        face3D = new Face3D(face3Ds_Temp[0].GetExternalEdge3D());
+            //    }
+            //}
+
+            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance )
             {
-                face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+                if(point2Ds != null && point2Ds.Count > 2)
+                {
+                    face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+                }
+
+                
             }
 
             //TODO: Working on SAM Families (requested by Michal)

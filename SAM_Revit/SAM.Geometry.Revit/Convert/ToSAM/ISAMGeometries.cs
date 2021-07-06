@@ -65,6 +65,17 @@ namespace SAM.Geometry.Revit
                         }
                     }
                 }
+                else if(geometryObject is Curve)
+                {
+                    if (typeof(T).IsAssignableFrom(typeof(ICurve3D)))
+                    {
+                        ICurve3D curve3D = ((Curve)geometryObject).ToSAM();
+                        if (typeof(T).IsAssignableFrom(typeof(ISegmentable3D)) && curve3D is ISegmentable3D)
+                        {
+                            result.Add((T)curve3D);
+                        }
+                    }
+                }
 
             }
             return result;

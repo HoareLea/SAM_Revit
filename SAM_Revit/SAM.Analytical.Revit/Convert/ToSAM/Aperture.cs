@@ -158,6 +158,12 @@ namespace SAM.Analytical.Revit
             if (!plane.Normal.SameHalf(normal))
                 plane.FlipZ(false);
 
+            List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance);
+            if(segmentable3Ds != null)
+            {
+
+            }
+
             List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
             if (shells == null || shells.Count == 0)
                 return null;

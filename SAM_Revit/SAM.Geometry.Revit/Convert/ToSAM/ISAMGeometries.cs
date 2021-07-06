@@ -6,7 +6,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static List<T> ToSAM_Geometries<T>(this Element element) where T: ISAMGeometry
+        public static List<T> ToSAM_Geometries<T>(this Element element, bool includeNonVisibleObjects = false) where T: ISAMGeometry
         {
             Transform transform = null;
             if (element is FamilyInstance)
@@ -15,6 +15,7 @@ namespace SAM.Geometry.Revit
             Options options = new Options();
             options.ComputeReferences = false;
             options.DetailLevel = ViewDetailLevel.Fine;
+            options.IncludeNonVisibleObjects = includeNonVisibleObjects;
 
             return ToSAM<T>(element.get_Geometry(options), transform);
         }
@@ -65,14 +66,14 @@ namespace SAM.Geometry.Revit
                         }
                     }
                 }
-                else if(geometryObject is Curve)
+                else if(geometryObject is Line)
                 {
-                    if (typeof(T).IsAssignableFrom(typeof(ICurve3D)))
+                    if (typeof(T).IsAssignableFrom(typeof(ISegmentable3D)))
                     {
-                        ICurve3D curve3D = ((Curve)geometryObject).ToSAM();
-                        if (typeof(T).IsAssignableFrom(typeof(ISegmentable3D)) && curve3D is ISegmentable3D)
+                        Segment3D segment3D = ((Line)geometryObject).ToSAM();
+                        if(segment3D != null)
                         {
-                            result.Add((T)curve3D);
+                            result.Add((T)(ISAMGeometry)segment3D);
                         }
                     }
                 }

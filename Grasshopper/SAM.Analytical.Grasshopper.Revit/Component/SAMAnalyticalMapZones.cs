@@ -1,15 +1,9 @@
-﻿using Autodesk.Revit.DB;
-using Grasshopper;
-using Grasshopper.Kernel;
-using Grasshopper.Kernel.Data;
+﻿using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
 using SAM.Core.Grasshopper;
-using SAM.Core.Revit;
-using SAM.Geometry.Revit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {

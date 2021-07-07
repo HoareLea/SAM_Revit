@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-
 using SAM.Geometry.Planar;
 
 namespace SAM.Geometry.Revit

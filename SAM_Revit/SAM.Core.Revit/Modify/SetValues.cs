@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using SAM.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

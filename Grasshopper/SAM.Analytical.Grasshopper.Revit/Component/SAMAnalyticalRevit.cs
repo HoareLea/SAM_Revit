@@ -2,7 +2,6 @@
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core;
-using SAM.Core.Grasshopper;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;

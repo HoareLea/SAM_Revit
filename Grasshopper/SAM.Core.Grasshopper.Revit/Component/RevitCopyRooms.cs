@@ -1,7 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Core.Grasshopper.Revit.Properties;
-using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

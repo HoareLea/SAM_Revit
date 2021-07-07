@@ -1,8 +1,4 @@
-﻿using Autodesk.Revit.DB;
-using SAM.Core;
-using SAM.Geometry.Planar;
-using SAM.Geometry.Spatial;
-using System;
+﻿using SAM.Core;
 using System.Collections.Generic;
 
 namespace SAM.Analytical.Revit

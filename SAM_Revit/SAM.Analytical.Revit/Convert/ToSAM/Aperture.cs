@@ -201,68 +201,68 @@ namespace SAM.Analytical.Revit
             }
 
             //Method 2 of extracting Geometry
-            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
-            {
-                List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
-                if (shells == null || shells.Count == 0)
-                    return null;
+            //if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
+            //{
+            //    List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
+            //    if (shells == null || shells.Count == 0)
+            //        return null;
 
-                point2Ds = new List<Point2D>();
+            //    point2Ds = new List<Point2D>();
 
-                foreach (Shell shell in shells)
-                {
-                    List<Face3D> face3Ds = shell?.Face3Ds;
-                    if (face3Ds == null || face3Ds.Count == 0)
-                    {
-                        continue;
-                    }
+            //    foreach (Shell shell in shells)
+            //    {
+            //        List<Face3D> face3Ds = shell?.Face3Ds;
+            //        if (face3Ds == null || face3Ds.Count == 0)
+            //        {
+            //            continue;
+            //        }
 
-                    foreach (Face3D face3D_Temp in face3Ds)
-                    {
-                        IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
-                        if (closedPlanar3D is ICurvable3D)
-                        {
-                            List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
-                            foreach (ICurve3D curve3D in curve3Ds)
-                            {
-                                ICurve3D curve3D_Temp = plane.Project(curve3D);
-                                point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
-                            }
-                        }
-                    }
-                }
+            //        foreach (Face3D face3D_Temp in face3Ds)
+            //        {
+            //            IClosedPlanar3D closedPlanar3D = face3D_Temp.GetExternalEdge3D();
+            //            if (closedPlanar3D is ICurvable3D)
+            //            {
+            //                List<ICurve3D> curve3Ds = ((ICurvable3D)closedPlanar3D).GetCurves();
+            //                foreach (ICurve3D curve3D in curve3Ds)
+            //                {
+            //                    ICurve3D curve3D_Temp = plane.Project(curve3D);
+            //                    point2Ds.Add(plane.Convert(curve3D_Temp.GetStart()));
+            //                }
+            //            }
+            //        }
+            //    }
 
-                if (point2Ds == null || point2Ds.Count == 0)
-                    return null;
+            //    if (point2Ds == null || point2Ds.Count == 0)
+            //        return null;
 
-                List<Face3D> face3Ds_Temp = new List<Face3D>();
-                foreach (Shell shell in shells)
-                {
-                    List<Face3D> face3Ds = shell?.Face3Ds;
-                    if (face3Ds == null || face3Ds.Count == 0)
-                    {
-                        continue;
-                    }
+            //    List<Face3D> face3Ds_Temp = new List<Face3D>();
+            //    foreach (Shell shell in shells)
+            //    {
+            //        List<Face3D> face3Ds = shell?.Face3Ds;
+            //        if (face3Ds == null || face3Ds.Count == 0)
+            //        {
+            //            continue;
+            //        }
 
-                    foreach (Face3D face3D_Temp in face3Ds)
-                    {
-                        Face3D face3D_Project = plane.Project(face3D_Temp);
-                        if (face3D_Project == null || !face3D_Project.IsValid() || face3D_Project.GetArea() < Core.Tolerance.MacroDistance)
-                        {
-                            continue;
-                        }
+            //        foreach (Face3D face3D_Temp in face3Ds)
+            //        {
+            //            Face3D face3D_Project = plane.Project(face3D_Temp);
+            //            if (face3D_Project == null || !face3D_Project.IsValid() || face3D_Project.GetArea() < Core.Tolerance.MacroDistance)
+            //            {
+            //                continue;
+            //            }
 
-                        face3Ds_Temp.Add(face3D_Project);
-                    }
-                }
+            //            face3Ds_Temp.Add(face3D_Project);
+            //        }
+            //    }
 
-                if (face3Ds_Temp != null && face3Ds_Temp.Count > 0)
-                {
-                    face3Ds_Temp = face3Ds_Temp.Union();
-                    face3Ds_Temp.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
-                    face3D = new Face3D(face3Ds_Temp[0].GetExternalEdge3D());
-                }
-            }
+            //    if (face3Ds_Temp != null && face3Ds_Temp.Count > 0)
+            //    {
+            //        face3Ds_Temp = face3Ds_Temp.Union();
+            //        face3Ds_Temp.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+            //        face3D = new Face3D(face3Ds_Temp[0].GetExternalEdge3D());
+            //    }
+            //}
 
             //Method 3 of extracting Geometry
             if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance )

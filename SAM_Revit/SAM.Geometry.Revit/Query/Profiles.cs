@@ -538,6 +538,8 @@ namespace SAM.Geometry.Revit
             }
 
             Polygon2D polygon2D = new Polygon2D(new Point2D[] { segment2D[0], segment2D[0].GetMoved(vector2D), segment2D[1].GetMoved(vector2D), segment2D[1] });
+            
+            
             Face2D face2D = new Face2D(polygon2D);
 
             if (segment2Ds == null || segment2Ds.Count() == 0)
@@ -549,12 +551,19 @@ namespace SAM.Geometry.Revit
             segment2Ds_Temp.Add(segment2D);
             segment2Ds_Temp.Add(segment2D.GetMoved(vector2D));
 
-            BoundingBox2D boundingBox2D = new BoundingBox2D(segment2Ds_Temp.ConvertAll(x => x.GetBoundingBox()));
-            Vector2D vector2D_Max =  vector2D.Unit * boundingBox2D.Perimeter();
+            BoundingBox2D boundingBox2D_Max = new BoundingBox2D(segment2Ds_Temp.ConvertAll(x => x.GetBoundingBox()));
+            Vector2D vector2D_Max =  vector2D.Unit * boundingBox2D_Max.Perimeter();
 
-            List<Face2D> result = new List<Face2D>() { face2D };
+            BoundingBox2D boundingBox2D = polygon2D.GetBoundingBox();
+
+            List <Face2D> result = new List<Face2D>() { face2D };
             foreach (Segment2D segment2D_Temp in segment2Ds)
             {
+                if(segment2D_Temp == null || !segment2D_Temp.IsValid() || segment2D_Temp.GetLength() < tolerance)
+                {
+                    continue;
+                }
+
                 Point2D point2D_1 = segment2D_Temp[0];
                 point2D_1 = Planar.Query.Snap(polygon2D, point2D_1, tolerance);
 
@@ -571,7 +580,13 @@ namespace SAM.Geometry.Revit
                 }
 
                 Polygon2D polygon2D_Temp = new Polygon2D(new Point2D[] { point2D_1, point2D_2, point2D_3, point2D_4 });
-                if (!polygon2D_Temp.IsValid())
+                if (!polygon2D_Temp.IsValid() || polygon2D_Temp.GetArea() < tolerance)
+                {
+                    continue;
+                }
+
+                BoundingBox2D boundingBox2D_Temp = polygon2D_Temp.GetBoundingBox();
+                if(!boundingBox2D.InRange(boundingBox2D_Temp, tolerance))
                 {
                     continue;
                 }

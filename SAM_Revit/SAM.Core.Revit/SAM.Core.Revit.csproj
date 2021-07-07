@@ -196,6 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accuracy\Tolerance.cs" />
+    <Compile Include="Classes\PurgeMaterialsWrapper.cs" />
     <Compile Include="Classes\RevitFilePreview.cs" />
     <Compile Include="Classes\RevitFilePreviewParameter.cs" />
     <Compile Include="Classes\DesignOption.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\CopyValue.cs" />
     <Compile Include="Create\Sheets.cs" />
+    <Compile Include="Modify\PurgeMaterials.cs" />
     <Compile Include="Modify\CopyValues.cs" />
     <Compile Include="Modify\DeleteViews.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />

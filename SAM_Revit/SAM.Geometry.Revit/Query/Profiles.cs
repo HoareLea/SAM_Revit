@@ -556,10 +556,15 @@ namespace SAM.Geometry.Revit
             foreach (Segment2D segment2D_Temp in segment2Ds)
             {
                 Point2D point2D_1 = segment2D_Temp[0];
-                Point2D point2D_2 = segment2D_Temp[0].GetMoved(vector2D_Max);
-                Point2D point2D_3 = segment2D_Temp[1].GetMoved(vector2D_Max);
-                Point2D point2D_4 = segment2D_Temp[1];
+                point2D_1 = Planar.Query.Snap(polygon2D, point2D_1, tolerance);
 
+                Point2D point2D_2 = point2D_1.GetMoved(vector2D_Max);
+
+                Point2D point2D_4 = segment2D_Temp[1];
+                point2D_4 = Planar.Query.Snap(polygon2D, point2D_4, tolerance);
+
+                Point2D point2D_3 = point2D_4.GetMoved(vector2D_Max);
+                
                 if (point2D_1.Distance(point2D_2) < tolerance && point2D_3.Distance(point2D_4) < tolerance)
                 {
                     continue;

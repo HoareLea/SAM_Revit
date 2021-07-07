@@ -51,6 +51,19 @@ namespace SAM.Core.Revit
             }
         }
 
+        public bool IsValid
+        {
+            get
+            {
+                if (storageInfo == null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         public void Dispose()
         {
             if (disposed == false)
@@ -307,7 +320,7 @@ namespace SAM.Core.Revit
             return null;
         }
 
-        public string ModelIdentity()
+        public string GetModelIdentity()
         {
             Dictionary<string, string> dictionary = GetParameterDictionary("Model Identity");
             //Revit 2016, 2017, 2018, 2019

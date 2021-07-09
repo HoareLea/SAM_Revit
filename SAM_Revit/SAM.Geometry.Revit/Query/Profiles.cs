@@ -444,8 +444,7 @@ namespace SAM.Geometry.Revit
                     Face3D face3D = face3Ds[i];
 
                     BoundingBox3D boundingBox3D = face3D?.GetBoundingBox();
-
-                    if (boundingBox3D != null)
+                    if (boundingBox3D == null)
                     {
                         continue;
                     }

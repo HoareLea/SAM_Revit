@@ -265,7 +265,7 @@ namespace SAM.Analytical.Revit
             //}
 
             //Method 3 of extracting Geometry
-            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance )
+            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance || familyInstance.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
             {
                 if(point2Ds != null && point2Ds.Count > 2)
                 {

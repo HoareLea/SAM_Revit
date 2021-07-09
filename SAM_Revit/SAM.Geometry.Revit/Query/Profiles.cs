@@ -366,9 +366,137 @@ namespace SAM.Geometry.Revit
 #endif
         }
 
-        private static List<Face3D> Profiles_FromLocation(this Wall wall, double tolerance_Angle = Core.Tolerance.Angle, double tolerance_Distance = Core.Tolerance.Distance, double tolerance_Snap = Core.Tolerance.MacroDistance)
+        //private static List<Face3D> Profiles_FromLocation(this Wall wall, double tolerance_Angle = Core.Tolerance.Angle, double tolerance_Distance = Core.Tolerance.Distance, double tolerance_Snap = Core.Tolerance.MacroDistance)
+        //{
+        //    BoundingBoxXYZ boundingBoxXYZ = wall?.get_BoundingBox(null);
+        //    if (boundingBoxXYZ == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    LocationCurve locationCurve = wall.Location as LocationCurve;
+        //    if (locationCurve == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    ICurve3D curve3D_Location = Convert.ToSAM(locationCurve);
+        //    IEnumerable<ICurve3D> curves = null;
+        //    if (curve3D_Location is ISegmentable3D)
+        //        curves = ((ISegmentable3D)curve3D_Location).GetSegments().Cast<ICurve3D>();
+        //    else
+        //        curves = new List<ICurve3D>() { curve3D_Location };
+
+        //    List<Shell> shells = wall.ToSAM_Geometries<Shell>();
+        //    if(shells == null || shells.Count == 0)
+        //    {
+        //        return null;
+        //    }
+
+        //    Document document = wall.Document;
+
+        //    Dictionary<ElementId, List<Face3D>> dictionary = wall.GeneratingElementIdDictionary();
+        //    if(dictionary != null && dictionary.Count != 0)
+        //    {
+        //        foreach (ElementId elementId in dictionary.Keys)
+        //        {
+        //            Wall wall_Temp = document.GetElement(elementId) as Wall;
+        //            if(wall_Temp == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            List<Shell> shells_Temp = wall_Temp.ToSAM_Geometries<Shell>();
+        //            if(shells_Temp != null && shells_Temp.Count != 0)
+        //            {
+        //                shells.AddRange(shells_Temp);
+        //            }
+        //        }
+        //    }
+
+        //    List<Face3D> result = new List<Face3D>();
+        //    foreach (ICurve3D curve3D in curves)
+        //    {
+        //        Segment3D segment3D = new Segment3D(curve3D.GetStart(), curve3D.GetEnd());
+        //        if(segment3D == null  || !segment3D.IsValid() || segment3D.GetLength() < tolerance_Distance)
+        //        {
+        //            continue;
+        //        }
+
+        //        Spatial.Plane plane = Spatial.Create.Plane(segment3D[0], segment3D[0].GetMoved(Vector3D.WorldZ) as Point3D, segment3D[1]);
+
+        //        List<Face3D> face3Ds = new List<Face3D>();
+        //        foreach(Shell shell in shells)
+        //        {
+        //            List<Face3D> face3Ds_Section =  shell.Section(plane, false, tolerance_Angle, tolerance_Distance, tolerance_Snap);
+        //            if(face3Ds_Section == null || face3Ds_Section.Count == 0)
+        //            {
+        //                continue;
+        //            }
+
+        //            face3Ds.AddRange(face3Ds_Section);
+        //        }
+
+        //        face3Ds = face3Ds.Union(tolerance_Distance);
+
+        //        for (int i = 0; i < face3Ds.Count; i++)
+        //        {
+        //            Face3D face3D = face3Ds[i];
+
+        //            BoundingBox3D boundingBox3D = face3D?.GetBoundingBox();
+        //            if (boundingBox3D == null)
+        //            {
+        //                continue;
+        //            }
+
+        //            double height = boundingBox3D.Max.Z - boundingBox3D.Min.Z;
+        //            List<Segment3D> segment3Ds = new List<Segment3D>();
+        //            Segment3D segment3D_Z = null;
+
+        //            segment3D_Z = new Segment3D(segment3D[0], segment3D[0].GetMoved(Vector3D.WorldZ * height) as Point3D);
+        //            if (boundingBox3D.InRange(segment3D_Z, tolerance_Distance))
+        //                segment3Ds.Add(segment3D_Z);
+
+        //            segment3D_Z = new Segment3D(segment3D[1], segment3D[1].GetMoved(Vector3D.WorldZ * height) as Point3D);
+        //            if (boundingBox3D.InRange(segment3D_Z, tolerance_Distance))
+        //                segment3Ds.Add(segment3D_Z);
+
+        //            if (segment3Ds.Count > 0)
+        //            {
+        //                Spatial.Plane plane_Temp = face3D.GetPlane();
+
+        //                ISegmentable2D segmentable2D = plane_Temp.Convert(face3D.GetExternalEdge3D()) as ISegmentable2D;
+        //                if (segmentable2D != null)
+        //                {
+        //                    List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane_Temp.Convert(x));
+
+        //                    segment2Ds.AddRange(segmentable2D.GetSegments());
+
+        //                    List<Face2D> face2Ds = Planar.Create.Face2Ds(segment2Ds, tolerance_Distance);
+        //                    if (face2Ds != null)
+        //                    {
+        //                        Point2D point2D = plane_Temp.Convert(segment3D.Mid());
+
+        //                        Face2D face2D = face2Ds.Find(x => x.On(point2D, tolerance_Distance));
+        //                        if (face2D != null)
+        //                        {
+        //                            face3D = plane_Temp.Convert(face2D);
+        //                        }
+        //                    }
+
+        //                }
+        //            }
+
+        //            result.Add(face3D);
+        //        }
+        //    }
+
+        //    return result;
+        //}
+
+        private static List<Face3D> Profiles_FromLocation(this Wall wall, double tolerance_Angle = Core.Tolerance.Angle, double tolerance_Distance = Core.Tolerance.Distance)
         {
-            BoundingBoxXYZ boundingBoxXYZ = wall?.get_BoundingBox(null);
+            BoundingBoxXYZ boundingBoxXYZ = wall.get_BoundingBox(null);
             if (boundingBoxXYZ == null)
             {
                 return null;
@@ -381,249 +509,124 @@ namespace SAM.Geometry.Revit
             }
 
             ICurve3D curve3D_Location = Convert.ToSAM(locationCurve);
+
             IEnumerable<ICurve3D> curves = null;
             if (curve3D_Location is ISegmentable3D)
                 curves = ((ISegmentable3D)curve3D_Location).GetSegments().Cast<ICurve3D>();
             else
                 curves = new List<ICurve3D>() { curve3D_Location };
 
-            List<Shell> shells = wall.ToSAM_Geometries<Shell>();
-            if(shells == null || shells.Count == 0)
-            {
-                return null;
-            }
+            Vector3D direction = Vector3D.WorldZ;
+
+            double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
+            Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), direction);
+
+            double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
+            Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), direction);
+
+            double height = max - min;
 
             Document document = wall.Document;
 
-            Dictionary<ElementId, List<Face3D>> dictionary = wall.GeneratingElementIdDictionary();
-            if(dictionary != null && dictionary.Count != 0)
-            {
-                foreach (ElementId elementId in dictionary.Keys)
-                {
-                    Wall wall_Temp = document.GetElement(elementId) as Wall;
-                    if(wall_Temp == null)
-                    {
-                        continue;
-                    }
+            //List<Face3D> face3Ds_Cutting = new List<Face3D>();
 
-                    List<Shell> shells_Temp = wall_Temp.ToSAM_Geometries<Shell>();
-                    if(shells_Temp != null && shells_Temp.Count != 0)
-                    {
-                        shells.AddRange(shells_Temp);
-                    }
-                }
-            }
+            //Dictionary<ElementId, List<Face3D>> dictionary = GeneratingElementIdDictionary(wall);
+            //foreach (KeyValuePair<ElementId, List<Face3D>> keyValuePair in dictionary)
+            //{
+            //    if (keyValuePair.Value == null || keyValuePair.Value.Count == 0)
+            //    {
+            //        continue;
+            //    }
+
+            //    HostObject hostObject_Cutting = document.GetElement(keyValuePair.Key) as HostObject;
+            //    if (hostObject_Cutting == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    if (hostObject_Cutting is Floor || hostObject_Cutting is RoofBase)
+            //    {
+            //        List<Face3D> face3Ds_Temp = hostObject_Cutting.Profiles();
+            //        if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+            //        {
+            //            face3Ds_Cutting.AddRange(face3Ds_Temp);
+            //        }
+            //    }
+            //}
 
             List<Face3D> result = new List<Face3D>();
             foreach (ICurve3D curve3D in curves)
             {
-                Segment3D segment3D = new Segment3D(curve3D.GetStart(), curve3D.GetEnd());
-                if(segment3D == null  || !segment3D.IsValid() || segment3D.GetLength() < tolerance_Distance)
+                if (curve3D == null)
                 {
                     continue;
                 }
 
-                Spatial.Plane plane = Spatial.Create.Plane(segment3D[0], segment3D[0].GetMoved(Vector3D.WorldZ) as Point3D, segment3D[1]);
+                ICurve3D maxCurve = Spatial.Query.Project(plane_max, curve3D);
+                ICurve3D minCurve = Spatial.Query.Project(plane_min, curve3D);
 
-                List<Face3D> face3Ds = new List<Face3D>();
-                foreach(Shell shell in shells)
+                Point3D point3D_1 = minCurve.GetEnd();
+                Point3D point3D_2 = maxCurve.GetStart();
+                Point3D point3D_3 = maxCurve.GetEnd();
+                Point3D point3D_4 = minCurve.GetStart();
+                if (point3D_1.Distance(point3D_3) < point3D_1.Distance(point3D_2))
                 {
-                    List<Face3D> face3Ds_Section =  shell.Section(plane, false, tolerance_Angle, tolerance_Distance, tolerance_Snap);
-                    if(face3Ds_Section == null || face3Ds_Section.Count == 0)
-                    {
-                        continue;
-                    }
+                    Point3D point_Temp = point3D_2;
 
-                    face3Ds.AddRange(face3Ds_Section);
+                    maxCurve.Reverse();
+                    point3D_2 = point3D_3;
+                    point3D_3 = point_Temp;
                 }
 
-                face3Ds = face3Ds.Union(tolerance_Distance);
-
-                for (int i = 0; i < face3Ds.Count; i++)
+                List<Point3D> point3Ds = new List<Point3D>() { point3D_4, point3D_3, point3D_2, point3D_1 };
+                if (wall.Flipped)
                 {
-                    Face3D face3D = face3Ds[i];
-
-                    BoundingBox3D boundingBox3D = face3D?.GetBoundingBox();
-                    if (boundingBox3D == null)
-                    {
-                        continue;
-                    }
-
-                    double height = boundingBox3D.Max.Z - boundingBox3D.Min.Z;
-                    List<Segment3D> segment3Ds = new List<Segment3D>();
-                    Segment3D segment3D_Z = null;
-
-                    segment3D_Z = new Segment3D(segment3D[0], segment3D[0].GetMoved(Vector3D.WorldZ * height) as Point3D);
-                    if (boundingBox3D.InRange(segment3D_Z, tolerance_Distance))
-                        segment3Ds.Add(segment3D_Z);
-
-                    segment3D_Z = new Segment3D(segment3D[1], segment3D[1].GetMoved(Vector3D.WorldZ * height) as Point3D);
-                    if (boundingBox3D.InRange(segment3D_Z, tolerance_Distance))
-                        segment3Ds.Add(segment3D_Z);
-
-                    if (segment3Ds.Count > 0)
-                    {
-                        Spatial.Plane plane_Temp = face3D.GetPlane();
-
-                        ISegmentable2D segmentable2D = plane_Temp.Convert(face3D.GetExternalEdge3D()) as ISegmentable2D;
-                        if (segmentable2D != null)
-                        {
-                            List<Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane_Temp.Convert(x));
-
-                            segment2Ds.AddRange(segmentable2D.GetSegments());
-
-                            List<Face2D> face2Ds = Planar.Create.Face2Ds(segment2Ds, tolerance_Distance);
-                            if (face2Ds != null)
-                            {
-                                Point2D point2D = plane_Temp.Convert(segment3D.Mid());
-
-                                Face2D face2D = face2Ds.Find(x => x.On(point2D, tolerance_Distance));
-                                if (face2D != null)
-                                {
-                                    face3D = plane_Temp.Convert(face2D);
-                                }
-                            }
-
-                        }
-                    }
-
-                    result.Add(face3D);
+                    point3Ds.Reverse();
                 }
+
+                Face3D face3D = new Face3D(new Polygon3D(point3Ds, tolerance_Distance));
+                result.Add(face3D);
+
+                //Spatial.Plane plane = Spatial.Create.Plane(point3Ds, tolerance_Distance);
+                //if (plane == null)
+                //{
+                //    continue;
+                //}
+
+                //Vector3D vector3D = new Vector3D(point3D_4, point3D_3);
+
+                //Segment2D segment2D = plane.Convert(new Segment3D(point3D_4, point3D_1));
+
+                //List<Segment2D> segment2Ds_Intersection = new List<Segment2D>();
+                //foreach (Face3D face3D_Cutting in face3Ds_Cutting)
+                //{
+                //    PlanarIntersectionResult planarIntersectionResult = Spatial.Create.PlanarIntersectionResult(plane, face3D_Cutting, tolerance_Angle, tolerance_Distance);
+                //    if (planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
+                //    {
+                //        continue;
+                //    }
+
+                //    List<Segment2D> segment2Ds_Intersection_Temp = planarIntersectionResult.GetGeometry2Ds<Segment2D>();
+                //    if (segment2Ds_Intersection_Temp != null && segment2Ds_Intersection_Temp.Count > 0)
+                //    {
+                //        segment2Ds_Intersection.AddRange(segment2Ds_Intersection_Temp);
+                //    }
+                //}
+
+                //List<Face2D> face2Ds = Profiles_From2D(segment2D, plane.Convert(vector3D), segment2Ds_Intersection, tolerance_Distance);
+                //if (face2Ds != null && face2Ds.Count > 0)
+                //{
+                //    result.AddRange(face2Ds.ConvertAll(x => plane.Convert(x)));
+                //}
+            }
+
+            if (result != null && result.Count > 0)
+            {
+                return result;
             }
 
             return result;
         }
-
-        //private static List<Face3D> Profiles_FromLocation(this Wall wall, double tolerance_Angle = Core.Tolerance.Angle, double tolerance_Distance = Core.Tolerance.Distance)
-        //{
-        //    BoundingBoxXYZ boundingBoxXYZ = wall.get_BoundingBox(null);
-        //    if (boundingBoxXYZ == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    LocationCurve locationCurve = wall.Location as LocationCurve;
-        //    if(locationCurve == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    ICurve3D curve3D_Location = Convert.ToSAM(locationCurve);
-
-        //    IEnumerable<ICurve3D> curves = null;
-        //    if (curve3D_Location is ISegmentable3D)
-        //        curves = ((ISegmentable3D)curve3D_Location).GetSegments().Cast<ICurve3D>();
-        //    else
-        //        curves = new List<ICurve3D>() { curve3D_Location };
-
-        //    Vector3D direction = Vector3D.WorldZ;
-
-        //    double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
-        //    Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), direction);
-
-        //    double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
-        //    Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), direction);
-
-        //    double height = max - min;
-
-        //    Document document = wall.Document;
-
-        //    List<Face3D> face3Ds_Cutting = new List<Face3D>();
-
-        //    Dictionary<ElementId, List<Face3D>> dictionary = GeneratingElementIdDictionary(wall);
-        //    foreach (KeyValuePair<ElementId, List<Face3D>> keyValuePair in dictionary)
-        //    {
-        //        if (keyValuePair.Value == null || keyValuePair.Value.Count == 0)
-        //        {
-        //            continue;
-        //        }
-
-        //        HostObject hostObject_Cutting = document.GetElement(keyValuePair.Key) as HostObject;
-        //        if (hostObject_Cutting == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        if(hostObject_Cutting is Floor || hostObject_Cutting is RoofBase)
-        //        {
-        //            List<Face3D> face3Ds_Temp = hostObject_Cutting.Profiles();
-        //            if(face3Ds_Temp != null && face3Ds_Temp.Count != 0)
-        //            {
-        //                face3Ds_Cutting.AddRange(face3Ds_Temp);
-        //            }
-        //        }
-        //    }
-
-        //    List<Face3D> result = new List<Face3D>();
-        //    foreach (ICurve3D curve3D in curves)
-        //    {
-        //        if (curve3D == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        ICurve3D maxCurve = Spatial.Query.Project(plane_max, curve3D);
-        //        ICurve3D minCurve = Spatial.Query.Project(plane_min, curve3D);
-
-        //        Point3D point3D_1 = minCurve.GetEnd();
-        //        Point3D point3D_2 = maxCurve.GetStart();
-        //        Point3D point3D_3 = maxCurve.GetEnd();
-        //        Point3D point3D_4 = minCurve.GetStart();
-        //        if (point3D_1.Distance(point3D_3) < point3D_1.Distance(point3D_2))
-        //        {
-        //            Point3D point_Temp = point3D_2;
-
-        //            maxCurve.Reverse();
-        //            point3D_2 = point3D_3;
-        //            point3D_3 = point_Temp;
-        //        }
-
-        //        List<Point3D> point3Ds = new List<Point3D>() { point3D_4, point3D_3, point3D_2, point3D_1 };
-        //        if (wall.Flipped)
-        //        {
-        //            point3Ds.Reverse();
-        //        }
-
-        //        Spatial.Plane plane = Spatial.Create.Plane(point3Ds, tolerance_Distance);
-        //        if (plane == null)
-        //        {
-        //            continue;
-        //        }
-
-        //        Vector3D vector3D = new Vector3D(point3D_4, point3D_3);
-
-        //        Segment2D segment2D = plane.Convert(new Segment3D(point3D_4, point3D_1));
-
-        //        List<Segment2D> segment2Ds_Intersection = new List<Segment2D>();
-        //        foreach (Face3D face3D_Cutting in face3Ds_Cutting)
-        //        {
-        //            PlanarIntersectionResult planarIntersectionResult = Spatial.Create.PlanarIntersectionResult(plane, face3D_Cutting, tolerance_Angle, tolerance_Distance);
-        //            if(planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
-        //            {
-        //                continue;
-        //            }
-
-        //            List<Segment2D> segment2Ds_Intersection_Temp = planarIntersectionResult.GetGeometry2Ds<Segment2D>();
-        //            if(segment2Ds_Intersection_Temp != null && segment2Ds_Intersection_Temp.Count > 0)
-        //            {
-        //                segment2Ds_Intersection.AddRange(segment2Ds_Intersection_Temp);
-        //            }
-        //        }
-
-        //        List<Face2D> face2Ds = Profiles_From2D(segment2D, plane.Convert(vector3D), segment2Ds_Intersection, tolerance_Distance);
-        //        if(face2Ds != null && face2Ds.Count > 0)
-        //        {
-        //            result.AddRange(face2Ds.ConvertAll(x => plane.Convert(x)));
-        //        }
-        //    }
-
-        //    if (result != null && result.Count > 0)
-        //    {
-        //        return result;
-        //    }
-
-        //    return result;
-        //}
 
         private static List<Face3D> Profiles_FromElevationProfile(this Wall wall)
         {

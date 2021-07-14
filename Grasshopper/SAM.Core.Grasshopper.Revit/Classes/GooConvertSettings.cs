@@ -85,7 +85,7 @@ namespace SAM.Core.Grasshopper.Revit
                 return true;
             }
 
-            return base.CastTo<Y>(ref target);
+            return base.CastTo(ref target);
         }
 
         public ConvertSettings ConvertSettings()

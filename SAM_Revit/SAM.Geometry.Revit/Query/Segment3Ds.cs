@@ -21,7 +21,7 @@ namespace SAM.Geometry.Revit
             if (segment3Ds.Contains(null))
                 return null;
 
-            Spatial.Plane plane = closedPlanar3D.GetPlane();
+            Plane plane = closedPlanar3D.GetPlane();
             if (plane == null)
                 return null;
 

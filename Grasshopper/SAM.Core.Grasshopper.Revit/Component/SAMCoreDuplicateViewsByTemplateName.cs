@@ -114,7 +114,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             StartTransaction(document);
 
-            List<View> views = Core.Revit.Modify.DuplicateViews(document, templateName, templateNames, viewTypes?.ConvertAll(x => (Autodesk.Revit.DB.ViewType)((int)x)));
+            List<View> views = Core.Revit.Modify.DuplicateViews(document, templateName, templateNames, viewTypes?.ConvertAll(x => (ViewType)((int)x)));
 
             index = Params.IndexOfOutputParam("views");
             if (index != -1)

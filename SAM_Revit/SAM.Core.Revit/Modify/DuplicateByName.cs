@@ -37,7 +37,7 @@ namespace SAM.Core.Revit
             return elementType;
         }
 
-        public static ElementType DuplicateByName(this Document document, Core.SAMType samType_Old, BuiltInCategory builtInCategory, string name_New, IEnumerable<string> parameterNames = null)
+        public static ElementType DuplicateByName(this Document document, SAMType samType_Old, BuiltInCategory builtInCategory, string name_New, IEnumerable<string> parameterNames = null)
         {
             if (samType_Old == null || document == null || string.IsNullOrWhiteSpace(name_New) || builtInCategory == BuiltInCategory.INVALID)
                 return null;

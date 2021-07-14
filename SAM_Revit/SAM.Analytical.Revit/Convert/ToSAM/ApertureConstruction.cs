@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilyInstance familyInstance, Core.Revit.ConvertSettings convertSettings)
+        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null)
                 return null;
@@ -18,7 +18,7 @@ namespace SAM.Analytical.Revit
             return ToSAM_ApertureConstruction(familySymbol, convertSettings);
         }
 
-        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilySymbol familySymbol, Core.Revit.ConvertSettings convertSettings)
+        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilySymbol familySymbol, ConvertSettings convertSettings)
         {
             if (familySymbol == null)
                 return null;

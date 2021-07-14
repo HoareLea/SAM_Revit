@@ -43,7 +43,7 @@ namespace SAM.Geometry.Revit
             if (geometryElement == null)
                 return null;
 
-            List<Spatial.Face3D> result = new List<Spatial.Face3D>();
+            List<Face3D> result = new List<Face3D>();
             foreach (GeometryObject geometryObject in geometryElement)
             {
                 Type aType = geometryObject.GetType();
@@ -111,18 +111,18 @@ namespace SAM.Geometry.Revit
                 Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
                 foreach (Face3D face3D in face3Ds)
                 {
-                    List<Planar.IClosed2D> internalEdges = face3D.InternalEdge2Ds;
+                    List<IClosed2D> internalEdges = face3D.InternalEdge2Ds;
                     if (internalEdges == null || internalEdges.Count == 0)
                         continue;
 
                     Spatial.Plane plane = face3D.GetPlane();
 
                     Point3D point3D_Projected = plane.Project(point3D);
-                    Planar.Point2D point2D = plane.Convert(point3D_Projected);
+                    Point2D point2D = plane.Convert(point3D_Projected);
 
                     for (int i = 0; i < internalEdges.Count; i++)
                     {
-                        Planar.IClosed2D internalEdge = internalEdges[i];
+                        IClosed2D internalEdge = internalEdges[i];
                         if (internalEdge.Inside(point2D))
                         {
                             face3D.RemoveInternalEdge(i);

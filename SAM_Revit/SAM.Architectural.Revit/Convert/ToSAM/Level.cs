@@ -5,7 +5,7 @@ namespace SAM.Architectural.Revit
 {
     public static partial class Convert
     {
-        public static Level ToSAM(this Autodesk.Revit.DB.Level level, Core.Revit.ConvertSettings convertSettings)
+        public static Level ToSAM(this Autodesk.Revit.DB.Level level, ConvertSettings convertSettings)
         {
             if (level == null)
                 return null;

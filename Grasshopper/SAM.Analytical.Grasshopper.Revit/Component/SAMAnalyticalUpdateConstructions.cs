@@ -42,36 +42,36 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "_panels_", NickName = "_panels_", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "constructionLibrary_", NickName = "constructionLibrary_", Description = "SAM Analytical ContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
-                result.Add(ParamDefinition.FromParam(new GooApertureConstructionLibraryParam() { Name = "apertureConstructionLibrary_", NickName = "apertureConstructionLibrary_", Description = "SAM Analytical ApertureContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
+                result.Add(new ParamDefinition(new GooPanelParam() { Name = "_panels_", NickName = "_panels_", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooConstructionLibraryParam() { Name = "constructionLibrary_", NickName = "constructionLibrary_", Description = "SAM Analytical ContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
+                result.Add(new ParamDefinition(new GooApertureConstructionLibraryParam() { Name = "apertureConstructionLibrary_", NickName = "apertureConstructionLibrary_", Description = "SAM Analytical ApertureContructionLibrary", Optional = true, Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
 
-                result.Add(ParamDefinition.FromParam(new Core.Grasshopper.GooDelimitedFileTableParam() { Name = "_delimitedFileTable", NickName = "_delimitedFileTable", Description = "SAM Analytical DelimitedFileTable", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new Core.Grasshopper.GooDelimitedFileTableParam() { Name = "_delimitedFileTable", NickName = "_delimitedFileTable", Description = "SAM Analytical DelimitedFileTable", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_String param_String;
 
                 param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_sourceColumn_", NickName = "_sourceColumn_", Description = "Column with Source Name of Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Name");
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_defaultColumn_", NickName = "_defaultColumn_", Description = "Column Name for name of the Construction or ApertureConstruction will be copied from if not exists", Optional = true, Access = GH_ParamAccess.item };                param_String.SetPersistentData("template Family");
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_destinationColumn_", NickName = "_destinationColumn_", Description = "Column with destination Name for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("New Name Family");
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_typeColumn_", NickName = "_typeColumn_", Description = "Column with Type Name for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Category Name");
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_thicknessColumn_", NickName = "_thicknessColumn_", Description = "Column with thickness for Construction or ApertureConstruction", Optional = true, Access = GH_ParamAccess.item };
                 param_String.SetPersistentData("Width");
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -84,13 +84,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Panels", NickName = "elementTypes_Panels", Description = "Revit ElementTypes for Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Apertures", NickName = "elementTypes_Apertures", Description = "Revit ElementTypes for Apertures", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new GooPanelParam() { Name = "panels", NickName = "panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new GooApertureParam() { Name = "apertures", NickName = "apertures", Description = "SAM Analytical Apertures", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Panels", NickName = "elementTypes_Panels", Description = "Revit ElementTypes for Panels", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementTypes_Apertures", NickName = "elementTypes_Apertures", Description = "Revit ElementTypes for Apertures", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooPanelParam() { Name = "panels", NickName = "panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooApertureParam() { Name = "apertures", NickName = "apertures", Description = "SAM Analytical Apertures", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
 
-                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "constructionLibrary", NickName = "constructionLibrary", Description = "SAM Analytical ConstructionLibrary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new GooConstructionLibraryParam() { Name = "apertureConstructionLibrary", NickName = "apertureConstructionLibrary", Description = "SAM Analytical ApertureConstructionLibrary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new GooConstructionLibraryParam() { Name = "constructionLibrary", NickName = "constructionLibrary", Description = "SAM Analytical ConstructionLibrary", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooConstructionLibraryParam() { Name = "apertureConstructionLibrary", NickName = "apertureConstructionLibrary", Description = "SAM Analytical ApertureConstructionLibrary", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

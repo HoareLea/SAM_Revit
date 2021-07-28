@@ -45,7 +45,7 @@ namespace SAM.Architectural.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "_levels", NickName = "_levels", Description = "SAM Architectural Levels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new GooLevelParam() { Name = "_levels", NickName = "_levels", Description = "SAM Architectural Levels", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -58,8 +58,8 @@ namespace SAM.Architectural.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "new", NickName = "new", Description = "New Levels that do not exisit in Revit model", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "existing", NickName = "exisiting", Description = "Existing Levels in Revit model", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new GooLevelParam() { Name = "new", NickName = "new", Description = "New Levels that do not exisit in Revit model", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooLevelParam() { Name = "existing", NickName = "exisiting", Description = "Existing Levels in Revit model", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

@@ -45,7 +45,14 @@ namespace SAM.Core.Revit
                 switch (parameter.StorageType)
                 {
                     case StorageType.Double:
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                         value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.UnitType);
+#elif Revit2021
+                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.GetSpecTypeId());
+#else
+                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.GetDataType());
+#endif
+
                         break;
 
                     case StorageType.Integer:

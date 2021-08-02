@@ -37,7 +37,12 @@ namespace SAM.Architectural.Revit
                 return null;
 
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
+
+#if Revit2017
+            IEnumerable<ElementId> elementIds = null;
+#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
+#endif
 
             if (hostObject is Autodesk.Revit.DB.Wall || hostObject is CurtainSystem)
             {

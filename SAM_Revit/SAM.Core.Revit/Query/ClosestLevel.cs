@@ -15,9 +15,15 @@ namespace SAM.Core.Revit
 
             Level result = null;
             double distance = double.MaxValue;
-            foreach(Level level in levels)
+            foreach (Level level in levels)
             {
-                double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS) - elevation);
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
+double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS) - elevation);
+#else
+                double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters) - elevation);
+#endif
+
+
                 if (distance < distance_Temp)
                     continue;
 

@@ -105,8 +105,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             double elevation_Low = Units.Revit.Convert.ToSI(level_Low.Elevation, UnitType.UT_Length);
             double elevation_High = Units.Revit.Convert.ToSI(level_High.Elevation, UnitType.UT_Length);
+#else
+            double elevation_Low = Units.Revit.Convert.ToSI(level_Low.Elevation, SpecTypeId.Length);
+            double elevation_High = Units.Revit.Convert.ToSI(level_High.Elevation, SpecTypeId.Length);
+#endif
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 

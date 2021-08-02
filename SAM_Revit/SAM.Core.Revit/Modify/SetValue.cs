@@ -184,7 +184,15 @@ namespace SAM.Core.Revit
             if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.Invalid)
                 return parameter.Set(value_Temp);
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.UnitType);
+#elif Revit2021
+            value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.GetSpecTypeId());
+#else
+            value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.GetDataType());
+#endif
+
+
 
             if (double.IsNaN(value_Temp))
                 return false;

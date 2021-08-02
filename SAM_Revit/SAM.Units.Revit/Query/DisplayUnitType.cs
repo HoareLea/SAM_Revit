@@ -6,6 +6,8 @@ namespace SAM.Units.Revit
 {
     public static partial class Query
     {
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
         public static DisplayUnitType DisplayUnitType(this UnitType unitType)
         {
             if (unitType == UnitType.UT_Number)
@@ -74,5 +76,9 @@ namespace SAM.Units.Revit
 
             return Autodesk.Revit.DB.DisplayUnitType.DUT_UNDEFINED;
         }
+#else
+
+#endif
+
     }
 }

@@ -120,8 +120,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
             double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, DisplayUnitType.DUT_METERS);
+#else
+            double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
+            double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, UnitTypeId.Meters);
+#endif
 
             Document document = level.Document;
 

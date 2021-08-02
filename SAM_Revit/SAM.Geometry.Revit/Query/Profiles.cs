@@ -518,10 +518,19 @@ namespace SAM.Geometry.Revit
 
             Vector3D direction = Vector3D.WorldZ;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
+#else
+            double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, UnitTypeId.Meters);
+#endif
+
             Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), direction);
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
+#else
+            double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, UnitTypeId.Meters);
+#endif
             Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), direction);
 
             double height = max - min;

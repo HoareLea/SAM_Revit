@@ -256,21 +256,23 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>
-if "$(ConfigurationName)" == "Debug2020" set Version=Revit 2020
-if "$(ConfigurationName)" == "Debug2021" set Version=Revit 2021
-if "$(ConfigurationName)" == "Release2020" set Version=Revit 2020
-if "$(ConfigurationName)" == "Release2021" set Version=Revit 2021
+      if "$(ConfigurationName)" == "Debug2020" set Version=Revit 2020
+      if "$(ConfigurationName)" == "Debug2021" set Version=Revit 2021
+      if "$(ConfigurationName)" == "Debug2022" set Version=Revit 2022
+      if "$(ConfigurationName)" == "Release2020" set Version=Revit 2020
+      if "$(ConfigurationName)" == "Release2021" set Version=Revit 2021
+      if "$(ConfigurationName)" == "Release2022" set Version=Revit 2022
 
-copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
+      copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
 
-set SAM_DIR=$(APPDATA)\SAM\%25Version%25
-if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
+      set SAM_DIR=$(APPDATA)\SAM\%25Version%25
+      if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
 
-copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
-copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
+      copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
+      copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
 
-::erase "%25SAM_DIR%25$(ProjectName).dll"
-::erase "$(TargetPath)"</PostBuildEvent>
+      ::erase "%25SAM_DIR%25$(ProjectName).dll"
+      ::erase "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <FallbackCulture>en-US</FallbackCulture>

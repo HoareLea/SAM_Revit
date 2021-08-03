@@ -40,7 +40,7 @@ namespace SAM.Core.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_path", NickName = "_path", Description = "Revit file path", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_path", NickName = "_path", Description = "Revit file path", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -53,16 +53,16 @@ namespace SAM.Core.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionInfo", NickName = "versionInfo", Description = "Version Info", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionBuild", NickName = "versionBuild", Description = "Version Build", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionNumber", NickName = "versionNumber", Description = "Version Number", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionName", NickName = "versionName", Description = "Version Name", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "gUID", NickName = "gUID", Description = "Unique Document GUID", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "increments", NickName = "increments", Description = "Unique Document Increments", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "modelIdentity", NickName = "modelIdentity", Description = "Model Identity", Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "familyCategory", NickName = "familyCategory", Description = "Family Category Name", Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "familyTypes", NickName = "familyTypes", Description = "Family Type Names", Access = GH_ParamAccess.list }, ParamVisibility.Voluntary));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "omniClass", NickName = "omniClass", Description = "OmniClass", Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionInfo", NickName = "versionInfo", Description = "Version Info", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionBuild", NickName = "versionBuild", Description = "Version Build", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionNumber", NickName = "versionNumber", Description = "Version Number", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "versionName", NickName = "versionName", Description = "Version Name", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "gUID", NickName = "gUID", Description = "Unique Document GUID", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "increments", NickName = "increments", Description = "Unique Document Increments", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "modelIdentity", NickName = "modelIdentity", Description = "Model Identity", Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "familyCategory", NickName = "familyCategory", Description = "Family Category Name", Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "familyTypes", NickName = "familyTypes", Description = "Family Type Names", Access = GH_ParamAccess.list }, ParamRelevance.Occasional));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "omniClass", NickName = "omniClass", Description = "OmniClass", Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
                 return result.ToArray();
             }
         }

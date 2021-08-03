@@ -44,14 +44,14 @@ namespace SAM.Architectural.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new GooLevelParam() { Name = "_level", NickName = "_level", Description = "SAM Architectural Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new GooLevelParam() { Name = "_level", NickName = "_level", Description = "SAM Architectural Level", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 
                 global::Grasshopper.Kernel.Parameters.Param_GenericObject param_GenericObject = new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_convertSettings_", NickName = "_convertSettings_", Description = "SAM ConvertSettings", Access = GH_ParamAccess.item, Optional = true};
-                result.Add(ParamDefinition.FromParam(param_GenericObject, ParamVisibility.Voluntary));
+                result.Add(new ParamDefinition(param_GenericObject, ParamRelevance.Occasional));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -64,7 +64,7 @@ namespace SAM.Architectural.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "level", NickName = "level", Description = "Revit Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Level() { Name = "level", NickName = "level", Description = "Revit Level", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

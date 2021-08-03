@@ -45,16 +45,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new Core.Grasshopper.GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_spaces_", NickName = "_spaces_", Description = "Revit Spaces", Optional = true, Access = GH_ParamAccess.list }, ParamVisibility.Voluntary));
+                result.Add(new ParamDefinition(new Core.Grasshopper.GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_spaces_", NickName = "_spaces_", Description = "Revit Spaces", Optional = true, Access = GH_ParamAccess.list }, ParamRelevance.Occasional));
 
                 global::Grasshopper.Kernel.Parameters.Param_Integer param_Integer = new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "maxLength_", NickName = "maxLength_", Description = "Max Length of the name", Access = GH_ParamAccess.item };
                 param_Integer.SetPersistentData(int.MaxValue);
-                result.Add(ParamDefinition.FromParam(param_Integer, ParamVisibility.Voluntary));
+                result.Add(new ParamDefinition(param_Integer, ParamRelevance.Occasional));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -67,7 +67,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces", NickName = "spaces", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces", NickName = "spaces", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

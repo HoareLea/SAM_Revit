@@ -33,7 +33,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 Param_Boolean param_Boolean = new Param_Boolean();
                 param_Boolean.Access = GH_ParamAccess.item;
-                paramDefinitions[0] = ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding, false);
+                paramDefinitions[0] = new ParamDefinition(param_Boolean, ParamRelevance.Binding);
 
                 return paramDefinitions;
             }
@@ -47,14 +47,14 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 GooAnalyticalModelParam gooAnalyticalModelParam = new GooAnalyticalModelParam();
                 gooAnalyticalModelParam.Access = GH_ParamAccess.item;
-                paramDefinitions[0] = ParamDefinition.FromParam(gooAnalyticalModelParam);
+                paramDefinitions[0] = new ParamDefinition(gooAnalyticalModelParam);
 
                 Param_Boolean param_Boolean = new Param_Boolean();
                 param_Boolean.Name = "Successful";
                 param_Boolean.NickName = "Successful";
                 param_Boolean.Description = "Correctly imported?";
                 param_Boolean.Access = GH_ParamAccess.item;
-                paramDefinitions[1] = ParamDefinition.FromParam(param_Boolean);
+                paramDefinitions[1] = new ParamDefinition(param_Boolean);
 
                 return paramDefinitions;
             }

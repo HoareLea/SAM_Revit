@@ -254,8 +254,13 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, DisplayUnitType.DUT_METERS);
-                if(height == 0)
+#else
+                double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, UnitTypeId.Meters);
+#endif
+
+                if (height == 0)
                 {
                     continue;
                 }

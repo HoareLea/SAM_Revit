@@ -28,7 +28,11 @@ namespace SAM.Analytical.Revit
                 if (level == null)
                     return null;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 result = document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, DisplayUnitType.DUT_METERS), UnitUtils.ConvertToInternalUnits(space.Location.Y, DisplayUnitType.DUT_METERS)));
+#else
+                result = document.Create.NewSpace(level, new UV(UnitUtils.ConvertToInternalUnits(space.Location.X, UnitTypeId.Meters), UnitUtils.ConvertToInternalUnits(space.Location.Y, UnitTypeId.Meters)));
+#endif
             }
 
             if (result == null)

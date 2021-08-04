@@ -68,16 +68,34 @@ namespace SAM.Analytical.Revit
                 parameter = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null)
                 {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                     double height = UnitUtils.ConvertToInternalUnits((panel.HighElevation() - lowElevation), DisplayUnitType.DUT_METERS);
+#else
+                    double height = UnitUtils.ConvertToInternalUnits((panel.HighElevation() - lowElevation), UnitTypeId.Meters);
+#endif
+
+
                     parameter.Set(height);
                 }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
+#else
+                double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
+#endif
+
                 if (Math.Abs(lowElevation - levelElevation) > Core.Tolerance.MacroDistance)
                 {
                     parameter = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
                     if (parameter != null)
+                    {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
+#else
+                        parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, UnitTypeId.Meters));
+#endif
+                    }
+
                 }
 
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.WALL_BASE_CONSTRAINT, BuiltInParameter.WALL_BASE_OFFSET, BuiltInParameter.WALL_HEIGHT_TYPE, BuiltInParameter.WALL_USER_HEIGHT_PARAM, BuiltInParameter.WALL_KEY_REF_PARAM };
@@ -116,7 +134,16 @@ namespace SAM.Analytical.Revit
                     curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
                 }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
+#else
+                CurveLoop curveLoop = new CurveLoop();
+                foreach(Curve curve in curveArray_Plane)
+                {
+                    curveLoop.Append(curve);
+                }
+                Floor floor = Floor.Create(document, new CurveLoop[] { curveLoop }, hostObjAttributes.Id, level.Id);
+#endif
 
                 if (floor != null)
                 {

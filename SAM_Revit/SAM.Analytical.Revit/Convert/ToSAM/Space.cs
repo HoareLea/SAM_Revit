@@ -41,14 +41,27 @@ namespace SAM.Analytical.Revit
 
             double area;
             if (!result.TryGetValue(SpaceParameter.Area, out area) || double.IsNaN(area) || area == 0)
-                result.SetValue(SpaceParameter.Area, UnitUtils.ConvertFromInternalUnits(spatialElement.Area, DisplayUnitType.DUT_SQUARE_METERS));
+            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
+            result.SetValue(SpaceParameter.Area, UnitUtils.ConvertFromInternalUnits(spatialElement.Area, DisplayUnitType.DUT_SQUARE_METERS));
+#else
+                result.SetValue(SpaceParameter.Area, UnitUtils.ConvertFromInternalUnits(spatialElement.Area, UnitTypeId.SquareMeters));
+#endif
+            }
 
             double volume;
             if (!result.TryGetValue(SpaceParameter.Volume, out volume) || double.IsNaN(volume) || volume == 0)
             {
                 Parameter parameter = spatialElement.get_Parameter(BuiltInParameter.ROOM_VOLUME);
                 if (parameter != null && parameter.HasValue)
+                {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                     result.SetValue(SpaceParameter.Volume, UnitUtils.ConvertFromInternalUnits(parameter.AsDouble(), DisplayUnitType.DUT_CUBIC_METERS));
+#else
+                    result.SetValue(SpaceParameter.Volume, UnitUtils.ConvertFromInternalUnits(parameter.AsDouble(), UnitTypeId.CubicMeters));
+#endif
+                }
+
             }
 
             convertSettings?.Add(spatialElement.Id, result);

@@ -4,6 +4,7 @@ namespace SAM.Units.Revit
 {
     public static partial class Convert
     {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
         public static double ToRevit(this double value, UnitType unitType)
         {
             if (unitType == UnitType.UT_Number)
@@ -15,5 +16,18 @@ namespace SAM.Units.Revit
 
             return UnitUtils.ConvertToInternalUnits(value, displayUnitType);
         }
+#else
+        public static double ToRevit(this double value, ForgeTypeId specTypeId)
+        {
+            if (specTypeId == SpecTypeId.Number)
+                return value;
+
+            ForgeTypeId unitTypeId = Query.UnitTypeId(specTypeId);
+            if (unitTypeId == null)
+                return value;
+
+            return UnitUtils.ConvertToInternalUnits(value, unitTypeId);
+        }
+#endif
     }
 }

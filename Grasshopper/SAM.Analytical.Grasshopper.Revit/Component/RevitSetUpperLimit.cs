@@ -44,11 +44,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_element", NickName = "_element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_element", NickName = "_element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -61,8 +61,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "element", NickName = "element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "element", NickName = "element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

@@ -45,7 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;Revit2020</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
@@ -58,7 +58,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Grasshopper.Revit.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -70,16 +70,41 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2021</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug2022\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Grasshopper.Revit.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
+    <OutputPath>bin\Release2022\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -91,12 +116,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
@@ -105,6 +130,22 @@
     </Reference>
     <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
       <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+      <HintPath>..\..\references\Revit 2022\RhinoInside.Revit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+      <HintPath>..\..\references\Revit 2022\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
@@ -203,7 +244,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grasshopper">
-      <Version>7.3.21039.11201</Version>
+      <Version>7.8.21196.5001</Version>
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
@@ -220,42 +261,54 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>
-if "$(ConfigurationName)" == "Debug2020" (
-set Version=Revit 2020
-set DirectoryName=Libraries-Inside-Revit-2020
-set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
-)
+      if "$(ConfigurationName)" == "Debug2020" (
+      set Version=Revit 2020
+      set DirectoryName=Libraries-Inside-Revit-2020
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
+      )
 
-if "$(ConfigurationName)" == "Debug2021" (
-set Version=Revit 2021
-set DirectoryName=Libraries-Inside-Revit-2021
-set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
-)
+      if "$(ConfigurationName)" == "Debug2021" (
+      set Version=Revit 2021
+      set DirectoryName=Libraries-Inside-Revit-2021
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
+      )
 
-if "$(ConfigurationName)" == "Release2020" (
-set Version=Revit 2020
-set DirectoryName=Libraries-Inside-Revit-2020
-set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
-)
+      if "$(ConfigurationName)" == "Debug2022" (
+      set Version=Revit 2022
+      set DirectoryName=Libraries-Inside-Revit-2022
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2022
+      )
 
-if "$(ConfigurationName)" == "Release2021" (
-set Version=Revit 2021
-set DirectoryName=Libraries-Inside-Revit-2021
-set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
-)
+      if "$(ConfigurationName)" == "Release2020" (
+      set Version=Revit 2020
+      set DirectoryName=Libraries-Inside-Revit-2020
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
+      )
 
-copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
+      if "$(ConfigurationName)" == "Release2021" (
+      set Version=Revit 2021
+      set DirectoryName=Libraries-Inside-Revit-2021
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
+      )
 
-set SAM_DIR=$(APPDATA)\SAM\%25Version%25
-if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
+      if "$(ConfigurationName)" == "Release2022" (
+      set Version=Revit 2022
+      set DirectoryName=Libraries-Inside-Revit-2022
+      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2022
+      )
 
-copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
-copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
+      copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
 
-if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
-copy "$(SolutionDir)files\Grasshopper\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+      set SAM_DIR=$(APPDATA)\SAM\%25Version%25
+      if not exist "%25SAM_DIR%25" mkdir "%25SAM_DIR%25"
 
-echo #Order of files is important &gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+      copy "$(TargetDir)*.dll" "%25SAM_DIR%25"
+      copy "%25SAM_DIR%25\$(ProjectName).dll" "%25SAM_DIR%25\$(ProjectName).gha"
+
+      if not exist "$(APPDATA)\Grasshopper\%25DirectoryName%25" mkdir "$(APPDATA)\Grasshopper\%25DirectoryName%25"
+      copy "$(SolutionDir)files\Grasshopper\%25Version%25\SAM_Revit.ghlink" "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
+
+      echo #Order of files is important &gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 echo %25SAM_REVIT_DIR%25\SAM.Core.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 echo %25SAM_REVIT_DIR%25\SAM.Architectural.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"
 echo %25SAM_REVIT_DIR%25\SAM.Analytical.Grasshopper.Revit.gha &gt;&gt; "$(APPDATA)\Grasshopper\%25DirectoryName%25\SAM_Revit.ghlink"

@@ -49,16 +49,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_level", NickName = "_level", Description = "Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_referenceLevel", NickName = "_referenceLevel", Description = "Reference Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_level", NickName = "_level", Description = "Level", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Level() { Name = "_referenceLevel", NickName = "_referenceLevel", Description = "Reference Level", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Number param_Number = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_maxDistance", NickName = "_maxDistance", Description = "Max Distance", Access = GH_ParamAccess.item };
                 param_Number.SetPersistentData(0.2);
-                result.Add(ParamDefinition.FromParam(param_Number, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Number, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -71,7 +71,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "walls", NickName = "walls", Description = "Revit Walls", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "walls", NickName = "walls", Description = "Revit Walls", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -120,8 +120,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
             double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, DisplayUnitType.DUT_METERS);
+#else
+            double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
+            double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, UnitTypeId.Meters);
+#endif
 
             Document document = level.Document;
 

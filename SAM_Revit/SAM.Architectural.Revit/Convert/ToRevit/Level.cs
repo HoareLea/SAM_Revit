@@ -24,7 +24,12 @@ namespace SAM.Architectural.Revit
             if (double.IsNaN(elevation))
                 return null;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             elevation = UnitUtils.ConvertToInternalUnits(elevation, DisplayUnitType.DUT_METERS);
+#else
+            elevation = UnitUtils.ConvertToInternalUnits(elevation, UnitTypeId.Meters);
+#endif
+
 
             if (result == null)
             {

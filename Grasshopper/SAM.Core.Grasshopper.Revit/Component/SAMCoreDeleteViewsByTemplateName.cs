@@ -43,21 +43,21 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_templateName", NickName = "_templateName", Description = "Source Template Name", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_templateName", NickName = "_templateName", Description = "Source Template Name", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = null;
 
                 param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_inverted_", NickName = "_inverted_", Description = "Inverted", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(true);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_String param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_viewTypes_", NickName = "_viewTypes_", Description = "Revit View Types to be considered", Access = GH_ParamAccess.list };
                 param_String.SetPersistentData(new string[] { Core.ViewType.FloorPlan.ToString() });
-                result.Add(ParamDefinition.FromParam(param_String, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_String, ParamRelevance.Binding));
 
                 param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
-                result.Add(ParamDefinition.FromParam(param_Boolean, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -70,7 +70,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(ParamDefinition.FromParam(new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "ids", NickName = "ids", Description = "Revit Element Ids", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Integer() { Name = "ids", NickName = "ids", Description = "Revit Element Ids", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

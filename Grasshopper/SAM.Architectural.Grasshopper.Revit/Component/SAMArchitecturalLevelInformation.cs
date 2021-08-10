@@ -121,16 +121,36 @@ namespace SAM.Architectural.Grasshopper.Revit
             Autodesk.Revit.DB.Level level_High = Core.Revit.Query.HighLevel(level);
             double elevation_High = double.NaN;
             if (level_High != null)
+            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, DisplayUnitType.DUT_METERS);
+#else
+                elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, UnitTypeId.Meters);
+#endif
+
+            }
+
 
             Autodesk.Revit.DB.Level level_Low = Core.Revit.Query.LowLevel(level);
             double elevation_Low = double.NaN;
             if (level_Low != null)
+            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, DisplayUnitType.DUT_METERS);
+#else
+                elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, UnitTypeId.Meters);
+#endif
+
+            }
 
             dataAccess.SetData(0, level_High);
             dataAccess.SetData(1, new GH_Number(elevation_High));
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
             dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS)));
+#else
+            dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters)));
+#endif
+
             dataAccess.SetData(3, level_Low);
             dataAccess.SetData(4, new GH_Number(elevation_Low));
         }

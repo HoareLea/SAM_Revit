@@ -50,7 +50,11 @@ namespace SAM.Analytical.Revit
                 return null;
 
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
+#if Revit2017
+            IEnumerable<ElementId> elementIds = null;
+#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
+#endif
 
             if (hostObject is Wall || hostObject is CurtainSystem)
             {
@@ -250,8 +254,13 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                 double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, DisplayUnitType.DUT_METERS);
-                if(height == 0)
+#else
+                double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, UnitTypeId.Meters);
+#endif
+
+                if (height == 0)
                 {
                     continue;
                 }

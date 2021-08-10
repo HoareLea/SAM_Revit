@@ -134,7 +134,7 @@ namespace SAM.Analytical.Revit
                     curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
                 }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021
                 Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
 #else
                 CurveLoop curveLoop = new CurveLoop();

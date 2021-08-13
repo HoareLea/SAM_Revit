@@ -298,7 +298,12 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            result = new Aperture(apertureConstruction, face3D);
+            result = Analytical.Create.Aperture(apertureConstruction, face3D);
+            if(result == null)
+            {
+                return result;
+            }
+
             result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
             convertSettings?.Add(familyInstance.Id, result);

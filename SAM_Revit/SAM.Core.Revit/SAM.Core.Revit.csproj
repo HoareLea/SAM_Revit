@@ -126,7 +126,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
     <OutputPath>bin\Release2022\</OutputPath>
@@ -138,7 +138,7 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-	<TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -272,6 +272,7 @@
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />
     <Compile Include="Modify\SetValues.cs" />
+    <Compile Include="Query\Materials.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
     <Compile Include="Query\ClosestLevel.cs" />
     <Compile Include="Query\BoundingBoxXYZ.cs" />

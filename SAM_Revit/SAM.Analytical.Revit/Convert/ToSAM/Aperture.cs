@@ -173,7 +173,7 @@ namespace SAM.Analytical.Revit
                         List<ISegmentable3D> segmentable3Ds_Temp = shell?.GetEdge3Ds()?.ConvertAll(x => x as ISegmentable3D);
                         if(segmentable3Ds_Temp != null)
                         {
-                            segmentable3Ds.AddRange(segmentable3Ds_Temp);
+                            segmentable3Ds_Temp.ForEach(x => segmentable3Ds.AddRange(x.GetSegments()));
                         }
                     }
                 }

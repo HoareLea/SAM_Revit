@@ -163,6 +163,22 @@ namespace SAM.Analytical.Revit
 
             //Method 1 of extracting Geometry
             List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
+            if((segmentable3Ds == null || segmentable3Ds.Count == 0) && familyInstance is Autodesk.Revit.DB.Panel)
+            {
+                List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance, true);
+                if(shells != null && shells.Count > 0)
+                {
+                    foreach(Shell shell in shells)
+                    {
+                        List<ISegmentable3D> segmentable3Ds_Temp = shell?.GetEdge3Ds()?.ConvertAll(x => x as ISegmentable3D);
+                        if(segmentable3Ds_Temp != null)
+                        {
+                            segmentable3Ds.AddRange(segmentable3Ds_Temp);
+                        }
+                    }
+                }
+            }
+
             if(segmentable3Ds != null)
             {
                 point2Ds = new List<Point2D>();

@@ -194,6 +194,14 @@ namespace SAM.Analytical.Revit
 
                             apertureType = Analytical.Query.ApertureType(typeName);
                             if (apertureType == ApertureType.Undefined)
+                            {
+                                if(typeName.Trim().Equals("Curtain Panels"))
+                                {
+                                    apertureType = ApertureType.Window;
+                                }
+                            }
+
+                            if (apertureType == ApertureType.Undefined)
                                 continue;
 
                             if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source))

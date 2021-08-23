@@ -35,7 +35,7 @@ namespace SAM.Analytical.Revit
 
             if (type == typeof(ApertureConstruction))
             {
-                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_Windows, Autodesk.Revit.DB.BuiltInCategory.OST_Doors };
+                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_Windows, Autodesk.Revit.DB.BuiltInCategory.OST_Doors, Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels};
                 LogicalOrFilter logicalOrFilter = new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter));
                 return new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsElementType();
             }

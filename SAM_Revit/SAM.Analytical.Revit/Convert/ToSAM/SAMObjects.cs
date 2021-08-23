@@ -51,7 +51,7 @@ namespace SAM.Analytical.Revit
             }
             else if (element is FamilySymbol)
             {
-                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
+                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors  || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_CurtainWallPanels)
                 {
                     ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction((FamilySymbol)element, convertSettings);
                     if (apertureConstruction != null)

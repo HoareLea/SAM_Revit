@@ -212,7 +212,7 @@ namespace SAM.Analytical.Revit
                 {
                     face2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
 
-                    face3D = plane.Convert(face2Ds[0]);
+                    //face3D = plane.Convert(face2Ds[0]);
                 }
             }
 

@@ -159,7 +159,7 @@ namespace SAM.Analytical.Revit
                 plane.FlipZ(false);
 
             List<Point2D> point2Ds = null;
-            Face3D face3D = null;
+            //Face3D face3D = null;
 
             //Method 1 of extracting Geometry
             List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
@@ -204,17 +204,24 @@ namespace SAM.Analytical.Revit
                         point2Ds_Temp.ForEach(x => point2Ds.Add(x));
                     }
 
-                    segmentable2Ds.Add(segmentable2D);
+                    //segmentable2Ds.Add(segmentable2D);
                 }
 
-                List<Face2D> face2Ds = segmentable2Ds.Face2Ds()?.Union();
-                if(face2Ds != null && face2Ds.Count > 0)
-                {
-                    face2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+                //List<Face2D> face2Ds = segmentable2Ds.Face2Ds()?.Union();
+                //if(face2Ds != null && face2Ds.Count > 0)
+                //{
+                //    face2Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
 
-                    //face3D = plane.Convert(face2Ds[0]);
-                }
+                //    face3D = plane.Convert(face2Ds[0]);
+                //}
             }
+
+            if(point2Ds == null || point2Ds.Count < 3)
+            {
+                return result;
+            }
+
+            Face3D face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
 
             //Method 2 of extracting Geometry
             //if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
@@ -281,13 +288,13 @@ namespace SAM.Analytical.Revit
             //}
 
             //Method 3 of extracting Geometry
-            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance || familyInstance.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
-            {
-                if(point2Ds != null && point2Ds.Count > 2)
-                {
-                    face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
-                }
-            }
+            //if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance || familyInstance.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
+            //{
+            //    if(point2Ds != null && point2Ds.Count > 2)
+            //    {
+            //        face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+            //    }
+            //}
 
             //TODO: Working on SAM Families (requested by Michal)
 

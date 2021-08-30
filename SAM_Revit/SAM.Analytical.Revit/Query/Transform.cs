@@ -13,7 +13,13 @@ namespace SAM.Analytical.Revit
             if (transform.IsIdentity)
                 return new PlanarBoundary3D(planarBoundary3D);
 
-            return new PlanarBoundary3D(Geometry.Revit.Query.Transform(transform, planarBoundary3D.GetFace3D()));
+            Geometry.Spatial.Face3D face3D = planarBoundary3D.GetFace3D();
+            if(face3D == null || !Geometry.Spatial.Query.IsValid(face3D))
+            {
+                return null;
+            }
+
+            return new PlanarBoundary3D(Geometry.Revit.Query.Transform(transform, face3D));
         }
         
         public static Aperture Transform(this Transform transform, Aperture aperture)
@@ -43,6 +49,11 @@ namespace SAM.Analytical.Revit
             }
 
             Panel result = Analytical.Create.Panel(panel.Guid, panel, Transform(transform, panel.PlanarBoundary3D));
+            if(result == null)
+            {
+                return result;
+            }
+
             result.RemoveApertures();
 
             if (apertures != null)

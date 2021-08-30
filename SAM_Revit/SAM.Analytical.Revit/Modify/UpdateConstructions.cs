@@ -80,7 +80,7 @@ namespace SAM.Analytical.Revit
                 for (int i = 0; i < delimitedFileTable.RowCount; i++)
                 {
                     string typeName = null;
-                    if (delimitedFileTable.TryGetValue(i, index_Type, out typeName))
+                    if (delimitedFileTable.TryConvert(i, index_Type, out typeName))
                     {
                         ApertureType apertureType = Analytical.Query.ApertureType(typeName);
                         if (apertureType != ApertureType.Undefined)
@@ -89,19 +89,19 @@ namespace SAM.Analytical.Revit
                         panelType = Analytical.Query.PanelType(typeName as object);
                     }
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source))
+                    if (!delimitedFileTable.TryConvert(i, index_Source, out name_Source))
                         continue;
 
                     if (!name.Equals(name_Source))
                         continue;
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Destination, out name_Destination))
+                    if (!delimitedFileTable.TryConvert(i, index_Destination, out name_Destination))
                     {
                         name_Destination = null;
                         continue;
                     }
 
-                    if (!delimitedFileTable.TryGetValue(i, index_Template, out name_Template))
+                    if (!delimitedFileTable.TryConvert(i, index_Template, out name_Template))
                         name_Template = null;
 
                     if (index_Thickness != -1)

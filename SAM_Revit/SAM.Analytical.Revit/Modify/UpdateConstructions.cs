@@ -189,7 +189,7 @@ namespace SAM.Analytical.Revit
                         for (int i = 0; i < delimitedFileTable.RowCount; i++)
                         {
                             string typeName = null;
-                            if (!delimitedFileTable.TryGetValue(i, index_Type, out typeName))
+                            if (!delimitedFileTable.TryGetValue(i, index_Type, out typeName) || string.IsNullOrWhiteSpace(typeName))
                                 continue;
 
                             apertureType = Analytical.Query.ApertureType(typeName);
@@ -204,7 +204,7 @@ namespace SAM.Analytical.Revit
                             if (apertureType == ApertureType.Undefined)
                                 continue;
 
-                            if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source))
+                            if (!delimitedFileTable.TryGetValue(i, index_Source, out name_Source) || string.IsNullOrWhiteSpace(name_Source))
                                 continue;
 
                             if (!name.Equals(name_Source))

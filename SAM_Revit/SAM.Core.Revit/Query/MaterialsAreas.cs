@@ -12,9 +12,21 @@ namespace SAM.Core.Revit
                 return null;
             }
 
+            if (double.IsNaN(spatialElement.Area) || spatialElement.Area < minArea)
+            {
+                return null;
+            }
+
             if (spatialElementGeometryCalculator == null)
             {
-                spatialElementGeometryCalculator = new SpatialElementGeometryCalculator(spatialElement.Document);
+                SpatialElementBoundaryOptions spatialElementBoundaryOptions = new SpatialElementBoundaryOptions()
+                {
+                    SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Finish,
+                    StoreFreeBoundaryFaces = false
+
+                };
+                
+                spatialElementGeometryCalculator = new SpatialElementGeometryCalculator(spatialElement.Document, spatialElementBoundaryOptions);
             }
 
             SpatialElementGeometryResults spatialElementGeometryResults = spatialElementGeometryCalculator.CalculateSpatialElementGeometry(spatialElement);

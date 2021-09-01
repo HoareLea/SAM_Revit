@@ -118,7 +118,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug2022\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2022</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Revit.xml</DocumentationFile>
     <DebugType>full</DebugType>

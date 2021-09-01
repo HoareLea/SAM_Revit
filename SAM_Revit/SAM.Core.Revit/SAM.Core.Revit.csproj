@@ -272,6 +272,7 @@
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />
     <Compile Include="Modify\SetValues.cs" />
+    <Compile Include="Query\MaterialsAreas.cs" />
     <Compile Include="Query\Materials.cs" />
     <Compile Include="Query\ConvertSettings.cs" />
     <Compile Include="Query\ClosestLevel.cs" />

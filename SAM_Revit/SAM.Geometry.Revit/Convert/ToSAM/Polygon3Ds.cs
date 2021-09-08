@@ -10,16 +10,52 @@ namespace SAM.Geometry.Revit
         public static List<Polygon3D> ToSAM_Polygon3Ds(this Autodesk.Revit.DB.Face face, double tolerance = Core.Tolerance.Distance)
         {
             if (face == null)
+            {
                 return null;
+            }
 
-            IEnumerable<CurveLoop> curveLoops = face.GetEdgesAsCurveLoops();
+            if(face is PlanarFace)
+            {
+                return ToSAM_Polygon3Ds((PlanarFace)face, tolerance);
+            }
 
+            List<Polygon3D> result = new List<Polygon3D>();
+
+            List<Triangle3D> triangle3Ds = face.Triangulate(0)?.ToSAM(tolerance)?.GetTriangles();
+            foreach(Triangle3D triangle3D in triangle3Ds)
+            {
+                Polygon3D polygon3D = Spatial.Create.Polygon3D(triangle3D);
+                if(polygon3D == null)
+                {
+                    continue;
+                }
+
+                result.Add(polygon3D);
+            }
+
+            return result;
+        }
+
+        public static List<Polygon3D> ToSAM_Polygon3Ds(this PlanarFace planarFace, double tolerance = Core.Tolerance.Distance)
+        {
+            if(planarFace == null)
+            {
+                return null;
+            }
+
+            XYZ normal = planarFace.FaceNormal;
+            if(normal == null)
+            {
+                return null;
+            }
+
+            IEnumerable<CurveLoop> curveLoops = planarFace.GetEdgesAsCurveLoops();
             if (curveLoops == null || curveLoops.Count() == 0)
+            {
                 return null;
+            }
 
-            XYZ normal = face.ComputeNormal(new UV(0.5, 0.5));
-
-            List<Polygon3D> polygon3Ds = new List<Polygon3D>();
+            List<Polygon3D> result = new List<Polygon3D>();
             foreach (CurveLoop curveLoop in curveLoops)
             {
                 Polygon3D polygon3D = ToSAM_Polygon3D(curveLoop, normal, tolerance);
@@ -30,21 +66,22 @@ namespace SAM.Geometry.Revit
 
                 List<Polygon3D> polygon3Ds_Intersection = Spatial.Query.SelfIntersectionPolygon3Ds(polygon3D, tolerance);
                 if (polygon3Ds_Intersection != null)
-                    polygon3Ds.AddRange(polygon3Ds_Intersection);
+                    result.AddRange(polygon3Ds_Intersection);
                 else
-                    polygon3Ds.Add(polygon3D);
+                    result.Add(polygon3D);
             }
 
-            if (polygon3Ds != null && polygon3Ds.Count > 1)
+            if (result != null && result.Count > 1)
             {
-                Spatial.Plane plane = polygon3Ds[0].GetPlane();
-                for (int i = 1; i < polygon3Ds.Count; i++)
+                Spatial.Plane plane = result[0].GetPlane();
+                for (int i = 1; i < result.Count; i++)
                 {
-                    polygon3Ds[i] = plane.Project(polygon3Ds[i]);
+                    result[i] = plane.Project(result[i]);
                 }
             }
 
-            return polygon3Ds;
+            return result;
+
         }
     }
 }

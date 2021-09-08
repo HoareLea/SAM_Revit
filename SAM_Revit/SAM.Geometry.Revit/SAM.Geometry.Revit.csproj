@@ -240,6 +240,7 @@
     <Compile Include="Classes\RevitInstance3D.cs" />
     <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToRevit\CurveLoops.cs" />
+    <Compile Include="Convert\ToSAM\Mesh3D.cs" />
     <Compile Include="Convert\ToSAM\RevitInstance3D.cs" />
     <Compile Include="Convert\ToSAM\RevitInstance.cs" />
     <Compile Include="Convert\ToSAM\RevitType.cs" />

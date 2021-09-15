@@ -21,7 +21,7 @@ namespace SAM.Geometry.Revit
 
             List<Polygon3D> result = new List<Polygon3D>();
 
-            List<Triangle3D> triangle3Ds = face.Triangulate(0)?.ToSAM(tolerance)?.GetTriangles();
+            List<Triangle3D> triangle3Ds = face.Triangulate(1)?.ToSAM(tolerance)?.GetTriangles();
             foreach(Triangle3D triangle3D in triangle3Ds)
             {
                 Polygon3D polygon3D = Spatial.Create.Polygon3D(triangle3D);

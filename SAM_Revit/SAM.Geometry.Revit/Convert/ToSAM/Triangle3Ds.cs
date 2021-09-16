@@ -12,6 +12,11 @@ namespace SAM.Geometry.Revit
             for (int i = 0; i < mesh.NumTriangles; i++)
             {
                 Triangle3D triangle3D = mesh.get_Triangle(i).ToSAM();
+                if(triangle3D == null || !triangle3D.IsValid())
+                {
+                    continue;
+                }
+
                 result.Add(triangle3D);
             }
             return result;

@@ -51,7 +51,24 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            return triangle3Ds.ConvertAll(x => new Face3D(x));
+            List<Face3D> result = new List<Face3D>();
+            foreach(Triangle3D triangle3D in triangle3Ds)
+            { 
+                if(triangle3D == null || !triangle3D.IsValid())
+                {
+                    continue;
+                }
+
+                Face3D face3D = new Face3D(triangle3D);
+                if(!face3D.IsValid())
+                {
+                    continue;
+                }
+
+                result.Add(face3D);
+            }
+
+            return result;
         }
 
     }

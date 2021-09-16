@@ -82,7 +82,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
 
             TextMap textMap = null;
-            index = Params.IndexOfInputParam("_spaces_");
+            index = Params.IndexOfInputParam("_textMap_");
             if(index == -1 || !dataAccess.GetData(index, ref textMap) || textMap == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");

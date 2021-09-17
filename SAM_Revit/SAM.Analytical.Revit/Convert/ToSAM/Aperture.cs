@@ -224,6 +224,37 @@ namespace SAM.Analytical.Revit
             Face3D face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
 
             //Method 2 of extracting Geometry
+            if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
+            {
+                List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
+                if (shells == null || shells.Count == 0)
+                    return null;
+
+                point2Ds = new List<Point2D>();
+                foreach(Shell shell in shells)
+                {
+                    List<Face3D> face3Ds = shell?.Face3Ds;
+                    if(face3Ds == null || face3Ds.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    foreach(Face3D face3D_Temp in face3Ds)
+                    {
+                        ISegmentable3D segmentable3D = face3D_Temp.GetExternalEdge3D() as ISegmentable3D;
+                        if(segmentable3D == null)
+                        {
+                            continue;
+                        }
+
+                        segmentable3D?.GetPoints()?.ForEach(x => point2Ds.Add(plane.Convert(x)));
+                    }
+                }
+
+                face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+            }
+
+            //Method 2 of extracting Geometry
             //if (face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
             //{
             //    List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);

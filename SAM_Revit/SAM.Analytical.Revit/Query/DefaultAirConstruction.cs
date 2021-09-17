@@ -16,7 +16,6 @@ namespace SAM.Analytical.Revit
                 result = constructionLibrary.GetConstructions(PanelGroup.Floor)?.FirstOrDefault();
             }
 
-
             return result;
         }
     }

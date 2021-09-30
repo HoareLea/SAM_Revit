@@ -80,13 +80,13 @@ namespace SAM.Analytical.Revit
                         continue;
                     }
                     
-                    Aperture aperture = ToSAM_Aperture(familyInstance, convertSettings);
-                    if(aperture == null)
+                    List<Aperture> apertures_Temp = ToSAM_Apertures(familyInstance, convertSettings);
+                    if(apertures_Temp == null)
                     {
                         continue;
                     }
 
-                    apertures.Add(aperture);
+                    apertures.AddRange(apertures_Temp);
                 }
             }
 

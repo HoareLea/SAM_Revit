@@ -5,6 +5,7 @@ using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Architectural.Revit
 {
@@ -29,7 +30,7 @@ namespace SAM.Architectural.Revit
 
             if (Core.Revit.Query.Simplified(familyInstance))
             {
-                result = Core.Revit.Query.IJSAMObject<Opening>(familyInstance);
+                result = Core.Revit.Query.IJSAMObjects<Opening>(familyInstance)?.FirstOrDefault();
                 if (result != null)
                     return result;
             }
@@ -65,7 +66,7 @@ namespace SAM.Architectural.Revit
 
             if (Core.Revit.Query.Simplified(familyInstance))
             {
-                result = Core.Revit.Query.IJSAMObject<Opening>(familyInstance);
+                result = Core.Revit.Query.IJSAMObjects<Opening>(familyInstance)?.FirstOrDefault();
                 if (result != null)
                 {
                     convertSettings?.Add(familyInstance.Id, result);

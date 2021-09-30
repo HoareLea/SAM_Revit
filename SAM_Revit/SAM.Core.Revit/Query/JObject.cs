@@ -5,7 +5,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static JObject JObject(this Element element)
+        public static JToken JToken(this Element element)
         {
             if (element == null)
                 return null;
@@ -14,7 +14,7 @@ namespace SAM.Core.Revit
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            return JToken.Parse(json) as JObject;
+            return Newtonsoft.Json.Linq.JToken.Parse(json);
         }
     }
 }

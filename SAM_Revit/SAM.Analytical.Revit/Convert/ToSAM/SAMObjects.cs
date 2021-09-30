@@ -40,9 +40,9 @@ namespace SAM.Analytical.Revit
 
                 if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
                 {
-                    Aperture aperture = ToSAM_Aperture(familyInstance, convertSettings);
-                    if (aperture != null)
-                        result = new List<Core.SAMObject>() { aperture };
+                    List<Aperture> apertures = ToSAM_Apertures(familyInstance, convertSettings);
+                    if (apertures != null)
+                        result = apertures.Cast<Core.SAMObject>();
                 }
                 else
                 {

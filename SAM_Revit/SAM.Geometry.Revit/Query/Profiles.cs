@@ -64,10 +64,7 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                List<Face3D> face3Ds_GeneratingElement_Temp = new List<Face3D>(face3Ds_GeneratingElement);
-                face3Ds_GeneratingElement_Temp.Add(face3D_HostObject);
-
-                PlanarIntersectionResult planarIntersectionResult = Spatial.Create.PlanarIntersectionResult(face3D_HostObject, face3Ds_GeneratingElement_Temp);
+                PlanarIntersectionResult planarIntersectionResult = Spatial.Create.PlanarIntersectionResult(face3D_HostObject, face3Ds_GeneratingElement);
                 if(planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
                 {
                     continue;

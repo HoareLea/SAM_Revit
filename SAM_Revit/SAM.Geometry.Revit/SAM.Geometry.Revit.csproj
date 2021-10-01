@@ -249,6 +249,8 @@
     <Compile Include="Convert\ToSAM\Shell.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Query\Face3Ds.cs" />
+    <Compile Include="Query\Faces.cs" />
     <Compile Include="Query\GeneratingElementIdsDictionary.cs" />
     <Compile Include="Query\BoundaryFace2Ds.cs" />
     <Compile Include="Query\BoundingBox3D.cs" />

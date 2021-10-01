@@ -57,36 +57,48 @@ namespace SAM.Geometry.Revit
             }
 
             List<Face3D> result = new List<Face3D>();
-            foreach(Face3D face3D_HostObject in face3Ds_HostObject)
+            foreach (Face3D face3D_HostObject in face3Ds_HostObject)
             {
-                if(face3D_HostObject == null)
+                if (face3D_HostObject == null)
                 {
                     continue;
                 }
 
                 PlanarIntersectionResult planarIntersectionResult = Spatial.Create.PlanarIntersectionResult(face3D_HostObject, face3Ds_GeneratingElement);
-                if(planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
+                if (planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
                 {
                     continue;
                 }
 
                 List<Face3D> face3Ds_Temp = planarIntersectionResult.Face3Ds();
-                if(face3Ds_Temp != null)
+                if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
                 {
-                    result.AddRange(face3Ds_Temp);
-                }
-                else
-                {
-                    List<ISegmentable2D> segmentable2Ds = planarIntersectionResult.GetGeometry2Ds<ISegmentable2D>();
-                    if(segmentable2Ds != null && segmentable2Ds.Count != 0)
+                    foreach (Face3D face3D in face3Ds_Temp)
                     {
-                        Rectangle2D rectangle2D = Planar.Create.Rectangle2D(segmentable2Ds);
-                        if(rectangle2D != null)
+                        if(face3D == null || !face3D.IsValid() || face3D.GetArea() < Core.Tolerance.MacroDistance)
                         {
-                            result.Add(new Face3D(planarIntersectionResult.Plane.Convert(rectangle2D)));
+                            continue;
                         }
+
+                        result.Add(face3D);
                     }
                 }
+
+                if (result != null && result.Count != 0)
+                {
+                    return result;
+                }
+
+                List<ISegmentable2D> segmentable2Ds = planarIntersectionResult.GetGeometry2Ds<ISegmentable2D>();
+                if (segmentable2Ds != null && segmentable2Ds.Count != 0)
+                {
+                    Rectangle2D rectangle2D = Planar.Create.Rectangle2D(segmentable2Ds);
+                    if (rectangle2D != null)
+                    {
+                        result.Add(new Face3D(planarIntersectionResult.Plane.Convert(rectangle2D)));
+                    }
+                }
+
             }
 
             return result;

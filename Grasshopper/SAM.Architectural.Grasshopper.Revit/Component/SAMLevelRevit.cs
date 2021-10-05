@@ -87,7 +87,7 @@ namespace SAM.Architectural.Grasshopper.Revit
                 convertSettings = Core.Revit.Query.ConvertSettings();
 
             Level level = null;
-            index = Params.IndexOfInputParam("level");
+            index = Params.IndexOfInputParam("_level");
             if (index == -1 || !dataAccess.GetData(index, ref level))
                 return;
 

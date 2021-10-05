@@ -11,7 +11,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             TextMap textMap;
-            if (!Analytical.ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ZoneMap, out textMap) || textMap == null)
+            if (!ActiveSetting.Setting.TryGetValue(ActiveSetting.Name.ZoneMap, out textMap) || textMap == null)
                 return null;
 
             return Analytical.Modify.MapZones(adjacencyCluster, textMap);

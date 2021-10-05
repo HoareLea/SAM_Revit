@@ -106,7 +106,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             index = Params.IndexOfOutputParam("Zones");
             if (index != -1)
-                dataAccess.SetData(index, zones);
+                dataAccess.SetDataList(index, zones);
         }
     }
 }

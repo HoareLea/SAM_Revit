@@ -139,5 +139,16 @@ namespace SAM.Core.Revit
             sAMObject.SetValue(ElementParameter.UniqueId, element.UniqueId);
             sAMObject.SetValue(ElementParameter.CategoryName, element.Category?.Name);
         }
+    
+        public static void UpdateParameterSets(this IRevitInstance revitInstance, Element element, TypeMap typeMap)
+        {
+            SAMObject sAMObject = revitInstance as SAMObject;
+            if(sAMObject == null)
+            {
+                return;
+            }
+
+            UpdateParameterSets(sAMObject, element, typeMap);
+        }
     }
 }

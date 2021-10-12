@@ -11,12 +11,12 @@ namespace SAM.Architectural.Revit
 {
     public static partial class Convert
     {
-        public static Opening ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, ConvertSettings convertSettings)
+        public static IOpening ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, ConvertSettings convertSettings)
         {
             if (energyAnalysisOpening == null)
                 return null;
 
-            Opening result = convertSettings?.GetObject<Opening>(energyAnalysisOpening.Id);
+            IOpening result = convertSettings?.GetObject<IOpening>(energyAnalysisOpening.Id);
             if (result != null)
                 return result;
 
@@ -30,7 +30,7 @@ namespace SAM.Architectural.Revit
 
             if (Core.Revit.Query.Simplified(familyInstance))
             {
-                result = Core.Revit.Query.IJSAMObjects<Opening>(familyInstance)?.FirstOrDefault();
+                result = Core.Revit.Query.IJSAMObjects<IOpening>(familyInstance)?.FirstOrDefault();
                 if (result != null)
                     return result;
             }
@@ -48,25 +48,25 @@ namespace SAM.Architectural.Revit
             }
 
             result = Architectural.Create.Opening(openingType, face3D);
-            result.UpdateParameterSets(familyInstance, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance);
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);
 
             return result;
         }
         
-        public static Opening ToSAM_Opening(this FamilyInstance familyInstance, ConvertSettings convertSettings)
+        public static IOpening ToSAM_Opening(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null)
                 return null;
 
-            Opening result = convertSettings?.GetObject<Opening>(familyInstance.Id);
+            IOpening result = convertSettings?.GetObject<IOpening>(familyInstance.Id);
             if (result != null)
                 return result;
 
             if (Core.Revit.Query.Simplified(familyInstance))
             {
-                result = Core.Revit.Query.IJSAMObjects<Opening>(familyInstance)?.FirstOrDefault();
+                result = Core.Revit.Query.IJSAMObjects<IOpening>(familyInstance)?.FirstOrDefault();
                 if (result != null)
                 {
                     convertSettings?.Add(familyInstance.Id, result);
@@ -151,7 +151,7 @@ namespace SAM.Architectural.Revit
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
             result = Architectural.Create.Opening(openingType, new Face3D(plane, rectangle2D));
-            result.UpdateParameterSets(familyInstance, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familyInstance);
 
             convertSettings?.Add(familyInstance.Id, result);
 

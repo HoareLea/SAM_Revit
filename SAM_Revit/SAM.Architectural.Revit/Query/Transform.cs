@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
 
 namespace SAM.Architectural.Revit
 {
@@ -14,12 +15,15 @@ namespace SAM.Architectural.Revit
             if (transform.IsIdentity)
                 return result;
 
-            if (result is BuildingElement)
+            if (result is AirPartition)
             {
-                BuildingElement buildingElement = (BuildingElement)result;
+                AirPartition airPartition = (AirPartition)result;
+                return new AirPartition(airPartition.Guid, Geometry.Revit.Query.Transform(transform, airPartition.Face3D));
+            }
 
-                buildingElement.Face3D = Geometry.Revit.Query.Transform(transform, buildingElement.Face3D);
-                return buildingElement;
+            if (result is IHostPartition)
+            {
+                return Transform(transform, (IHostPartition)result);
             }
 
             if (result is Room)
@@ -31,6 +35,33 @@ namespace SAM.Architectural.Revit
             }
 
             return result;
+        }
+
+        public static IHostPartition Transform(Transform transform, IHostPartition hostPartition)
+        {
+            if (transform == null || hostPartition == null)
+                return null;
+
+            IHostPartition result = Architectural.Create.HostPartition(hostPartition.Guid, Geometry.Revit.Query.Transform(transform, hostPartition.Face3D), hostPartition.Type());
+
+            List<IOpening> openings = hostPartition.Openings;
+            if(openings != null)
+            {
+                foreach(IOpening opening in openings)
+                {
+                    result.AddOpening(Transform(transform, opening));
+                }
+            }
+
+            return result;
+        }
+
+        public static IOpening Transform(Transform transform, IOpening opening)
+        {
+            if (transform == null || opening == null)
+                return null;
+
+            return Architectural.Create.Opening(opening.Guid, opening.Type(), Geometry.Revit.Query.Transform(transform, opening.Face3D));
         }
     }
 }

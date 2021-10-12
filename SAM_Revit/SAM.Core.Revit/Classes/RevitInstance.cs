@@ -2,7 +2,7 @@
 
 namespace SAM.Core.Revit
 {
-    public class RevitInstance: SAMInstance
+    public class RevitInstance: SAMInstance<RevitType>
     {
         public RevitInstance(RevitInstance revitInstance)
             :base(revitInstance)
@@ -11,7 +11,7 @@ namespace SAM.Core.Revit
         }
 
         public RevitInstance(RevitType revitType)
-            : base(revitType?.Name, revitType)
+            : base(revitType)
         {
 
         }

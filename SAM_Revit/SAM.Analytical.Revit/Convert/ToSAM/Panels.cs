@@ -423,7 +423,7 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            RevitType3D revitType3D = revitInstance3D.SAMType as RevitType3D;
+            RevitType3D revitType3D = revitInstance3D.Type as RevitType3D;
             Construction construction = revitType3D.ToSAM_Construction();
 
             List<Face3D> face3Ds = new List<Face3D>();

@@ -64,8 +64,8 @@ namespace SAM.Architectural.Revit
                 if (face3D == null)
                     continue;
 
-                HostPartition hostBuildingElement = Architectural.Create.HostPartition(face3D, hostPartitionType);
-                hostBuildingElement.UpdateParameterSets(hostObject, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+                IHostPartition hostPartition = Architectural.Create.HostPartition(face3D, hostPartitionType);
+                hostPartition.UpdateParameterSets(hostObject);
 
                 if (elementIds != null && elementIds.Count() > 0)
                 {
@@ -78,15 +78,15 @@ namespace SAM.Architectural.Revit
                         if (!(element is FamilyInstance))
                             continue;
 
-                        Opening opening = ToSAM_Opening((FamilyInstance)element, convertSettings);
+                        IOpening opening = ToSAM_Opening((FamilyInstance)element, convertSettings);
                         if(opening != null)
                         {
-                            hostBuildingElement.AddOpening(opening);
+                            hostPartition.AddOpening(opening);
                         }
                     }
                 }
 
-                result.Add(hostBuildingElement);
+                result.Add(hostPartition);
             }
 
             convertSettings?.Add(hostObject.Id, result);

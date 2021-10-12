@@ -9,12 +9,12 @@ namespace SAM.Architectural.Revit
 {
     public static partial class Convert
     {
-        public static List<HostBuildingElement> ToSAM(this HostObject hostObject, ConvertSettings convertSettings)
+        public static List<IPartition> ToSAM(this HostObject hostObject, ConvertSettings convertSettings)
         {
             if (hostObject == null)
                 return null;
 
-            List<HostBuildingElement> result = convertSettings?.GetObjects<HostBuildingElement>(hostObject.Id);
+            List<IPartition> result = convertSettings?.GetObjects<IPartition>(hostObject.Id);
             if (result != null)
             {
                 return result;
@@ -26,8 +26,8 @@ namespace SAM.Architectural.Revit
                 return null;
             }
 
-            HostBuildingElementType hostBuildingElementType = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
-            if(hostBuildingElementType == null)
+            HostPartitionType hostPartitionType = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
+            if(hostPartitionType == null)
             {
                 return null;
             }
@@ -57,14 +57,14 @@ namespace SAM.Architectural.Revit
                 }
             }
 
-            result = new List<HostBuildingElement>();
+            result = new List<IPartition>();
 
             foreach (Face3D face3D in face3Ds)
             {
                 if (face3D == null)
                     continue;
 
-                HostBuildingElement hostBuildingElement = Architectural.Create.HostBuildingElement(face3D, hostBuildingElementType);
+                HostPartition hostBuildingElement = Architectural.Create.HostPartition(face3D, hostPartitionType);
                 hostBuildingElement.UpdateParameterSets(hostObject, Core.Revit.ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
                 if (elementIds != null && elementIds.Count() > 0)

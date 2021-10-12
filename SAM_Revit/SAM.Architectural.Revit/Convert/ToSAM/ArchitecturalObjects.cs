@@ -13,21 +13,21 @@ namespace SAM.Architectural.Revit
             List<IArchitecturalObject> result = null;
             if (element is WallSweep)
             {
-                List<HostBuildingElement> hostBuildingElements = ToSAM((WallSweep)element, convertSettings);
-                if (hostBuildingElements != null)
-                    result = hostBuildingElements.ConvertAll(x => x as IArchitecturalObject);
+                List<IPartition> partitions = ToSAM((WallSweep)element, convertSettings);
+                if (partitions != null)
+                    result = partitions.ConvertAll(x => x as IArchitecturalObject);
             }
             else if (element is HostObject)
             {
-                List<HostBuildingElement> hostBuildingElements = ToSAM((HostObject)element, convertSettings);
-                if (hostBuildingElements != null)
-                    result = hostBuildingElements.ConvertAll(x => x as IArchitecturalObject);
+                List<IPartition> partitions = ToSAM((HostObject)element, convertSettings);
+                if (partitions != null)
+                    result = partitions.ConvertAll(x => x as IArchitecturalObject);
             }
             else if (element is HostObjAttributes)
             {
-                HostBuildingElementType hostBuildingElementType = ToSAM((HostObjAttributes)element, convertSettings);
-                if (hostBuildingElementType != null)
-                    result = new List<IArchitecturalObject>() { hostBuildingElementType };
+                HostPartitionType hostPartitionType = ToSAM((HostObjAttributes)element, convertSettings);
+                if (hostPartitionType != null)
+                    result = new List<IArchitecturalObject>() { hostPartitionType };
             }
             else if (element is SpatialElement)
             {

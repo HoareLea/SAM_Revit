@@ -232,9 +232,9 @@
     <Compile Include="Convert\ToSAM\Room.cs" />
     <Compile Include="Create\MaterialLayers.cs" />
     <Compile Include="Convert\ToSAM\Opening.cs" />
-    <Compile Include="Convert\ToSAM\HostBuildingElement.cs" />
+    <Compile Include="Convert\ToSAM\IPartitions.cs" />
     <Compile Include="Convert\ToSAM\OpeningType.cs" />
-    <Compile Include="Convert\ToSAM\HostBuildingElementType.cs" />
+    <Compile Include="Convert\ToSAM\HostPartitionType.cs" />
     <Compile Include="Convert\ToSAM\Level.cs" />
     <Compile Include="Create\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

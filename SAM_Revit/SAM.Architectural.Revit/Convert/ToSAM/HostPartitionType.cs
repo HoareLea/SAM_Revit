@@ -6,14 +6,14 @@ namespace SAM.Architectural.Revit
 {
     public static partial class Convert
     {
-        public static HostBuildingElementType ToSAM(this HostObjAttributes hostObjAttributes, ConvertSettings convertSettings)
+        public static HostPartitionType ToSAM(this HostObjAttributes hostObjAttributes, ConvertSettings convertSettings)
         {
             if (hostObjAttributes == null)
             {
                 return null;
             }
 
-            HostBuildingElementType result = convertSettings?.GetObject<HostBuildingElementType>(hostObjAttributes.Id);
+            HostPartitionType result = convertSettings?.GetObject<HostPartitionType>(hostObjAttributes.Id);
             if (result != null)
             {
                 return result;

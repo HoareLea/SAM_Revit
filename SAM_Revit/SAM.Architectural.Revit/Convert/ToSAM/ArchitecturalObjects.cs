@@ -41,7 +41,7 @@ namespace SAM.Architectural.Revit
 
                 if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
                 {
-                    Opening opening = ToSAM_Opening(familyInstance, convertSettings);
+                    IOpening opening = ToSAM_Opening(familyInstance, convertSettings);
                     if (opening != null)
                         result = new List<IArchitecturalObject>() { opening };
                 }

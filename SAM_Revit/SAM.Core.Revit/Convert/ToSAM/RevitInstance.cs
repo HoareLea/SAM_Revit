@@ -4,14 +4,14 @@ namespace SAM.Core.Revit
 {
     public static partial class Convert
     {
-        public static RevitInstance ToSAM(this FamilyInstance familyInstance, ConvertSettings convertSettings)
+        public static IRevitInstance ToSAM(this FamilyInstance familyInstance, ConvertSettings convertSettings)
         {
             if (familyInstance == null)
             {
                 return null;
             }
 
-            RevitInstance result = convertSettings?.GetObject<RevitInstance>(familyInstance.Id);
+            IRevitInstance result = convertSettings?.GetObject<IRevitInstance>(familyInstance.Id);
             if (result != null)
             {
                 return result;

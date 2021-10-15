@@ -252,6 +252,7 @@
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Enums\WallKind.cs" />
     <Compile Include="Enums\ViewType.cs" />
+    <Compile Include="Interfaces\IRevitInstance.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\AddProjectParameter.cs" />
     <Compile Include="Modify\CopyValue.cs" />

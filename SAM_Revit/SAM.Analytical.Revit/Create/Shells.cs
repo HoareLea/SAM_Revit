@@ -257,7 +257,7 @@ namespace SAM.Analytical.Revit
                     face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Bottom, x)));
                     face3Ds.AddRange(face2Ds.ConvertAll(x => new Face3D(plane_Top, x)));
 
-                    List<Shell> shells_Temp = Geometry.Spatial.Create.Shells(face3Ds, tolerance);
+                    List<Shell> shells_Temp = Geometry.Spatial.Create.Shells(face3Ds, new double[] { elevation_Bottom }, offset,  snapTolerance: snapTolerance, tolerance_Distance: tolerance);
                     if (shells_Temp == null || shells_Temp.Count == 0)
                         continue;
 

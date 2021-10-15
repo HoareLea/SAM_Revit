@@ -237,6 +237,7 @@
     <Compile Include="Convert\ToSAM\HostPartitionType.cs" />
     <Compile Include="Convert\ToSAM\Level.cs" />
     <Compile Include="Create\Log.cs" />
+    <Compile Include="Modify\UpdateParameterSets.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query\Elevation.cs" />
     <Compile Include="Query\FilteredElementCollector.cs" />
@@ -244,7 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\" />
-    <Folder Include="Modify\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

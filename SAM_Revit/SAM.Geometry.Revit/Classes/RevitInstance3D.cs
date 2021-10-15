@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SAM.Geometry.Revit
 {
-    public class RevitInstance3D: RevitInstance, ISAMGeometry3DObject
+    public class RevitInstance3D: RevitInstance<RevitType3D>, ISAMGeometry3DObject, IRevitInstance
     {
         private List<ISAMGeometry3D> geometries;
         

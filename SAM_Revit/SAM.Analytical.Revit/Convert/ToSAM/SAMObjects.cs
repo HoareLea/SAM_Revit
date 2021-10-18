@@ -109,7 +109,7 @@ namespace SAM.Analytical.Revit
             if (transform == null)
                 transform = Transform.Identity;
 
-            List<Element> elements = Query.FilteredElementCollector_New(document, type)?.ToList();
+            List<Element> elements = Query.FilteredElementCollector(document, type)?.ToList();
             if (elements == null)
                 return null;
 

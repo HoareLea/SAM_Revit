@@ -1,16 +1,16 @@
 ﻿using Autodesk.Revit.DB;
 using System.Collections.Generic;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Query
     {
-        public static IArchitecturalObject Transform(this Transform transform, IArchitecturalObject architecturalObject)
+        public static IAnalyticalObject Transform(this Transform transform, IAnalyticalObject analyticalObject)
         {
-            if (transform == null || architecturalObject == null)
+            if (transform == null || analyticalObject == null)
                 return null;
 
-            IArchitecturalObject result = Core.Query.Clone(architecturalObject);
+            IAnalyticalObject result = Core.Query.Clone(analyticalObject);
 
             if (transform.IsIdentity)
                 return result;
@@ -42,7 +42,7 @@ namespace SAM.Architectural.Revit
             if (transform == null || hostPartition == null)
                 return null;
 
-            IHostPartition result = Architectural.Create.HostPartition(hostPartition.Guid, Geometry.Revit.Query.Transform(transform, hostPartition.Face3D), hostPartition.Type());
+            IHostPartition result = Analytical.Create.HostPartition(hostPartition.Guid, Geometry.Revit.Query.Transform(transform, hostPartition.Face3D), hostPartition.Type());
 
             List<IOpening> openings = hostPartition.Openings;
             if(openings != null)
@@ -61,7 +61,7 @@ namespace SAM.Architectural.Revit
             if (transform == null || opening == null)
                 return null;
 
-            return Architectural.Create.Opening(opening.Guid, opening.Type(), Geometry.Revit.Query.Transform(transform, opening.Face3D));
+            return Analytical.Create.Opening(opening.Guid, opening.Type(), Geometry.Revit.Query.Transform(transform, opening.Face3D));
         }
     }
 }

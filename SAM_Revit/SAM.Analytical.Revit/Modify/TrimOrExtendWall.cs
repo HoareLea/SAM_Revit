@@ -9,35 +9,35 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Modify
     {
-        public static List<Wall> TrimOrExtendWall(this IEnumerable<Wall> walls, double maxDistance, double tolerance = Core.Tolerance.Distance)
+        public static List<Autodesk.Revit.DB.Wall> TrimOrExtendWall(this IEnumerable<Autodesk.Revit.DB.Wall> walls, double maxDistance, double tolerance = Core.Tolerance.Distance)
         {
-            Dictionary<double, Dictionary<Wall, Segment2D>> dictionary = new Dictionary<double, Dictionary<Wall, Segment2D>>();
-            foreach (Wall wall in walls)
+            Dictionary<double, Dictionary<Autodesk.Revit.DB.Wall, Segment2D>> dictionary = new Dictionary<double, Dictionary<Autodesk.Revit.DB.Wall, Segment2D>>();
+            foreach (Autodesk.Revit.DB.Wall wall in walls)
             {
                 Curve curve = (wall.Location as LocationCurve).Curve;
                 Segment3D segment3D = Geometry.Revit.Convert.ToSAM_Segment3D(curve);
 
                 double elevation = Math.Min(segment3D[0].Z, segment3D[1].Z);
 
-                Dictionary<Wall, Segment2D> dictionary_Wall = null;
+                Dictionary<Autodesk.Revit.DB.Wall, Segment2D> dictionary_Wall = null;
                 if (!dictionary.TryGetValue(elevation, out dictionary_Wall))
                 {
-                    dictionary_Wall = new Dictionary<Wall, Segment2D>();
+                    dictionary_Wall = new Dictionary<Autodesk.Revit.DB.Wall, Segment2D>();
                     dictionary[elevation] = dictionary_Wall;
                 }
 
                 dictionary_Wall[wall] = Geometry.Spatial.Plane.WorldXY.Convert(segment3D);
             }
 
-            List<Wall> result = new List<Wall>();
+            List<Autodesk.Revit.DB.Wall> result = new List<Autodesk.Revit.DB.Wall>();
 
-            foreach (KeyValuePair<double, Dictionary<Wall, Segment2D>> keyValuePair in dictionary)
+            foreach (KeyValuePair<double, Dictionary<Autodesk.Revit.DB.Wall, Segment2D>> keyValuePair in dictionary)
             {
                 List<Segment2D> segment2Ds = keyValuePair.Value.Values.ToList();
 
                 //Filtering Walls by Level
-                List<Tuple<Wall, Segment2D, List<int>, bool>> tupleList = new List<Tuple<Wall, Segment2D, List<int>, bool>>();
-                foreach (KeyValuePair<Wall, Segment2D> keyValuePair_Wall in keyValuePair.Value)
+                List<Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>> tupleList = new List<Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>>();
+                foreach (KeyValuePair<Autodesk.Revit.DB.Wall, Segment2D> keyValuePair_Wall in keyValuePair.Value)
                 {
                     LocationCurve locationCurve = keyValuePair_Wall.Key.Location as LocationCurve;
 
@@ -54,7 +54,7 @@ namespace SAM.Analytical.Revit
                         indexes.Add(1);
 
                     //if (indexes.Count > 0)
-                    tupleList.Add(new Tuple<Wall, Segment2D, List<int>, bool>(keyValuePair_Wall.Key, keyValuePair_Wall.Value, indexes, false));
+                    tupleList.Add(new Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>(keyValuePair_Wall.Key, keyValuePair_Wall.Value, indexes, false));
                 }
 
                 //Seeking for walls to be extended/trimmed
@@ -62,12 +62,12 @@ namespace SAM.Analytical.Revit
                 while (updated)
                 {
                     updated = false;
-                    List<Tuple<Wall, Segment2D, List<int>, bool>> tupleList_Unconnected = tupleList.FindAll(x => x.Item3 != null && x.Item3.Count > 0);
+                    List<Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>> tupleList_Unconnected = tupleList.FindAll(x => x.Item3 != null && x.Item3.Count > 0);
                     for (int i = 0; i < tupleList_Unconnected.Count; i++)
                     {
-                        Tuple<Wall, Segment2D, List<int>, bool> tuple = tupleList_Unconnected[i];
+                        Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool> tuple = tupleList_Unconnected[i];
 
-                        List<Tuple<Wall, Segment2D, List<int>, bool>> tupleList_Temp = new List<Tuple<Wall, Segment2D, List<int>, bool>>(tupleList);
+                        List<Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>> tupleList_Temp = new List<Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>>(tupleList);
                         tupleList_Temp.Remove(tuple);
 
                         Segment2D segment2D = tuple.Item2;
@@ -138,7 +138,7 @@ namespace SAM.Analytical.Revit
                             //TODO: Double Check if works (added 2020.05.14)
                             if ((index == 0 && segment2D[1].AlmostEquals(tuple_Intersection.Item1)) || (index == 1 && segment2D[0].AlmostEquals(tuple_Intersection.Item1)))
                             {
-                                tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, new Segment2D(tuple_Intersection.Item1, tuple_Intersection.Item1), tuple.Item3.FindAll(x => x != index), true);
+                                tupleList[k] = new Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>(tuple.Item1, new Segment2D(tuple_Intersection.Item1, tuple_Intersection.Item1), tuple.Item3.FindAll(x => x != index), true);
 
                                 updated = true;
                                 break;
@@ -151,7 +151,7 @@ namespace SAM.Analytical.Revit
                                 segment2D_Temp = new Segment2D(segment2D_Intersection);
                                 segment2D_Temp.Adjust(tuple_Intersection.Item1);
                                 if (!segment2D_Temp.AlmostSimilar(segment2D_Intersection) && segment2D_Temp.GetLength() > segment2D_Intersection.GetLength())
-                                    tupleList[j] = new Tuple<Wall, Segment2D, List<int>, bool>(tupleList[j].Item1, segment2D_Temp, tupleList[j].Item3.FindAll(x => x != segment2D_Temp.GetEndIndex(tuple_Intersection.Item1)), true);
+                                    tupleList[j] = new Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>(tupleList[j].Item1, segment2D_Temp, tupleList[j].Item3.FindAll(x => x != segment2D_Temp.GetEndIndex(tuple_Intersection.Item1)), true);
                             }
 
                             segment2D_Temp = new Segment2D(segment2D);
@@ -159,7 +159,7 @@ namespace SAM.Analytical.Revit
                             if (segment2D_Temp.AlmostSimilar(segment2D))
                                 continue;
 
-                            tupleList[k] = new Tuple<Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Temp, tuple.Item3.FindAll(x => x != index), true);
+                            tupleList[k] = new Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool>(tuple.Item1, segment2D_Temp, tuple.Item3.FindAll(x => x != index), true);
 
                             updated = true;
                             break;
@@ -173,9 +173,9 @@ namespace SAM.Analytical.Revit
                 tupleList.RemoveAll(x => !x.Item4);
 
                 //Updating Revit Walls
-                foreach (Tuple<Wall, Segment2D, List<int>, bool> tuple in tupleList)
+                foreach (Tuple<Autodesk.Revit.DB.Wall, Segment2D, List<int>, bool> tuple in tupleList)
                 {
-                    Wall wall = tuple.Item1;
+                    Autodesk.Revit.DB.Wall wall = tuple.Item1;
                     if (!wall.IsValidObject)
                         continue;
 

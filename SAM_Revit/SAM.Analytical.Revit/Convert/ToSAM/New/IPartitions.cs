@@ -5,11 +5,11 @@ using SAM.Geometry.Revit;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static List<IPartition> ToSAM(this HostObject hostObject, ConvertSettings convertSettings)
+        public static List<IPartition> ToSAM_Partitions(this HostObject hostObject, ConvertSettings convertSettings)
         {
             if (hostObject == null)
                 return null;
@@ -26,7 +26,7 @@ namespace SAM.Architectural.Revit
                 return null;
             }
 
-            HostPartitionType hostPartitionType = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM(convertSettings);
+            HostPartitionType hostPartitionType = ((HostObjAttributes)hostObject.Document.GetElement(elementId_Type)).ToSAM_HostPartitionType(convertSettings);
             if(hostPartitionType == null)
             {
                 return null;
@@ -46,7 +46,7 @@ namespace SAM.Architectural.Revit
 
             if (hostObject is Autodesk.Revit.DB.Wall || hostObject is CurtainSystem)
             {
-                List<Panel> panels = Core.Revit.Query.Panels(hostObject as dynamic);
+                List<Autodesk.Revit.DB.Panel> panels = Core.Revit.Query.Panels(hostObject as dynamic);
                 if (panels != null && panels.Count > 0)
                 {
                     List<ElementId> elementIds_Temp = panels.ConvertAll(x => x.Id);
@@ -64,7 +64,7 @@ namespace SAM.Architectural.Revit
                 if (face3D == null)
                     continue;
 
-                IHostPartition hostPartition = Architectural.Create.HostPartition(face3D, hostPartitionType);
+                IHostPartition hostPartition = Analytical.Create.HostPartition(face3D, hostPartitionType);
                 hostPartition.UpdateParameterSets(hostObject);
 
                 if (elementIds != null && elementIds.Count() > 0)

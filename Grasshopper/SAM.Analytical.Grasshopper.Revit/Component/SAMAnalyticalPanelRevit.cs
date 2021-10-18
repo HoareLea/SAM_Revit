@@ -26,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
 
-        private List<Wall> walls = new List<Wall>();
+        private List<Autodesk.Revit.DB.Wall> walls = new List<Autodesk.Revit.DB.Wall>();
         private bool run = false;
 
         private static readonly FailureDefinitionId[] failureDefinitionIdsToFix = new FailureDefinitionId[]
@@ -98,7 +98,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 WallUtils.AllowWallJoinAtEnd(wallToJoin, 1);
             }
 
-            walls = new List<Wall>();
+            walls = new List<Autodesk.Revit.DB.Wall>();
         }
 
         public override void OnDone(TransactionStatus status)
@@ -174,8 +174,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             //        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Defult type used for panel {0}", panel.Guid));
             //}
 
-            if (hostObject_New is Wall)
-                walls.Add((Wall)hostObject_New);
+            if (hostObject_New is Autodesk.Revit.DB.Wall)
+                walls.Add((Autodesk.Revit.DB.Wall)hostObject_New);
 
             hostObject = hostObject_New;
         }

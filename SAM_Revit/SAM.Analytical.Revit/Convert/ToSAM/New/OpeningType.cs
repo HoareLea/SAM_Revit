@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
@@ -28,7 +28,7 @@ namespace SAM.Architectural.Revit
                     break;
             }
 
-            result.UpdateParameterSets(familySymbol, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(familySymbol);
 
             convertSettings?.Add(familySymbol.Id, result);
 

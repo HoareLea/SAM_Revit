@@ -25,13 +25,13 @@ namespace SAM.Analytical.Revit
                 hostObjAttributes = Analytical.Query.DefaultConstruction(panelType)?.ToRevit(document, panelType, normal, convertSettings); //Default Construction
 
             BuiltInParameter[] builtInParameters = null;
-            if (hostObjAttributes is WallType)
+            if (hostObjAttributes is Autodesk.Revit.DB.WallType)
             {
                 double lowElevation = panel.LowElevation();
 
                 Level level = document.LowLevel(lowElevation);
 
-                Wall wall = ToRevit_Wall(face3D, document, (WallType)hostObjAttributes, level);
+                Autodesk.Revit.DB.Wall wall = ToRevit_Wall(face3D, document, (Autodesk.Revit.DB.WallType)hostObjAttributes, level);
                 if (wall == null)
                     return result;
 
@@ -135,7 +135,7 @@ namespace SAM.Analytical.Revit
                 }
 
 #if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021
-                Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as FloorType, level, false);
+                Autodesk.Revit.DB.Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as Autodesk.Revit.DB.FloorType, level, false);
 #else
                 CurveLoop curveLoop = new CurveLoop();
                 foreach(Curve curve in curveArray_Plane)
@@ -216,7 +216,7 @@ namespace SAM.Analytical.Revit
                 double levelElevation = level.Elevation;
 
                 ModelCurveArray modelCurveArray = new ModelCurveArray();
-                RoofBase roofBase = document.Create.NewFootPrintRoof(curveArray, level, hostObjAttributes as RoofType, out modelCurveArray);
+                RoofBase roofBase = document.Create.NewFootPrintRoof(curveArray, level, hostObjAttributes as Autodesk.Revit.DB.RoofType, out modelCurveArray);
 
                 Parameter parameter = roofBase.get_Parameter(BuiltInParameter.ROOF_UPTO_LEVEL_PARAM);
                 if (parameter != null)
@@ -245,7 +245,7 @@ namespace SAM.Analytical.Revit
             List<Aperture> apertures = panel.Apertures;
             if (apertures != null)
             {
-                if(result is Wall && ((Wall)result).WallType.Kind == WallKind.Curtain)
+                if(result is Autodesk.Revit.DB.Wall && ((Autodesk.Revit.DB.Wall)result).WallType.Kind == WallKind.Curtain)
                 {
 
                 }

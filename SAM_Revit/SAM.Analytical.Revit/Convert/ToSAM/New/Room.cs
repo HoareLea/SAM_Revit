@@ -4,11 +4,11 @@ using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static Room ToSAM(this SpatialElement spatialElement, ConvertSettings convertSettings)
+        public static Room ToSAM_Room(this SpatialElement spatialElement, ConvertSettings convertSettings)
         {
             if (spatialElement == null)
                 return null;
@@ -68,7 +68,7 @@ namespace SAM.Architectural.Revit
             return result;
         }
 
-        public static Room ToSAM(this EnergyAnalysisSpace energyAnalysisSpace, ConvertSettings convertSettings)
+        public static Room ToSAM_Room(this EnergyAnalysisSpace energyAnalysisSpace, ConvertSettings convertSettings)
         {
             if (energyAnalysisSpace == null)
                 return null;
@@ -79,7 +79,7 @@ namespace SAM.Architectural.Revit
             if (spatialElement == null)
                 return null;
 
-            return ToSAM(spatialElement, convertSettings);
+            return ToSAM_Room(spatialElement, convertSettings);
 
         }
     }

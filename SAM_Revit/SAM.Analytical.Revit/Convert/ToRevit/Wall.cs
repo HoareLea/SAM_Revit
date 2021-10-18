@@ -14,7 +14,7 @@ namespace SAM.Analytical.Revit
         /// <param name="wallType">Revit WallType. Default WallType will be used if null</param>
         /// <param name="level">Revit Level. Low Level for Face3D will be used if null</param>
         /// <returns>Revit Wall</returns>
-        public static Wall ToRevit_Wall(this Geometry.Spatial.Face3D face3D, Document document, WallType wallType = null, Level level = null)
+        public static Autodesk.Revit.DB.Wall ToRevit_Wall(this Geometry.Spatial.Face3D face3D, Document document, Autodesk.Revit.DB.WallType wallType = null, Level level = null)
         {
             if (face3D == null || document == null)
                 return null;
@@ -33,7 +33,7 @@ namespace SAM.Analytical.Revit
                 {
                     elementId = document.GetDefaultFamilyTypeId(elementId);
                     if (elementId != null && elementId != ElementId.InvalidElementId)
-                        wallType = document.GetElement(elementId) as WallType;
+                        wallType = document.GetElement(elementId) as Autodesk.Revit.DB.WallType;
                 }
             }
 
@@ -57,7 +57,7 @@ namespace SAM.Analytical.Revit
             XYZ xyz_Normal = Geometry.Revit.Convert.ToRevit(normal, false);
 
             if (curveLoops.Count == 1)
-                return Wall.Create(document, curveLoops[0].ToList(), wallType.Id, level.Id, false, xyz_Normal);
+                return Autodesk.Revit.DB.Wall.Create(document, curveLoops[0].ToList(), wallType.Id, level.Id, false, xyz_Normal);
 
             //The Wall.Create method requires the curveLoops to be in either all counter-clockwise direction or all clockwise direction.
             for (int i = 0; i < curveLoops.Count; i++)
@@ -112,7 +112,7 @@ namespace SAM.Analytical.Revit
             if (curves == null || curves.Count == 0)
                 return null;
 
-            return Wall.Create(document, curves, wallType.Id, level.Id, false, xyz_Normal);
+            return Autodesk.Revit.DB.Wall.Create(document, curves, wallType.Id, level.Id, false, xyz_Normal);
 
         }
     }

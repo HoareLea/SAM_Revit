@@ -130,7 +130,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = level.Document;
 
-            IEnumerable<Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>();
+            IEnumerable<Autodesk.Revit.DB.Wall> walls_All = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Wall)).Cast<Autodesk.Revit.DB.Wall>();
             if (walls_All == null || walls_All.Count() == 0)
                 return;
 
@@ -140,7 +140,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Panel> panels = new List<Panel>();
             List<Panel> panels_Reference = new List<Panel>();
-            foreach (Wall wall in walls_All)
+            foreach (Autodesk.Revit.DB.Wall wall in walls_All)
             {
                 List<Panel> panels_Temp = Analytical.Revit.Convert.ToSAM(wall, convertSettings);
                 foreach (Panel panel in panels_Temp)
@@ -271,7 +271,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             foreach (KeyValuePair<Segment2D, ElementId> keyValuePair in dictionary_Result)
             {
-                Wall wall = document.GetElement(keyValuePair.Value) as Wall;
+                Autodesk.Revit.DB.Wall wall = document.GetElement(keyValuePair.Value) as Autodesk.Revit.DB.Wall;
 
                 if (wall == null || !wall.IsValidObject)
                     continue;

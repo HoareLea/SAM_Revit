@@ -7,11 +7,11 @@ using SAM.Geometry.Spatial;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static IOpening ToSAM(this EnergyAnalysisOpening energyAnalysisOpening, ConvertSettings convertSettings)
+        public static IOpening ToSAM_Opening(this EnergyAnalysisOpening energyAnalysisOpening, ConvertSettings convertSettings)
         {
             if (energyAnalysisOpening == null)
                 return null;
@@ -47,7 +47,7 @@ namespace SAM.Architectural.Revit
                 return null;
             }
 
-            result = Architectural.Create.Opening(openingType, face3D);
+            result = Analytical.Create.Opening(openingType, face3D);
             result.UpdateParameterSets(familyInstance);
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);
@@ -150,7 +150,7 @@ namespace SAM.Architectural.Revit
 
             Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
 
-            result = Architectural.Create.Opening(openingType, new Face3D(plane, rectangle2D));
+            result = Analytical.Create.Opening(openingType, new Face3D(plane, rectangle2D));
             result.UpdateParameterSets(familyInstance);
 
             convertSettings?.Add(familyInstance.Id, result);

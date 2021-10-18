@@ -62,7 +62,7 @@ namespace SAM.Analytical.Revit
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Windows).WhereElementIsElementType();
             }
 
-            if(type == typeof(Room))
+            if(type == typeof(Space))
             {
                 FilteredElementCollector fileteredElementCollector = new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_MEPSpaces);
                 IEnumerable<ElementId> elementIds = fileteredElementCollector.ToElementIds();

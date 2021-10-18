@@ -26,12 +26,12 @@ namespace SAM.Analytical.Revit
                 return Transform(transform, (IHostPartition)result);
             }
 
-            if (result is Room)
+            if (result is Space)
             {
-                Room room = (Room)result;
+                Space space = (Space)result;
 
-                room.Location = Geometry.Revit.Query.Transform(transform, room.Location);
-                return room;
+                space = new Space(space, space.Name, Geometry.Revit.Query.Transform(transform, space.Location));
+                return space;
             }
 
             return result;

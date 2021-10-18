@@ -31,9 +31,9 @@ namespace SAM.Analytical.Revit
             }
             else if (element is SpatialElement)
             {
-                Room room = ToSAM_Room((SpatialElement)element, convertSettings);
-                if (room != null)
-                    result = new List<IAnalyticalObject>() { room };
+                Space space = ToSAM((SpatialElement)element, convertSettings);
+                if (space != null)
+                    result = new List<IAnalyticalObject>() { space };
             }
             else if (element is FamilyInstance)
             {

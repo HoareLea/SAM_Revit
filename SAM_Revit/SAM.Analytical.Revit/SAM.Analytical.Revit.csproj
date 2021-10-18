@@ -226,7 +226,6 @@
     <Compile Include="Convert\ToSAM\New\IPartitions.cs" />
     <Compile Include="Convert\ToSAM\New\Opening.cs" />
     <Compile Include="Convert\ToSAM\New\OpeningType.cs" />
-    <Compile Include="Convert\ToSAM\New\Room.cs" />
     <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Shells.cs" />

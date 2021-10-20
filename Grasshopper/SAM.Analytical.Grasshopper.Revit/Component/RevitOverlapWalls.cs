@@ -115,12 +115,12 @@ namespace SAM.Analytical.Grasshopper.Revit
                 panels_Overlap.ForEach(x => elementIds.Add(x.ElementId()));
             }
 
-            List<Wall> walls = new List<Wall>();
-            DataTree<Wall> dataTree_Walls = new DataTree<Wall>();
+            List<Autodesk.Revit.DB.Wall> walls = new List<Autodesk.Revit.DB.Wall>();
+            DataTree<Autodesk.Revit.DB.Wall> dataTree_Walls = new DataTree<Autodesk.Revit.DB.Wall>();
             int count = 0;
             foreach (KeyValuePair<ElementId, HashSet<ElementId>> keyValuePair in dictionary)
             {
-                walls.Add(document.GetElement(keyValuePair.Key) as Wall);
+                walls.Add(document.GetElement(keyValuePair.Key) as Autodesk.Revit.DB.Wall);
 
                 GH_Path path = new GH_Path(count);
                 //if (keyValuePair.Value == null)
@@ -136,7 +136,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 //    continue;
                 //}
 
-                List<Wall> walls_Overlap = keyValuePair.Value.ToList().ConvertAll(x => document.GetElement(x) as Wall);
+                List<Autodesk.Revit.DB.Wall> walls_Overlap = keyValuePair.Value.ToList().ConvertAll(x => document.GetElement(x) as Autodesk.Revit.DB.Wall);
                 walls_Overlap.Sort((x, y) => (y.Location as LocationCurve).Curve.Length.CompareTo((x.Location as LocationCurve).Curve.Length));
                 walls_Overlap.ForEach(x => dataTree_Walls.Add(x, path));
                 count++;

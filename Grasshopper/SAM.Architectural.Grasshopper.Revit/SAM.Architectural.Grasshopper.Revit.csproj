@@ -198,7 +198,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Component\RevitSAMArchitecturalByElement.cs" />
     <Compile Include="Component\SAMArchitecturalLevelDispatchExisting.cs" />
     <Compile Include="Component\SAMLevelRevit.cs" />
     <Compile Include="Component\SAMArchitecturalLevelInformation.cs" />

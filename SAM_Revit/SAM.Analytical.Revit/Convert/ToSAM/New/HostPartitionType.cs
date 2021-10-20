@@ -2,11 +2,14 @@
 using SAM.Core.Revit;
 using System.Collections.Generic;
 
-namespace SAM.Architectural.Revit
+using SAM.Architectural.Revit;
+using SAM.Architectural;
+
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static HostPartitionType ToSAM(this HostObjAttributes hostObjAttributes, ConvertSettings convertSettings)
+        public static HostPartitionType ToSAM_HostPartitionType(this HostObjAttributes hostObjAttributes, ConvertSettings convertSettings)
         {
             if (hostObjAttributes == null)
             {
@@ -21,7 +24,7 @@ namespace SAM.Architectural.Revit
 
             string name = hostObjAttributes.Name;
 
-            List<MaterialLayer> materialLayers = Create.MaterialLayers(hostObjAttributes.Document, hostObjAttributes.GetCompoundStructure());
+            List<MaterialLayer> materialLayers = Architectural.Revit.Create.MaterialLayers(hostObjAttributes.Document, hostObjAttributes.GetCompoundStructure());
             if(materialLayers == null)
             {
                 return null;
@@ -48,7 +51,7 @@ namespace SAM.Architectural.Revit
 
             if(result != null)
             {
-                result.UpdateParameterSets(hostObjAttributes, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
+                result.UpdateParameterSets(hostObjAttributes);
                 convertSettings?.Add(hostObjAttributes.Id, result);
             }
 

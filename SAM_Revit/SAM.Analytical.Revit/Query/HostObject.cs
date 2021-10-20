@@ -14,14 +14,14 @@ namespace SAM.Analytical.Revit
             switch (panelGroup)
             {
                 case PanelGroup.Wall:
-                    IEnumerable<Wall> walls = Geometry.Revit.Query.Elements<Wall>(document, aperture.GetBoundingBox());
+                    IEnumerable<Autodesk.Revit.DB.Wall> walls = Geometry.Revit.Query.Elements<Autodesk.Revit.DB.Wall>(document, aperture.GetBoundingBox());
                     
                     if (walls != null && walls.Count() != 0)
                     {
                         Geometry.Spatial.Point3D point3D = Geometry.Spatial.Query.InternalPoint3D(aperture.GetFace3D());
                         double distance = double.MaxValue;
-                        Wall wall = null;
-                        foreach (Wall wall_Temp in walls)
+                        Autodesk.Revit.DB.Wall wall = null;
+                        foreach (Autodesk.Revit.DB.Wall wall_Temp in walls)
                         {
                             List<Panel> panels = Convert.ToSAM(wall_Temp, new Core.Revit.ConvertSettings(true, false, false));
                             if(panels != null)

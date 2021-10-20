@@ -4,36 +4,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SAM.Architectural.Revit
+namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static List<IArchitecturalObject> ToSAM(this Element element, ConvertSettings convertSettings)
+        public static List<IAnalyticalObject> ToSAM_AnalyticalObject(this Element element, ConvertSettings convertSettings)
         {
-            List<IArchitecturalObject> result = null;
+            List<IAnalyticalObject> result = null;
             if (element is WallSweep)
             {
-                List<IPartition> partitions = ToSAM((WallSweep)element, convertSettings);
+                List<IPartition> partitions = ToSAM_Partitions((WallSweep)element, convertSettings);
                 if (partitions != null)
-                    result = partitions.ConvertAll(x => x as IArchitecturalObject);
+                    result = partitions.ConvertAll(x => x as IAnalyticalObject);
             }
             else if (element is HostObject)
             {
-                List<IPartition> partitions = ToSAM((HostObject)element, convertSettings);
+                List<IPartition> partitions = ToSAM_Partitions((HostObject)element, convertSettings);
                 if (partitions != null)
-                    result = partitions.ConvertAll(x => x as IArchitecturalObject);
+                    result = partitions.ConvertAll(x => x as IAnalyticalObject);
             }
             else if (element is HostObjAttributes)
             {
-                HostPartitionType hostPartitionType = ToSAM((HostObjAttributes)element, convertSettings);
+                HostPartitionType hostPartitionType = ToSAM_HostPartitionType((HostObjAttributes)element, convertSettings);
                 if (hostPartitionType != null)
-                    result = new List<IArchitecturalObject>() { hostPartitionType };
+                    result = new List<IAnalyticalObject>() { hostPartitionType };
             }
             else if (element is SpatialElement)
             {
-                Room room = ToSAM((SpatialElement)element, convertSettings);
-                if (room != null)
-                    result = new List<IArchitecturalObject>() { room };
+                Space space = ToSAM((SpatialElement)element, convertSettings);
+                if (space != null)
+                    result = new List<IAnalyticalObject>() { space };
             }
             else if (element is FamilyInstance)
             {
@@ -43,7 +43,7 @@ namespace SAM.Architectural.Revit
                 {
                     IOpening opening = ToSAM_Opening(familyInstance, convertSettings);
                     if (opening != null)
-                        result = new List<IArchitecturalObject>() { opening };
+                        result = new List<IAnalyticalObject>() { opening };
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace SAM.Architectural.Revit
                 {
                     OpeningType openingType = ToSAM_OpeningType((FamilySymbol)element, convertSettings);
                     if (openingType != null)
-                        result = new List<IArchitecturalObject>() { openingType };
+                        result = new List<IAnalyticalObject>() { openingType };
                 }
             }
             else if (element is ModelCurve)
@@ -71,12 +71,12 @@ namespace SAM.Architectural.Revit
             return result;
         }
 
-        public static List<T> ToSAM<T>(this RevitLinkInstance revitLinkInstance, ConvertSettings convertSettings) where T : IArchitecturalObject
+        public static List<T> ToSAM_AnalyticalObject<T>(this RevitLinkInstance revitLinkInstance, ConvertSettings convertSettings) where T : IAnalyticalObject
         {
-            return ToSAM(revitLinkInstance, typeof(T), convertSettings)?.Cast<T>()?.ToList();
+            return ToSAM_AnalyticalObject(revitLinkInstance, typeof(T), convertSettings)?.Cast<T>()?.ToList();
         }
 
-        public static List<IArchitecturalObject> ToSAM(this RevitLinkInstance revitLinkInstance, System.Type type, ConvertSettings convertSettings)
+        public static List<IAnalyticalObject> ToSAM_AnalyticalObject(this RevitLinkInstance revitLinkInstance, System.Type type, ConvertSettings convertSettings)
         {
             Document document = null;
 
@@ -99,10 +99,10 @@ namespace SAM.Architectural.Revit
             if (!transform.IsIdentity)
                 transform = transform.Inverse;
 
-            return ToSAM(document, type, convertSettings, transform);
+            return ToSAM_AnalyticalObject(document, type, convertSettings, transform);
         }
 
-        public static List<IArchitecturalObject> ToSAM(this Document document, System.Type type, ConvertSettings convertSettings, Transform transform = null)
+        public static List<IAnalyticalObject> ToSAM_AnalyticalObject(this Document document, System.Type type, ConvertSettings convertSettings, Transform transform = null)
         {
             if (document == null || type == null)
                 return null;
@@ -110,19 +110,19 @@ namespace SAM.Architectural.Revit
             if (transform == null)
                 transform = Transform.Identity;
 
-            List<Element> elements = Query.FilteredElementCollector(document, type)?.ToList();
+            List<Element> elements = Query.FilteredElementCollector_New(document, type)?.ToList();
             if (elements == null)
                 return null;
 
-            List<IArchitecturalObject> result = new List<IArchitecturalObject>();
+            List<IAnalyticalObject> result = new List<IAnalyticalObject>();
             for (int i = 0; i < elements.Count; i++)
             {
-                IEnumerable<IArchitecturalObject> analyticalObjects = ToSAM(elements[i], convertSettings);
+                IEnumerable<IAnalyticalObject> analyticalObjects = ToSAM_AnalyticalObject(elements[i], convertSettings);
                 if (analyticalObjects == null || analyticalObjects.Count() == 0)
                     continue;
 
-                foreach (IArchitecturalObject architecturalObject in analyticalObjects)
-                    result.Add(architecturalObject);
+                foreach (IAnalyticalObject analyticalObject in analyticalObjects)
+                    result.Add(analyticalObject);
             };
 
             if (transform != null && transform != Transform.Identity)
@@ -136,12 +136,12 @@ namespace SAM.Architectural.Revit
             return result;
         }
 
-        public static List<IArchitecturalObject> ToSAM(this Document document, ConvertSettings convertSettings)
+        public static List<IAnalyticalObject> ToSAM_AnalyticalObject(this Document document, ConvertSettings convertSettings)
         {
             if (document == null)
                 return null;
 
-            return ToSAM(document, null, convertSettings);
+            return ToSAM_AnalyticalObject(document, null, convertSettings);
         }
 
     }

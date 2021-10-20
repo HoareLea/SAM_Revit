@@ -124,13 +124,13 @@ namespace SAM.Analytical.Revit
             }
 
             //Collecting Revit Walls
-            List<Wall> walls = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<Wall>().ToList();
+            List<Autodesk.Revit.DB.Wall> walls = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Wall)).Cast<Autodesk.Revit.DB.Wall>().ToList();
             if (walls == null || walls.Count == 0)
                 return null;
 
             //Converting Revit Walls to SAM Panels
             List<Panel> panels = new List<Panel>();
-            foreach(Wall wall in walls)
+            foreach(Autodesk.Revit.DB.Wall wall in walls)
             {
                 BoundingBoxXYZ boundingBoxXYZ = wall?.get_BoundingBox(null);
                 if (boundingBoxXYZ == null)

@@ -103,7 +103,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                         Level level = levels.Find(x => x.Elevation.AlmostEqual(boundingBoxXYZ.Max.Z, Core.Tolerance.MacroDistance));
                         if(level != null)
                         {
-                            Wall wall = (Wall)element;
+                            Autodesk.Revit.DB.Wall wall = (Autodesk.Revit.DB.Wall)element;
                             Parameter parameter = wall.get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE);
                             if (parameter != null)
                             {

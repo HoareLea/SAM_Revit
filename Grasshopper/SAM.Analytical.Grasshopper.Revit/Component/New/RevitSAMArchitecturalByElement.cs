@@ -1,14 +1,14 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
-using SAM.Architectural.Grasshopper.Revit.Properties;
+using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SAM.Architectural.Grasshopper.Revit
+namespace SAM.Analytical.Grasshopper.Revit
 {
     public class RevitSAMArchitecturalByElement : GH_SAMComponent
     {
@@ -25,7 +25,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// Provides an Icon for the component.
         /// </summary>
-        protected override System.Drawing.Bitmap Icon => Resources.SAM_Architectural;
+        protected override System.Drawing.Bitmap Icon => Resources.SAM_Revit;
 
         /// <summary>
         /// Initializes a new instance of the SAM_point3D class.
@@ -84,9 +84,9 @@ namespace SAM.Architectural.Grasshopper.Revit
             if(obj is RhinoInside.Revit.GH.Types.ProjectDocument)
             {
                 Document document = ((RhinoInside.Revit.GH.Types.ProjectDocument)obj).Value;
-                List<IArchitecturalObject> architecturalObjects = Architectural.Revit.Convert.ToSAM(document, convertSettings);
-                if (architecturalObjects != null)
-                    sAMObjects = architecturalObjects.Cast<Core.ISAMObject>();
+                List<IAnalyticalObject> analyticalObjects = Analytical.Revit.Convert.ToSAM_AnalyticalObject(document, convertSettings);
+                if (analyticalObjects != null)
+                    sAMObjects = analyticalObjects.Cast<Core.ISAMObject>();
 
                 if (sAMObjects == null || sAMObjects.Count() == 0)
                 {
@@ -129,15 +129,15 @@ namespace SAM.Architectural.Grasshopper.Revit
             
             if (element is RevitLinkInstance)
             {
-                List<IArchitecturalObject> architecturalObjects = Architectural.Revit.Convert.ToSAM((RevitLinkInstance)element, convertSettings);
-                if (architecturalObjects != null)
-                    sAMObjects = architecturalObjects.Cast<Core.ISAMObject>();
+                List<IAnalyticalObject> analyticalObjects = Analytical.Revit.Convert.ToSAM_AnalyticalObject((RevitLinkInstance)element, convertSettings);
+                if (analyticalObjects != null)
+                    sAMObjects = analyticalObjects.Cast<Core.ISAMObject>();
             }
             else
             {
                 try
                 {
-                    sAMObjects = Architectural.Revit.Convert.ToSAM(element, convertSettings).Cast<Core.ISAMObject>();
+                    sAMObjects = Analytical.Revit.Convert.ToSAM_AnalyticalObject(element, convertSettings).Cast<Core.ISAMObject>();
                 }
                 catch (Exception exception)
                 {

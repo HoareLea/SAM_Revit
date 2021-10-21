@@ -261,6 +261,7 @@
     <Compile Include="Query\HighLevel.cs" />
     <Compile Include="Query\ConnectorProfileType.cs" />
     <Compile Include="Query\Plane.cs" />
+    <Compile Include="Query\TryGetAdaptiveComponentPoint3Ds.cs" />
     <Compile Include="Query\Profile.cs" />
     <Compile Include="Query\Segmentable3D.cs" />
     <Compile Include="Query\Segment3Ds.cs" />

@@ -92,7 +92,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             StartTransaction(element.Document);
 
             bool successful = false;
-            if(element is Wall)
+            if(element is Autodesk.Revit.DB.Wall)
             {
                 List<Level> levels = new FilteredElementCollector(element.Document).OfClass(typeof(Level)).Cast<Level>().ToList();
                 if(levels != null && levels.Count != 0)

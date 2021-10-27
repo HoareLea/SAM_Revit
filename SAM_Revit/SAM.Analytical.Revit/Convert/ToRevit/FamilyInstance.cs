@@ -148,7 +148,7 @@ namespace SAM.Analytical.Revit
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.ExternalEdge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
                     simplified = true;
 
-                if (!simplified && result.Host is Wall)
+                if (!simplified && result.Host is Autodesk.Revit.DB.Wall)
                 {
                     Face3D face3D = aperture.GetFace3D();
                     Geometry.Spatial.Plane plane = face3D.GetPlane();

@@ -124,66 +124,66 @@ namespace SAM.Analytical.Revit
                 plane.FlipZ(false);
 
             //Method 2 of extracting Geometry
-            if (face3Ds == null || face3Ds.Count == 0)
-            {
-                List<Point2D> point2Ds = null;
+            //if (face3Ds == null || face3Ds.Count == 0)
+            //{
+            //    List<Point2D> point2Ds = null;
 
-                List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
-                if ((segmentable3Ds == null || segmentable3Ds.Count == 0) && familyInstance is Autodesk.Revit.DB.Panel)
-                {
-                    List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance, true);
-                    if (shells != null && shells.Count > 0)
-                    {
-                        foreach (Shell shell in shells)
-                        {
-                            List<ISegmentable3D> segmentable3Ds_Temp = shell?.GetEdge3Ds()?.ConvertAll(x => x as ISegmentable3D);
-                            if (segmentable3Ds_Temp != null)
-                            {
-                                segmentable3Ds_Temp.ForEach(x => segmentable3Ds.AddRange(x.GetSegments()));
-                            }
-                        }
-                    }
-                }
+            //    List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
+            //    if ((segmentable3Ds == null || segmentable3Ds.Count == 0) && familyInstance is Autodesk.Revit.DB.Panel)
+            //    {
+            //        List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance, true);
+            //        if (shells != null && shells.Count > 0)
+            //        {
+            //            foreach (Shell shell in shells)
+            //            {
+            //                List<ISegmentable3D> segmentable3Ds_Temp = shell?.GetEdge3Ds()?.ConvertAll(x => x as ISegmentable3D);
+            //                if (segmentable3Ds_Temp != null)
+            //                {
+            //                    segmentable3Ds_Temp.ForEach(x => segmentable3Ds.AddRange(x.GetSegments()));
+            //                }
+            //            }
+            //        }
+            //    }
 
-                if (segmentable3Ds != null)
-                {
-                    point2Ds = new List<Point2D>();
-                    List<ISegmentable2D> segmentable2Ds = new List<ISegmentable2D>();
-                    foreach (ISegmentable3D segmentable3D in segmentable3Ds)
-                    {
-                        ICurve3D curve3D = plane.Project(segmentable3D as ICurve3D);
-                        if (curve3D == null)
-                        {
-                            continue;
-                        }
+            //    if (segmentable3Ds != null)
+            //    {
+            //        point2Ds = new List<Point2D>();
+            //        List<ISegmentable2D> segmentable2Ds = new List<ISegmentable2D>();
+            //        foreach (ISegmentable3D segmentable3D in segmentable3Ds)
+            //        {
+            //            ICurve3D curve3D = plane.Project(segmentable3D as ICurve3D);
+            //            if (curve3D == null)
+            //            {
+            //                continue;
+            //            }
 
-                        ISegmentable2D segmentable2D = plane.Convert(curve3D) as ISegmentable2D;
-                        if (segmentable2D == null)
-                        {
-                            continue;
-                        }
+            //            ISegmentable2D segmentable2D = plane.Convert(curve3D) as ISegmentable2D;
+            //            if (segmentable2D == null)
+            //            {
+            //                continue;
+            //            }
 
 
-                        List<Point2D> point2Ds_Temp = segmentable2D?.GetPoints();
-                        if (point2Ds_Temp != null && point2Ds_Temp.Count > 0)
-                        {
-                            point2Ds_Temp.ForEach(x => point2Ds.Add(x));
-                        }
-                    }
-                }
+            //            List<Point2D> point2Ds_Temp = segmentable2D?.GetPoints();
+            //            if (point2Ds_Temp != null && point2Ds_Temp.Count > 0)
+            //            {
+            //                point2Ds_Temp.ForEach(x => point2Ds.Add(x));
+            //            }
+            //        }
+            //    }
 
-                if (point2Ds == null || point2Ds.Count < 3)
-                {
-                    return result;
-                }
+            //    if (point2Ds == null || point2Ds.Count < 3)
+            //    {
+            //        return result;
+            //    }
 
-                Face3D face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
-                if (face3D != null && face3D.IsValid() && face3D.GetArea() > Core.Tolerance.MacroDistance)
-                {
-                    face3Ds = new List<Face3D>() { face3D };
-                }
+            //    Face3D face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
+            //    if (face3D != null && face3D.IsValid() && face3D.GetArea() > Core.Tolerance.MacroDistance)
+            //    {
+            //        face3Ds = new List<Face3D>() { face3D };
+            //    }
 
-            }
+            //}
 
             //Method 3 of extracting Geometry
             if (face3Ds == null || face3Ds.Count == 0)

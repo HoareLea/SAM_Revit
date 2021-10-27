@@ -166,35 +166,52 @@ namespace SAM.Geometry.Revit
 
             IEnumerable<ElementId> elementIds = roofBase.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Windows));
             if (elementIds == null || elementIds.Count() == 0)
+            {
                 return face3Ds;
+            }
+
+            List<Tuple<BoundingBox3D, Face3D>> tuples = face3Ds.ConvertAll(x => new Tuple<BoundingBox3D, Face3D>(x.GetBoundingBox(), x));
 
             foreach (ElementId elementId in elementIds)
             {
                 Element element = roofBase.Document.GetElement(elementId);
                 if (element == null)
+                {
                     continue;
+                }
 
                 BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
                 Point3D point3D = ((boundingBoxXYZ.Max + boundingBoxXYZ.Min) / 2).ToSAM();
-                foreach (Face3D face3D in face3Ds)
+                List<Face3D> face3Ds_Temp = tuples.FindAll(x => x.Item1.InRange(point3D)).ConvertAll(x => x.Item2);
+
+                foreach (Face3D face3D in face3Ds_Temp)
                 {
                     List<IClosed2D> internalEdges = face3D.InternalEdge2Ds;
                     if (internalEdges == null || internalEdges.Count == 0)
+                    {
                         continue;
+                    }
 
                     Spatial.Plane plane = face3D.GetPlane();
 
                     Point3D point3D_Projected = plane.Project(point3D);
                     Point2D point2D = plane.Convert(point3D_Projected);
 
+                    bool @break = false;
                     for (int i = 0; i < internalEdges.Count; i++)
                     {
                         IClosed2D internalEdge = internalEdges[i];
                         if (internalEdge.Inside(point2D))
                         {
                             face3D.RemoveInternalEdge(i);
+                            @break = true;
                             break;
                         }
+                    }
+
+                    if(@break)
+                    {
+                        break;
                     }
                 }
             }

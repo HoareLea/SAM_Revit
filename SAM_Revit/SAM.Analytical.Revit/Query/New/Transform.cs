@@ -44,7 +44,7 @@ namespace SAM.Analytical.Revit
 
             IHostPartition result = Analytical.Create.HostPartition(hostPartition.Guid, Geometry.Revit.Query.Transform(transform, hostPartition.Face3D), hostPartition.Type());
 
-            List<IOpening> openings = hostPartition.Openings;
+            List<IOpening> openings = hostPartition.GetOpenings();
             if(openings != null)
             {
                 foreach(IOpening opening in openings)

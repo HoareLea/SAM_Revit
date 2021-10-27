@@ -12,7 +12,7 @@ namespace SAM.Analytical.Revit
             if (type == null || document == null)
                 return null;
 
-            if(type == typeof(Wall))
+            if(type == typeof(Autodesk.Revit.DB.Wall))
             {
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Walls).WhereElementIsNotElementType();
             }

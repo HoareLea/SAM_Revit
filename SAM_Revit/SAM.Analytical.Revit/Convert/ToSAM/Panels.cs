@@ -56,7 +56,7 @@ namespace SAM.Analytical.Revit
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
 #endif
 
-            if (hostObject is Wall || hostObject is CurtainSystem)
+            if (hostObject is Autodesk.Revit.DB.Wall || hostObject is CurtainSystem)
             {
                 List<Autodesk.Revit.DB.Panel> panels = Core.Revit.Query.Panels(hostObject as dynamic);
                 if (panels != null && panels.Count > 0)
@@ -96,7 +96,8 @@ namespace SAM.Analytical.Revit
                 if (face3D == null)
                     continue;
 
-                Panel panel = Analytical.Create.Panel(construction, panelType, face3D.Reduce(0.2));
+                //Panel panel = Analytical.Create.Panel(construction, panelType, face3D.Reduce(0.2)); Double check why Reduce have been used turn off on 27.10.2021 when mesh roof in sam teplate gave gap
+                Panel panel = Analytical.Create.Panel(construction, panelType, face3D);
                 panel.UpdateParameterSets(hostObject, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
 
                 foreach(Aperture aperture in apertures)

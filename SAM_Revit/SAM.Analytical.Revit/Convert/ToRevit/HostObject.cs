@@ -142,7 +142,8 @@ namespace SAM.Analytical.Revit
                 {
                     curveLoop.Append(curve);
                 }
-                Floor floor = Floor.Create(document, new CurveLoop[] { curveLoop }, hostObjAttributes.Id, level.Id);
+
+                Autodesk.Revit.DB.Floor floor = Autodesk.Revit.DB.Floor.Create(document, new CurveLoop[] { curveLoop }, hostObjAttributes.Id, level.Id);
 #endif
 
                 if (floor != null)

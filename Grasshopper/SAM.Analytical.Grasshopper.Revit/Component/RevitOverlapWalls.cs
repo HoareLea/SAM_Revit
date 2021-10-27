@@ -73,7 +73,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             if (hostObjects == null || hostObjects.Count == 0)
-                hostObjects = new FilteredElementCollector(document).OfClass(typeof(Wall)).Cast<HostObject>().ToList();
+                hostObjects = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Wall)).Cast<HostObject>().ToList();
 
             if (hostObjects == null || hostObjects.Count == 0)
                 return;
@@ -83,7 +83,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             List<Panel> panels = new List<Panel>();
             foreach (HostObject hostObject in hostObjects)
             {
-                if (!(hostObject is Wall))
+                if (!(hostObject is Autodesk.Revit.DB.Wall))
                     continue;
 
                 List<Panel> panels_Temp = hostObject.ToSAM(convertSettings);

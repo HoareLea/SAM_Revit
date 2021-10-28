@@ -74,7 +74,7 @@ namespace SAM.Analytical.Revit
 
             if (type.IsAssignableFrom(typeof(Core.IMaterial)))
             {
-                return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Materials).WhereElementIsElementType();
+                return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Materials);
             }
 
             return null;

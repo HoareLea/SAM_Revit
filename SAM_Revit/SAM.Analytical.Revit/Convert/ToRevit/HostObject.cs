@@ -101,7 +101,7 @@ namespace SAM.Analytical.Revit
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.WALL_BASE_CONSTRAINT, BuiltInParameter.WALL_BASE_OFFSET, BuiltInParameter.WALL_HEIGHT_TYPE, BuiltInParameter.WALL_USER_HEIGHT_PARAM, BuiltInParameter.WALL_KEY_REF_PARAM };
                 result = wall;
             }
-            else if (hostObjAttributes is FloorType)
+            else if (hostObjAttributes is Autodesk.Revit.DB.FloorType)
             {
                 Geometry.Spatial.IClosedPlanar3D closedPlanar3D_External = face3D.GetExternalEdge3D();
                 if (!(closedPlanar3D_External is Geometry.Spatial.ICurvable3D))
@@ -201,7 +201,7 @@ namespace SAM.Analytical.Revit
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.LEVEL_PARAM };
                 result = floor;
             }
-            else if (hostObjAttributes is RoofType)
+            else if (hostObjAttributes is Autodesk.Revit.DB.RoofType)
             {
                 CurveArray curveArray = new CurveArray();
                 foreach (Geometry.Spatial.IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())

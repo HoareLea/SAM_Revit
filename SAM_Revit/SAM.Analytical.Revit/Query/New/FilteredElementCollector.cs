@@ -12,7 +12,7 @@ namespace SAM.Analytical.Revit
             if (type == null || document == null)
                 return null;
 
-            if(type == typeof(Autodesk.Revit.DB.Wall))
+            if(type == typeof(Wall))
             {
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Walls).WhereElementIsNotElementType();
             }
@@ -32,12 +32,12 @@ namespace SAM.Analytical.Revit
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Floors).WhereElementIsElementType();
             }
 
-            if (type == typeof(Roof))
+            if (type == typeof(RoofBase))
             {
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Roofs).WhereElementIsNotElementType();
             }
 
-            if (type == typeof(FloorType))
+            if (type == typeof(RoofType))
             {
                 return new FilteredElementCollector(document).OfCategory(Autodesk.Revit.DB.BuiltInCategory.OST_Roofs).WhereElementIsElementType();
             }

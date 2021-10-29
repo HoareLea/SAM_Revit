@@ -17,21 +17,25 @@ namespace SAM.Geometry.Revit
             if (curve3Ds == null)
                 return null;
 
-            List<Segment3D> segment3Ds = curve3Ds.ConvertAll(x => x as Segment3D);
-            if (segment3Ds.Contains(null))
-                return null;
-
             Plane plane = closedPlanar3D.GetPlane();
             if (plane == null)
                 return null;
 
-            List<Planar.Segment2D> segment2Ds = segment3Ds.ConvertAll(x => plane.Convert(x));
-            segment2Ds.RemoveAll(x => x.GetLength() <= tolerance_Distance);
+            List<Planar.Point2D> point2Ds = new List<Planar.Point2D>();
+            foreach(ICurve3D curve3D in curve3Ds)
+            {
+                if(curve3D == null)
+                {
+                    continue;
+                }
 
-            Planar.Query.SimplifyBySAM_Angle(segment2Ds, tolerance_Distance, tolerance_Angle);
-            segment2Ds = Planar.Query.Snap(segment2Ds);
+                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetStart()), tolerance_Distance);
+                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetEnd()), tolerance_Distance);
+            }
 
-            return segment2Ds.ConvertAll(x => plane.Convert(x));
+            point2Ds = Planar.Query.SimplifyByAngle(point2Ds, true, tolerance_Angle);
+
+            return Planar.Create.Segment2Ds(point2Ds, true)?.ConvertAll(x => plane.Convert(x));
         }
     }
 }

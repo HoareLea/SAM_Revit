@@ -24,9 +24,9 @@ namespace SAM.Analytical.Revit
                 if(hostObjAttributes != null && hostObjAttributes.Count != 0)
                 {
                     if (normal.PanelType().PanelGroup() == PanelGroup.Wall)
-                        result = hostObjAttributes.Find(x => x is WallType);
+                        result = hostObjAttributes.Find(x => x is Autodesk.Revit.DB.WallType);
                     else
-                        result = hostObjAttributes.Find(x => !(x is WallType));
+                        result = hostObjAttributes.Find(x => !(x is Autodesk.Revit.DB.WallType));
                 }
             }
 

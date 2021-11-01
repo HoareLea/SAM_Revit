@@ -11,11 +11,16 @@ namespace SAM.Analytical.Revit
         public static OpeningType ToSAM_OpeningType(this FamilySymbol familySymbol, ConvertSettings convertSettings)
         {
             if (familySymbol == null)
+            {
                 return null;
+            }
+
 
             OpeningType result = convertSettings?.GetObject<OpeningType>(familySymbol.Id);
             if (result != null)
+            {
                 return result;
+            }
 
             string name = familySymbol.Name;
 
@@ -29,6 +34,11 @@ namespace SAM.Analytical.Revit
                 case BuiltInCategory.OST_Doors:
                     result = new DoorType(name);
                     break;
+            }
+
+            if(result == null)
+            {
+                return null;
             }
 
             Dictionary<ElementId, List<Shell>> materialElementIdsDictionary = Geometry.Revit.Query.MaterialElementIdsDictionary(familySymbol);

@@ -2,6 +2,7 @@
 using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -23,9 +24,14 @@ namespace SAM.Analytical.Revit
 
             Construction construction = Analytical.Query.DefaultConstruction(panelType);
             if(construction != null && (name.Equals(construction.Name) || name.Equals(construction.UniqueName())))
+            {
                 result = new Construction(construction);
+            }
             else
+            {
                 result = new Construction(hostObjAttributes.Name);
+            }
+                
 
             result.UpdateParameterSets(hostObjAttributes, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             
@@ -37,6 +43,26 @@ namespace SAM.Analytical.Revit
                 result.SetValue(ConstructionParameter.DefaultPanelType, panelType.Text());
             else
                 result.SetValue(ConstructionParameter.DefaultPanelType, null);
+
+            List<ConstructionLayer> constructionLayers = result.ConstructionLayers;
+            if(constructionLayers != null && constructionLayers.Count != 0)
+            {
+                result.SetValue(ConstructionParameter.DefaultThickness, constructionLayers.ConvertAll(x => x.Thickness).Sum());
+            }
+            else
+            {
+                CompoundStructure compoundStructure = hostObjAttributes.GetCompoundStructure();
+                if(compoundStructure != null)
+                {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
+                    double thickness = UnitUtils.ConvertFromInternalUnits(compoundStructure.GetWidth(), DisplayUnitType.DUT_METERS);
+#else
+                    double thickness = UnitUtils.ConvertFromInternalUnits(compoundStructure.GetWidth(), UnitTypeId.Meters);
+#endif
+                    result.SetValue(ConstructionParameter.DefaultThickness, thickness);
+                }
+            }
+
 
             return result;
         }

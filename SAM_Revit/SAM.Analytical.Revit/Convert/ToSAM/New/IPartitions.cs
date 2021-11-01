@@ -81,6 +81,7 @@ namespace SAM.Analytical.Revit
                         IOpening opening = ToSAM_Opening((FamilyInstance)element, convertSettings);
                         if(opening != null)
                         {
+                            opening = Analytical.Query.Project(hostPartition, opening);
                             hostPartition.AddOpening(opening);
                         }
                     }

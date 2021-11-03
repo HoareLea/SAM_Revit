@@ -97,6 +97,11 @@ namespace SAM.Geometry.Revit
                         continue;
                     }
 
+                    if(dictionary == null)
+                    {
+                        dictionary = new Dictionary<ElementId, List<Shell>>();
+                    }
+
                     if (!dictionary.TryGetValue(elementId, out List<Shell> shells))
                     {
                         shells = new List<Shell>();

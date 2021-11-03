@@ -31,11 +31,24 @@ namespace SAM.Geometry.Revit
 
             XYZ normal = sketch.SketchPlane?.GetPlane()?.Normal;
 
-            List<Face3D> result = new List<Face3D>();
+            List<Polygon3D> polygon3Ds = new List<Polygon3D>();
             foreach (CurveArray curveArray in sketch.Profile)
-                result.Add(curveArray.ToSAM_Face3D(normal, flip));
+            {
+                Polygon3D polygon3D = curveArray?.ToSAM_Polygon3D(normal);
+                if(polygon3D == null)
+                {
+                    continue;
+                }
 
-            return result;
+                if(flip)
+                {
+                    polygon3D.Reverse();
+                }
+
+                polygon3Ds.Add(polygon3D);
+            }
+
+            return Spatial.Create.Face3Ds(polygon3Ds);
         }
 
         public static List<Face3D> ToSAM_Face3Ds(this Solid solid)

@@ -72,7 +72,8 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
@@ -83,7 +84,8 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
@@ -94,7 +96,8 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">

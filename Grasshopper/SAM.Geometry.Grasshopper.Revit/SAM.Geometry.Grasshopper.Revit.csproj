@@ -91,7 +91,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug2022\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Geometry.Grasshopper.Revit.xml</DocumentationFile>
     <DebugType>full</DebugType>
@@ -103,7 +103,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
-    <OutputPath>bin\Release2022\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2022</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

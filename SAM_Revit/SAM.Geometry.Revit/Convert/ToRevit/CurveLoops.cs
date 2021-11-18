@@ -6,7 +6,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static List<CurveLoop> ToRevit(this Face3D face3D, double tolerance_Distance = Core.Tolerance.Distance, double tolerance_Angle = Core.Tolerance.Angle)
+        public static List<CurveLoop> ToRevit(this Face3D face3D, double tolerance = Core.Tolerance.MacroDistance)
         {
             if (face3D == null)
                 return null;
@@ -15,7 +15,7 @@ namespace SAM.Geometry.Revit
             foreach (IClosedPlanar3D closedPlanar3D in face3D.GetEdge3Ds())
             {
                 
-                List<Line> lines = closedPlanar3D.ToRevit(tolerance_Distance, tolerance_Angle);
+                List<Line> lines = closedPlanar3D.ToRevit(tolerance);
                 if (lines == null)
                     continue;
 

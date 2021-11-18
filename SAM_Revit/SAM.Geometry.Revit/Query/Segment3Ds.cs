@@ -5,7 +5,7 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<Segment3D> Segment3Ds(this IClosedPlanar3D closedPlanar3D, double tolerance_Distance = Core.Tolerance.Distance, double tolerance_Angle = Core.Tolerance.Angle)
+        public static List<Segment3D> Segment3Ds(this IClosedPlanar3D closedPlanar3D, double tolerance = Core.Tolerance.MacroDistance)
         {
             if (closedPlanar3D == null)
                 return null;
@@ -29,11 +29,11 @@ namespace SAM.Geometry.Revit
                     continue;
                 }
 
-                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetStart()), tolerance_Distance);
-                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetEnd()), tolerance_Distance);
+                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetStart()), tolerance);
+                Planar.Modify.Add(point2Ds, plane.Convert(curve3D.GetEnd()), tolerance);
             }
 
-            point2Ds = Planar.Query.SimplifyByAngle(point2Ds, true, tolerance_Angle);
+            point2Ds = Planar.Query.SimplifyByAngle(point2Ds, true, tolerance);
 
             return Planar.Create.Segment2Ds(point2Ds, true)?.ConvertAll(x => plane.Convert(x));
         }

@@ -12,7 +12,10 @@
             {
                 if (source.ToUpper().EndsWith("TAS"))
                     return "_T";
+                else if (source.ToUpper().EndsWith("OPENSTUDIO"))
+                    return "_E";
             }
+
 
             return string.Empty;
         }

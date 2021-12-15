@@ -15,7 +15,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             string path = DefaultToolsParameterMapPath(setting);
-            if(string.IsNullOrWhiteSpace(path) || System.IO.File.Exists(path))
+            if(string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path))
             {
                 return null;
             }

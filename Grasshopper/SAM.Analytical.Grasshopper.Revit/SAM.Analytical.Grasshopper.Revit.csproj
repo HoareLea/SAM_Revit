@@ -199,6 +199,7 @@
     <Compile Include="Component\New\RevitSAMArchitecturalByElement.cs" />
     <Compile Include="Component\RevitDuplicatePlanView.cs" />
     <Compile Include="Component\RevitMaterialLibrary.cs" />
+    <Compile Include="Component\SAMAnalyticalCopyParameters.cs" />
     <Compile Include="Component\SAMAnalyticalShellsBySpaces.cs" />
     <Compile Include="Component\SAMAnalyticalPanelsByBoundaries.cs" />
     <Compile Include="Component\RevitSAMAnalyticalByView.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Component\RevitSetUpperLimit.cs" />
     <Compile Include="Component\SAMAnalyticalRevit.cs" />
     <Compile Include="Component\SAMAnalyticalRevitCheck.cs" />
+    <Compile Include="Component\SAMAnalyticalTool.cs" />
     <Compile Include="Component\SAMAnalyticalUpdateConstructions.cs" />
     <Compile Include="Component\SAMAnalyticalUpdatePanelType.cs" />
     <Compile Include="Component\SAMAnalyticalApertureRevit.cs" />

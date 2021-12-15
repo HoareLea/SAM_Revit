@@ -14,6 +14,8 @@ namespace SAM.Analytical.Revit
             public const string ParameterMap_Cooling = "Parameter Map Cooling";
             public const string ParameterMap_Heating = "Parameter Map Heating";
             public const string ParameterMap_Ventilation = "Parameter Map Ventilation";
+
+            public const string ParameterMap_Tools = "Parameter Map Tools";
         }
 
         private static Setting setting = Load();
@@ -264,6 +266,8 @@ namespace SAM.Analytical.Revit
 
             //File Names
             result.Add(Name.FileName_DefaultAirConstructionLibrary, "SAM_AirConstructionLibrary.JSON");
+
+            result.Add(Name.ParameterMap_Tools, "ParameterMap_Tools");
 
             string path;
 

@@ -199,6 +199,7 @@
     <Compile Include="Component\New\RevitSAMArchitecturalByElement.cs" />
     <Compile Include="Component\RevitDuplicatePlanView.cs" />
     <Compile Include="Component\RevitMaterialLibrary.cs" />
+    <Compile Include="Component\SAMAnalyticalUpdateParameters.cs" />
     <Compile Include="Component\SAMAnalyticalCopyParameters.cs" />
     <Compile Include="Component\SAMAnalyticalShellsBySpaces.cs" />
     <Compile Include="Component\SAMAnalyticalPanelsByBoundaries.cs" />

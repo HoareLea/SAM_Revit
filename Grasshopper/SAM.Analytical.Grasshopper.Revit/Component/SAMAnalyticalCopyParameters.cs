@@ -4,7 +4,6 @@ using Grasshopper.Kernel.Parameters;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper.Revit;
-using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

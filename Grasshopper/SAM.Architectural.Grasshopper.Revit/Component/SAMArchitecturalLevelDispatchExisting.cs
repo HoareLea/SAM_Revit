@@ -31,7 +31,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </summary>
         public SAMArchitecturalLevelDispatchExisting()
           : base("SAMArchitectural.LevelDispatchExisting", "SAMArchitectural.LevelDispatchExisting",
-              "Dispatch/Filters existing Levels in Revit model based on Level elevation, help you chose which Levels are need to be created and missing in Revit",
+              "Dispatch/Filters existing Levels in Revit model based on Level elevation, \n help you chose which Levels are need to be created and missing in Revit",
               "SAM", "Architectural")
         {
 

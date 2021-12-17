@@ -96,12 +96,6 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             ElementId elementId = ((Core.SAMObject)analyticalObject).ElementId();
-            if (elementId == null || elementId == ElementId.InvalidElementId)
-            {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cound not find matching Revit Element");
-                return;
-            }
-
             if (elementId == null && analyticalObject is Space)
             {
                 List<Autodesk.Revit.DB.Mechanical.Space> spaces = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
@@ -115,6 +109,12 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
             }
 
+            if (elementId == null || elementId == ElementId.InvalidElementId)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cound not find matching Revit Element");
+                return;
+            }
+
             Element element = document.GetElement(elementId);
             if (element == null)
             {
@@ -125,8 +125,19 @@ namespace SAM.Analytical.Grasshopper.Revit
             StartTransaction(document);
 
             Core.Revit.Modify.SetValues(element, sAMObject);
-
             Core.Revit.Modify.SetValues(element, sAMObject, ActiveSetting.Setting);
+
+            if(sAMObject is Space)
+            {
+                Space space = (Space)sAMObject;
+
+                InternalCondition internalCondition = space.InternalCondition;
+                if(internalCondition != null)
+                {
+                    Core.Revit.Modify.SetValues(element, internalCondition);
+                    Core.Revit.Modify.SetValues(element, internalCondition, ActiveSetting.Setting);
+                }
+            }
 
             index = Params.IndexOfOutputParam("element");
             if (index != -1)

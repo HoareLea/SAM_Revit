@@ -33,7 +33,7 @@ namespace SAM.Core.Grasshopper.Revit
         public SAMCoreIsPlaced()
           : base("SAMCore.IsPlaced", "SAMCore.IsPlaced",
               "Check if given Type is placed",
-              "SAM", "Revit")
+              "SAM WIP", "Revit")
         {
         }
 

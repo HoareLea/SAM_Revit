@@ -152,7 +152,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             StartTransaction(document);
 
             Core.Revit.Modify.SetValues(element, sAMObject);
-            Core.Revit.Modify.SetValues(element, sAMObject, ActiveSetting.Setting);
+            Core.Revit.Modify.SetValues(element, sAMObject, Analytical.Revit.ActiveSetting.Setting);
 
             if(sAMObject is Space)
             {
@@ -162,7 +162,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 if(internalCondition != null)
                 {
                     Core.Revit.Modify.SetValues(element, internalCondition);
-                    Core.Revit.Modify.SetValues(element, internalCondition, ActiveSetting.Setting);
+                    Core.Revit.Modify.SetValues(element, internalCondition, Analytical.Revit.ActiveSetting.Setting);
                 }
             }
 

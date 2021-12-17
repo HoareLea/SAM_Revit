@@ -31,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMCoreRenameSpaces()
           : base("SAMCore.RenameSpaces", "SAMCore.RenameSpaces",
-              "Renames Spaces",
+              "Renames Spaces \n *format 'Level_Numrber' so first room will be ie. 00_001",
               "SAM", "Revit")
         {
 

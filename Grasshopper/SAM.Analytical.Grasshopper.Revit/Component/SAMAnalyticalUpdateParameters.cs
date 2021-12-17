@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -45,7 +45,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new GooAnalyticalObjectParam() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object \n connect Spaces or Analytical Model", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
-                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "run", NickName = "run", Description = "Run", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
+
                 return result.ToArray();
             }
         }
@@ -128,7 +132,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                                     continue;
                                 }
 
-                                if (name.Equals(space_Revit.Name))
+                                if (name.Equals(space.Name))
                                 {
                                     space_Revit = space_Revit_Temp;
                                     break;
@@ -180,7 +184,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                                             continue;
                                         }
 
-                                        if (name.Equals(space_Revit.Name))
+                                        if (name.Equals(space.Name))
                                         {
                                             space_Revit = space_Revit_Temp;
                                             break;

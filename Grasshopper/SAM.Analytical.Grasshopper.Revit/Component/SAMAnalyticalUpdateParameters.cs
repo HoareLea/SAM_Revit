@@ -243,8 +243,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cound not find matching Revit Element for SAM Object [Guid: {0}]", tuple.Item2.Guid));
                 }
 
-                Core.Revit.Modify.SetValues(element, sAMObject);
-                Core.Revit.Modify.SetValues(element, sAMObject, ActiveSetting.Setting);
+                Core.Revit.Modify.SetValues(element, tuple.Item2);
+                Core.Revit.Modify.SetValues(element, tuple.Item2, ActiveSetting.Setting);
+                Core.Revit.Modify.SetValues(element, tuple.Item2, Analytical.Revit.ActiveSetting.Setting);
                 elements.Add(element);
             }
 

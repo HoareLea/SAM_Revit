@@ -208,7 +208,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 ElementId elementId = ((Core.SAMObject)analyticalObject).ElementId();
                 if(elementId != null && elementId != ElementId.InvalidElementId)
                 {
-                    dictionary.Add(elementId, sAMObject);
+                    tuples.Add(new Tuple<ElementId, Core.SAMObject>(elementId, sAMObject));
                 }
             }
 

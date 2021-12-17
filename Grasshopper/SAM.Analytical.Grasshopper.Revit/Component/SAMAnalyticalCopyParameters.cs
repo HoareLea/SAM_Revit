@@ -32,7 +32,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalCopyParameters()
           : base("SAMAnalytical.CopyParameters", "SAMAnalytical.CopyParameters",
-              "Copy Parameters",
+              "Copy Parameters from spftware specific to generic \n *Is used when you store data from different sources like \n Tas, E+ etc...",
               "SAM", "Revit")
         {
         }

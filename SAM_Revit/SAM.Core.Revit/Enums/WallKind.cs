@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SAM.Core
+namespace SAM.Core.Revit
 {
     [Description("Revit Wall Kind")]
     public enum WallKind

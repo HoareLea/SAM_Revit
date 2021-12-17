@@ -31,7 +31,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// </summary>
         public SAMCoreDuplicatedElementIds()
           : base("SAMCore.DuplicatedElementIds", "SAMCore.DuplicatedElementIds",
-              "Query Filter SAM Objects By ElementIds",
+              "Query Filter SAM Objects By ElementIds \n *was used to find which SAM Panel Walls that were created from Revit Curve Wall \n Remember curve wall will be divided into many segments ",
               "SAM", "Revit")
         {
         }

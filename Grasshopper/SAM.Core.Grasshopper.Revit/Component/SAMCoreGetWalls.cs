@@ -30,7 +30,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// </summary>
         public SAMCoreGetWalls()
           : base("SAMCore.GetWalls", "SAMCore.GetWalls",
-              "Query Walls from Revit Document",
+              "Query Walls from Revit Document by kinds: Basic Wall, Curtain Wall or Stacked Wall \n *Connect SAMCore.WallKind",
               "SAM", "Revit")
         {
         }
@@ -42,7 +42,7 @@ namespace SAM.Core.Grasshopper.Revit
         {
             Param_String param_String = new Param_String() { Optional = true};
             param_String.SetPersistentData(new string[] { WallKind.Basic.ToString() });
-            inputParamManager.AddParameter(param_String, "_wallKinds_", "_wallKinds_", "_wallKinds_", GH_ParamAccess.list);
+            inputParamManager.AddParameter(param_String, "_wallKinds_", "_wallKinds_", "_wallKinds_  \n *Connect SAMCore.WallKind", GH_ParamAccess.list);
 
 
             Param_Boolean param_Boolean = new Param_Boolean() { Optional = true};

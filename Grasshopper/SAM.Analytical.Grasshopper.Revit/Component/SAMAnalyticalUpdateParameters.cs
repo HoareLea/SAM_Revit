@@ -19,7 +19,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -45,6 +45,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new GooAnalyticalObjectParam() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "run", NickName = "run", Description = "Run", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -57,7 +58,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "element", NickName = "element", Description = "Revit Element", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
@@ -78,6 +79,10 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (index_Successful != -1)
                 dataAccess.SetData(index_Successful, false);
 
+            bool run = false;
+            if (!dataAccess.GetData(1, ref run) || !run)
+                return;
+
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             IAnalyticalObject analyticalObject = null;
@@ -95,80 +100,153 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            ElementId elementId = ((Core.SAMObject)analyticalObject).ElementId();
-            if (elementId == null && analyticalObject is Space)
+            List<Tuple<ElementId, Core.SAMObject>> tuples = new List<Tuple<ElementId, Core.SAMObject>>();
+            if(sAMObject is Space)
             {
-                Space space_SAM = ((Space)analyticalObject);
+                Space space = (Space)sAMObject;
 
-
-                List<Autodesk.Revit.DB.Mechanical.Space> spaces = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
-                if (spaces != null)
+                ElementId elementId = space.ElementId();
+                if (elementId == null || elementId == ElementId.InvalidElementId)
                 {
-                    Autodesk.Revit.DB.Mechanical.Space space = spaces.Find(x => x.Name != null && x.Name.Equals(space_SAM.Name));
-                    if(space == null)
+                    List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
+                    if(spaces_Revit != null)
                     {
-                        foreach(Autodesk.Revit.DB.Mechanical.Space space_Temp in spaces)
+                        Autodesk.Revit.DB.Mechanical.Space space_Revit = spaces_Revit.Find(x => x.Name != null && x.Name.Equals(space.Name));
+                        if (space_Revit == null)
                         {
-                            Parameter parameter = space_Temp?.get_Parameter(BuiltInParameter.ROOM_NAME);
-                            if(parameter == null || !parameter.HasValue)
+                            foreach (Autodesk.Revit.DB.Mechanical.Space space_Revit_Temp in spaces_Revit)
                             {
-                                continue;
-                            }
+                                Parameter parameter = space_Revit_Temp?.get_Parameter(BuiltInParameter.ROOM_NAME);
+                                if (parameter == null || !parameter.HasValue)
+                                {
+                                    continue;
+                                }
 
-                            string name = parameter.AsString();
-                            if(string.IsNullOrEmpty(name))
-                            {
-                                continue;
-                            }
+                                string name = parameter.AsString();
+                                if (string.IsNullOrEmpty(name))
+                                {
+                                    continue;
+                                }
 
-                            if(name.Equals(space_SAM.Name))
-                            {
-                                space = space_Temp;
-                                break;
+                                if (name.Equals(space_Revit.Name))
+                                {
+                                    space_Revit = space_Revit_Temp;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if (space != null)
+                        if(space_Revit != null)
+                        {
+                            elementId = space_Revit.Id;
+                        }
+                    }
+                }
+
+                tuples.Add(new Tuple<ElementId, Core.SAMObject> (elementId, space));
+                if(elementId != null && elementId != ElementId.InvalidElementId)
+                {
+                    tuples.Add(new Tuple<ElementId, Core.SAMObject>(elementId, space.InternalCondition));
+                }
+            }
+            else if(sAMObject is AnalyticalModel)
+            {
+                AnalyticalModel analyticalModel = (AnalyticalModel)sAMObject;
+                List<Space> spaces = analyticalModel.GetSpaces();
+                if(spaces != null)
+                {
+                    foreach (Space space in spaces)
                     {
-                        elementId = space.Id;
+                        ElementId elementId = space.ElementId();
+                        if (elementId == null || elementId == ElementId.InvalidElementId)
+                        {
+                            List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
+                            if (spaces_Revit != null)
+                            {
+                                Autodesk.Revit.DB.Mechanical.Space space_Revit = spaces_Revit.Find(x => x.Name != null && x.Name.Equals(space.Name));
+                                if (space_Revit == null)
+                                {
+                                    foreach (Autodesk.Revit.DB.Mechanical.Space space_Revit_Temp in spaces_Revit)
+                                    {
+                                        Parameter parameter = space_Revit_Temp?.get_Parameter(BuiltInParameter.ROOM_NAME);
+                                        if (parameter == null || !parameter.HasValue)
+                                        {
+                                            continue;
+                                        }
+
+                                        string name = parameter.AsString();
+                                        if (string.IsNullOrEmpty(name))
+                                        {
+                                            continue;
+                                        }
+
+                                        if (name.Equals(space_Revit.Name))
+                                        {
+                                            space_Revit = space_Revit_Temp;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (space_Revit != null)
+                                {
+                                    elementId = space_Revit.Id;
+                                }
+                            }
+                        }
+
+                        tuples.Add(new Tuple<ElementId, Core.SAMObject>(elementId, space));
+                        if (elementId != null && elementId != ElementId.InvalidElementId)
+                        {
+                            tuples.Add(new Tuple<ElementId, Core.SAMObject>(elementId, space.InternalCondition));
+                        }
                     }
                 }
             }
-
-            if (elementId == null || elementId == ElementId.InvalidElementId)
+            else
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cound not find matching Revit Element");
-                return;
+                ElementId elementId = ((Core.SAMObject)analyticalObject).ElementId();
+                if(elementId != null && elementId != ElementId.InvalidElementId)
+                {
+                    dictionary.Add(elementId, sAMObject);
+                }
             }
 
-            Element element = document.GetElement(elementId);
-            if (element == null)
+            if (tuples == null || tuples.Count == 0)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Cound not find matching Revit Element");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Cound not find matching Revit Element");
                 return;
             }
 
             StartTransaction(document);
 
-            Core.Revit.Modify.SetValues(element, sAMObject);
-            Core.Revit.Modify.SetValues(element, sAMObject, Analytical.Revit.ActiveSetting.Setting);
-
-            if(sAMObject is Space)
+            List<Element> elements = new List<Element>();
+            foreach(Tuple<ElementId, Core.SAMObject> tuple in tuples)
             {
-                Space space = (Space)sAMObject;
-
-                InternalCondition internalCondition = space.InternalCondition;
-                if(internalCondition != null)
+                if(tuple.Item2 == null)
                 {
-                    Core.Revit.Modify.SetValues(element, internalCondition);
-                    Core.Revit.Modify.SetValues(element, internalCondition, Analytical.Revit.ActiveSetting.Setting);
+                    continue;
                 }
+                
+                if(tuple.Item1 == null || tuple.Item1 == ElementId.InvalidElementId)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cound not find matching Revit Element for SAM Object [Guid: {0}]", tuple.Item2.Guid));
+                }
+
+                Element element = document.GetElement(tuple.Item1);
+                if(element == null)
+                {
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Cound not find matching Revit Element for SAM Object [Guid: {0}]", tuple.Item2.Guid));
+                }
+
+                Core.Revit.Modify.SetValues(element, sAMObject);
+                Core.Revit.Modify.SetValues(element, sAMObject, ActiveSetting.Setting);
+                elements.Add(element);
             }
 
-            index = Params.IndexOfOutputParam("element");
+            index = Params.IndexOfOutputParam("elements");
             if (index != -1)
-                dataAccess.SetData(0, element);
+                dataAccess.SetDataList(0, elements);
 
             if (index_Successful != -1)
                 dataAccess.SetData(index_Successful, true);

@@ -132,6 +132,8 @@ namespace SAM.Analytical.Revit
 
             result = dictionary_Element.Values.ToList();
 
+            Modify.UpdateNumbers(result.FindAll(x => x is Autodesk.Revit.DB.Mechanical.Space).Cast<Autodesk.Revit.DB.Mechanical.Space>());
+
             convertSettings?.Add(adjacencyCluster.Guid, result);
 
             return result;

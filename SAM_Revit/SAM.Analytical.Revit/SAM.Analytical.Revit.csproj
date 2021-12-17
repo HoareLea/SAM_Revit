@@ -234,6 +234,7 @@
     <Compile Include="Enums\Tool.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\New\UpdateParameterSets.cs" />
+    <Compile Include="Modify\UpdateNumbers.cs" />
     <Compile Include="Modify\UpdateConstructions.cs" />
     <Compile Include="Modify\MapZones.cs" />
     <Compile Include="Modify\SetValues.cs" />

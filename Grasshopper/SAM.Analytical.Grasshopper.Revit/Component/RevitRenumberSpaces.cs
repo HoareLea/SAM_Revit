@@ -90,91 +90,29 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            if(spaces == null || spaces.Count == 0)
+            Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
+            if (spaces == null || spaces.Count == 0)
             {
-                Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
                 spaces = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
             }
 
-            bool successful = false;
-            List<Autodesk.Revit.DB.Mechanical.Space> result = new List<Autodesk.Revit.DB.Mechanical.Space>();
-            List<string> numbers = new List<string>();
-
+            Dictionary<string, Autodesk.Revit.DB.Mechanical.Space> dictionary = null;
             if (spaces != null && spaces.Count != 0)
             {
-                Dictionary<string, List<Autodesk.Revit.DB.Mechanical.Space>> dictionary = new Dictionary<string, List<Autodesk.Revit.DB.Mechanical.Space>>();
-                foreach(Autodesk.Revit.DB.Mechanical.Space space in spaces)
-                {
-                    StartTransaction(space.Document);
-                    
-                    string name = space?.Level?.Name;
-                    if (string.IsNullOrEmpty(name))
-                        name = string.Empty;
-
-                    if(!dictionary.TryGetValue(name, out List<Autodesk.Revit.DB.Mechanical.Space> spaces_Level))
-                    {
-                        spaces_Level = new List<Autodesk.Revit.DB.Mechanical.Space>();
-                        dictionary[name] = spaces_Level;
-                    }
-
-                    spaces_Level.Add(space);
-                }
-
-                foreach (KeyValuePair<string, List<Autodesk.Revit.DB.Mechanical.Space>> keyValuePair in dictionary)
-                {
-                    XYZ xyz_Min = new XYZ(double.MaxValue, double.MaxValue, double.MaxValue);
-                    foreach(Autodesk.Revit.DB.Mechanical.Space space_Temp in keyValuePair.Value)
-                    {
-                        XYZ xyz = (space_Temp.Location as LocationPoint)?.Point;
-                        if (xyz == null)
-                            continue;
-
-                        xyz_Min = new XYZ(Math.Min(xyz.X, xyz_Min.X), Math.Min(xyz.Y, xyz_Min.Y), Math.Min(xyz.Z, xyz_Min.Z));
-                    }
-
-                    List<Tuple<double, Autodesk.Revit.DB.Mechanical.Space>> tuples = new List<Tuple<double, Autodesk.Revit.DB.Mechanical.Space>>();
-                    foreach (Autodesk.Revit.DB.Mechanical.Space space_Temp in keyValuePair.Value)
-                    {
-                        XYZ xyz = (space_Temp.Location as LocationPoint)?.Point;
-                        if (xyz == null)
-                            continue;
-
-                        tuples.Add(new Tuple<double, Autodesk.Revit.DB.Mechanical.Space>(xyz.DistanceTo(xyz_Min), space_Temp));
-                    }
-
-                    tuples.Sort((x, y) => x.Item1.CompareTo(y.Item1));
-
-                    int count = 1;
-                    string levelName = keyValuePair.Key.Replace("Level", string.Empty).Trim();
-                    foreach(Autodesk.Revit.DB.Mechanical.Space space in tuples.ConvertAll(x => x.Item2))
-                    {
-                        string number = count.ToString();
-                        while (number.Length < 3)
-                            number = "0" + number;
-
-                        if (!string.IsNullOrWhiteSpace(levelName))
-                            number = string.Format("{0}_{1}", levelName, number);
-
-                        result.Add(space);
-                        numbers.Add(number);
-
-                        space.get_Parameter(BuiltInParameter.ROOM_NUMBER).Set(number);
-
-                        count++;
-                    }
-                }
+                StartTransaction(document);
+                dictionary = Analytical.Revit.Modify.UpdateNumbers(spaces);
             }
 
             index = Params.IndexOfOutputParam("spaces");
             if (index != -1)
-                dataAccess.SetDataList(index, result);
+                dataAccess.SetDataList(index, dictionary?.Values);
 
             index = Params.IndexOfOutputParam("numbers");
             if(index != -1)
-            dataAccess.SetDataList(index, numbers);
+            dataAccess.SetDataList(index, dictionary?.Keys);
 
             if (index_Successful != -1)
-                dataAccess.SetData(index_Successful, result != null && result.Count != 0);
+                dataAccess.SetData(index_Successful, dictionary != null && dictionary.Count != 0);
 
         }
     }

@@ -97,6 +97,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
+            List<Autodesk.Revit.DB.Mechanical.Space> spaces_Revit_UpdateNumbers = new List<Autodesk.Revit.DB.Mechanical.Space>();
+
             Core.SAMObject sAMObject = analyticalObject as Core.SAMObject;
             if (sAMObject == null)
             {
@@ -195,6 +197,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                                 if (space_Revit != null)
                                 {
                                     elementId = space_Revit.Id;
+                                    spaces_Revit_UpdateNumbers.Add(space_Revit);
                                 }
                             }
                         }
@@ -247,6 +250,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                 Core.Revit.Modify.SetValues(element, tuple.Item2, ActiveSetting.Setting);
                 Core.Revit.Modify.SetValues(element, tuple.Item2, Analytical.Revit.ActiveSetting.Setting);
                 elements.Add(element);
+            }
+
+            if(spaces_Revit_UpdateNumbers != null && spaces_Revit_UpdateNumbers.Count != 0)
+            {
+                Analytical.Revit.Modify.UpdateNumbers(spaces_Revit_UpdateNumbers);
             }
 
             index = Params.IndexOfOutputParam("elements");

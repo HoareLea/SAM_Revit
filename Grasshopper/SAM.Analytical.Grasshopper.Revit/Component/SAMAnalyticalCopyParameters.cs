@@ -45,7 +45,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(new ParamDefinition(new Param_GenericObject() { Name = "_tool", NickName = "_tool", Description = "Source Tool", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new Param_GenericObject() { Name = "_tool", NickName = "_tool", Description = "Source Tool \n *Connect SAMAnalytical.Tool", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
 
                 Param_Boolean param_Boolean = new Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);

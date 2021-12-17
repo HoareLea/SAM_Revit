@@ -30,7 +30,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdatePanelType()
           : base("SAMAnalytical.UpdatePanelType", "SAManalytical.UpdatePanelType",
-              "Modify Update Analytical Construction from csv file heading column: Prefix, Name, Width, Function,SAM_BuildingElementType, template Family. New Name Family,SAM Types in Template ",
+              "Modify Update Analytical Construction from csv file heading column: \nPrefix, Name, Width, Function,SAM_BuildingElementType, template Family. New Name Family,SAM Types \n  in Template ",
               "SAM", "Revit")
         {
         }

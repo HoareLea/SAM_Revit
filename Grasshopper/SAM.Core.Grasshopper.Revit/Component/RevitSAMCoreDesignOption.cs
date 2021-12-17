@@ -31,7 +31,7 @@ namespace SAM.Core.Grasshopper.Revit
         public RevitSAMCoreDesignOption()
           : base("Revit.SAMCoreDesignOption", "Revit.SAMCoreDesignOption",
               "Gets SAM Design Option from Revit Document",
-              "SAM", "Revit")
+              "SAM WIP", "Revit")
         {
         }
 

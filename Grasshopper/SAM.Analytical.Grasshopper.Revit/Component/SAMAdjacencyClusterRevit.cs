@@ -31,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         public SAMAdjacencyClusterRevit()
           : base("SAMAdjacencyCluster.Revit", "SAMAdjacencyCluster.Revit",
               "SAM AdjacencyCluster to Revit",
-              "SAM", "Revit")
+              "SAM WIP", "Revit")
         {
 
         }

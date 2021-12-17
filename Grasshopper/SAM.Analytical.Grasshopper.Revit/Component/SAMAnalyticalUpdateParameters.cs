@@ -98,10 +98,37 @@ namespace SAM.Analytical.Grasshopper.Revit
             ElementId elementId = ((Core.SAMObject)analyticalObject).ElementId();
             if (elementId == null && analyticalObject is Space)
             {
+                Space space_SAM = ((Space)analyticalObject);
+
+
                 List<Autodesk.Revit.DB.Mechanical.Space> spaces = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Autodesk.Revit.DB.Mechanical.Space>().ToList();
                 if (spaces != null)
                 {
-                    Autodesk.Revit.DB.Mechanical.Space space = spaces.Find(x => x.Name != null && x.Name.Equals(((Space)analyticalObject).Name));
+                    Autodesk.Revit.DB.Mechanical.Space space = spaces.Find(x => x.Name != null && x.Name.Equals(space_SAM.Name));
+                    if(space == null)
+                    {
+                        foreach(Autodesk.Revit.DB.Mechanical.Space space_Temp in spaces)
+                        {
+                            Parameter parameter = space_Temp?.get_Parameter(BuiltInParameter.ROOM_NAME);
+                            if(parameter == null || !parameter.HasValue)
+                            {
+                                continue;
+                            }
+
+                            string name = parameter.AsString();
+                            if(string.IsNullOrEmpty(name))
+                            {
+                                continue;
+                            }
+
+                            if(name.Equals(space_SAM.Name))
+                            {
+                                space = space_Temp;
+                                break;
+                            }
+                        }
+                    }
+
                     if (space != null)
                     {
                         elementId = space.Id;

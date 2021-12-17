@@ -29,8 +29,8 @@ namespace SAM.Core.Grasshopper.Revit
         /// </summary>
         public RevitUpdateParameters()
           : base("Revit.UpdateParameters", "Revit.UpdateParameters",
-              "Updates Revit Element Parameter based on SAMObject Parameter",
-              "SAM", "Revit")
+              "Updates Revit Element Parameter based on SAMObject Parameter \n works on all object that were pulled from Revit and therefore contians ElementID",
+              "SAM WIP", "Revit")
         {
         }
 

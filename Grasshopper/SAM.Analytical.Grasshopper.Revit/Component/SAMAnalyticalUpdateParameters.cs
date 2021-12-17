@@ -31,7 +31,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdateParameters()
           : base("SAMAnalytical.UpdateParameters", "SAMAnalytical.UpdateParameters",
-              "Updates Revit Element Parameter based on Analytical Object",
+              "Updates Revit Element Parameter based on Analytical Object \n *works on Spaces at the moment \n connect Spaces or Analytical Model ",
               "SAM", "Revit")
         {
         }
@@ -44,7 +44,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(new ParamDefinition(new GooAnalyticalObjectParam() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new GooAnalyticalObjectParam() { Name = "_analytical", NickName = "_analytical", Description = "SAM Analytical Object \n connect Spaces or Analytical Model", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "run", NickName = "run", Description = "Run", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }

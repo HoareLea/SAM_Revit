@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,8 +37,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_revitLinkElement", NickName = "_revitLinkElement", Description = "Revit Link Element", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_view_", NickName = "_view_", Description = "Revit View", Access = GH_ParamAccess.item }, ParamVisibility.Voluntary));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_view", NickName = "_view", Description = "Revit View", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "revitLinkInstance_", NickName = "revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 boolean.SetPersistentData(false);
@@ -56,7 +56,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "AnalyticalObjects", NickName = "AnalyticalObjects", Description = "SAM Analytical Objects", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analyticalObjects", NickName = "analyticalObjects", Description = "SAM Analytical Objects", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
                 return result.ToArray();
             }
         }
@@ -93,41 +93,52 @@ namespace SAM.Analytical.Grasshopper.Revit
             GH_ObjectWrapper objectWrapper = null;
 
 
-            index = Params.IndexOfInputParam("_revitLinkElement");
+            index = Params.IndexOfInputParam("revitLinkInstance_");
             if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            if(!Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out RevitLinkInstance revitLinkInstance))
+            Transform tranform = null;
+            Document document = null;
+            if(Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out RevitLinkInstance revitLinkInstance) && revitLinkInstance != null)
+            {
+                document = revitLinkInstance.GetLinkDocument();
+                tranform = revitLinkInstance.GetTotalTransform();
+            }
+
+            if(document == null)
+            {
+                document = RhinoInside.Revit.Revit.ActiveDBDocument;
+            }
+
+            if(document == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            Document document_Linked = revitLinkInstance.GetLinkDocument();
-            if(document_Linked == null)
+            if(tranform == null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                tranform = Transform.Identity;
             }
 
             IEnumerable<ElementId> elementIds = null;
 
-            index = Params.IndexOfInputParam("_view_");
+            index = Params.IndexOfInputParam("_view");
             if (index != -1 && dataAccess.GetData(index, ref objectWrapper) && objectWrapper.Value != null)
             {
                 if (Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out ViewPlan viewPlan))
                 {
-                    Outline outline = Core.Revit.Query.Outline(viewPlan, revitLinkInstance.GetTotalTransform());
+                    Outline outline = Core.Revit.Query.Outline(viewPlan, tranform);
                     if(outline != null)
                     {
                         //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
                         //elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
 
                         BoundingBoxIsInsideFilter boundingBoxIsInsideFilter = new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance);
-                        elementIds = new FilteredElementCollector(document_Linked).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
+                        elementIds = new FilteredElementCollector(document).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
                     }
                 }
             }
@@ -141,7 +152,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
             IEnumerable<Core.ISAMObject> sAMObjects = null;
 
-            List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels(document_Linked, elementIds, convertSettings);
+            List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels(document, elementIds, convertSettings);
             if (panels != null)
                 sAMObjects = panels.Cast<Core.ISAMObject>();
 

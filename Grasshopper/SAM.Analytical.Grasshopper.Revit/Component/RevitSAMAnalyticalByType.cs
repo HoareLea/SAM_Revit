@@ -41,12 +41,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_type_", NickName = "_type_", Description = "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_String param_String = new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_type_", NickName = "_type_", Description = "Type Name ie. Panel, Construction, Aperture, ApertureConstruction, Space", Access = GH_ParamAccess.item };
+                param_String.SetPersistentData("Panel");
+                result.Add(new GH_SAMParam(param_String, ParamVisibility.Binding));
+                
                 result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "revitLinkInstance_", NickName = "revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
 
-                global::Grasshopper.Kernel.Parameters.Param_Boolean boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
-                boolean.SetPersistentData(false);
-                result.Add(new GH_SAMParam(boolean, ParamVisibility.Binding));
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Boolean, ParamVisibility.Binding));
 
                 return result.ToArray();
             }
@@ -139,7 +143,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform);
 
 
-            index = Params.IndexOfOutputParam("revitLinkInstance_");
+            index = Params.IndexOfOutputParam("analyticalObjects");
             if(index != -1)
             {
                 dataAccess.SetDataList(index, result);

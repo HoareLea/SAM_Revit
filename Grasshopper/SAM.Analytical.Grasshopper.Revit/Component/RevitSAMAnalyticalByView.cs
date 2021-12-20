@@ -94,21 +94,24 @@ namespace SAM.Analytical.Grasshopper.Revit
 
 
             index = Params.IndexOfInputParam("revitLinkInstance_");
-            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
+            if (index != -1)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                dataAccess.GetData(index, ref objectWrapper);
             }
 
             Transform tranform = null;
             Document document = null;
-            if(Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out RevitLinkInstance revitLinkInstance) && revitLinkInstance != null)
+            if(objectWrapper != null && Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out RevitLinkInstance revitLinkInstance) && revitLinkInstance != null)
             {
                 document = revitLinkInstance.GetLinkDocument();
                 tranform = revitLinkInstance.GetTotalTransform();
             }
+            else if (objectWrapper?.Value is RhinoInside.Revit.GH.Types.ProjectDocument)
+            {
+                document = ((RhinoInside.Revit.GH.Types.ProjectDocument)objectWrapper.Value).Value;
+            }
 
-            if(document == null)
+            if (document == null)
             {
                 document = RhinoInside.Revit.Revit.ActiveDBDocument;
             }
@@ -124,26 +127,28 @@ namespace SAM.Analytical.Grasshopper.Revit
                 tranform = Transform.Identity;
             }
 
-            IEnumerable<ElementId> elementIds = null;
-
             index = Params.IndexOfInputParam("_view");
-            if (index != -1 && dataAccess.GetData(index, ref objectWrapper) && objectWrapper.Value != null)
+            if(index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
-                if (Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out ViewPlan viewPlan))
-                {
-                    Outline outline = Core.Revit.Query.Outline(viewPlan, tranform);
-                    if(outline != null)
-                    {
-                        //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
-                        //elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
 
-                        BoundingBoxIsInsideFilter boundingBoxIsInsideFilter = new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance);
-                        elementIds = new FilteredElementCollector(document).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
-                    }
+            IEnumerable<ElementId> elementIds = null;
+            if (Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out ViewPlan viewPlan))
+            {
+                Outline outline = Core.Revit.Query.Outline(viewPlan, tranform);
+                if (outline != null)
+                {
+                    //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
+                    //elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
+
+                    BoundingBoxIsInsideFilter boundingBoxIsInsideFilter = new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance);
+                    elementIds = new FilteredElementCollector(document).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
                 }
             }
 
-            if(elementIds == null || elementIds.Count() == 0)
+            if (elementIds == null || elementIds.Count() == 0)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

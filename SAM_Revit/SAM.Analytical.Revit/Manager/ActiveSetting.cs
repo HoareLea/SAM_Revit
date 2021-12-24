@@ -145,7 +145,15 @@ namespace SAM.Analytical.Revit
 
             //Panel
             parameterMap_General.Add(PanelParameter.Transparent, typeof(HostObject), "SAM_BuildingElementTransparent");
+            parameterMap_General.Add(PanelParameter.ThermalTransmittance, typeof(HostObject), "SAM_SrfUValue");
+            parameterMap_General.Add(PanelParameter.LightTransmittance, typeof(HostObject), "SAM_SrfLightTransmittance");
+            parameterMap_General.Add(PanelParameter.LightReflectance, typeof(HostObject), "SAM_SrfLightReflectance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyTransmittance, typeof(HostObject), "SAM_SrfDirectSolarEnergyTransmittance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyReflectance, typeof(HostObject), "SAM_SrfDirectSolarEnergyReflectance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyAbsorptance, typeof(HostObject), "SAM_SrfDirectSolarEnergyAbsorptance");
+            parameterMap_General.Add(PanelParameter.TotalSolarEnergyTransmittance, typeof(HostObject), "SAM_SrfgValue");
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_NorthAngle"); //double
+
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternalGlazing"); //double
 

@@ -13,5 +13,10 @@ namespace SAM.Geometry.Revit
             : base(jObject)
         {
         }
+
+        public FilledRegionType(string name)
+            : base(name)
+        {
+        }
     }
 }

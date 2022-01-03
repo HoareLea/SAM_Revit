@@ -2,6 +2,7 @@
 using SAM.Core;
 using SAM.Geometry.Planar;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Geometry.Revit
 {
@@ -9,6 +10,13 @@ namespace SAM.Geometry.Revit
     {
         private IntegerId viewId;
         private List<Face2D> face2Ds;
+        
+        public FilledRegion(FilledRegionType filledRegionType, IntegerId viewId, IEnumerable<Face2D> face2Ds)
+            : base(filledRegionType)
+        {
+            this.viewId = viewId == null ? null : new IntegerId(viewId);
+            face2Ds = face2Ds?.ToList().FindAll(x => x != null).ConvertAll(x => new Face2D(x));
+        }
         
         public FilledRegion(FilledRegion filledRegion) 
             : base(filledRegion)

@@ -48,8 +48,8 @@ namespace SAM.Geometry.Revit
 
             if (result != null)
             {
-                result.UpdateParameterSets(elementType, ActiveSetting.Setting.GetValue<TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
-                convertSettings?.Add(elementType.Id, result);
+                result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+                convertSettings?.Add(familyInstance.Id, result);
             }
 
             return result;

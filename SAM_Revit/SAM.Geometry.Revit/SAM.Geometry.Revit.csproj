@@ -234,6 +234,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\FilledRegion.cs" />
+    <Compile Include="Classes\FilledRegionType.cs" />
     <Compile Include="Classes\RevitInstance2D.cs" />
     <Compile Include="Classes\RevitType2D.cs" />
     <Compile Include="Classes\RevitType3D.cs" />

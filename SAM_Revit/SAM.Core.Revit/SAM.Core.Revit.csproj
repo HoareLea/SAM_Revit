@@ -235,6 +235,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accuracy\Tolerance.cs" />
+    <Compile Include="Classes\FilledRegionType.cs" />
+    <Compile Include="Classes\FilledRegion.cs" />
     <Compile Include="Classes\PurgeMaterialsWrapper.cs" />
     <Compile Include="Classes\RevitFilePreview.cs" />
     <Compile Include="Classes\RevitFilePreviewParameter.cs" />

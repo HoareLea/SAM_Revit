@@ -247,6 +247,7 @@
     <Compile Include="Classes\SharedParameterFileWrapper.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
+    <Compile Include="Convert\ToRevit\Material.cs" />
     <Compile Include="Convert\ToSAM\DesignOption.cs" />
     <Compile Include="Convert\ToSAM\RevitInstance.cs" />
     <Compile Include="Convert\ToSAM\Material.cs" />

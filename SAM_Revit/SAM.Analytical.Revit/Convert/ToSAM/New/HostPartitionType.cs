@@ -1,8 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using System.Collections.Generic;
-
-using SAM.Architectural.Revit;
 using SAM.Architectural;
 
 namespace SAM.Analytical.Revit

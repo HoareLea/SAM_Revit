@@ -215,6 +215,7 @@
   <ItemGroup>
     <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
     <Compile Include="Convert\ToRevit\Elements.cs" />
+    <Compile Include="Convert\ToRevit\New\HostObjAttributes.cs" />
     <Compile Include="Convert\ToRevit\ProjectInfo.cs" />
     <Compile Include="Convert\ToRevit\Spaces.cs" />
     <Compile Include="Convert\ToRevit\Wall.cs" />

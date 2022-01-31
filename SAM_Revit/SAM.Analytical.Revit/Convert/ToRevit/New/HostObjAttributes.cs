@@ -102,7 +102,13 @@ namespace SAM.Analytical.Revit
 
                         double width = double.NaN;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                         width = UnitUtils.ConvertToInternalUnits(materialLayer.Thickness, DisplayUnitType.DUT_METERS);
+#else
+                        width = UnitUtils.ConvertToInternalUnits(materialLayer.Thickness, UnitTypeId.Meters);
+#endif
+
+
 
                         CompoundStructureLayer compoundStructureLayer = new CompoundStructureLayer(width, MaterialFunctionAssignment.Structure, material.Id);
                         if (compoundStructureLayer == null)

@@ -140,7 +140,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\references\Revit 2022\RhinoInside.Revit.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -148,8 +147,11 @@
       <HintPath>..\..\references\Revit 2022\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RhinoInside.Revit.External" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+      <HintPath>..\..\references\Revit 2022\RhinoInside.Revit.External.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -157,13 +159,20 @@
       <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.GH.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RhinoInside.Revit.External" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
+      <HintPath>..\..\references\Revit 2021\RhinoInside.Revit.External.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RhinoInside.Revit" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RhinoInside.Revit.GH" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
       <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.GH.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RhinoInside.Revit.External" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+      <HintPath>..\..\references\Revit 2020\RhinoInside.Revit.External.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SAM.Analytical">
@@ -239,7 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Grasshopper">
-      <Version>7.9.21222.15001</Version>
+      <Version>7.15.22039.13001</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>

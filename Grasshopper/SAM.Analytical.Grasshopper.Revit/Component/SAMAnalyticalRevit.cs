@@ -21,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -67,6 +67,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -75,6 +76,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
             int index = -1;
             int index_Elements = -1;
+            int index_Successful = -1;
+
+            index_Successful = Params.IndexOfOutputParam("successful");
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, false);
 
             index_Elements = Params.IndexOfOutputParam("elements");
             if(index_Elements != -1)
@@ -150,6 +156,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if (index_Elements != -1)
                 dataAccess.SetDataList(index_Elements, elements);
+
+            if (index_Successful != -1)
+                dataAccess.SetData(index_Successful, elements != null && elements.Count() > 0);
         }
 
         //protected override void OnAfterStart(Document document, string strTransactionName)

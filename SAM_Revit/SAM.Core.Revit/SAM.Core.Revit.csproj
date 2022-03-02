@@ -245,6 +245,7 @@
     <Compile Include="Classes\RevitInstance.cs" />
     <Compile Include="Classes\SAMSchema.cs" />
     <Compile Include="Classes\SharedParameterFileWrapper.cs" />
+    <Compile Include="Classes\DestinationDuplicateTypeNamesHandler.cs" />
     <Compile Include="Classes\WarningSwallower.cs" />
     <Compile Include="Classes\ConvertSettings.cs" />
     <Compile Include="Convert\ToRevit\Material.cs" />
@@ -261,6 +262,9 @@
     <Compile Include="Interfaces\IRevitInstance.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\AddProjectParameter.cs" />
+    <Compile Include="Modify\CopyMaterials.cs" />
+    <Compile Include="Modify\CopyElements.cs" />
+    <Compile Include="Modify\CopyElementTypes.cs" />
     <Compile Include="Modify\CopyValue.cs" />
     <Compile Include="Create\Sheets.cs" />
     <Compile Include="Modify\PurgeMaterials.cs" />

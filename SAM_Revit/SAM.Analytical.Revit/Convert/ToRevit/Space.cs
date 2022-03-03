@@ -38,7 +38,10 @@ namespace SAM.Analytical.Revit
             if (result == null)
                 return null;
 
-            result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
+            result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(string.Empty);
+            result.get_Parameter(BuiltInParameter.ROOM_NUMBER).Set(space.Name);
+
+            //result.get_Parameter(BuiltInParameter.ROOM_NAME).Set(space.Name);
 
             if (convertSettings.ConvertParameters)
             {

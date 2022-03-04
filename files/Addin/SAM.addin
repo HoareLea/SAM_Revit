@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>SAM Addin</Name>
+    <Assembly></Assembly>
+    <AddInId>53112961-8521-4d4e-be81-aa1cabf3232b</AddInId>
+    <FullClassName>SAM.Core.Revit.Addin.ExternalApplication</FullClassName>
+    <VendorId>SAM</VendorId>
+    <VendorDescription>SAM</VendorDescription>
+  </AddIn>
+</RevitAddIns>

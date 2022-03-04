@@ -18,8 +18,14 @@ namespace SAM.Core.Revit
 
                 FilteredElementCollector filteredElementCollector = new FilteredElementCollector(document_Temp).OfCategory(BuiltInCategory.OST_Materials);
 
+                IEnumerable<Element> elements = filteredElementCollector.ToElements();
+                if(elements == null)
+                {
+                    return null;
+                }
+
                 List<ElementId> elementIds = new List<ElementId>();
-                foreach (Element element in filteredElementCollector)
+                foreach (Element element in elements)
                 {
                     Autodesk.Revit.DB.Material material = element as Autodesk.Revit.DB.Material;
                     if(!materialNames.Contains(material.Name))

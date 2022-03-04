@@ -2,6 +2,7 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using SAM.Analytical.Revit.Addin.Properties;
+using SAM.Core;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,12 +16,12 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Analytical";
 
-        public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
+        public override Autodesk.Revit.UI.Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
             Document document = externalCommandData?.Application?.ActiveUIDocument?.Document;
             if (document == null)
             {
-                return Result.Failed;
+                return Autodesk.Revit.UI.Result.Failed;
             }
 
             string path = null;
@@ -34,7 +35,7 @@ namespace SAM.Analytical.Revit.Addin
 
                 if (openFileDialog.ShowDialog(Core.Revit.Addin.ExternalApplication.WindowHandle) != DialogResult.OK)
                 {
-                    return Result.Cancelled;
+                    return Autodesk.Revit.UI.Result.Cancelled;
                 }
 
                 path = openFileDialog.FileName;
@@ -42,13 +43,13 @@ namespace SAM.Analytical.Revit.Addin
 
             if(string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path))
             {
-                return Result.Failed;
+                return Autodesk.Revit.UI.Result.Failed;
             }
 
             AnalyticalModel analyticalModel = Core.Convert.ToSAM<AnalyticalModel>(path)?.FirstOrDefault();
             if(analyticalModel == null)
             {
-                return Result.Failed;
+                return Autodesk.Revit.UI.Result.Failed;
             }
 
             List<Architectural.Level> levels = null;
@@ -67,7 +68,7 @@ namespace SAM.Analytical.Revit.Addin
 
                 List<Element> elements = new List<Element>();
 
-                using (Core.Windows.SimpleProgressForm simpleProgressForm = new Core.Windows.SimpleProgressForm("Lad Analytical Model", string.Empty, 3))
+                using (Core.Windows.SimpleProgressForm simpleProgressForm = new Core.Windows.SimpleProgressForm("Lad Analytical Model", string.Empty, 4))
                 {
                     simpleProgressForm.Increment("Creating Levels");
 
@@ -88,13 +89,16 @@ namespace SAM.Analytical.Revit.Addin
                         elements.AddRange(elements_AnalyticalModel);
                     }
 
+                    simpleProgressForm.Increment("Coping Parameters");
+                    Modify.CopySpatialElementParameters(document, Tool.TAS);
+
                     simpleProgressForm.Increment("Finishing");
                 }
 
                 transaction.Commit();
             }
 
-            return Result.Succeeded;
+            return Autodesk.Revit.UI.Result.Succeeded;
         }
 
         public override void Create(RibbonPanel ribbonPanel)

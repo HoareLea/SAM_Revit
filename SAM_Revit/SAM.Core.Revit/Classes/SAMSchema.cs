@@ -89,7 +89,7 @@ namespace SAM.Core.Revit
             if (result != null)
                 return result;
 
-            if (Guid == System.Guid.Empty || string.IsNullOrWhiteSpace(Name))
+            if (Guid == Guid.Empty || string.IsNullOrWhiteSpace(Name))
                 return null;
 
             SchemaBuilder schemaBuilder = new SchemaBuilder(Guid);
@@ -155,7 +155,7 @@ namespace SAM.Core.Revit
 
         public List<T> GetIJSAMObjects<T>(Autodesk.Revit.DB.Element element) where T : IJSAMObject
         {
-            if (element == null || Guid == System.Guid.Empty || string.IsNullOrEmpty(fieldName))
+            if (element == null || Guid == Guid.Empty || string.IsNullOrEmpty(fieldName))
                 return null;
 
             Schema schema = GetSchema();

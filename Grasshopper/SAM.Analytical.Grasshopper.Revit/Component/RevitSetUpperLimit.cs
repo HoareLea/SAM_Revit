@@ -100,7 +100,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                     BoundingBoxXYZ boundingBoxXYZ = element.get_BoundingBox(null);
                     if(boundingBoxXYZ != null)
                     {
-                        Level level = levels.Find(x => x.Elevation.AlmostEqual(boundingBoxXYZ.Max.Z, Core.Tolerance.MacroDistance));
+                        Level level = levels.Find(x => x.Elevation.AlmostEqual(boundingBoxXYZ.Max.Z, Tolerance.MacroDistance));
                         if(level != null)
                         {
                             Autodesk.Revit.DB.Wall wall = (Autodesk.Revit.DB.Wall)element;
@@ -123,7 +123,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                     double elevation = space.UnboundedHeight + levels.Find(x => x.Id == space.LevelId).Elevation;
 
-                    Level level = levels.Find(x => x.Elevation.AlmostEqual(elevation, Core.Tolerance.MacroDistance));
+                    Level level = levels.Find(x => x.Elevation.AlmostEqual(elevation, Tolerance.MacroDistance));
                     if (level != null)
                     {
                         Parameter parameter = space.get_Parameter(BuiltInParameter.ROOM_UPPER_LEVEL);

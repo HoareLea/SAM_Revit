@@ -28,7 +28,7 @@ namespace SAM.Analytical.Revit.Addin
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 //openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "json files (*.json)|*.txt|All files (*.*)|*.*";
+                openFileDialog.Filter = "json files (*.json)|*.json|All files (*.*)|*.*";
                 openFileDialog.FilterIndex = 2;
                 openFileDialog.RestoreDirectory = true;
 

@@ -14,7 +14,7 @@ namespace SAM.Core.Revit
                 return null;
 
             ParameterSet parameterSet = new ParameterSet(element.GetType()?.Assembly);
-            parameterSet.Add("Name", Query.FullName(element));
+            parameterSet.Add("Name", FullName(element));
 
             string categoryName = null;
             if (element is Family)

@@ -167,6 +167,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

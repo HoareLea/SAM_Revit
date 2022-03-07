@@ -63,9 +63,29 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SAM_AddParameters {
+            get {
+                object obj = ResourceManager.GetObject("SAM_AddParameters", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SAM_GenerateSharedParametersFile {
             get {
                 object obj = ResourceManager.GetObject("SAM_GenerateSharedParametersFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SAM_RemoveParameters {
+            get {
+                object obj = ResourceManager.GetObject("SAM_RemoveParameters", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

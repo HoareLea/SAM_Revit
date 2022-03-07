@@ -69,6 +69,31 @@ namespace SAM.Core.Revit
             }
         }
 
+        public HashSet<string> GetNames()
+        {
+            if (definitionFile?.Groups == null)
+            {
+                return null;
+            }
+
+            HashSet<string> result = new HashSet<string>();
+
+            foreach (DefinitionGroup definitionGroup in definitionFile.Groups)
+            {
+                if (definitionGroup.Definitions == null)
+                {
+                    continue;
+                }
+
+                foreach (Definition definition in definitionGroup.Definitions)
+                {
+                    result.Add(definition.Name);
+                }
+            }
+
+            return result;
+        }
+
         public List<Definition> FindAll(params string[] names)
         {
             if (definitionFile == null)
@@ -94,6 +119,30 @@ namespace SAM.Core.Revit
             }
 
             return definitions;
+        }
+
+        public Definition Find(string name)
+        {
+            if (definitionFile?.Groups == null)
+                return null;
+
+            foreach (DefinitionGroup definitionGroup in definitionFile.Groups)
+            {
+                if (definitionGroup.Definitions == null)
+                {
+                    continue;
+                }
+
+                foreach (Definition definition in definitionGroup.Definitions)
+                {
+                    if (definition?.Name == name)
+                    {
+                        return definition;
+                    }
+                }
+            }
+
+            return null;
         }
 
         public Definition Create(string group, ExternalDefinitionCreationOptions externalDefinitionCreationOptions)

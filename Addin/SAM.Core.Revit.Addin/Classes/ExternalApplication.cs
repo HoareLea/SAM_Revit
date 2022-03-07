@@ -20,15 +20,15 @@ namespace SAM.Core.Revit.Addin
         {
             uIControlledApplication.CreateRibbonTab(TabName);
 
-            List<SAMExternalCommand> sAMExternalCommands = null;
+            List<Assembly> assemblies = new List<Assembly>();
+            //assemblies.Add(GetType().Assembly);
+
             string directory = GetAssemblyDirectory();
             if(!string.IsNullOrWhiteSpace(directory) && System.IO.Directory.Exists(directory))
             {
                 string[] paths = System.IO.Directory.GetFiles(directory, "*.Revit.Addin.dll");
                 if(paths != null)
                 {
-                    sAMExternalCommands = new List<SAMExternalCommand>();
-
                     foreach(string path in paths)
                     {
                         Assembly assembly = Assembly.LoadFrom(path);
@@ -37,49 +37,54 @@ namespace SAM.Core.Revit.Addin
                             continue;
                         }
 
-                        Type[] types = assembly.GetExportedTypes();
-                        if(types == null)
-                        {
-                            continue;
-                        }
-
-                        foreach(Type type in types)
-                        {
-                            if(!typeof(SAMExternalCommand).IsAssignableFrom(type) || type.IsAbstract)
-                            {
-                                continue;
-                            }
-
-                            SAMExternalCommand sAMExternalCommand = Activator.CreateInstance(type) as SAMExternalCommand;
-                            if(sAMExternalCommand == null)
-                            {
-                                continue;
-                            }
-
-                            sAMExternalCommands.Add(sAMExternalCommand);
-                        }
+                        assemblies.Add(assembly);
                     }
                 }
             }
 
-            if(sAMExternalCommands != null)
+            List<SAMExternalCommand> sAMExternalCommands = new List<SAMExternalCommand>();
+            foreach(Assembly assembly in assemblies)
             {
-                foreach (SAMExternalCommand sAMExternalCommand in sAMExternalCommands)
+                Type[] types = assembly?.GetExportedTypes();
+                if (types == null)
                 {
-                    string ribbonPanelName = sAMExternalCommand.RibbonPanelName;
-                    if(string.IsNullOrWhiteSpace(ribbonPanelName))
-                    {
-                        ribbonPanelName = "General";
-                    }
-
-                    RibbonPanel ribbonPanel = uIControlledApplication.GetRibbonPanels(TabName)?.Find(x => x.Name == ribbonPanelName);
-                    if(ribbonPanel == null)
-                    {
-                        ribbonPanel = uIControlledApplication.CreateRibbonPanel(TabName, ribbonPanelName);
-                    }
-
-                    sAMExternalCommand.Create(ribbonPanel);
+                    continue;
                 }
+
+                foreach (Type type in types)
+                {
+                    if (!typeof(SAMExternalCommand).IsAssignableFrom(type) || type.IsAbstract)
+                    {
+                        continue;
+                    }
+
+                    SAMExternalCommand sAMExternalCommand = Activator.CreateInstance(type) as SAMExternalCommand;
+                    if (sAMExternalCommand == null)
+                    {
+                        continue;
+                    }
+
+                    sAMExternalCommands.Add(sAMExternalCommand);
+                }
+            }
+
+            sAMExternalCommands.Sort((x, y) => x.Index.CompareTo(y.Index));
+
+            foreach(SAMExternalCommand sAMExternalCommand in sAMExternalCommands)
+            {
+                string ribbonPanelName = sAMExternalCommand.RibbonPanelName;
+                if (string.IsNullOrWhiteSpace(ribbonPanelName))
+                {
+                    ribbonPanelName = "General";
+                }
+
+                RibbonPanel ribbonPanel = uIControlledApplication.GetRibbonPanels(TabName)?.Find(x => x.Name == ribbonPanelName);
+                if (ribbonPanel == null)
+                {
+                    ribbonPanel = uIControlledApplication.CreateRibbonPanel(TabName, ribbonPanelName);
+                }
+
+                sAMExternalCommand.Create(ribbonPanel);
             }
 
             return Autodesk.Revit.UI.Result.Succeeded;

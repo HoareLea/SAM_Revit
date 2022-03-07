@@ -2,7 +2,6 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using SAM.Analytical.Revit.Addin.Properties;
-using SAM.Core;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,12 +15,14 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Analytical";
 
-        public override Autodesk.Revit.UI.Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
+        public override int Index => 2;
+
+        public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
             Document document = externalCommandData?.Application?.ActiveUIDocument?.Document;
             if (document == null)
             {
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
             string path = null;
@@ -35,7 +36,7 @@ namespace SAM.Analytical.Revit.Addin
 
                 if (openFileDialog.ShowDialog(Core.Revit.Addin.ExternalApplication.WindowHandle) != DialogResult.OK)
                 {
-                    return Autodesk.Revit.UI.Result.Cancelled;
+                    return Result.Cancelled;
                 }
 
                 path = openFileDialog.FileName;
@@ -43,13 +44,13 @@ namespace SAM.Analytical.Revit.Addin
 
             if(string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path))
             {
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
             AnalyticalModel analyticalModel = Core.Convert.ToSAM<AnalyticalModel>(path)?.FirstOrDefault();
             if(analyticalModel == null)
             {
-                return Autodesk.Revit.UI.Result.Failed;
+                return Result.Failed;
             }
 
             List<Architectural.Level> levels = null;
@@ -98,14 +99,14 @@ namespace SAM.Analytical.Revit.Addin
                 transaction.Commit();
             }
 
-            return Autodesk.Revit.UI.Result.Succeeded;
+            return Result.Succeeded;
         }
 
         public override void Create(RibbonPanel ribbonPanel)
         {
             BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
 
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(GetType().FullName, "Load\nAnalytical Model", GetType().Assembly.Location, GetType().FullName)) as PushButton;
+            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Load\nAnalytical Model", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Load Analytical Model";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;

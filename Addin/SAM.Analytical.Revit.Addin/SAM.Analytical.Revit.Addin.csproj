@@ -145,6 +145,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Core.Excel">
+      <HintPath>..\..\..\SAM_Excel\build\SAM.Core.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core.Windows">
       <HintPath>..\..\..\SAM_Windows\build\SAM.Core.Windows.dll</HintPath>
     </Reference>
@@ -164,6 +167,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -200,9 +204,15 @@
     <None Include="Resources\SAM_Small.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="NetOfficeFw.Excel">
+      <Version>1.8.1</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_GenerateSharedParametersFile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

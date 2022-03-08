@@ -59,7 +59,7 @@ namespace SAM.Analytical.Revit.Addin
             int index_ParameterType = 8;
             int index_Name = 7;
 
-            string[] unselected = new string[] { "DetailItem_AHU", "Space_Security", "Construction_CFD", "Space_LightingElec", "Space_DHW", "Space_Electrical", "Plant_Electrical", "DetailItem_Emitter", "Space_FireAlarm", "Construction_Detail", "Space_Data", "DetailItem_Benchmark", "DetailItem_ICData", "DetailItem_MEPInput", "DetailItem_Profiles", "DetailItem_Material", "Architect_Required" }
+            string[] unselected = new string[] { "DetailItem_AHU", "Space_Security", "Construction_CFD", "Space_LightingElec", "Space_DHW", "Space_Electrical", "Plant_Electrical", "DetailItem_Emitter", "Space_FireAlarm", "Construction_Detail", "Space_Data", "DetailItem_Benchmark", "DetailItem_ICData", "DetailItem_MEPInput", "DetailItem_Profiles", "DetailItem_Material", "Architect_Required" };
 
             List<dynamic> dynamics = new List<dynamic>();
             for (int i = 5; i <= objects.GetLength(0); i++)
@@ -83,6 +83,9 @@ namespace SAM.Analytical.Revit.Addin
 
                 dynamics.Add(dynamic);
             }
+
+            dynamics.Sort((x, y) => x.Group.CompareTo(y.Group));
+            dynamics.Sort((x, y) => x.Name.CompareTo(y.Name));
 
             List<string> names_Selected = null;
             using (Core.Windows.Forms.TreeViewForm<dynamic> treeViewForm = new Core.Windows.Forms.TreeViewForm<dynamic>("Select Parameters", dynamics, (dynamic @dynamic) => dynamic.Name, (dynamic @dynamic) => dynamic.Group, (dynamic @dynamic) => dynamic.Checked))

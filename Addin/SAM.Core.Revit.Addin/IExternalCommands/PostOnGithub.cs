@@ -23,7 +23,7 @@ namespace SAM.Core.Revit.Addin
 
         public override void Create(RibbonPanel ribbonPanel)
         {
-            BitmapSource bitmapSource = Windows.Convert.ToBitmapSource(Resources.SAM_PostOnGitHub);
+            BitmapSource bitmapSource = Windows.Convert.ToBitmapSource(Resources.SAM_PostOnGitHub, 32, 32);
 
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Query.FullTypeName(GetType()), "Post on\nGithub", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Post On Github";

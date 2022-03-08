@@ -164,7 +164,7 @@ namespace SAM.Analytical.Revit.Addin
 
         public override void Create(RibbonPanel ribbonPanel)
         {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_GenerateSharedParametersFile);
+            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_GenerateSharedParametersFile, 32, 32);
 
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Generate", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Generate Shared Parameters File";

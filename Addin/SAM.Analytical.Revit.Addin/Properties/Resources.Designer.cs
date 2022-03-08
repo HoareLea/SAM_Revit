@@ -83,6 +83,16 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SAM_Hydra {
+            get {
+                object obj = ResourceManager.GetObject("SAM_Hydra", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SAM_RemoveParameters {
             get {
                 object obj = ResourceManager.GetObject("SAM_RemoveParameters", resourceCulture);

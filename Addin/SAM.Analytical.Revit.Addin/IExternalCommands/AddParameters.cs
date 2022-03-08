@@ -187,7 +187,7 @@ namespace SAM.Analytical.Revit.Addin
 
         public override void Create(RibbonPanel ribbonPanel)
         {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_AddParameters);
+            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_AddParameters, 32, 32);
 
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Add\nParameters", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Add Parameters";

@@ -172,6 +172,7 @@
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="IExternalCommands\AddParameters.cs" />
     <Compile Include="IExternalCommands\RemoveParameters.cs" />
+    <Compile Include="IExternalCommands\Hydra.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -222,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SAM_RemoveParameters.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_Hydra.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

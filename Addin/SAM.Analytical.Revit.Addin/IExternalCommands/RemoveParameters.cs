@@ -97,13 +97,13 @@ namespace SAM.Analytical.Revit.Addin
 
         public override void Create(RibbonPanel ribbonPanel)
         {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_RemoveParameters);
+            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_RemoveParameters, 32, 32);
 
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Remove\nParameters", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Remove Parameters";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;
-            pushButton.AvailabilityClassName = typeof(AlwaysAvailableExternalCommandAvailability).FullName;
+            //pushButton.AvailabilityClassName = typeof(AlwaysAvailableExternalCommandAvailability).FullName;
         }
     }
 }

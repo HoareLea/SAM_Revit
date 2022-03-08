@@ -60,44 +60,7 @@ namespace SAM.Analytical.Revit.Addin
             int index_Name = 7;
 
             string[] unselected = new string[] { "DetailItem_AHU", "Space_Security", "Construction_CFD", "Space_LightingElec", "Space_DHW", "Space_Electrical", "Plant_Electrical", "DetailItem_Emitter", "Space_FireAlarm", "Construction_Detail", "Space_Data", "DetailItem_Benchmark", "DetailItem_ICData", "DetailItem_MEPInput", "DetailItem_Profiles", "DetailItem_Material", "Architect_Required" };
-
-            List<dynamic> dynamics = new List<dynamic>();
-            for (int i = 5; i <= objects.GetLength(0); i++)
-            {
-                string parameterGroup = objects[i, index_Group] as string;
-                if (string.IsNullOrWhiteSpace(parameterGroup))
-                {
-                    continue;
-                }
-
-                string name = objects[i, index_Name] as string;
-                if (string.IsNullOrWhiteSpace(name))
-                {
-                    continue;
-                }
-
-                dynamic @dynamic = new ExpandoObject();
-                dynamic.Name = name;
-                dynamic.Group = parameterGroup;
-                dynamic.Checked = unselected.Contains(parameterGroup);
-
-                dynamics.Add(dynamic);
-            }
-
-            dynamics.Sort((x, y) => x.Group.CompareTo(y.Group));
-            dynamics.Sort((x, y) => x.Name.CompareTo(y.Name));
-
-            List<string> names_Selected = null;
-            using (Core.Windows.Forms.TreeViewForm<dynamic> treeViewForm = new Core.Windows.Forms.TreeViewForm<dynamic>("Select Parameters", dynamics, (dynamic @dynamic) => dynamic.Name, (dynamic @dynamic) => dynamic.Group, (dynamic @dynamic) => dynamic.Checked))
-            {
-                if (treeViewForm.ShowDialog() != DialogResult.OK)
-                {
-                    return Result.Cancelled;
-                }
-
-                names_Selected = treeViewForm?.SelectedItems?.ConvertAll(x => x.Name as string);
-            }
-
+            List<string> names_Selected = Query.ParameterNames(objects, index_Group, index_Name, unselected);
             if(names_Selected == null || names_Selected.Count == 0)
             {
                 return Result.Failed;

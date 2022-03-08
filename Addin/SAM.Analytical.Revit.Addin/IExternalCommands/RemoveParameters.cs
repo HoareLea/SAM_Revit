@@ -49,7 +49,14 @@ namespace SAM.Analytical.Revit.Addin
                 return Result.Failed;
             }
 
+            int index_Group = 2;
             int index_Name = 7;
+
+            List<string> names_Selected = Query.ParameterNames(objects, index_Group, index_Name);
+            if (names_Selected == null || names_Selected.Count == 0)
+            {
+                return Result.Failed;
+            }
 
             using (Transaction transaction = new Transaction(document, "Remove Parameters"))
             {
@@ -84,7 +91,10 @@ namespace SAM.Analytical.Revit.Addin
                             }
                         }
                         else
+                        {
                             name = "???";
+                        }
+
                         simpleProgressForm.Increment(name);
                     }
                 }

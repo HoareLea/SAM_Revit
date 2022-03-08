@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using SAM.Core.Windows;
 using System;
 using System.Linq;
+using System.Dynamic;
 
 namespace SAM.Analytical.Revit.Addin
 {
@@ -53,6 +54,52 @@ namespace SAM.Analytical.Revit.Addin
                 return Result.Failed;
             }
 
+            int index_Group = 2;
+            int index_Guid = 1;
+            int index_ParameterType = 8;
+            int index_Name = 7;
+
+            string[] unselected = new string[] { "DetailItem_AHU", "Space_Security", "Construction_CFD", "Space_LightingElec", "Space_DHW", "Space_Electrical", "Plant_Electrical", "DetailItem_Emitter", "Space_FireAlarm", "Construction_Detail", "Space_Data", "DetailItem_Benchmark", "DetailItem_ICData", "DetailItem_MEPInput", "DetailItem_Profiles", "DetailItem_Material", "Architect_Required" }
+
+            List<dynamic> dynamics = new List<dynamic>();
+            for (int i = 5; i <= objects.GetLength(0); i++)
+            {
+                string parameterGroup = objects[i, index_Group] as string;
+                if (string.IsNullOrWhiteSpace(parameterGroup))
+                {
+                    continue;
+                }
+
+                string name = objects[i, index_Name] as string;
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    continue;
+                }
+
+                dynamic @dynamic = new ExpandoObject();
+                dynamic.Name = name;
+                dynamic.Group = parameterGroup;
+                dynamic.Checked = unselected.Contains(parameterGroup);
+
+                dynamics.Add(dynamic);
+            }
+
+            List<string> names_Selected = null;
+            using (Core.Windows.Forms.TreeViewForm<dynamic> treeViewForm = new Core.Windows.Forms.TreeViewForm<dynamic>("Select Parameters", dynamics, (dynamic @dynamic) => dynamic.Name, (dynamic @dynamic) => dynamic.Group, (dynamic @dynamic) => dynamic.Checked))
+            {
+                if (treeViewForm.ShowDialog() != DialogResult.OK)
+                {
+                    return Result.Cancelled;
+                }
+
+                names_Selected = treeViewForm?.SelectedItems?.ConvertAll(x => x.Name as string);
+            }
+
+            if(names_Selected == null || names_Selected.Count == 0)
+            {
+                return Result.Failed;
+            }
+
             string path_SharedParametersFile = externalCommandData.Application.Application.SharedParametersFilename;
 
             string path_SharedParametersFile_Temp = System.IO.Path.GetTempFileName();
@@ -72,11 +119,6 @@ namespace SAM.Analytical.Revit.Addin
 
                     using (SimpleProgressForm progressForm = new SimpleProgressForm("Creating Shared Parameters", "Parameter", objects.GetLength(0)))
                     {
-                        int index_Group = 2;
-                        int index_Guid = 1;
-                        int index_ParameterType = 8;
-                        int index_Name = 7;
-
                         for (int i = 1; i <= objects.GetLength(0); i++)
                         {
                             if (!string.IsNullOrEmpty(objects[i, index_Name] as string) && !string.IsNullOrEmpty(objects[i, index_ParameterType] as string))
@@ -86,6 +128,11 @@ namespace SAM.Analytical.Revit.Addin
                                     progressForm.Increment("???");
                                 else
                                     progressForm.Increment(name);
+
+                                if(!names_Selected.Contains(name))
+                                {
+                                    continue;
+                                }
 
                                 string parameterTypeString = objects[i, index_ParameterType] as string;
                                 parameterTypeString = parameterTypeString.Replace(" ", string.Empty);

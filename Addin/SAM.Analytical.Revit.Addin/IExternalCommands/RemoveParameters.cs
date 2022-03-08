@@ -63,7 +63,7 @@ namespace SAM.Analytical.Revit.Addin
 
                 while (definitionBindingMapIterator.MoveNext())
                 {
-                    Definition definition = definitionBindingMapIterator.Key as Definition;
+                    Definition definition = definitionBindingMapIterator.Key;
                     //Autodesk.Revit.DB.Binding aBinding = aDefinitionBindingMapIterator.Current as Autodesk.Revit.DB.Binding;
 
                     definitions.Add(definition);

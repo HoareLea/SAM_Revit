@@ -65,6 +65,8 @@ namespace SAM.Analytical.Revit.Addin
 
                 using (Core.Revit.SharedParameterFileWrapper sharedParameterFileWrapper = new Core.Revit.SharedParameterFileWrapper(externalCommandData.Application.Application))
                 {
+                    sharedParameterFileWrapper.Open();
+
                     BindingMap bindingMap = document.ParameterBindings;
                     List<string> names = new List<string>();
 

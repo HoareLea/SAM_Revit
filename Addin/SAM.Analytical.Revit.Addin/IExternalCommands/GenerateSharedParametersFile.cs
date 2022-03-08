@@ -50,15 +50,15 @@ namespace SAM.Analytical.Revit.Addin
 
             string path_SharedParametersFile = null;
 
-            using (SaveFileDialog aSaveFileDialog = new SaveFileDialog())
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
-                aSaveFileDialog.Filter = "Text file|*.txt;*.txt";
-                aSaveFileDialog.Title = "Select Shared Parameter file";
-                if (aSaveFileDialog.ShowDialog() != DialogResult.OK)
+                saveFileDialog.Filter = "Text file|*.txt;*.txt";
+                saveFileDialog.Title = "Select Shared Parameter file";
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 {
                     return Result.Cancelled;
                 }
-                path_SharedParametersFile = aSaveFileDialog.FileName;
+                path_SharedParametersFile = saveFileDialog.FileName;
             }
 
             if (string.IsNullOrEmpty(path_SharedParametersFile))

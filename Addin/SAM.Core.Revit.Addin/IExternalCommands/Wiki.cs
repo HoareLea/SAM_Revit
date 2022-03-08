@@ -16,7 +16,7 @@ namespace SAM.Core.Revit.Addin
 
         public override Autodesk.Revit.UI.Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
-            System.Diagnostics.Process.Start("https://github.com/HoareLea/SAM/wiki");
+            System.Diagnostics.Process.Start("https://github.com/HoareLea/SAM/wiki/00-Home");
 
             return Autodesk.Revit.UI.Result.Succeeded;
         }

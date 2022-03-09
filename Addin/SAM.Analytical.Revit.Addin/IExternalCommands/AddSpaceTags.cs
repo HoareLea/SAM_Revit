@@ -27,7 +27,7 @@ namespace SAM.Analytical.Revit.Addin
                 return Result.Failed;
             }
 
-            List<Autodesk.Revit.DB.Mechanical.SpaceTagType> spaceTagTypes = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Mechanical.SpaceTagType)).Cast<Autodesk.Revit.DB.Mechanical.SpaceTagType>().ToList();
+            List<Autodesk.Revit.DB.Mechanical.SpaceTagType> spaceTagTypes = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaceTags).Cast<Autodesk.Revit.DB.Mechanical.SpaceTagType>().ToList();
             if(spaceTagTypes == null || spaceTagTypes.Count == 0)
             {
                 return Result.Failed;
@@ -72,7 +72,7 @@ namespace SAM.Analytical.Revit.Addin
 
         public override void Create(RibbonPanel ribbonPanel)
         {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Hydra, 32, 23);
+            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
 
             PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Add\nSpace Tags", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Add Space Tags";

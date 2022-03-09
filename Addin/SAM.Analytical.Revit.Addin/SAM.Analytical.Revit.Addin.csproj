@@ -169,6 +169,7 @@
   <ItemGroup>
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
+    <Compile Include="IExternalCommands\CreateViews.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="IExternalCommands\AddParameters.cs" />
     <Compile Include="IExternalCommands\RemoveParameters.cs" />

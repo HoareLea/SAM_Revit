@@ -27,10 +27,7 @@ namespace SAM.Analytical.Revit.Addin
                 dynamic @dynamic = new ExpandoObject();
                 dynamic.Name = name;
                 dynamic.Group = parameterGroup;
-                if(unselectedParameterGroups != null)
-                {
-                    dynamic.Checked = unselectedParameterGroups.Contains(parameterGroup);
-                }
+                dynamic.Checked = unselectedParameterGroups != null ? unselectedParameterGroups.Contains(parameterGroup) : true;
 
                 dynamics.Add(dynamic);
             }
@@ -40,7 +37,7 @@ namespace SAM.Analytical.Revit.Addin
             using (Core.Windows.Forms.TreeViewForm<dynamic> treeViewForm = new Core.Windows.Forms.TreeViewForm<dynamic>("Select Parameters", dynamics, (dynamic @dynamic) => dynamic.Name, (dynamic @dynamic) => dynamic.Group, (dynamic @dynamic) => dynamic.Checked))
             {
                 treeViewForm.CollapseAll();
-                treeViewForm.Size = new System.Drawing.Size(350, 700);
+                treeViewForm.Size = new System.Drawing.Size(430, 850);
 
                 if (treeViewForm.ShowDialog() != DialogResult.OK)
                 {

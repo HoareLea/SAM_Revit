@@ -40,7 +40,7 @@ namespace SAM.Analytical.Revit.Addin
             using (Core.Windows.Forms.TreeViewForm<dynamic> treeViewForm = new Core.Windows.Forms.TreeViewForm<dynamic>("Select Parameters", dynamics, (dynamic @dynamic) => dynamic.Name, (dynamic @dynamic) => dynamic.Group, (dynamic @dynamic) => dynamic.Checked))
             {
                 treeViewForm.CollapseAll();
-                treeViewForm.Size = new System.Drawing.Size(397, 493);
+                treeViewForm.Size = new System.Drawing.Size(350, 700);
 
                 if (treeViewForm.ShowDialog() != DialogResult.OK)
                 {

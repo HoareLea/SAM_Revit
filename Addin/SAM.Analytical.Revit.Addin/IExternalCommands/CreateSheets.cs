@@ -29,7 +29,7 @@ namespace SAM.Analytical.Revit.Addin
             List<ViewSheet> viewSheets = new FilteredElementCollector(document).OfClass(typeof(ViewSheet)).Cast<ViewSheet>().ToList();
 
             ViewSheet viewSheet = null;
-            using (Core.Windows.Forms.ComboBoxForm<ViewSheet> comboBoxForm = new Core.Windows.Forms.ComboBoxForm<ViewSheet>("Reference View Sheet", viewSheets, (ViewSheet x) => x.Name, viewSheets.Find(x => x.Id.IntegerValue == 725533)) )
+            using (Core.Windows.Forms.ComboBoxForm<ViewSheet> comboBoxForm = new Core.Windows.Forms.ComboBoxForm<ViewSheet>("Reference View Sheet", viewSheets, (ViewSheet x) => string.Format("{0} - {1}", x.SheetNumber, x.Name), viewSheets.Find(x => x.Id.IntegerValue == 725533)) )
             {
                 if(comboBoxForm.ShowDialog() != DialogResult.OK)
                 {

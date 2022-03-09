@@ -171,6 +171,7 @@
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
     <Compile Include="IExternalCommands\CreateViews.cs" />
+    <Compile Include="IExternalCommands\CreateSheets.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="IExternalCommands\AddParameters.cs" />
     <Compile Include="IExternalCommands\RemoveParameters.cs" />

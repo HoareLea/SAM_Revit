@@ -15,7 +15,7 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Project Setup";
 
-        public override int Index => 8;
+        public override int Index => 9;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {

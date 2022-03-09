@@ -16,7 +16,7 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Project Setup";
 
-        public override int Index => 9;
+        public override int Index => 8;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -26,7 +26,23 @@ namespace SAM.Analytical.Revit.Addin
                 return Result.Failed;
             }
 
-            ViewPlan viewPlan = document.GetElement(new ElementId(312)) as ViewPlan;
+            List<ViewPlan> viewPlans = new FilteredElementCollector(document).OfClass(typeof(ViewPlan)).Cast<ViewPlan>().ToList();
+            if(viewPlans == null || viewPlans.Count == 0)
+            {
+                return Result.Failed;
+            }
+
+            ViewPlan viewPlan = null;
+            using (Core.Windows.Forms.ComboBoxForm<ViewPlan> comboBoxForm = new Core.Windows.Forms.ComboBoxForm<ViewPlan>("Select ViewPlan", viewPlans, (ViewPlan x) => x.Name, viewPlans.Find(x => x.Id.IntegerValue == 312)))
+            {
+                if(comboBoxForm.ShowDialog() != DialogResult.OK)
+                {
+                    return Result.Cancelled;
+                }
+
+                viewPlan = comboBoxForm.SelectedItem;
+            }
+
             if(viewPlan == null)
             {
                 MessageBox.Show("Could not find view to be duplicated");

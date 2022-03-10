@@ -64,6 +64,18 @@ namespace SAM.Analytical.Revit.Addin
 
             }
 
+            double minLength = 1;
+            using (Core.Windows.Forms.TextBoxForm<double> textBoxForm = new Core.Windows.Forms.TextBoxForm<double>("Wall Length", "Min Wall Length"))
+            {
+                textBoxForm.Value = minLength;
+                if(textBoxForm.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    return Result.Cancelled;
+                }
+
+                minLength = textBoxForm.Value;
+            }
+
             List<string> templateNames = new List<string> { "Heating Load" };
 
             using (Core.Windows.Forms.TreeViewForm<View> treeViewForm = new Core.Windows.Forms.TreeViewForm<View>("Select Templates", views, (View view) => view.Name, null, (View view) => templateNames.Contains(view.Name)))
@@ -79,6 +91,35 @@ namespace SAM.Analytical.Revit.Addin
             if (templateNames == null || templateNames.Count == 0)
             {
                 return Result.Failed;
+            }
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
+            minLength = UnitUtils.ConvertToInternalUnits(minLength, DisplayUnitType.DUT_METERS);
+#else
+            minLength = UnitUtils.ConvertToInternalUnits(minLength, UnitTypeId.Meters);
+#endif
+
+            for(int i = walls.Count - 1; i >= 0; i--)
+            {
+                LocationCurve locationCurve = walls[i]?.Location as LocationCurve;
+                if(locationCurve == null)
+                {
+                    walls.RemoveAt(i);
+                    continue;
+                }
+
+                Curve curve = locationCurve.Curve;
+                if(curve == null)
+                {
+                    walls.ElementAt(i);
+                    continue;
+                }
+
+                if(curve.Length < minLength)
+                {
+                    walls.ElementAt(i);
+                    continue;
+                }
             }
 
             List<Tuple<ElementId, List<Autodesk.Revit.DB.Wall>>> tuples = new List<Tuple<ElementId, List<Autodesk.Revit.DB.Wall>>>();

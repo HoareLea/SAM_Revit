@@ -128,19 +128,27 @@ namespace SAM.Analytical.Revit.Addin
 
             using (Transaction transaction = new Transaction(document, "Add Wall Tags"))
             {
-                transaction.Start();
-
-                foreach(Tuple<ElementId, List<Autodesk.Revit.DB.Wall>> tuple in tuples)
+                using (Core.Windows.SimpleProgressForm simpleProgressForm = new Core.Windows.SimpleProgressForm("Add Wall Tags", string.Empty, tuples.Count + 1))
                 {
-                    if(tuple.Item1 == null || tuple.Item2 == null || tuple.Item2.Count == 0)
-                    {
-                        continue;
-                    }
-                    
-                    List<IndependentTag> independentTags = Core.Revit.Modify.TagElements(document, templateNames, tuple.Item1, tuple.Item2.ConvertAll(x => x.Id), false, TagOrientation.Horizontal, new ViewType[] { ViewType.FloorPlan });
-                }
+                    transaction.Start();
 
-                transaction.Commit();
+                    foreach (Tuple<ElementId, List<Autodesk.Revit.DB.Wall>> tuple in tuples)
+                    {
+                        if (tuple.Item1 == null || tuple.Item2 == null || tuple.Item2.Count == 0)
+                        {
+                            simpleProgressForm.Increment("???");
+                            continue;
+                        }
+
+                        simpleProgressForm.Increment((document.GetElement(tuple.Item1) as ElementType)?.FamilyName);
+
+                        List<IndependentTag> independentTags = Core.Revit.Modify.TagElements(document, templateNames, tuple.Item1, tuple.Item2.ConvertAll(x => x.Id), false, TagOrientation.Horizontal, new ViewType[] { ViewType.FloorPlan });
+                    }
+
+                    simpleProgressForm.Increment("Finishing");
+
+                    transaction.Commit();
+                }
             }
 
             return Result.Succeeded;

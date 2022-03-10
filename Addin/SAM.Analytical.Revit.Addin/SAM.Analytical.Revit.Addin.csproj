@@ -175,6 +175,7 @@
     <Compile Include="IExternalCommands\CreateSheets.cs" />
     <Compile Include="IExternalCommands\AddSpaceTags.cs" />
     <Compile Include="IExternalCommands\DeleteViews.cs" />
+    <Compile Include="IExternalCommands\AddWallTags.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="IExternalCommands\AddParameters.cs" />
     <Compile Include="IExternalCommands\RemoveParameters.cs" />

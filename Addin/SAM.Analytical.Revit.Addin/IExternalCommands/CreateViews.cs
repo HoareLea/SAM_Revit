@@ -85,7 +85,7 @@ namespace SAM.Analytical.Revit.Addin
         {
             BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
 
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Create Views", GetType().Assembly.Location, GetType().FullName)) as PushButton;
+            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Create\nViews", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Create Views";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;

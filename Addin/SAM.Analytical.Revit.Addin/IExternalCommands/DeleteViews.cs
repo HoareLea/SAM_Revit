@@ -15,7 +15,7 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Project Setup";
 
-        public override int Index => 12;
+        public override int Index => 13;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -90,7 +90,7 @@ namespace SAM.Analytical.Revit.Addin
         {
             BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
 
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Delete Views", GetType().Assembly.Location, GetType().FullName)) as PushButton;
+            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Delete\nViews", GetType().Assembly.Location, GetType().FullName)) as PushButton;
             pushButton.ToolTip = "Delete Views";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;

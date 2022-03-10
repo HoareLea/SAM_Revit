@@ -62,6 +62,7 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             Core.Revit.ConvertSettings convertSettings = new Core.Revit.ConvertSettings(true, true, true);
+            convertSettings.AddParameter("AnalyticalModel", analyticalModel);
 
             using (Transaction transaction = new Transaction(document, "Load Analytical Model"))
             {

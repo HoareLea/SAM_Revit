@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
+    <Compile Include="IExternalCommands\AddWindowAndDoorTags.cs" />
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
     <Compile Include="IExternalCommands\DeleteSheets.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />

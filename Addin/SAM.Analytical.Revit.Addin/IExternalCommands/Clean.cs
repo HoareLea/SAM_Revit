@@ -3,6 +3,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using SAM.Analytical.Revit.Addin.Properties;
 using SAM.Core.Revit.Addin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
@@ -27,10 +28,10 @@ namespace SAM.Analytical.Revit.Addin
 
             List<BuiltInCategory> builtInCategories = new List<BuiltInCategory>()
             {
+                BuiltInCategory.OST_MEPSpaces,
                 BuiltInCategory.OST_Walls,
                 BuiltInCategory.OST_Floors,
                 BuiltInCategory.OST_Roofs,
-                BuiltInCategory.OST_MEPSpaces,
                 BuiltInCategory.OST_Lines,
                 BuiltInCategory.OST_GenericModel,
                 BuiltInCategory.OST_Levels,
@@ -56,7 +57,23 @@ namespace SAM.Analytical.Revit.Addin
             {
                 transaction.Start();
 
-                document.Delete(elements.ConvertAll(x => x.Id));
+                List<ElementId> elementIds = new List<ElementId>();
+                foreach(Element element in elements)
+                {
+                    if(element == null || !element.IsValidObject)
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        document.Delete(element.Id);
+                    }
+                    catch(Exception exception)
+                    {
+                        elementIds.Add(element.Id);
+                    }
+                }
 
                 transaction.Commit();
             }

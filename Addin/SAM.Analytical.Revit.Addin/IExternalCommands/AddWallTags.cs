@@ -16,7 +16,7 @@ namespace SAM.Analytical.Revit.Addin
     {
         public override string RibbonPanelName => "Project Setup";
 
-        public override int Index => 12;
+        public override int Index => 13;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -162,7 +162,6 @@ namespace SAM.Analytical.Revit.Addin
             pushButton.ToolTip = "Add Wall Tags";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;
-            pushButton.AvailabilityClassName = typeof(AlwaysAvailableExternalCommandAvailability).FullName;
         }
     }
 }

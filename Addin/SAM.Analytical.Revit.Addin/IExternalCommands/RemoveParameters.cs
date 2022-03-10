@@ -113,7 +113,6 @@ namespace SAM.Analytical.Revit.Addin
             pushButton.ToolTip = "Remove Parameters";
             pushButton.LargeImage = bitmapSource;
             pushButton.Image = bitmapSource;
-            //pushButton.AvailabilityClassName = typeof(AlwaysAvailableExternalCommandAvailability).FullName;
         }
     }
 }

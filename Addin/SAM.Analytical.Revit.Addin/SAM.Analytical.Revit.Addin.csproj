@@ -169,10 +169,12 @@
   <ItemGroup>
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
+    <Compile Include="IExternalCommands\DeleteSheets.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
     <Compile Include="IExternalCommands\CreateViews.cs" />
     <Compile Include="IExternalCommands\CreateSheets.cs" />
     <Compile Include="IExternalCommands\AddSpaceTags.cs" />
+    <Compile Include="IExternalCommands\DeleteViews.cs" />
     <Compile Include="IExternalCommands\LoadAnalyticalModel.cs" />
     <Compile Include="IExternalCommands\AddParameters.cs" />
     <Compile Include="IExternalCommands\RemoveParameters.cs" />

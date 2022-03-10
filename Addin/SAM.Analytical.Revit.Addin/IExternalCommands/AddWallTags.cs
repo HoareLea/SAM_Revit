@@ -64,7 +64,7 @@ namespace SAM.Analytical.Revit.Addin
 
             }
 
-            double minLength = 1;
+            double minLength = 1.5;
             using (Core.Windows.Forms.TextBoxForm<double> textBoxForm = new Core.Windows.Forms.TextBoxForm<double>("Wall Length", "Min Wall Length"))
             {
                 textBoxForm.Value = minLength;

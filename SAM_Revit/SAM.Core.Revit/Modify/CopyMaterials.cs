@@ -41,7 +41,7 @@ namespace SAM.Core.Revit
                     return null;
                 }
 
-                return new FilteredElementCollector(document_Temp, elementIds);
+                return new FilteredElementCollector(document_Temp, elementIds).OfCategory(BuiltInCategory.OST_Materials);
             });
 
             return CopyElements(document, path, function, copyPasteOptions);

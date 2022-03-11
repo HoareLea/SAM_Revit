@@ -12,15 +12,27 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class AddWindowAndDoorTags : SAMExternalCommand
+    public class AddWindowAndDoorTags : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Project Setup";
 
         public override int Index => 14;
 
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
+
+        public override string Text => "Add Window\nDoor Tags";
+
+        public override string ToolTip => "Add Window and Door Tags";
+
+        public override string AvailabilityClassName => null;
+
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
-            Document document = externalCommandData.Application.ActiveUIDocument.Document;
+            Document document = externalCommandData?.Application?.ActiveUIDocument?.Document;
+            if(document == null)
+            {
+                return Result.Failed;
+            }
 
             List<View> views = new FilteredElementCollector(document).OfClass(typeof(View)).Cast<View>().ToList();
             if (views == null || views.Count == 0)
@@ -122,16 +134,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Add Window\nDoor Tags", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Add Window and Door Tags";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

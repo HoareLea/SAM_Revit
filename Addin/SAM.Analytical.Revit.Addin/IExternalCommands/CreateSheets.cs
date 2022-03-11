@@ -12,11 +12,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class CreateSheets : SAMExternalCommand
+    public class CreateSheets : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Project Setup";
 
         public override int Index => 11;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
+
+        public override string Text => "Create\nSheets";
+
+        public override string ToolTip => "Create Sheets";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -71,16 +79,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Create\nSheets", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Create Sheets";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

@@ -12,11 +12,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class CreateFloorPlan : SAMExternalCommand
+    public class CreateFloorPlan : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Project Setup";
 
         public override int Index => 9;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
+
+        public override string Text => "Create\nFloor Plans";
+
+        public override string ToolTip => "Create Floor Plans";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -64,16 +72,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Create\nFloor Plans", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Create Floor Plans";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

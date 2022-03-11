@@ -11,11 +11,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class LoadAnalyticalModel : Core.Revit.Addin.SAMExternalCommand
+    public class LoadAnalyticalModel : Core.Revit.Addin.PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Analytical";
 
         public override int Index => 7;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
+
+        public override string Text => "Load\nAnalytical Model";
+
+        public override string ToolTip => "Load Analytical Model";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -101,16 +109,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Load\nAnalytical Model", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Load Analytical Model";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

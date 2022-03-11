@@ -9,17 +9,24 @@ using System.Collections.Generic;
 using SAM.Core.Windows;
 using System;
 using System.Linq;
-using System.Dynamic;
 
 namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class AddParameters : SAMExternalCommand
+    public class AddParameters : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Shared Parameters";
 
         public override int Index => 5;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_AddParameters, 32, 32);
+
+        public override string Text => "Add\nParameters";
+
+        public override string ToolTip => "Add Parameters";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -196,16 +203,6 @@ namespace SAM.Analytical.Revit.Addin
             System.IO.File.Delete(path_SharedParametersFile_Temp);
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_AddParameters, 32, 32);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Add\nParameters", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Add Parameters";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

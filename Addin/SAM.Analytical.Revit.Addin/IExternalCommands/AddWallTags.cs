@@ -12,11 +12,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class AddWallTags : SAMExternalCommand
+    public class AddWallTags : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Project Setup";
 
         public override int Index => 13;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
+
+        public override string Text => "Add\nWall Tags";
+
+        public override string ToolTip => "Add Wall Tags";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -152,16 +160,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_Small);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Add\nWall Tags", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Add Wall Tags";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

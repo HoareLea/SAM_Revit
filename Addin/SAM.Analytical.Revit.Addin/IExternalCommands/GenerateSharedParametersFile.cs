@@ -16,11 +16,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class GenerateSharedParametersFile : SAMExternalCommand
+    public class GenerateSharedParametersFile : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Shared Parameters";
 
         public override int Index => 4;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_GenerateSharedParametersFile, 32, 32);
+
+        public override string Text => "Generate";
+
+        public override string ToolTip => "Generate Shared Parameters File";
+
+        public override string AvailabilityClassName => typeof(AlwaysAvailableExternalCommandAvailability).FullName;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -160,17 +168,6 @@ namespace SAM.Analytical.Revit.Addin
             Core.Excel.Modify.Update(path_Excel, "Live", func);
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_GenerateSharedParametersFile, 32, 32);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Generate", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Generate Shared Parameters File";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
-            pushButton.AvailabilityClassName = typeof(AlwaysAvailableExternalCommandAvailability).FullName;
         }
     }
 }

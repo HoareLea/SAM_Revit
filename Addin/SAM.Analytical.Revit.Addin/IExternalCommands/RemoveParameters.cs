@@ -12,11 +12,19 @@ namespace SAM.Analytical.Revit.Addin
 {
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
-    public class RemoveParameters : SAMExternalCommand
+    public class RemoveParameters : PushButtonExternalCommand
     {
         public override string RibbonPanelName => "Shared Parameters";
 
         public override int Index => 6;
+
+        public override BitmapSource BitmapSource => Core.Windows.Convert.ToBitmapSource(Resources.SAM_RemoveParameters, 32, 32);
+
+        public override string Text => "Remove\nParameters";
+
+        public override string ToolTip => "Remove Parameters";
+
+        public override string AvailabilityClassName => null;
 
         public override Result Execute(ExternalCommandData externalCommandData, ref string message, ElementSet elementSet)
         {
@@ -103,16 +111,6 @@ namespace SAM.Analytical.Revit.Addin
             }
 
             return Result.Succeeded;
-        }
-
-        public override void Create(RibbonPanel ribbonPanel)
-        {
-            BitmapSource bitmapSource = Core.Windows.Convert.ToBitmapSource(Resources.SAM_RemoveParameters, 32, 32);
-
-            PushButton pushButton = ribbonPanel.AddItem(new PushButtonData(Core.Query.FullTypeName(GetType()), "Remove\nParameters", GetType().Assembly.Location, GetType().FullName)) as PushButton;
-            pushButton.ToolTip = "Remove Parameters";
-            pushButton.LargeImage = bitmapSource;
-            pushButton.Image = bitmapSource;
         }
     }
 }

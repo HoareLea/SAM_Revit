@@ -21,7 +21,6 @@ namespace SAM.Core.Revit.Addin
             uIControlledApplication.CreateRibbonTab(TabName);
 
             List<Assembly> assemblies = new List<Assembly>();
-            //assemblies.Add(GetType().Assembly);
 
             string directory = GetAssemblyDirectory();
             if(!string.IsNullOrWhiteSpace(directory) && System.IO.Directory.Exists(directory))
@@ -42,7 +41,7 @@ namespace SAM.Core.Revit.Addin
                 }
             }
 
-            List<SAMExternalCommand> sAMExternalCommands = new List<SAMExternalCommand>();
+            List<ISAMRibbonItemData> sAMRibbonItemDatas = new List<ISAMRibbonItemData>();
             foreach(Assembly assembly in assemblies)
             {
                 Type[] types = assembly?.GetExportedTypes();
@@ -53,26 +52,26 @@ namespace SAM.Core.Revit.Addin
 
                 foreach (Type type in types)
                 {
-                    if (!typeof(SAMExternalCommand).IsAssignableFrom(type) || type.IsAbstract)
+                    if (!typeof(ISAMRibbonItemData).IsAssignableFrom(type) || type.IsAbstract)
                     {
                         continue;
                     }
 
-                    SAMExternalCommand sAMExternalCommand = Activator.CreateInstance(type) as SAMExternalCommand;
-                    if (sAMExternalCommand == null)
+                    ISAMRibbonItemData sAMRibbonItemData = Activator.CreateInstance(type) as ISAMRibbonItemData;
+                    if (sAMRibbonItemData == null)
                     {
                         continue;
                     }
 
-                    sAMExternalCommands.Add(sAMExternalCommand);
+                    sAMRibbonItemDatas.Add(sAMRibbonItemData);
                 }
             }
 
-            sAMExternalCommands.Sort((x, y) => x.Index.CompareTo(y.Index));
+            sAMRibbonItemDatas.Sort((x, y) => x.Index.CompareTo(y.Index));
 
-            foreach(SAMExternalCommand sAMExternalCommand in sAMExternalCommands)
+            foreach(ISAMRibbonItemData sAMRibbonItemData in sAMRibbonItemDatas)
             {
-                string ribbonPanelName = sAMExternalCommand.RibbonPanelName;
+                string ribbonPanelName = sAMRibbonItemData.RibbonPanelName;
                 if (string.IsNullOrWhiteSpace(ribbonPanelName))
                 {
                     ribbonPanelName = "General";
@@ -84,7 +83,7 @@ namespace SAM.Core.Revit.Addin
                     ribbonPanel = uIControlledApplication.CreateRibbonPanel(TabName, ribbonPanelName);
                 }
 
-                sAMExternalCommand.Create(ribbonPanel);
+                sAMRibbonItemData.Create(ribbonPanel);
             }
 
             return Autodesk.Revit.UI.Result.Succeeded;

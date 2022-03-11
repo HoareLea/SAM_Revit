@@ -148,6 +148,9 @@
     <Reference Include="SAM.Core.Excel">
       <HintPath>..\..\..\SAM_Excel\build\SAM.Core.Excel.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Core.Tas">
+      <HintPath>..\..\..\SAM_Tas\build\SAM.Core.Tas.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core.Windows">
       <HintPath>..\..\..\SAM_Windows\build\SAM.Core.Windows.dll</HintPath>
     </Reference>
@@ -170,6 +173,7 @@
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\AddWindowAndDoorTags.cs" />
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
+    <Compile Include="IExternalCommands\OpenTas.cs" />
     <Compile Include="IExternalCommands\DeleteSheets.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
     <Compile Include="IExternalCommands\CreateViews.cs" />
@@ -236,6 +240,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SAM_Hydra.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_T3D.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_TBD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_TPD.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_TSD.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -121,6 +121,9 @@
   <data name="SAM_AddParameters" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_AddParameters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SAM_gbXMLViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_gbXMLViewer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SAM_GenerateSharedParametersFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_GenerateSharedParametersFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -136,8 +139,14 @@
   <data name="SAM_PMVAndPPV" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_PMVAndPPV.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SAM_RadViewer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_RadViewer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SAM_RemoveParameters" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_RemoveParameters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SAM_Simulate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_Simulate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SAM_Small" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_Small.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

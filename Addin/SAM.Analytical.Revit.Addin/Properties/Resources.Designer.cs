@@ -73,6 +73,16 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SAM_gbXMLViewer {
+            get {
+                object obj = ResourceManager.GetObject("SAM_gbXMLViewer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SAM_GenerateSharedParametersFile {
             get {
                 object obj = ResourceManager.GetObject("SAM_GenerateSharedParametersFile", resourceCulture);
@@ -123,9 +133,29 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SAM_RadViewer {
+            get {
+                object obj = ResourceManager.GetObject("SAM_RadViewer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SAM_RemoveParameters {
             get {
                 object obj = ResourceManager.GetObject("SAM_RemoveParameters", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SAM_Simulate {
+            get {
+                object obj = ResourceManager.GetObject("SAM_Simulate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

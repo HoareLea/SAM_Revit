@@ -96,6 +96,18 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.TAS3D">
+      <HintPath>..\..\references_buildonly\Interop.TAS3D.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.TBD">
+      <HintPath>..\..\references_buildonly\Interop.TBD.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.TSD">
+      <HintPath>..\..\references_buildonly\Interop.TSD.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
       <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
@@ -137,6 +149,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Analytical.Tas">
+      <HintPath>..\..\..\SAM_Tas\build\SAM.Analytical.Tas.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Architectural, Version=1.0.8096.27678, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Architectural.dll</HintPath>
@@ -173,6 +188,8 @@
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\AddWindowAndDoorTags.cs" />
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
+    <Compile Include="IExternalCommands\OpenViewers.cs" />
+    <Compile Include="IExternalCommands\Simulate.cs" />
     <Compile Include="IExternalCommands\OpenTas.cs" />
     <Compile Include="IExternalCommands\DeleteSheets.cs" />
     <Compile Include="IExternalCommands\GenerateSharedParametersFile.cs" />
@@ -264,6 +281,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SAM_IDFWizard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_Simulate.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_RadViewer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_gbXMLViewer.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

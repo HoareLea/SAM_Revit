@@ -188,6 +188,7 @@
     <Compile Include="IExternalCommandAvailabilities\AlwaysAvailableExternalCommandAvailability.cs" />
     <Compile Include="IExternalCommands\AddWindowAndDoorTags.cs" />
     <Compile Include="IExternalCommands\CreateFloorPlan.cs" />
+    <Compile Include="IExternalCommands\CopyWall.cs" />
     <Compile Include="IExternalCommands\OpenViewers.cs" />
     <Compile Include="IExternalCommands\Simulate.cs" />
     <Compile Include="IExternalCommands\OpenTas.cs" />
@@ -290,6 +291,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SAM_gbXMLViewer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_CopyWall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -234,8 +234,11 @@
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Enums\Tool.cs" />
+    <Compile Include="ISelectionFilters\RevitLinkInstanceSelectionFilter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\CopySpatialElementParameters.cs" />
+    <Compile Include="Modify\CopyWall.cs" />
+    <Compile Include="Modify\UpdateWallType.cs" />
     <Compile Include="Modify\New\UpdateParameterSets.cs" />
     <Compile Include="Modify\UpdateNumbers.cs" />
     <Compile Include="Modify\UpdateConstructions.cs" />

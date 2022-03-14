@@ -93,6 +93,36 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap SAM_IDFWizard {
+            get {
+                object obj = ResourceManager.GetObject("SAM_IDFWizard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SAM_NPOStudio {
+            get {
+                object obj = ResourceManager.GetObject("SAM_NPOStudio", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SAM_PMVAndPPV {
+            get {
+                object obj = ResourceManager.GetObject("SAM_PMVAndPPV", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SAM_RemoveParameters {
             get {
                 object obj = ResourceManager.GetObject("SAM_RemoveParameters", resourceCulture);
@@ -146,6 +176,16 @@ namespace SAM.Analytical.Revit.Addin.Properties {
         internal static System.Drawing.Bitmap SAM_TSD {
             get {
                 object obj = ResourceManager.GetObject("SAM_TSD", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap SAM_UKBRStudio2013 {
+            get {
+                object obj = ResourceManager.GetObject("SAM_UKBRStudio2013", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -127,6 +127,15 @@
   <data name="SAM_Hydra" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_Hydra.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SAM_IDFWizard" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_IDFWizard.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SAM_NPOStudio" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_NPOStudio.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SAM_PMVAndPPV" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_PMVAndPPV.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SAM_RemoveParameters" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_RemoveParameters.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -144,5 +153,8 @@
   </data>
   <data name="SAM_TSD" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SAM_TSD.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SAM_UKBRStudio2013" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SAM_UKBRStudio2013.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

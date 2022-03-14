@@ -253,5 +253,17 @@
   <ItemGroup>
     <None Include="Resources\SAM_TSD.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_NPOStudio.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_PMVAndPPV.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_UKBRStudio2013.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SAM_IDFWizard.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

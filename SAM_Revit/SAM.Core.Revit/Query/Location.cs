@@ -14,7 +14,7 @@ namespace SAM.Core.Revit
             if (siteLocation == null)
                 return null;
 
-            return new Location(siteLocation.PlaceName, siteLocation.Longitude, siteLocation.Latitude, siteLocation.Elevation);
+            return new Location(siteLocation.PlaceName, Units.Convert.ToDegrees(siteLocation.Longitude), Units.Convert.ToDegrees(siteLocation.Latitude), siteLocation.Elevation);
         }
     }
 }

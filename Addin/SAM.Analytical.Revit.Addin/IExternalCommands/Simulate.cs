@@ -63,7 +63,19 @@ namespace SAM.Analytical.Revit.Addin
                 document.SaveAs(path);
             }
 
-            AnalyticalModel analyticalModel = Convert.ToSAM_AnalyticalModel(document, new ConvertSettings(true, true, false));
+            AnalyticalModel analyticalModel = null;
+
+            using (Transaction transaction = new Transaction(document, "Convert Model"))
+            {
+                transaction.Start();
+                analyticalModel = Convert.ToSAM_AnalyticalModel(document, new ConvertSettings(true, true, false));
+                transaction.RollBack();
+            }
+            
+            if(analyticalModel == null)
+            {
+                return Result.Failed;
+            }
 
             string path_gbXML = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path));
             if(System.IO.File.Exists(path_gbXML))
@@ -127,11 +139,27 @@ namespace SAM.Analytical.Revit.Addin
 
             analyticalModel = Tas.Modify.UpdateDesignLoads(path_TBD, analyticalModel);
 
+            bool hasWeatherData = false;
+            using (SAMTBDDocument sAMTBDDocument = new SAMTBDDocument(path_TBD))
+            {
+                TBD.TBDDocument tBDDocument = sAMTBDDocument.TBDDocument;
+
+                hasWeatherData = tBDDocument?.Building.GetWeatherYear() != null;
+            }
+
+            if(!hasWeatherData)
+            {
+                MessageBox.Show("Could not complete simulation. TBD file has no Weather Data");
+                return Result.Failed;
+            }
+
             string path_TSD = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + ".tsd");
 
             bool result = Tas.Modify.Simulate(path_TBD, path_TSD, 1, 365);
 
-            adjacencyCluster = analyticalModel.AdjacencyCluster;
+
+
+                adjacencyCluster = analyticalModel.AdjacencyCluster;
             Tas.Modify.AddResults(path_TSD, adjacencyCluster);
             analyticalModel = new AnalyticalModel(analyticalModel, adjacencyCluster);
 

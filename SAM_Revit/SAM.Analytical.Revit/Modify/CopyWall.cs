@@ -173,7 +173,14 @@ namespace SAM.Analytical.Revit
             {
                 parameter = result.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null && !parameter.IsReadOnly)
+                {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020
                     parameter.Set(UnitUtils.ConvertToInternalUnits(2000, DisplayUnitType.DUT_MILLIMETERS));
+#else
+                    parameter.Set(UnitUtils.ConvertToInternalUnits(2000, UnitTypeId.Millimeters));
+#endif
+                }
+
             }
 
             parameter = result.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);

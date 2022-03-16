@@ -268,5 +268,7 @@ namespace SAM.Core.Revit
         {
             Close();
         }
+
+        ~SharedParameterFileWrapper() { Dispose(); }
     }
 }

@@ -63,29 +63,11 @@ namespace SAM.Analytical.Revit.Addin
 
             }
 
+            List<FamilyInstance> familyInstances_Window = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_Windows).OfClass(typeof(FamilyInstance)).Cast<FamilyInstance>().ToList();
             List<ElementType> elementTypes_WindowTags = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_WindowTags).OfClass(typeof(ElementType)).Cast<ElementType>().ToList();
-            if (elementTypes_WindowTags == null || elementTypes_WindowTags.Count == 0)
-            {
-                return Result.Failed;
-            }
-
-            List<ElementType> elementTypes_DoorTags = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_DoorTags).OfClass(typeof(ElementType)).Cast<ElementType>().ToList();
-            if (elementTypes_DoorTags == null || elementTypes_DoorTags.Count == 0)
-            {
-                return Result.Failed;
-            }
 
             List<FamilyInstance> familyInstances_Door = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_Doors).OfClass(typeof(FamilyInstance)).Cast<FamilyInstance>().ToList();
-            if (familyInstances_Door == null || familyInstances_Door.Count == 0)
-            {
-                return Result.Failed;
-            }
-
-            List<FamilyInstance> familyInstances_Window = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_Windows).OfClass(typeof(FamilyInstance)).Cast<FamilyInstance>().ToList();
-            if (familyInstances_Window == null || familyInstances_Window.Count == 0)
-            {
-                return Result.Failed;
-            }
+            List<ElementType> elementTypes_DoorTags = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_DoorTags).OfClass(typeof(ElementType)).Cast<ElementType>().ToList();
 
             List<string> templateNames = new List<string> { "Heating Load" };
 

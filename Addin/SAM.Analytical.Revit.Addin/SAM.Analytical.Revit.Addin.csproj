@@ -149,6 +149,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Analytical.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Analytical.SolarCalculator">
+      <HintPath>..\..\..\SAM_SolarCalculator\build\SAM.Analytical.SolarCalculator.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Analytical.Tas">
       <HintPath>..\..\..\SAM_Tas\build\SAM.Analytical.Tas.dll</HintPath>
     </Reference>
@@ -172,6 +175,10 @@
     <Reference Include="SAM.Geometry, Version=1.0.8096.27677, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="SAM.Geometry.SolarCalculator, Version=1.0.8096.18454, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM_SolarCalculator\build\SAM.Geometry.SolarCalculator.dll</HintPath>
     </Reference>
     <Reference Include="SAM.Weather, Version=1.0.8105.21201, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

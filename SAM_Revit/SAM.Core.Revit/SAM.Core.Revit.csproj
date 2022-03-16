@@ -239,6 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accuracy\Tolerance.cs" />
+    <Compile Include="Classes\ElementBindingData.cs" />
     <Compile Include="Classes\FilledRegionType.cs" />
     <Compile Include="Classes\FilledRegion.cs" />
     <Compile Include="Classes\PurgeMaterialsWrapper.cs" />

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SAM.Core.Revit
 {
@@ -165,6 +166,80 @@ namespace SAM.Core.Revit
 
             Definition definition = definitionGroup.Definitions.Create(externalDefinitionCreationOptions);
             return definition;
+        }
+
+        public ElementBinding Add(Document document, string name, IEnumerable<BuiltInCategory> builtInCategories, BuiltInParameterGroup builtInParameterGroup, bool instance)
+        {
+            if (document == null || document.ParameterBindings == null || string.IsNullOrWhiteSpace(name) || builtInCategories == null || builtInCategories.Count() == 0)
+            {
+                return null;
+            }
+
+            ElementBinding result = null;
+
+            Definition definition = null;
+
+            DefinitionBindingMapIterator definitionBindingMapIterator = document?.ParameterBindings?.ForwardIterator();
+            if(definitionBindingMapIterator != null)
+            {
+                definitionBindingMapIterator.Reset();
+
+                while (definitionBindingMapIterator.MoveNext())
+                {
+                    definition = definitionBindingMapIterator.Key as Definition;
+                    if (definition == null)
+                        continue;
+
+                    //if (aExternalDefinition.GUID.Equals(pExternalDefinition.GUID))
+                    if (definition.Name.Equals(name))
+                    {
+                        result = (ElementBinding)definitionBindingMapIterator.Current;
+                        break;
+                    }
+                }
+            }
+
+            if(result != null)
+            {
+                return result;
+            }
+
+            if(definition == null)
+            {
+                return null;
+            }
+
+            CategorySet categorySet = Revit.Create.CategorySet(document, builtInCategories);
+            if (categorySet == null || categorySet.Size == 0)
+            {
+                return null;
+            }
+
+            if (result != null)
+            {
+
+            }
+            else
+            {
+                if (instance)
+                    result = document.Application.Create.NewInstanceBinding(categorySet);
+                else
+                    result = document.Application.Create.NewTypeBinding(categorySet);
+
+               document.ParameterBindings.Insert(definition, result, builtInParameterGroup);
+            }
+
+            return result;
+        }
+
+        public ElementBinding Add(Document document, ElementBindingData elementBindingData)
+        {
+            if(document == null || elementBindingData == null)
+            {
+                return null;
+            }
+
+            return Add(document, elementBindingData.Name, elementBindingData.BuiltInCategories, elementBindingData.BuiltInParameterGroup, elementBindingData.Instance);
         }
 
         public void Close()

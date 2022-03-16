@@ -218,6 +218,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Query\DayTypes.cs" />
     <Compile Include="Query\ParameterNames.cs" />
   </ItemGroup>
   <ItemGroup>

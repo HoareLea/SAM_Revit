@@ -8,6 +8,7 @@ using SAM.Core.Tas;
 using SAM.Weather;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
@@ -134,119 +135,130 @@ namespace SAM.Analytical.Revit.Addin
 
             AnalyticalModel analyticalModel = null;
 
-            using (Transaction transaction = new Transaction(document, "Convert Model"))
+            using (Core.Windows.SimpleProgressForm simpleProgressForm = new Core.Windows.SimpleProgressForm("Simulate", string.Empty, 9))
             {
-                transaction.Start();
-                analyticalModel = Convert.ToSAM_AnalyticalModel(document, new ConvertSettings(true, true, false));
-                transaction.RollBack();
-            }
-
-            if (analyticalModel == null)
-            {
-                return Result.Failed;
-            }
-
-            string path_TBD = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + ".tbd");
-            if (System.IO.File.Exists(path_TBD))
-            {
-                System.IO.File.Delete(path_TBD);
-            }
-
-            bool simulate = false;
-
-            List<DesignDay> heatingDesignDays = new List<DesignDay>() { Analytical.Query.HeatingDesignDay(weatherData) };
-            List<DesignDay> coolingDesignDays = new List<DesignDay>() { Analytical.Query.CoolingDesignDay(weatherData) };
-
-            using (SAMTBDDocument sAMTBDDocument = new SAMTBDDocument(path_TBD))
-            {
-                TBD.TBDDocument tBDDocument = sAMTBDDocument.TBDDocument;
-
-                Weather.Tas.Modify.UpdateWeatherData(tBDDocument, weatherData);
-
-                TBD.Calendar calendar = tBDDocument.Building.GetCalendar();
-
-                List<TBD.dayType> dayTypes = Query.DayTypes(calendar);
-                if (dayTypes.Find(x => x.name == "HDD") == null)
-                {
-                    TBD.dayType dayType = calendar.AddDayType();
-                    dayType.name = "HDD";
-                }
-
-                if (dayTypes.Find(x => x.name == "CDD") == null)
-                {
-                    TBD.dayType dayType = calendar.AddDayType();
-                    dayType.name = "CDD";
-                }
-
-                Tas.Convert.ToTBD(analyticalModel, tBDDocument);
-
-                Tas.Modify.UpdateZones(tBDDocument.Building, analyticalModel, true);
-
-                if (coolingDesignDays != null || heatingDesignDays != null)
-                {
-                    Tas.Modify.AddDesignDays(tBDDocument, coolingDesignDays, heatingDesignDays, 30);
-                }
-
-                simulate = Tas.Modify.UpdateShading(tBDDocument, analyticalModel);
-
-                sAMTBDDocument.Save();
-            }
-
-            SurfaceOutputSpec surfaceOutputSpec = new SurfaceOutputSpec("Tas.Simulate");
-            surfaceOutputSpec.SolarGain = true;
-            surfaceOutputSpec.Conduction = true;
-            surfaceOutputSpec.ApertureData = false;
-            surfaceOutputSpec.Condensation = false;
-            surfaceOutputSpec.Convection = false;
-            surfaceOutputSpec.LongWave = false;
-            surfaceOutputSpec.Temperature = false;
-
-            List<SurfaceOutputSpec> surfaceOutputSpecs = new List<SurfaceOutputSpec>() { surfaceOutputSpec };
-
-            analyticalModel = Tas.Modify.RunWorkflow(analyticalModel, path_TBD, null, null, heatingDesignDays, coolingDesignDays, surfaceOutputSpecs, true, simulate, false);
-
-            List<Core.IResult> results = null;
-
-            AdjacencyCluster adjacencyCluster = null;
-            if (analyticalModel != null)
-            {
-                adjacencyCluster = analyticalModel?.AdjacencyCluster;
-                if(adjacencyCluster != null)
-                {
-                    results = new List<Core.IResult>();
-                    adjacencyCluster.GetObjects<SpaceSimulationResult>()?.ForEach(x => results.Add(x));
-                    adjacencyCluster.GetObjects<ZoneSimulationResult>()?.ForEach(x => results.Add(x));
-                    adjacencyCluster.GetObjects<AdjacencyClusterSimulationResult>()?.ForEach(x => results.Add(x));
-                }
-            }
-
-            if(adjacencyCluster != null && results != null && results.Count != 0)
-            {
-                ConvertSettings convertSettings = new ConvertSettings(false, true, false);
-
-                using (Transaction transaction = new Transaction(document, "Simulate"))
+                simpleProgressForm.Increment("Converting Model");
+                using (Transaction transaction = new Transaction(document, "Convert Model"))
                 {
                     transaction.Start();
+                    analyticalModel = Convert.ToSAM_AnalyticalModel(document, new ConvertSettings(true, true, false));
+                    transaction.RollBack();
+                }
 
-                    foreach(Core.IResult result in results)
+                if (analyticalModel == null)
+                {
+                    MessageBox.Show("Could not convert to AnalyticalModel");
+                    return Result.Failed;
+                }
+
+                string path_TBD = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + ".tbd");
+                if (System.IO.File.Exists(path_TBD))
+                {
+                    System.IO.File.Delete(path_TBD);
+                }
+
+                bool simulate = false;
+
+                List<DesignDay> heatingDesignDays = new List<DesignDay>() { Analytical.Query.HeatingDesignDay(weatherData) };
+                List<DesignDay> coolingDesignDays = new List<DesignDay>() { Analytical.Query.CoolingDesignDay(weatherData) };
+
+                using (SAMTBDDocument sAMTBDDocument = new SAMTBDDocument(path_TBD))
+                {
+                    TBD.TBDDocument tBDDocument = sAMTBDDocument.TBDDocument;
+
+                    simpleProgressForm.Increment("Updating WeatherData");
+                    Weather.Tas.Modify.UpdateWeatherData(tBDDocument, weatherData);
+
+                    TBD.Calendar calendar = tBDDocument.Building.GetCalendar();
+
+                    List<TBD.dayType> dayTypes = Query.DayTypes(calendar);
+                    if (dayTypes.Find(x => x.name == "HDD") == null)
                     {
-                        if (result is SpaceSimulationResult)
-                        {
-                            Convert.ToRevit(adjacencyCluster, (SpaceSimulationResult)result, document, convertSettings)?.Cast<Element>().ToList();
-                        }
-                        else if (result is ZoneSimulationResult)
-                        {
-                            Convert.ToRevit(adjacencyCluster, (ZoneSimulationResult)result, document, convertSettings)?.Cast<Element>().ToList();
-                        }
-                            
-                        else if (result is AdjacencyClusterSimulationResult)
-                        {
-                            Convert.ToRevit((AdjacencyClusterSimulationResult)result, document, convertSettings);
-                        }
+                        TBD.dayType dayType = calendar.AddDayType();
+                        dayType.name = "HDD";
                     }
 
-                    transaction.Commit();
+                    if (dayTypes.Find(x => x.name == "CDD") == null)
+                    {
+                        TBD.dayType dayType = calendar.AddDayType();
+                        dayType.name = "CDD";
+                    }
+
+                    simpleProgressForm.Increment("Converting to TBD");
+                    Tas.Convert.ToTBD(analyticalModel, tBDDocument);
+
+                    simpleProgressForm.Increment("Updating Zones");
+                    Tas.Modify.UpdateZones(tBDDocument.Building, analyticalModel, true);
+
+                    simpleProgressForm.Increment("Adding DesignDays");
+                    Tas.Modify.AddDesignDays(tBDDocument, coolingDesignDays, heatingDesignDays, 30);
+
+                    simpleProgressForm.Increment("Updating Shading");
+                    simulate = Tas.Modify.UpdateShading(tBDDocument, analyticalModel);
+
+                    sAMTBDDocument.Save();
                 }
+
+                SurfaceOutputSpec surfaceOutputSpec = new SurfaceOutputSpec("Tas.Simulate");
+                surfaceOutputSpec.SolarGain = true;
+                surfaceOutputSpec.Conduction = true;
+                surfaceOutputSpec.ApertureData = false;
+                surfaceOutputSpec.Condensation = false;
+                surfaceOutputSpec.Convection = false;
+                surfaceOutputSpec.LongWave = false;
+                surfaceOutputSpec.Temperature = false;
+
+                List<SurfaceOutputSpec> surfaceOutputSpecs = new List<SurfaceOutputSpec>() { surfaceOutputSpec };
+
+                simpleProgressForm.Increment("Simulating");
+                analyticalModel = Tas.Modify.RunWorkflow(analyticalModel, path_TBD, null, null, heatingDesignDays, coolingDesignDays, surfaceOutputSpecs, true, simulate, false);
+
+                simpleProgressForm.Increment("Inserting Results");
+                List<Core.IResult> results = null;
+
+                AdjacencyCluster adjacencyCluster = null;
+                if (analyticalModel != null)
+                {
+                    adjacencyCluster = analyticalModel?.AdjacencyCluster;
+                    if (adjacencyCluster != null)
+                    {
+                        results = new List<Core.IResult>();
+                        adjacencyCluster.GetObjects<SpaceSimulationResult>()?.ForEach(x => results.Add(x));
+                        adjacencyCluster.GetObjects<ZoneSimulationResult>()?.ForEach(x => results.Add(x));
+                        adjacencyCluster.GetObjects<AdjacencyClusterSimulationResult>()?.ForEach(x => results.Add(x));
+                    }
+                }
+
+                if (adjacencyCluster != null && results != null && results.Count != 0)
+                {
+                    ConvertSettings convertSettings = new ConvertSettings(false, true, false);
+
+                    using (Transaction transaction = new Transaction(document, "Simulate"))
+                    {
+                        transaction.Start();
+
+                        foreach (Core.IResult result in results)
+                        {
+                            if (result is SpaceSimulationResult)
+                            {
+                                Convert.ToRevit(adjacencyCluster, (SpaceSimulationResult)result, document, convertSettings)?.Cast<Element>().ToList();
+                            }
+                            else if (result is ZoneSimulationResult)
+                            {
+                                Convert.ToRevit(adjacencyCluster, (ZoneSimulationResult)result, document, convertSettings)?.Cast<Element>().ToList();
+                            }
+
+                            else if (result is AdjacencyClusterSimulationResult)
+                            {
+                                Convert.ToRevit((AdjacencyClusterSimulationResult)result, document, convertSettings);
+                            }
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+
+                simpleProgressForm.Increment("Finishing");
             }
 
             return Result.Succeeded;

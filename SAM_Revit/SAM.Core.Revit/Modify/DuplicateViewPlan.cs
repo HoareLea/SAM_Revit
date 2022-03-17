@@ -22,6 +22,7 @@ namespace SAM.Core.Revit
             if (levels_Temp == null)
                 levels_Temp = new FilteredElementCollector(document).OfClass(typeof(Level)).Cast<Level>().ToList();
 
+            List<Element> elements_ColorFillLegend = new FilteredElementCollector(document, viewPlan.Id).OfCategory(BuiltInCategory.OST_ColorFillLegends).ToList();
 
             List<ViewPlan> result = new List<ViewPlan>();
             foreach(Level level in levels_Temp)
@@ -67,6 +68,11 @@ namespace SAM.Core.Revit
                         continue;
 
                     CopyValue(parameter, parameter_New);
+                }
+
+                if(elements_ColorFillLegend != null && elements_ColorFillLegend.Count != 0)
+                {
+                    ElementTransformUtils.CopyElements(viewPlan, elements_ColorFillLegend.ConvertAll(x => x.Id), viewPlan_New, null, new CopyPasteOptions());
                 }
 
                 result.Add(viewPlan_New);

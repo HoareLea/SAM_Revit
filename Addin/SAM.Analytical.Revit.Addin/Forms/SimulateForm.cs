@@ -33,7 +33,7 @@ namespace SAM.Analytical.Revit.Addin.Forms
                 ComboBox_SolarCalculationMethod.Items.Add(Core.Query.Description(solarCalculationMethod));
             }
 
-            ComboBox_SolarCalculationMethod.SelectedText = Core.Query.Description(SolarCalculationMethod.SAM);
+            ComboBox_SolarCalculationMethod.SelectedItem = Core.Query.Description(SolarCalculationMethod.SAM);
         }
 
         private void Button_OK_Click(object sender, EventArgs e)
@@ -104,7 +104,7 @@ namespace SAM.Analytical.Revit.Addin.Forms
         {
             get
             {
-                return Core.Query.Enum<SolarCalculationMethod>(ComboBox_SolarCalculationMethod.SelectedText);
+                return Core.Query.Enum<SolarCalculationMethod>(ComboBox_SolarCalculationMethod.SelectedItem?.ToString());
             }
         }
 
@@ -133,6 +133,8 @@ namespace SAM.Analytical.Revit.Addin.Forms
             }
 
             weatherData = weatherData_Temp;
+
+            TextBox_WeatherData.Text = string.IsNullOrWhiteSpace(weatherData.Name) ? "???" : weatherData.Name;
         }
     }
 }

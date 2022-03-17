@@ -157,6 +157,15 @@ namespace SAM.Analytical.Revit
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternalGlazing"); //double
 
+            //Aperture
+            parameterMap_General.Add(ApertureParameter.ThermalTransmittance, typeof(FamilyInstance), "SAM_SrfUValue");
+            parameterMap_General.Add(ApertureParameter.LightTransmittance, typeof(FamilyInstance), "SAM_SrfLightTransmittance");
+            parameterMap_General.Add(ApertureParameter.LightReflectance, typeof(FamilyInstance), "SAM_SrfLightReflectance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyTransmittance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyTransmittance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyReflectance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyReflectance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyAbsorptance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyAbsorptance");
+            parameterMap_General.Add(ApertureParameter.TotalSolarEnergyTransmittance, typeof(FamilyInstance), "SAM_SrfgValue");
+
             //Material
             parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "ThermalConductivity", "SAM_Material_Conductivity");
             parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "SpecificHeatCapacity", "SAM_Material_SpecificHeat");

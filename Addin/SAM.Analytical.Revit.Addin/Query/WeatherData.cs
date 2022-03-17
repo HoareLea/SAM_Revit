@@ -72,7 +72,7 @@ namespace SAM.Analytical.Revit.Addin
                 }
             }
 
-            return weatherData != null ? Result.Failed : Result.Succeeded;
+            return weatherData == null ? Result.Failed : Result.Succeeded;
         }
     }
 }

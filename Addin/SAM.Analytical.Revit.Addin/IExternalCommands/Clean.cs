@@ -43,7 +43,11 @@ namespace SAM.Analytical.Revit.Addin
                 BuiltInCategory.OST_Lines,
                 BuiltInCategory.OST_GenericModel,
                 BuiltInCategory.OST_Levels,
-                BuiltInCategory.OST_CLines
+                BuiltInCategory.OST_CLines,
+                BuiltInCategory.OST_MEPSpaceTags,
+                BuiltInCategory.OST_WallTags,
+                BuiltInCategory.OST_WindowTags,
+                BuiltInCategory.OST_DoorTags
 
             };
 

@@ -56,6 +56,11 @@ namespace SAM.Core.Revit
 
         public static Element Element(this EnergyAnalysisOpening energyAnalysisOpening)
         {
+            if(energyAnalysisOpening == null)
+            {
+                return null;
+            }
+
             ElementId elementID = ElementId(energyAnalysisOpening.OriginatingElementDescription);
             if (elementID == null || elementID == Autodesk.Revit.DB.ElementId.InvalidElementId)
                 return null;

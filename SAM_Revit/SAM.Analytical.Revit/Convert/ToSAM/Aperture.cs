@@ -40,7 +40,8 @@ namespace SAM.Analytical.Revit
                 return null;
 
             result = new Aperture(apertureConstruction, polygon3D, point3D_Location);
-            result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            result.UpdateParameterSets(energyAnalysisOpening, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+            //result.UpdateParameterSets(familyInstance, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
             //result.Add(Core.Revit.Query.ParameterSet(familyInstance));
 
             convertSettings?.Add(energyAnalysisOpening.Id, result);

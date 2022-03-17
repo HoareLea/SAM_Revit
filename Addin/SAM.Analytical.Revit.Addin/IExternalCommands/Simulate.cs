@@ -264,7 +264,7 @@ namespace SAM.Analytical.Revit.Addin
 
                                 if (dictionary.TryGetValue(panel.Guid, out elementId))
                                 {
-                                    Core.Revit.Modify.SetValues(document.GetElement(elementId), panel);
+                                    Core.Revit.Modify.SetValues(document.GetElement(elementId), panel, ActiveSetting.Setting);
                                 }
 
                                 List<Aperture> apertures = panel.Apertures;
@@ -274,7 +274,7 @@ namespace SAM.Analytical.Revit.Addin
                                     {
                                         if (dictionary.TryGetValue(aperture.Guid, out elementId))
                                         {
-                                            Core.Revit.Modify.SetValues(document.GetElement(elementId), aperture);
+                                            Core.Revit.Modify.SetValues(document.GetElement(elementId), aperture, ActiveSetting.Setting);
                                         }
                                     }
                                 }

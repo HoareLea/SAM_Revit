@@ -37,6 +37,12 @@ namespace SAM.Units.Revit
             if (unitTypeIds.Contains(Autodesk.Revit.DB.UnitTypeId.WattsPerCubicMeter))
                 return Autodesk.Revit.DB.UnitTypeId.WattsPerCubicMeter;
 
+            if (unitTypeIds.Contains(Autodesk.Revit.DB.UnitTypeId.WattsPerMeterKelvin))
+                return Autodesk.Revit.DB.UnitTypeId.WattsPerMeterKelvin;
+
+            if (unitTypeIds.Contains(Autodesk.Revit.DB.UnitTypeId.WattsPerSquareMeterKelvin))
+                return Autodesk.Revit.DB.UnitTypeId.WattsPerSquareMeterKelvin;
+
             if (unitTypeIds.Contains(Autodesk.Revit.DB.UnitTypeId.CubicMeters))
                 return Autodesk.Revit.DB.UnitTypeId.CubicMeters;
 

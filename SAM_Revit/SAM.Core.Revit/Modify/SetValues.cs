@@ -152,7 +152,7 @@ namespace SAM.Core.Revit
 
                             Parameter parameter = element.LookupParameter(name_Revit);
                             if (parameter == null)
-                                return false;
+                                continue;
 
                             object value_Temp = value;
                             if(formula != null)

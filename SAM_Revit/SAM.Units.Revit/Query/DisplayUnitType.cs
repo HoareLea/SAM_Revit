@@ -38,6 +38,12 @@ namespace SAM.Units.Revit
             if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_CUBIC_METER))
                 return Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_CUBIC_METER;
 
+            if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_METER_KELVIN))
+                return Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_METER_KELVIN;
+
+            if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_SQUARE_METER_KELVIN))
+                return Autodesk.Revit.DB.DisplayUnitType.DUT_WATTS_PER_SQUARE_METER_KELVIN;
+
             if (displayUnitTypes.Contains(Autodesk.Revit.DB.DisplayUnitType.DUT_CUBIC_METERS))
                 return Autodesk.Revit.DB.DisplayUnitType.DUT_CUBIC_METERS;
 

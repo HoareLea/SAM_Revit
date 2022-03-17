@@ -35,7 +35,7 @@ namespace SAM.Analytical.Revit.Addin
                 return Result.Failed;
             }
 
-            List<Autodesk.Revit.DB.Mechanical.SpaceTagType> spaceTagTypes = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaceTags).Cast<Autodesk.Revit.DB.Mechanical.SpaceTagType>().ToList();
+            List<Autodesk.Revit.DB.Mechanical.SpaceTagType> spaceTagTypes = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaceTags).WhereElementIsElementType().Cast<Autodesk.Revit.DB.Mechanical.SpaceTagType>().ToList();
             if(spaceTagTypes == null || spaceTagTypes.Count == 0)
             {
                 return Result.Failed;

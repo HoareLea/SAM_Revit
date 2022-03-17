@@ -119,13 +119,13 @@ namespace SAM.Analytical.Revit.Addin
                 Curve curve = locationCurve.Curve;
                 if(curve == null)
                 {
-                    walls.ElementAt(i);
+                    walls.RemoveAt(i);
                     continue;
                 }
 
                 if(curve.Length < minLength)
                 {
-                    walls.ElementAt(i);
+                    walls.RemoveAt(i);
                     continue;
                 }
             }

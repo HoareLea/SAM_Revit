@@ -177,8 +177,6 @@ namespace SAM.Core.Revit
 
             ElementBinding result = null;
 
-            Definition definition = null;
-
             DefinitionBindingMapIterator definitionBindingMapIterator = document?.ParameterBindings?.ForwardIterator();
             if(definitionBindingMapIterator != null)
             {
@@ -186,12 +184,12 @@ namespace SAM.Core.Revit
 
                 while (definitionBindingMapIterator.MoveNext())
                 {
-                    definition = definitionBindingMapIterator.Key as Definition;
-                    if (definition == null)
+                    Definition definition_Temp = definitionBindingMapIterator.Key as Definition;
+                    if (definition_Temp == null)
                         continue;
 
                     //if (aExternalDefinition.GUID.Equals(pExternalDefinition.GUID))
-                    if (definition.Name.Equals(name))
+                    if (definition_Temp.Name.Equals(name))
                     {
                         result = (ElementBinding)definitionBindingMapIterator.Current;
                         break;
@@ -204,7 +202,8 @@ namespace SAM.Core.Revit
                 return result;
             }
 
-            if(definition == null)
+            Definition definition = Find(name);
+            if (definition == null)
             {
                 return null;
             }

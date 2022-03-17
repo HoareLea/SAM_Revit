@@ -182,7 +182,7 @@ namespace SAM.Analytical.Revit.Addin
 
             analyticalModel = Tas.Modify.RunWorkflow(analyticalModel, path_TBD, null, null, heatingDesignDays, coolingDesignDays, surfaceOutputSpecs, unmetHours, simulate, false);
 
-            List<Core.IResult> results = null;
+            List<Core.ISAMObject> results = null;
 
             AdjacencyCluster adjacencyCluster = null;
             if (analyticalModel != null)
@@ -190,10 +190,11 @@ namespace SAM.Analytical.Revit.Addin
                 adjacencyCluster = analyticalModel?.AdjacencyCluster;
                 if (adjacencyCluster != null)
                 {
-                    results = new List<Core.IResult>();
+                    results = new List<Core.ISAMObject>();
                     adjacencyCluster.GetObjects<SpaceSimulationResult>()?.ForEach(x => results.Add(x));
                     adjacencyCluster.GetObjects<ZoneSimulationResult>()?.ForEach(x => results.Add(x));
                     adjacencyCluster.GetObjects<AdjacencyClusterSimulationResult>()?.ForEach(x => results.Add(x));
+                    adjacencyCluster.GetPanels()?.ForEach(x => results.Add(x));
                 }
             }
 
@@ -209,22 +210,40 @@ namespace SAM.Analytical.Revit.Addin
                     {
                         transaction.Start();
 
-                        foreach (Core.IResult result_Temp in results)
+                        foreach (Core.ISAMObject sAMObject in results)
                         {
-                            simpleProgressForm.Increment(result_Temp?.Name == null ? "???" : result_Temp.Name);
+                            simpleProgressForm.Increment(sAMObject?.Name == null ? "???" : sAMObject.Name);
 
-                            if (result_Temp is SpaceSimulationResult)
+                            if (sAMObject is SpaceSimulationResult)
                             {
-                                Convert.ToRevit(adjacencyCluster, (SpaceSimulationResult)result_Temp, document, convertSettings)?.Cast<Element>().ToList();
+                                Convert.ToRevit(adjacencyCluster, (SpaceSimulationResult)sAMObject, document, convertSettings)?.Cast<Element>().ToList();
                             }
-                            else if (result_Temp is ZoneSimulationResult)
+                            else if (sAMObject is ZoneSimulationResult)
                             {
-                                Convert.ToRevit(adjacencyCluster, (ZoneSimulationResult)result_Temp, document, convertSettings)?.Cast<Element>().ToList();
+                                Convert.ToRevit(adjacencyCluster, (ZoneSimulationResult)sAMObject, document, convertSettings)?.Cast<Element>().ToList();
                             }
+                            else if (sAMObject is AdjacencyClusterSimulationResult)
+                            {
+                                Convert.ToRevit((AdjacencyClusterSimulationResult)sAMObject, document, convertSettings);
+                            }
+                            else if(sAMObject is Panel)
+                            {
+                                Panel panel = (Panel)sAMObject;
 
-                            else if (result_Temp is AdjacencyClusterSimulationResult)
-                            {
-                                Convert.ToRevit((AdjacencyClusterSimulationResult)result_Temp, document, convertSettings);
+                                HostObject hostObject = Core.Revit.Query.Element<HostObject>(document, panel);
+
+                                Core.Revit.Modify.SetValues(hostObject, panel);
+
+                                List<Aperture> apertures = panel.Apertures;
+                                if(apertures != null)
+                                {
+                                    foreach(Aperture aperture in apertures)
+                                    {
+                                        FamilyInstance familyInstance = Core.Revit.Query.Element<FamilyInstance>(document, aperture);
+
+                                        Core.Revit.Modify.SetValues(familyInstance, aperture);
+                                    }
+                                }
                             }
                         }
 

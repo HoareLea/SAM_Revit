@@ -232,7 +232,7 @@
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
     <Compile Include="Create\Shells.cs" />
     <Compile Include="Create\Panels.cs" />
-    <Compile Include="Enums\Parameter\ElementParameter.cs" />
+    <Compile Include="Enums\Parameter\RevitPanelParameter.cs" />
     <Compile Include="Enums\Tool.cs" />
     <Compile Include="ISelectionFilters\RevitLinkInstanceSelectionFilter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />

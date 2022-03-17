@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 using Autodesk.Revit.UI;
 using SAM.Analytical.Revit.Addin.Properties;
 using SAM.Core.Revit;
@@ -98,6 +99,7 @@ namespace SAM.Analytical.Revit.Addin
 
             bool simulate = false;
 
+            Dictionary<Guid, ElementId> dictionary = new Dictionary<Guid, ElementId>();
             using (Core.Windows.SimpleProgressForm simpleProgressForm = new Core.Windows.SimpleProgressForm("Preparing Model", string.Empty, 6))
             {
                 simpleProgressForm.Increment("Converting Model");
@@ -105,6 +107,34 @@ namespace SAM.Analytical.Revit.Addin
                 {
                     transaction.Start();
                     analyticalModel = Convert.ToSAM_AnalyticalModel(document, new ConvertSettings(true, true, false));
+                    List<Panel> panels = analyticalModel?.GetPanels();
+                    if (panels != null)
+                    {
+                        foreach(Panel panel in panels)
+                        {
+                            EnergyAnalysisSurface energyAnalysisSurface = Core.Revit.Query.Element<EnergyAnalysisSurface>(document, panel);
+                            HostObject hostObject = Core.Revit.Query.Element(document, energyAnalysisSurface?.CADObjectUniqueId, energyAnalysisSurface?.CADLinkUniqueId) as HostObject;
+                            if(hostObject != null)
+                            {
+                                dictionary[panel.Guid] = hostObject.Id;
+                            }
+
+                            List<Aperture> apertures = panel.Apertures;
+                            if(apertures != null)
+                            {
+                                foreach(Aperture aperture in apertures)
+                                {
+                                    EnergyAnalysisOpening energyAnalysisOpening = Core.Revit.Query.Element<EnergyAnalysisOpening>(document, aperture);
+                                    FamilyInstance familyInstance = Core.Revit.Query.Element(energyAnalysisOpening) as FamilyInstance;
+                                    if(familyInstance != null)
+                                    {
+                                        dictionary[aperture.Guid] = familyInstance.Id;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     transaction.RollBack();
                 }
 
@@ -230,18 +260,22 @@ namespace SAM.Analytical.Revit.Addin
                             {
                                 Panel panel = (Panel)sAMObject;
 
-                                HostObject hostObject = Core.Revit.Query.Element<HostObject>(document, panel);
+                                ElementId elementId = null;
 
-                                Core.Revit.Modify.SetValues(hostObject, panel);
+                                if (dictionary.TryGetValue(panel.Guid, out elementId))
+                                {
+                                    Core.Revit.Modify.SetValues(document.GetElement(elementId), panel);
+                                }
 
                                 List<Aperture> apertures = panel.Apertures;
                                 if(apertures != null)
                                 {
                                     foreach(Aperture aperture in apertures)
                                     {
-                                        FamilyInstance familyInstance = Core.Revit.Query.Element<FamilyInstance>(document, aperture);
-
-                                        Core.Revit.Modify.SetValues(familyInstance, aperture);
+                                        if (dictionary.TryGetValue(aperture.Guid, out elementId))
+                                        {
+                                            Core.Revit.Modify.SetValues(document.GetElement(elementId), aperture);
+                                        }
                                     }
                                 }
                             }

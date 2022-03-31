@@ -249,16 +249,6 @@
     <None Include="Resources\SAM_Revit.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Addin\SAM.Analytical.Revit.Addin\SAM.Analytical.Revit.Addin.csproj">
-      <Project>{d835aef0-8c2c-4345-8f76-062669bcd3e2}</Project>
-      <Name>SAM.Analytical.Revit.Addin</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Addin\SAM.Core.Revit.Addin\SAM.Core.Revit.Addin.csproj">
-      <Project>{4a52937f-1356-443b-8a6c-6bec0140ac98}</Project>
-      <Name>SAM.Core.Revit.Addin</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj">
       <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
       <Name>SAM.Core.Revit</Name>

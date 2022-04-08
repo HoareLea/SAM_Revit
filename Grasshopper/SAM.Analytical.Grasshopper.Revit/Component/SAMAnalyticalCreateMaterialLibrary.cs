@@ -96,9 +96,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            string parameterName_Type = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.TypeName);
+            string parameterName_Type = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), Analytical.Revit.RevitMaterialParameter.TypeName);
             string parameterName_Name = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Name");
-            string parameterName_MaterialDescription = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), MaterialParameter.Description);
+            string parameterName_MaterialDescription = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Description");
             string parameterName_DefaultThickness = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), Core.MaterialParameter.DefaultThickness);
             string parameterName_ThermalConductivity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "ThermalConductivity");
             string parameterName_SpecificHeatCapacity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "SpecificHeatCapacity");

@@ -172,7 +172,7 @@ namespace SAM.Analytical.Revit
             parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Density", "SAM_Material_Density");
             parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Description", "SAM_Material_Description");
             parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Name", "SAM_Material_Name");
-            parameterMap_General.Add(MaterialParameter.TypeName, typeof(FamilyInstance), "SAM_Material_Type");
+            parameterMap_General.Add(RevitMaterialParameter.TypeName, typeof(FamilyInstance), "SAM_Material_Type");
             parameterMap_General.Add(Core.MaterialParameter.DefaultThickness, typeof(FamilyInstance), "SAM_Material_Width");
             parameterMap_General.Add(MaterialParameter.VapourDiffusionFactor, typeof(FamilyInstance), "SAM_Material_VapourDiffusionFactor");
 

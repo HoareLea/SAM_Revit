@@ -134,5 +134,25 @@ namespace SAM.Analytical.Revit
 
             return result;
         }
+
+        public static IEnumerable<T> ToSAM<T>(this Document document, Core.Revit.ConvertSettings convertSettings, Transform transform = null)
+        {
+            IEnumerable<Core.SAMObject> sAMObjects = ToSAM(document, typeof(T), convertSettings, transform);
+            if(sAMObjects == null)
+            {
+                return null;
+            }
+
+            List<T> result = new List<T>();
+            foreach(Core.SAMObject sAMObject in sAMObjects)
+            {
+                if(sAMObject is T)
+                {
+                    result.Add((T)(object)sAMObject);
+                }
+            }
+
+            return result;
+        }
     }
 }

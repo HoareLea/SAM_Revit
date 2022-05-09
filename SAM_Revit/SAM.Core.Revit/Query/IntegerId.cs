@@ -13,18 +13,19 @@ namespace SAM.Core.Revit
             if (integerId == null)
                 return null;
 
-            ParameterSet parameterSet = new ParameterSet(element.GetType()?.Assembly);
-            parameterSet.Add("Name", FullName(element));
+            string fullName = FullName(element);
+            if(!string.IsNullOrEmpty(fullName))
+            {
+                integerId.SetValue(RevitIdParameter.FullName, fullName);
+            }
+            string categoryName = element is Family ? ((Family)element).FamilyCategory?.Name : element.Category?.Name;
+            if(!string.IsNullOrEmpty(categoryName))
+            {
+                integerId.SetValue(RevitIdParameter.CategoryName, categoryName);
+            }
 
-            string categoryName = null;
-            if (element is Family)
-                categoryName = ((Family)element).FamilyCategory?.Name;
-            else
-                categoryName = element.Category?.Name;
+            integerId.SetValue(RevitIdParameter.UniqueId, element.UniqueId);
 
-            parameterSet.Add("Category Name", categoryName);
-
-            integerId.Add(parameterSet);
             return integerId;
         }
     }

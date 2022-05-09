@@ -1,0 +1,65 @@
+﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Mechanical;
+using SAM.Core;
+using SAM.Core.Revit;
+
+namespace SAM.Geometry.Revit
+{
+    public static partial class Convert
+    {
+        public static Tag ToSAM(this SpaceTag spaceTag, ConvertSettings convertSettings)
+        {
+            if (spaceTag == null)
+            {
+                return null;
+            }
+
+            Document document = spaceTag.Document;
+            if(document == null)
+            {
+                return null;
+            }
+
+            Tag result = convertSettings?.GetObject<Tag>(spaceTag.Id);
+            if (result != null)
+            {
+                return result;
+            }
+
+            TagType tagType = ToSAM(document.GetElement(spaceTag.GetTypeId()) as SpaceTagType, convertSettings);
+            if(tagType == null)
+            {
+                return null;
+            }
+
+            ElementId elementId = spaceTag.OwnerViewId;
+            if(elementId == null)
+            {
+                return null;
+            }
+
+            View view = document.GetElement(elementId) as View;
+            if(view == null)
+            {
+                return null;
+            }
+
+            IntegerId viewId = Query.IntegerId(view);
+            IntegerId referenceId = Query.IntegerId(spaceTag.Space);
+
+            Spatial.Point3D point3D = ToSAM((spaceTag.Location as LocationPoint)?.Point);
+
+            result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
+            if (result != null)
+            {
+                result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTag));
+
+                Core.Revit.Modify.SetValues(spaceTag, result);
+
+                convertSettings?.Add(spaceTag.Id, result);
+            }
+
+            return result;
+        }
+    }
+}

@@ -10,8 +10,14 @@ namespace SAM.Core.Revit
                 return null;
 
             int @int;
-            if (!sAMObject.TryGetValue(ElementParameter.ElementId, out @int))
+            if (!sAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            {
                 return null;
+            }
+            else
+            {
+                @int = integerId.Id;
+            }
 
             return new ElementId(@int);
         }

@@ -53,7 +53,7 @@ namespace SAM.Geometry.Revit
 
             FilledRegionType filledRegionType = filledRegionType_Revit.ToSAM(convertSettings);
             List<Planar.Face2D> face2Ds = face3Ds.ConvertAll(x => Spatial.Query.Convert(plane, x));
-            IntegerId integerId = Core.Revit.Query.IntegerId(view);
+            IntegerId integerId = Query.IntegerId(view);
 
             result = new FilledRegion(filledRegionType, integerId, face2Ds);
 

@@ -240,6 +240,8 @@
     <Compile Include="Classes\RevitType2D.cs" />
     <Compile Include="Classes\RevitType3D.cs" />
     <Compile Include="Classes\RevitInstance3D.cs" />
+    <Compile Include="Classes\Tag.cs" />
+    <Compile Include="Classes\TagType.cs" />
     <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToRevit\CurveLoops.cs" />
     <Compile Include="Convert\ToSAM\FilledRegion.cs" />
@@ -251,16 +253,21 @@
     <Compile Include="Convert\ToSAM\Segment3Ds.cs" />
     <Compile Include="Convert\ToSAM\ISAMGeometries.cs" />
     <Compile Include="Convert\ToSAM\Shell.cs" />
+    <Compile Include="Convert\ToSAM\Tag.cs" />
+    <Compile Include="Convert\ToSAM\TagType.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
+    <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Query\Face3Ds.cs" />
     <Compile Include="Query\Faces.cs" />
+    <Compile Include="Query\IntegerId.cs" />
+    <Compile Include="Query\Location.cs" />
     <Compile Include="Query\MaterialElementIdsDictionary.cs" />
     <Compile Include="Query\GeneratingElementIdsDictionary.cs" />
     <Compile Include="Query\BoundaryFace2Ds.cs" />
     <Compile Include="Query\BoundingBox3D.cs" />
     <Compile Include="Query\Elements.cs" />
-    <Compile Include="Query\Location.cs" />
+    <Compile Include="Query\LocationPoint3D.cs" />
     <Compile Include="Query\BottomProfiles.cs" />
     <Compile Include="Query\LowLevel.cs" />
     <Compile Include="Query\HighLevel.cs" />
@@ -308,5 +315,6 @@
       <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

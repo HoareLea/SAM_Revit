@@ -68,20 +68,37 @@ namespace SAM.Core.Revit
             return energyAnalysisOpening.Document.GetElement(elementID);
         }
 
-        public static T Element<T>(this Document document, SAMObject sAMObject) where T : Element
+        public static T Element<T>(this Document document, IParameterizedSAMObject parameterizedSAMObject) where T : Element
         {
-            if (document == null || sAMObject == null)
+            if (document == null || parameterizedSAMObject == null)
+            {
                 return null;
+            }
+
+            if (!parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            {
+                return null;
+            }
+
+            return Element<T>(document, integerId);
+        }
+
+        public static T Element<T>(this Document document, IntegerId integerId) where T : Element
+        {
+            if(integerId == null || document == null)
+            {
+                return null;
+            }
 
             T result = null;
 
-            ElementId elementId = sAMObject.ElementId();
+            ElementId elementId = integerId.ElementId();
             if (elementId != null && elementId != Autodesk.Revit.DB.ElementId.InvalidElementId)
                 result = document.GetElement(elementId) as T;
 
-            if(result == null)
+            if (result == null)
             {
-                string uniqueId = sAMObject.UniqueId();
+                string uniqueId = integerId.UniqueId();
                 if (!string.IsNullOrWhiteSpace(uniqueId))
                     result = document.GetElement(uniqueId) as T;
             }

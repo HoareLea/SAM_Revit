@@ -256,6 +256,7 @@
     <Compile Include="Convert\ToSAM\Tag.cs" />
     <Compile Include="Convert\ToSAM\TagType.cs" />
     <Compile Include="Convert\ToSAM\Vector3D.cs" />
+    <Compile Include="Enums\Parameter\TagParameter.cs" />
     <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Query\Face3Ds.cs" />

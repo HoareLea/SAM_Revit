@@ -123,6 +123,8 @@ namespace SAM.Geometry.Revit
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(independentTag));
+                result.SetValue(TagParameter.Leader, independentTag.HasLeader);
+                result.SetValue(TagParameter.Orientation, independentTag.TagOrientation.ToString());
 
                 Core.Revit.Modify.SetValues(independentTag, result);
 

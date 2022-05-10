@@ -14,7 +14,17 @@
                 return null;
             }
 
-            if(!integerId.TryGetValue(RevitIdParameter.UniqueId, out string result))
+            return UniqueId(integerId);
+        }
+
+        public static string UniqueId(this IntegerId integerId)
+        {
+            if (integerId == null)
+            {
+                return null;
+            }
+
+            if (!integerId.TryGetValue(RevitIdParameter.UniqueId, out string result))
             {
                 return null;
             }

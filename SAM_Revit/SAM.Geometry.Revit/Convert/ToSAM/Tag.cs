@@ -61,5 +61,60 @@ namespace SAM.Geometry.Revit
 
             return result;
         }
+
+        public static Tag ToSAM(this IndependentTag independentTag, ConvertSettings convertSettings)
+        {
+            if (independentTag == null)
+            {
+                return null;
+            }
+
+            Document document = independentTag.Document;
+            if (document == null)
+            {
+                return null;
+            }
+
+            Tag result = convertSettings?.GetObject<Tag>(independentTag.Id);
+            if (result != null)
+            {
+                return result;
+            }
+
+            TagType tagType = ToSAM_TagType(document.GetElement(independentTag.GetTypeId()) as FamilySymbol, convertSettings);
+            if (tagType == null)
+            {
+                return null;
+            }
+
+            ElementId elementId = independentTag.OwnerViewId;
+            if (elementId == null)
+            {
+                return null;
+            }
+
+            View view = document.GetElement(elementId) as View;
+            if (view == null)
+            {
+                return null;
+            }
+
+            IntegerId viewId = Query.IntegerId(view);
+            IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
+
+            Spatial.Point3D point3D = ToSAM((independentTag.Location as LocationPoint)?.Point);
+
+            result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
+            if (result != null)
+            {
+                result.SetValue(ElementParameter.RevitId, Query.IntegerId(independentTag));
+
+                Core.Revit.Modify.SetValues(independentTag, result);
+
+                convertSettings?.Add(independentTag.Id, result);
+            }
+
+            return result;
+        }
     }
 }

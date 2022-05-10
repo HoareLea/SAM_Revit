@@ -18,10 +18,12 @@ namespace SAM.Core.Revit
             {
                 integerId.SetValue(RevitIdParameter.FullName, fullName);
             }
-            string categoryName = element is Family ? ((Family)element).FamilyCategory?.Name : element.Category?.Name;
-            if(!string.IsNullOrEmpty(categoryName))
+
+            Category category = element is Family ? ((Family)element).FamilyCategory : element.Category;
+            if(category != null)
             {
-                integerId.SetValue(RevitIdParameter.CategoryName, categoryName);
+                integerId.SetValue(RevitIdParameter.CategoryName, category.Name);
+                integerId.SetValue(RevitIdParameter.CategoryId, category.Id.IntegerValue);
             }
 
             integerId.SetValue(RevitIdParameter.UniqueId, element.UniqueId);

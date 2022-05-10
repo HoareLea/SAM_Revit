@@ -291,6 +291,7 @@
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />
     <Compile Include="Modify\SetValues.cs" />
+    <Compile Include="Query\BuiltInCategory.cs" />
     <Compile Include="Query\IntersectingElements.cs" />
     <Compile Include="Query\ReferenceConnectors.cs" />
     <Compile Include="Query\Connector.cs" />

@@ -102,7 +102,13 @@ namespace SAM.Geometry.Revit
             IntegerId viewId = Query.IntegerId(view);
             IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
 
-            Spatial.Point3D point3D = ToSAM((independentTag.Location as LocationPoint)?.Point);
+            XYZ xYZ = (independentTag.Location as LocationPoint)?.Point;
+            if(xYZ == null)
+            {
+                return null;
+            }
+
+            Spatial.Point3D point3D = ToSAM(xYZ);
 
             result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
             if (result != null)

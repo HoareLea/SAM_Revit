@@ -33,7 +33,7 @@ namespace SAM.Core.Revit
 
                 if(!allowDuplicates)
                 {
-                    IList<ElementId> elementIds = space.GetDependentElements(new ElementClassFilter(typeof(SpaceTag)));
+                    IList<ElementId> elementIds = space.GetDependentElements(new LogicalAndFilter( new ElementCategoryFilter(BuiltInCategory.OST_MEPSpaceTags), new ElementOwnerViewFilter(view.Id)));
                     if(elementIds != null)
                     {
                         ElementId elementId_Temp = elementIds.ToList().Find(x => document.GetElement(x)?.GetTypeId() == elementId_SpaceTagType);

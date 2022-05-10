@@ -63,7 +63,7 @@ namespace SAM.Core.Revit
 
                 if(!allowDuplicates)
                 {
-                    IList<ElementId> elementIds_Tags = element.GetDependentElements(new ElementClassFilter(typeof(IndependentTag)));
+                    IList<ElementId> elementIds_Tags = element.GetDependentElements(new LogicalAndFilter(new ElementClassFilter(typeof(IndependentTag)), new ElementOwnerViewFilter(view.Id)));
                     if(elementIds_Tags != null && elementIds_Tags.Count != 0)
                     {
                         ElementId elementId_Tag = elementIds_Tags.ToList().Find(x => document.GetElement(x).GetTypeId() == elementId_TagType);

@@ -105,10 +105,19 @@ namespace SAM.Geometry.Revit
             XYZ xYZ = (independentTag.Location as LocationPoint)?.Point;
             if(xYZ == null)
             {
+                xYZ = independentTag.TagHeadPosition;
+            }
+
+            if(xYZ == null)
+            {
                 return null;
             }
 
             Spatial.Point3D point3D = ToSAM(xYZ);
+            if(point3D == null)
+            {
+                return null;
+            }
 
             result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
             if (result != null)

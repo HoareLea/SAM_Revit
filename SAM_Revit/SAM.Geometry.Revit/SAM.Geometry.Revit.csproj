@@ -242,8 +242,11 @@
     <Compile Include="Classes\RevitInstance3D.cs" />
     <Compile Include="Classes\Tag.cs" />
     <Compile Include="Classes\TagType.cs" />
+    <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
+    <Compile Include="Convert\ToRevit\SpaceTag.cs" />
     <Compile Include="Convert\ToRevit\Lines.cs" />
     <Compile Include="Convert\ToRevit\CurveLoops.cs" />
+    <Compile Include="Convert\ToRevit\IndependentTag.cs" />
     <Compile Include="Convert\ToSAM\FilledRegion.cs" />
     <Compile Include="Convert\ToSAM\Mesh3D.cs" />
     <Compile Include="Convert\ToSAM\RevitInstance3D.cs" />
@@ -259,6 +262,7 @@
     <Compile Include="Enums\Parameter\TagParameter.cs" />
     <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Query\Find.cs" />
     <Compile Include="Query\Face3Ds.cs" />
     <Compile Include="Query\Faces.cs" />
     <Compile Include="Query\IntegerId.cs" />

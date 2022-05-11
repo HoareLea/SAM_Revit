@@ -1,5 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Core.Revit
 {
@@ -46,7 +48,7 @@ namespace SAM.Core.Revit
             return revitDocument.GetElement(uniqueId);
         }
 
-        public static T Element<T>(this Document document, ElementId elementId) where T: Element
+        public static T Element<T>(this Document document, ElementId elementId) where T : Element
         {
             if (document == null || elementId == null || elementId == Autodesk.Revit.DB.ElementId.InvalidElementId)
                 return default(T);
@@ -56,7 +58,7 @@ namespace SAM.Core.Revit
 
         public static Element Element(this EnergyAnalysisOpening energyAnalysisOpening)
         {
-            if(energyAnalysisOpening == null)
+            if (energyAnalysisOpening == null)
             {
                 return null;
             }
@@ -68,24 +70,30 @@ namespace SAM.Core.Revit
             return energyAnalysisOpening.Document.GetElement(elementID);
         }
 
-        public static T Element<T>(this Document document, IParameterizedSAMObject parameterizedSAMObject) where T : Element
+        public static T Element<T>(this Document document, IParameterizedSAMObject parameterizedSAMObject, bool includeName = false) where T : Element
         {
             if (document == null || parameterizedSAMObject == null)
             {
                 return null;
             }
 
-            if (!parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            T result = null;
+            if (parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) && integerId != null)
             {
-                return null;
+                result = Element<T>(document, integerId, includeName);
             }
 
-            return Element<T>(document, integerId);
+            if(result == null && includeName)
+            {
+
+            }
+
+            return result;
         }
 
-        public static T Element<T>(this Document document, IntegerId integerId) where T : Element
+        public static T Element<T>(this Document document, IntegerId integerId, bool includeName = false) where T : Element
         {
-            if(integerId == null || document == null)
+            if (integerId == null || document == null)
             {
                 return null;
             }
@@ -101,6 +109,35 @@ namespace SAM.Core.Revit
                 string uniqueId = integerId.UniqueId();
                 if (!string.IsNullOrWhiteSpace(uniqueId))
                     result = document.GetElement(uniqueId) as T;
+            }
+
+            if (result == null && includeName)
+            {
+                if (integerId.TryGetValue(RevitIdParameter.FullName, out string fullName) && !string.IsNullOrWhiteSpace(fullName))
+                {
+                    BuiltInCategory? builtInCategory = integerId.BuiltInCategory();
+                    if (builtInCategory != null && builtInCategory.HasValue && builtInCategory.Value != Autodesk.Revit.DB.BuiltInCategory.INVALID)
+                    {
+                        List<Element> elements = new FilteredElementCollector(document).OfCategory(builtInCategory.Value).ToList();
+                        if (elements != null)
+                        {
+                            foreach (Element element in elements)
+                            {
+                                T t = element as T;
+                                if (t == null)
+                                {
+                                    continue;
+                                }
+
+                                string fullName_Element = FullName(t);
+                                if (fullName.Equals(fullName_Element))
+                                {
+                                    return t;
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             return result;

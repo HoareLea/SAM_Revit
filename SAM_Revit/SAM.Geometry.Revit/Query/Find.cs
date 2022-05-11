@@ -172,17 +172,25 @@ namespace SAM.Geometry.Revit
                 {
                     ISegmentable3D segmentable3D_Temp = (ISegmentable3D)sAMGeometry3D;
                     double distance = segmentable3D.Distance(segmentable3D_Temp, min);
-                    if (distance <= min)
-                    {
-                        return t;
-                    }
-
                     if (distance > max)
                     {
                         continue;
                     }
 
-                    tuples.Add(new Tuple<T, ISAMGeometry3D, double>(t, segmentable3D, distance));
+                    List<Point3D> point3Ds_Temp = segmentable3D_Temp.GetPoints();
+                    List<Point3D> point3Ds = segmentable3D.GetPoints();
+
+                    List<double> distances_Temp = point3Ds_Temp.ConvertAll(x => segmentable3D.Distance(x));
+                    List<double> distances = point3Ds.ConvertAll(x => segmentable3D.Distance(x));
+
+                    if (distance <= min && distances_Temp.TrueForAll(x => x < min) && distances.TrueForAll(x => x < min))
+                    {
+                        return t;
+                    }
+
+                    int count = (distances_Temp.Count + distances.Count) - (distances_Temp.FindAll(x => x < min).Count + distances.FindAll(x => x < min).Count);
+
+                    tuples.Add(new Tuple<T, ISAMGeometry3D, double>(t, segmentable3D, count));
                 }
             }
 

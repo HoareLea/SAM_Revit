@@ -262,6 +262,7 @@
     <Compile Include="Enums\Parameter\TagParameter.cs" />
     <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
     <Compile Include="Manager\ActiveSetting.cs" />
+    <Compile Include="Query\Placed.cs" />
     <Compile Include="Query\Find.cs" />
     <Compile Include="Query\Face3Ds.cs" />
     <Compile Include="Query\Faces.cs" />

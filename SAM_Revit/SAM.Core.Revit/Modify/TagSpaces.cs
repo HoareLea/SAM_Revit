@@ -7,14 +7,14 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static List<SpaceTag> TagSpaces(this View view, ElementId elementId_Tag)
+        public static List<SpaceTag> TagSpaces(this View view, ElementId elementId_SpaceTagType, bool allowDuplicates = false)
         {
-            if (view == null || elementId_Tag == null || elementId_Tag == ElementId.InvalidElementId)
+            if (view == null || elementId_SpaceTagType == null || elementId_SpaceTagType == ElementId.InvalidElementId)
                 return null;
 
             Document document = view.Document;
 
-            SpaceTagType spaceTagType = document.GetElement(elementId_Tag) as SpaceTagType;
+            SpaceTagType spaceTagType = document.GetElement(elementId_SpaceTagType) as SpaceTagType;
             if (spaceTagType == null)
                 return null;
 
@@ -31,6 +31,19 @@ namespace SAM.Core.Revit
                 if (space == null || !space.IsValidObject)
                     continue;
 
+                if(!allowDuplicates)
+                {
+                    IList<ElementId> elementIds = space.GetDependentElements(new LogicalAndFilter( new ElementCategoryFilter(BuiltInCategory.OST_MEPSpaceTags), new ElementOwnerViewFilter(view.Id)));
+                    if(elementIds != null)
+                    {
+                        ElementId elementId_Temp = elementIds.ToList().Find(x => document.GetElement(x)?.GetTypeId() == elementId_SpaceTagType);
+                        if(elementId_Temp != null)
+                        {
+                            continue;
+                        }
+                    }
+                }
+
                 Autodesk.Revit.DB.Location location = space.Location;
                 if (location == null)
                     continue;
@@ -46,7 +59,7 @@ namespace SAM.Core.Revit
                 if (spaceTag == null)
                     continue;
 
-                if (spaceTag.GetTypeId() != elementId_Tag)
+                if (spaceTag.GetTypeId() != elementId_SpaceTagType)
                     spaceTag.SpaceTagType = spaceTagType;
 
                 result.Add(spaceTag);
@@ -55,7 +68,7 @@ namespace SAM.Core.Revit
             return result;
         }
 
-        public static List<SpaceTag> TagSpaces(this Document document, IEnumerable<string> templateNames, ElementId elementId_Tag, IEnumerable<Autodesk.Revit.DB.ViewType> viewTypes = null)
+        public static List<SpaceTag> TagSpaces(this Document document, IEnumerable<string> templateNames, ElementId elementId_Tag, IEnumerable<Autodesk.Revit.DB.ViewType> viewTypes = null, bool allowDuplicates = false)
         {
             if (document == null || elementId_Tag == null || elementId_Tag == ElementId.InvalidElementId || templateNames == null || templateNames.Count() == 0)
                 return null;
@@ -101,7 +114,7 @@ namespace SAM.Core.Revit
                     if (elementIds_DependentView.Contains(view.Id))
                         continue;
 
-                    List<SpaceTag> spaceTags = TagSpaces(view, elementId_Tag);
+                    List<SpaceTag> spaceTags = TagSpaces(view, elementId_Tag, allowDuplicates);
                     if (spaceTags != null)
                         result.AddRange(spaceTags);
                 }

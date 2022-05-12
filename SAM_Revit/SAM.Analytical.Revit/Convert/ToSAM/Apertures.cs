@@ -28,7 +28,7 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
+            Point3D point3D_Location = Geometry.Revit.Query.LocationPoint3D(familyInstance);
             if (point3D_Location == null)
             {
                 List<Solid> solids = Core.Revit.Query.Solids(familyInstance, new Options());

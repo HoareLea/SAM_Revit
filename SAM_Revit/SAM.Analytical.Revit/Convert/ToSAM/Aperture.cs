@@ -35,7 +35,7 @@ namespace SAM.Analytical.Revit
 
             ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
 
-            Point3D point3D_Location = Geometry.Revit.Query.Location(familyInstance);
+            Point3D point3D_Location = Geometry.Revit.Query.LocationPoint3D(familyInstance);
             if (point3D_Location == null)
                 return null;
 

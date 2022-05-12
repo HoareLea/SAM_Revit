@@ -240,12 +240,11 @@
   <ItemGroup>
     <Compile Include="Accuracy\Tolerance.cs" />
     <Compile Include="Classes\ElementBindingData.cs" />
-    <Compile Include="Classes\FilledRegionType.cs" />
-    <Compile Include="Classes\FilledRegion.cs" />
     <Compile Include="Classes\PurgeMaterialsWrapper.cs" />
     <Compile Include="Classes\RevitFilePreview.cs" />
     <Compile Include="Classes\RevitFilePreviewParameter.cs" />
     <Compile Include="Classes\DesignOption.cs" />
+    <Compile Include="Classes\ViewSpecificRevitInstance.cs" />
     <Compile Include="Classes\RevitType.cs" />
     <Compile Include="Classes\RevitInstance.cs" />
     <Compile Include="Classes\SAMSchema.cs" />
@@ -261,6 +260,7 @@
     <Compile Include="Create\RevitFilePreviewParameter.cs" />
     <Compile Include="Create\RevitFilePreview.cs" />
     <Compile Include="Create\Log.cs" />
+    <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
     <Compile Include="Enums\Parameter\ElementParameter.cs" />
     <Compile Include="Enums\WallKind.cs" />
     <Compile Include="Enums\ViewType.cs" />
@@ -291,6 +291,7 @@
     <Compile Include="Modify\SetSimplified.cs" />
     <Compile Include="Modify\SetValue.cs" />
     <Compile Include="Modify\SetValues.cs" />
+    <Compile Include="Query\BuiltInCategory.cs" />
     <Compile Include="Query\IntersectingElements.cs" />
     <Compile Include="Query\ReferenceConnectors.cs" />
     <Compile Include="Query\Connector.cs" />

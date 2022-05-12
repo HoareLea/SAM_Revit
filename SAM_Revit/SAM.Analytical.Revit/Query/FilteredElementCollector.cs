@@ -50,6 +50,20 @@ namespace SAM.Analytical.Revit
                 return fileteredElementCollector;
             }
 
+            if(type == typeof(Geometry.Revit.Tag))
+            {
+                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_MEPSpaceTags };
+                LogicalOrFilter logicalOrFilter = new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter));
+                return new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsNotElementType();
+            }
+
+            if (type == typeof(Geometry.Revit.TagType))
+            {
+                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_MEPSpaceTags };
+                LogicalOrFilter logicalOrFilter = new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter));
+                return new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsElementType();
+            }
+
             return null;
         }
 

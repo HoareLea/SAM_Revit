@@ -9,13 +9,24 @@ namespace SAM.Core.Revit
             if (sAMObject == null)
                 return null;
 
-            int @int;
-            if (!sAMObject.TryGetValue(ElementParameter.ElementId, out @int))
+            if (!sAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            {
                 return null;
+            }
 
-            return new ElementId(@int);
+            return ElementId(integerId);
         }
-        
+
+        public static ElementId ElementId(this IntegerId integerId)
+        {
+            if (integerId == null)
+            {
+                return null;
+            }
+
+            return new ElementId(integerId.Id);
+        }
+
         public static ElementId ElementId(this string originatingElementDescription)
         {
             if (string.IsNullOrEmpty(originatingElementDescription))

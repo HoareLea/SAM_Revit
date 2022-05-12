@@ -5,13 +5,31 @@
         public static string UniqueId(this SAMObject sAMObject)
         {
             if (sAMObject == null)
+            {
                 return null;
+            }
 
-            string uniqueId;
-            if (!sAMObject.TryGetValue(ElementParameter.UniqueId, out uniqueId))
+            if (!sAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            {
                 return null;
+            }
 
-            return uniqueId;
+            return UniqueId(integerId);
+        }
+
+        public static string UniqueId(this IntegerId integerId)
+        {
+            if (integerId == null)
+            {
+                return null;
+            }
+
+            if (!integerId.TryGetValue(RevitIdParameter.UniqueId, out string result))
+            {
+                return null;
+            }
+
+            return result;
         }
     }
 }

@@ -6,13 +6,12 @@ using System.Linq;
 
 namespace SAM.Geometry.Revit
 {
-    public class FilledRegion : Core.Revit.RevitInstance<FilledRegionType>, IBoundable2DObject
+    public class FilledRegion : Core.Revit.ViewSpecificRevitInstance<FilledRegionType>, IBoundable2DObject
     {
-        private IntegerId viewId;
         private List<Face2D> face2Ds;
         
         public FilledRegion(FilledRegionType filledRegionType, IntegerId viewId, IEnumerable<Face2D> face2Ds)
-            : base(filledRegionType)
+            : base(filledRegionType, viewId)
         {
             this.viewId = viewId == null ? null : new IntegerId(viewId);
             face2Ds = face2Ds?.ToList().FindAll(x => x != null).ConvertAll(x => new Face2D(x));
@@ -40,19 +39,6 @@ namespace SAM.Geometry.Revit
             }
         }
 
-        public IntegerId ViewId
-        {
-            get
-            {
-                if(viewId == null)
-                {
-                    return null;
-                }
-
-                return new IntegerId(viewId);
-            }
-        }
-
         public BoundingBox2D GetBoundingBox(double offset = 0)
         {
             List<BoundingBox2D> boundingBox2Ds = face2Ds?.FindAll(x => x != null).ConvertAll(x => x.GetBoundingBox(offset));
@@ -66,7 +52,7 @@ namespace SAM.Geometry.Revit
 
         public override bool FromJObject(JObject jObject)
         {
-            if(! base.FromJObject(jObject))
+            if(!base.FromJObject(jObject))
             {
                 return false;
             }
@@ -74,11 +60,6 @@ namespace SAM.Geometry.Revit
             if(jObject.ContainsKey("Face2Ds"))
             {
                 face2Ds = Create.ISAMGeometries<Face2D>(jObject.Value<JArray>("Face2Ds"));
-            }
-
-            if(jObject.ContainsKey("ViewId"))
-            {
-                viewId = new IntegerId(jObject.Value<JObject>("ViewId"));
             }
 
             return true;
@@ -95,11 +76,6 @@ namespace SAM.Geometry.Revit
             if(face2Ds != null)
             {
                 result.Add("Face2Ds", Create.JArray(face2Ds));
-            }
-
-            if (viewId != null)
-            {
-                result.Add("ViewId", viewId.ToJObject());
             }
 
             return result;

@@ -6,14 +6,14 @@ namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static List<IndependentTag> TagElements(this View view, ElementId elementId_Tag, BuiltInCategory builtInCategory, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal)
+        public static List<IndependentTag> TagElements(this View view, ElementId elementId_TagType, BuiltInCategory builtInCategory, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal, bool allowDuplicates = false)
         {
-            if (view == null || elementId_Tag == null || elementId_Tag == ElementId.InvalidElementId)
+            if (view == null || elementId_TagType == null || elementId_TagType == ElementId.InvalidElementId)
                 return null;
 
             Document document = view.Document;
 
-            FamilySymbol familySymbol = document.GetElement(elementId_Tag) as FamilySymbol;
+            FamilySymbol familySymbol = document.GetElement(elementId_TagType) as FamilySymbol;
             if (familySymbol == null)
                 return null;
 
@@ -25,17 +25,17 @@ namespace SAM.Core.Revit
             if (elementIds == null)
                 return null;
 
-            return TagElements(view, elementId_Tag, elementIds, addLeader, tagOrientation);
+            return TagElements(view, elementId_TagType, elementIds, addLeader, tagOrientation, allowDuplicates);
         }
 
-        public static List<IndependentTag> TagElements(this View view, ElementId elementId_Tag, IEnumerable<ElementId> elementIds, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal)
+        public static List<IndependentTag> TagElements(this View view, ElementId elementId_TagType, IEnumerable<ElementId> elementIds, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal, bool allowDuplicates = false)
         {
-            if (view == null || elementId_Tag == null || elementId_Tag == ElementId.InvalidElementId)
+            if (view == null || elementId_TagType == null || elementId_TagType == ElementId.InvalidElementId)
                 return null;
 
             Document document = view.Document;
 
-            FamilySymbol familySymbol = document.GetElement(elementId_Tag) as FamilySymbol;
+            FamilySymbol familySymbol = document.GetElement(elementId_TagType) as FamilySymbol;
             if (familySymbol == null)
                 return null;
 
@@ -60,6 +60,19 @@ namespace SAM.Core.Revit
                 Element element = document.GetElement(elementId);
                 if (element == null)
                     continue;
+
+                if(!allowDuplicates)
+                {
+                    IList<ElementId> elementIds_Tags = element.GetDependentElements(new LogicalAndFilter(new ElementClassFilter(typeof(IndependentTag)), new ElementOwnerViewFilter(view.Id)));
+                    if(elementIds_Tags != null && elementIds_Tags.Count != 0)
+                    {
+                        ElementId elementId_Tag = elementIds_Tags.ToList().Find(x => document.GetElement(x).GetTypeId() == elementId_TagType);
+                        if(elementId_Tag != null)
+                        {
+                            continue;
+                        }
+                    }
+                }
 
                 if (!builtInCategory_Tag.IsValidTagCategory((BuiltInCategory)element.Category.Id.IntegerValue))
                     continue;
@@ -88,8 +101,6 @@ namespace SAM.Core.Revit
                 if (xyz == null)
                     continue;
 
-
-
 #if Revit2017
                 IndependentTag independentTag = document.Create.NewTag(view, element, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
                 independentTag?.ChangeTypeId(elementId_Tag);
@@ -99,7 +110,7 @@ namespace SAM.Core.Revit
                 independentTag?.ChangeTypeId(elementId_Tag);
 #else
                 Reference reference = new Reference(element);
-                IndependentTag independentTag = IndependentTag.Create(document, elementId_Tag, view.Id, reference, addLeader, tagOrientation, xyz);
+                IndependentTag independentTag = IndependentTag.Create(document, elementId_TagType, view.Id, reference, addLeader, tagOrientation, xyz);
 #endif
 
                 if (independentTag != null)
@@ -109,9 +120,9 @@ namespace SAM.Core.Revit
             return result;
         }
     
-        public static List<IndependentTag> TagElements(this Document document, IEnumerable<string> templateNames, ElementId elementId_Tag, IEnumerable<ElementId> elementIds, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal, IEnumerable<Autodesk.Revit.DB.ViewType> viewTypes = null)
+        public static List<IndependentTag> TagElements(this Document document, IEnumerable<string> templateNames, ElementId elementId_TagType, IEnumerable<ElementId> elementIds, bool addLeader = false, TagOrientation tagOrientation = TagOrientation.Horizontal, IEnumerable<Autodesk.Revit.DB.ViewType> viewTypes = null, bool allowDuplicates = false)
         {
-            if (templateNames == null || elementId_Tag == null || elementId_Tag == ElementId.InvalidElementId)
+            if (templateNames == null || elementId_TagType == null || elementId_TagType == ElementId.InvalidElementId)
                 return null;
 
             List<View> views_All = new FilteredElementCollector(document).OfClass(typeof(View)).Cast<View>().ToList();
@@ -156,7 +167,7 @@ namespace SAM.Core.Revit
                     if (elementIds_DependentView.Contains(view.Id))
                         continue;
 
-                    List<IndependentTag> independentTags = TagElements(view, elementId_Tag, elementIds, addLeader, tagOrientation);
+                    List<IndependentTag> independentTags = TagElements(view, elementId_TagType, elementIds, addLeader, tagOrientation, allowDuplicates);
                     if (independentTags != null && independentTags.Count != 0)
                         result.AddRange(independentTags);
                 }

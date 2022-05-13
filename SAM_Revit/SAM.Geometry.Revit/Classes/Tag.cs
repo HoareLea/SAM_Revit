@@ -9,6 +9,7 @@ namespace SAM.Geometry.Revit
         private IntegerId referenceId;
         private Planar.Point2D location;
         private Planar.Point2D elbow;
+        private Planar.Point2D end;
 
         public Tag(Tag tag)
        : base(tag)
@@ -28,12 +29,13 @@ namespace SAM.Geometry.Revit
             this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
         }
 
-        public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, Planar.Point2D elbow, IntegerId referenceId)
+        public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, Planar.Point2D elbow, Planar.Point2D end, IntegerId referenceId)
     : base(tagType, viewId)
         {
             this.location = location == null ? null : new Planar.Point2D(location);
             this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
             this.elbow = elbow == null ? null : new Planar.Point2D(elbow);
+            this.end = end == null ? null : new Planar.Point2D(end);
         }
 
         public override bool FromJObject(JObject jObject)
@@ -51,6 +53,11 @@ namespace SAM.Geometry.Revit
             if (jObject.ContainsKey("Elbow"))
             {
                 location = new Planar.Point2D(jObject.Value<JObject>("Elbow"));
+            }
+
+            if (jObject.ContainsKey("End"))
+            {
+                end = new Planar.Point2D(jObject.Value<JObject>("End"));
             }
 
             if (jObject.ContainsKey("ReferenceId"))
@@ -77,6 +84,11 @@ namespace SAM.Geometry.Revit
             if (elbow != null)
             {
                 result.Add("Elbow", elbow.ToJObject());
+            }
+
+            if (end != null)
+            {
+                result.Add("End", end.ToJObject());
             }
 
             if (referenceId != null)
@@ -107,7 +119,15 @@ namespace SAM.Geometry.Revit
         {
             get
             {
-                return location == null ? null : new Planar.Point2D(location);
+                return elbow == null ? null : new Planar.Point2D(elbow);
+            }
+        }
+
+        public Planar.Point2D End
+        {
+            get
+            {
+                return end == null ? null : new Planar.Point2D(end);
             }
         }
     }

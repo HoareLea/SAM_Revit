@@ -70,6 +70,12 @@ namespace SAM.Geometry.Revit
                 {
                     result.LeaderElbow = new XYZ(elbow.U, elbow.V, 0);
                 }
+
+                UV end = tag.End?.ToRevit();
+                if (end != null)
+                {
+                    result.LeaderEnd = new XYZ(end.U, end.V, 0);
+                }
             }
 
             if(tag.TryGetValue(TagParameter.Orientation, out string orientationText) && !string.IsNullOrWhiteSpace(orientationText))

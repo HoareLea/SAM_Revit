@@ -47,19 +47,33 @@ namespace SAM.Geometry.Revit
             IntegerId viewId = Query.IntegerId(view);
             IntegerId referenceId = Query.IntegerId(spaceTag.Space);
 
-            Spatial.Point3D location = ToSAM((spaceTag.Location as LocationPoint)?.Point);
+            Spatial.Point3D location = ToSAM(spaceTag.TagHeadPosition);
+            if (location == null)
+            {
+                return null;
+            }
 
             Planar.Point2D elbow = null;
-            if(spaceTag.HasLeader && spaceTag.HasElbow)
+            Planar.Point2D end = null;
+            if (spaceTag.HasLeader )
             {
-                Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
-                if(elbow3D != null)
+                if(spaceTag.HasElbow)
                 {
-                    elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                    Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
+                    if (elbow3D != null)
+                    {
+                        elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                    }
+                }
+
+                Spatial.Point3D end3D = ToSAM(spaceTag.LeaderEnd);
+                if (end3D != null)
+                {
+                    end = new Planar.Point2D(end3D.X, end3D.Y);
                 }
             }
 
-            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, referenceId);
+            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, end, referenceId);
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTag));
@@ -114,34 +128,33 @@ namespace SAM.Geometry.Revit
             IntegerId viewId = Query.IntegerId(view);
             IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
 
-            XYZ xYZ = (independentTag.Location as LocationPoint)?.Point;
-            if(xYZ == null)
-            {
-                xYZ = independentTag.TagHeadPosition;
-            }
-
-            if(xYZ == null)
-            {
-                return null;
-            }
-
-            Spatial.Point3D location = ToSAM(xYZ);
+            Spatial.Point3D location = ToSAM(independentTag.TagHeadPosition);
             if(location == null)
             {
                 return null;
             }
 
             Planar.Point2D elbow = null;
-            if (independentTag.HasLeader && independentTag.HasElbow)
+            Planar.Point2D end = null;
+            if (independentTag.HasLeader)
             {
-                Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
-                if (elbow3D != null)
+                if (independentTag.HasElbow)
                 {
-                    elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                    Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
+                    if (elbow3D != null)
+                    {
+                        elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                    }
+                }
+
+                Spatial.Point3D end3D = ToSAM(independentTag.LeaderEnd);
+                if (end3D != null)
+                {
+                    end = new Planar.Point2D(end3D.X, end3D.Y);
                 }
             }
 
-            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, referenceId);
+            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, end, referenceId);
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(independentTag));

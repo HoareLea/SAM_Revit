@@ -69,10 +69,19 @@ namespace SAM.Geometry.Revit
 
             IndependentTag result = IndependentTag.Create(document, familySymbol.Id, view.Id, new Reference(element), leader, tagOrientation, new XYZ(uV.U, uV.V, 0));
 
-            UV elbow = tag.Elbow?.ToRevit();
-            if(elbow != null)
+            if(leader)
             {
-                result.LeaderElbow = new XYZ(elbow.U, elbow.V, 0);
+                UV elbow = tag.Elbow?.ToRevit();
+                if (elbow != null)
+                {
+                    result.LeaderElbow = new XYZ(elbow.U, elbow.V, 0);
+                }
+
+                UV end = tag.End?.ToRevit();
+                if (end != null)
+                {
+                    result.LeaderEnd = new XYZ(end.U, end.V, 0);
+                }
             }
 
             return result;

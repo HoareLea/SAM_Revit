@@ -47,9 +47,19 @@ namespace SAM.Geometry.Revit
             IntegerId viewId = Query.IntegerId(view);
             IntegerId referenceId = Query.IntegerId(spaceTag.Space);
 
-            Spatial.Point3D point3D = ToSAM((spaceTag.Location as LocationPoint)?.Point);
+            Spatial.Point3D location = ToSAM((spaceTag.Location as LocationPoint)?.Point);
 
-            result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
+            Planar.Point2D elbow = null;
+            if(spaceTag.HasElbow)
+            {
+                Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
+                if(elbow3D != null)
+                {
+                    elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                }
+            }
+
+            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, referenceId);
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTag));
@@ -113,13 +123,23 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            Spatial.Point3D point3D = ToSAM(xYZ);
-            if(point3D == null)
+            Spatial.Point3D location = ToSAM(xYZ);
+            if(location == null)
             {
                 return null;
             }
 
-            result = new Tag(tagType, viewId, new Planar.Point2D(point3D.X, point3D.Y), referenceId);
+            Planar.Point2D elbow = null;
+            if (independentTag.HasElbow)
+            {
+                Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
+                if (elbow3D != null)
+                {
+                    elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
+                }
+            }
+
+            result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, referenceId);
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(independentTag));

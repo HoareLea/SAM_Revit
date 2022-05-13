@@ -15,7 +15,7 @@ namespace SAM.Core.Revit
         public ViewSpecificRevitInstance(T revitType, IntegerId viewId)
             : base(revitType)
         {
-            this.viewId = viewId;
+            this.viewId = viewId == null ? null : new IntegerId(viewId);
         }
 
         public ViewSpecificRevitInstance(JObject jObject)

@@ -48,15 +48,38 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            Planar.Point2D point2D = tag.Location;
-            if(point2D == null)
+            UV location = tag.Location?.ToRevit();
+            if(location == null)
             {
                 return null;
             }
 
-            UV uV = point2D.ToRevit();
+            SpaceTag result = document.Create.NewSpaceTag(space, location, view);
+            if(tag.TryGetValue(TagParameter.Leader, out bool leader) && leader)
+            {
+                result.HasLeader = leader;
 
-            SpaceTag result = document.Create.NewSpaceTag(space, uV, view);
+                XYZ xYZ = (result.Location as LocationPoint)?.Point;
+                if(xYZ != null)
+                {
+                    ElementTransformUtils.MoveElement(document, result.Id, new XYZ(location.U - xYZ.X, location.V - xYZ.Y, 0));
+                }
+
+                UV elbow = tag.Elbow?.ToRevit();
+                if(elbow != null)
+                {
+                    result.LeaderElbow = new XYZ(elbow.U, elbow.V, 0);
+                }
+            }
+
+            if(tag.TryGetValue(TagParameter.Orientation, out string orientationText) && !string.IsNullOrWhiteSpace(orientationText))
+            {
+                if(System.Enum.TryParse(orientationText, out SpatialElementTagOrientation spatialElementTagOrientation) && result.TagOrientation != spatialElementTagOrientation)
+                {
+                    result.TagOrientation = spatialElementTagOrientation;
+                }
+            }
+
             result.ChangeTypeId(familySymbol.Id);
 
             return result;

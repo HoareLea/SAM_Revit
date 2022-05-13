@@ -8,6 +8,7 @@ namespace SAM.Geometry.Revit
     {
         private IntegerId referenceId;
         private Planar.Point2D location;
+        private Planar.Point2D elbow;
 
         public Tag(Tag tag)
        : base(tag)
@@ -23,8 +24,16 @@ namespace SAM.Geometry.Revit
         public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, IntegerId referenceId)
             :base(tagType, viewId)
         {
-            this.location = location;
-            this.referenceId = referenceId;
+            this.location = location == null ? null : new Planar.Point2D(location);
+            this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
+        }
+
+        public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, Planar.Point2D elbow, IntegerId referenceId)
+    : base(tagType, viewId)
+        {
+            this.location = location == null ? null : new Planar.Point2D(location);
+            this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
+            this.elbow = elbow == null ? null : new Planar.Point2D(elbow);
         }
 
         public override bool FromJObject(JObject jObject)
@@ -37,6 +46,11 @@ namespace SAM.Geometry.Revit
             if (jObject.ContainsKey("Location"))
             {
                 location = new Planar.Point2D(jObject.Value<JObject>("Location"));
+            }
+
+            if (jObject.ContainsKey("Elbow"))
+            {
+                location = new Planar.Point2D(jObject.Value<JObject>("Elbow"));
             }
 
             if (jObject.ContainsKey("ReferenceId"))
@@ -60,6 +74,11 @@ namespace SAM.Geometry.Revit
                 result.Add("Location", location.ToJObject());
             }
 
+            if (elbow != null)
+            {
+                result.Add("Elbow", elbow.ToJObject());
+            }
+
             if (referenceId != null)
             {
                 result.Add("ReferenceId", referenceId.ToJObject());
@@ -77,6 +96,14 @@ namespace SAM.Geometry.Revit
         }
 
         public Planar.Point2D Location
+        {
+            get
+            {
+                return location == null ? null : new Planar.Point2D(location);
+            }
+        }
+
+        public Planar.Point2D Elbow
         {
             get
             {

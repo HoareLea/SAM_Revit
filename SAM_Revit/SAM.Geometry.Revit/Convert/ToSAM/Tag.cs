@@ -50,7 +50,7 @@ namespace SAM.Geometry.Revit
             Spatial.Point3D location = ToSAM((spaceTag.Location as LocationPoint)?.Point);
 
             Planar.Point2D elbow = null;
-            if(spaceTag.HasElbow)
+            if(spaceTag.HasLeader && spaceTag.HasElbow)
             {
                 Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
                 if(elbow3D != null)
@@ -63,6 +63,8 @@ namespace SAM.Geometry.Revit
             if (result != null)
             {
                 result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTag));
+                result.SetValue(TagParameter.Leader, spaceTag.HasLeader);
+                result.SetValue(TagParameter.Orientation, spaceTag.TagOrientation.ToString());
 
                 Core.Revit.Modify.SetValues(spaceTag, result);
 
@@ -130,7 +132,7 @@ namespace SAM.Geometry.Revit
             }
 
             Planar.Point2D elbow = null;
-            if (independentTag.HasElbow)
+            if (independentTag.HasLeader && independentTag.HasElbow)
             {
                 Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
                 if (elbow3D != null)

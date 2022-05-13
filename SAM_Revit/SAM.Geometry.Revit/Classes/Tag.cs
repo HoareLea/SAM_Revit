@@ -52,7 +52,7 @@ namespace SAM.Geometry.Revit
 
             if (jObject.ContainsKey("Elbow"))
             {
-                location = new Planar.Point2D(jObject.Value<JObject>("Elbow"));
+                elbow = new Planar.Point2D(jObject.Value<JObject>("Elbow"));
             }
 
             if (jObject.ContainsKey("End"))

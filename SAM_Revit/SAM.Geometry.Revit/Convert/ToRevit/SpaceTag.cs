@@ -59,11 +59,11 @@ namespace SAM.Geometry.Revit
             {
                 result.HasLeader = leader;
 
-                XYZ xYZ = (result.Location as LocationPoint)?.Point;
-                if(xYZ != null)
-                {
-                    ElementTransformUtils.MoveElement(document, result.Id, new XYZ(location.U - xYZ.X, location.V - xYZ.Y, 0));
-                }
+                //XYZ xYZ = (result.Location as LocationPoint)?.Point;
+                //if(xYZ != null)
+                //{
+                //    ElementTransformUtils.MoveElement(document, result.Id, new XYZ(location.U - xYZ.X, location.V - xYZ.Y, 0));
+                //}
 
                 UV elbow = tag.Elbow?.ToRevit();
                 if(elbow != null)

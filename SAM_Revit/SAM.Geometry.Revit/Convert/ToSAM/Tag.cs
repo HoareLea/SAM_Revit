@@ -147,10 +147,13 @@ namespace SAM.Geometry.Revit
                     }
                 }
 
-                Spatial.Point3D end3D = ToSAM(independentTag.LeaderEnd);
-                if (end3D != null)
+                if(independentTag.LeaderEndCondition == LeaderEndCondition.Free)
                 {
-                    end = new Planar.Point2D(end3D.X, end3D.Y);
+                    Spatial.Point3D end3D = ToSAM(independentTag.LeaderEnd);
+                    if (end3D != null)
+                    {
+                        end = new Planar.Point2D(end3D.X, end3D.Y);
+                    }
                 }
             }
 

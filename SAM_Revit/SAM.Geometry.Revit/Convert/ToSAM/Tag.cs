@@ -57,7 +57,10 @@ namespace SAM.Geometry.Revit
             Planar.Point2D end = null;
             if (spaceTag.HasLeader )
             {
-                if(spaceTag.HasElbow)
+#if Revit2017
+
+#else
+                if (spaceTag.HasElbow)
                 {
                     Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
                     if (elbow3D != null)
@@ -65,6 +68,7 @@ namespace SAM.Geometry.Revit
                         elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
                     }
                 }
+#endif
 
                 Spatial.Point3D end3D = ToSAM(spaceTag.LeaderEnd);
                 if (end3D != null)
@@ -126,7 +130,17 @@ namespace SAM.Geometry.Revit
             }
 
             IntegerId viewId = Query.IntegerId(view);
+
+#if Revit2017
+            IntegerId referenceId = null;
+#else
             IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
+#endif
+
+            if (referenceId == null)
+            {
+                return null;
+            }
 
             Spatial.Point3D location = ToSAM(independentTag.TagHeadPosition);
             if(location == null)
@@ -138,6 +152,9 @@ namespace SAM.Geometry.Revit
             Planar.Point2D end = null;
             if (independentTag.HasLeader)
             {
+#if Revit2017
+
+#else
                 if (independentTag.HasElbow)
                 {
                     Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
@@ -146,8 +163,9 @@ namespace SAM.Geometry.Revit
                         elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
                     }
                 }
+#endif
 
-                if(independentTag.LeaderEndCondition == LeaderEndCondition.Free)
+                if (independentTag.LeaderEndCondition == LeaderEndCondition.Free)
                 {
                     Spatial.Point3D end3D = ToSAM(independentTag.LeaderEnd);
                     if (end3D != null)

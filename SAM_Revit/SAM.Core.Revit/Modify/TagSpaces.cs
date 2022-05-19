@@ -33,8 +33,12 @@ namespace SAM.Core.Revit
 
                 if(!allowDuplicates)
                 {
+#if Revit2017
+                    IList<ElementId> elementIds = null;
+#else
                     IList<ElementId> elementIds = space.GetDependentElements(new LogicalAndFilter( new ElementCategoryFilter(BuiltInCategory.OST_MEPSpaceTags), new ElementOwnerViewFilter(view.Id)));
-                    if(elementIds != null)
+#endif
+                    if (elementIds != null)
                     {
                         ElementId elementId_Temp = elementIds.ToList().Find(x => document.GetElement(x)?.GetTypeId() == elementId_SpaceTagType);
                         if(elementId_Temp != null)

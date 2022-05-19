@@ -63,8 +63,13 @@ namespace SAM.Core.Revit
 
                 if(!allowDuplicates)
                 {
+#if Revit2017
+                    IList<ElementId> elementIds_Tags = null;
+#else
                     IList<ElementId> elementIds_Tags = element.GetDependentElements(new LogicalAndFilter(new ElementClassFilter(typeof(IndependentTag)), new ElementOwnerViewFilter(view.Id)));
-                    if(elementIds_Tags != null && elementIds_Tags.Count != 0)
+#endif
+
+                    if (elementIds_Tags != null && elementIds_Tags.Count != 0)
                     {
                         ElementId elementId_Tag = elementIds_Tags.ToList().Find(x => document.GetElement(x).GetTypeId() == elementId_TagType);
                         if(elementId_Tag != null)
@@ -103,11 +108,11 @@ namespace SAM.Core.Revit
 
 #if Revit2017
                 IndependentTag independentTag = document.Create.NewTag(view, element, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
-                independentTag?.ChangeTypeId(elementId_Tag);
+                independentTag?.ChangeTypeId(elementId_TagType);
 #elif Revit2018
                 Reference reference = new Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, view.Id, reference, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
-                independentTag?.ChangeTypeId(elementId_Tag);
+                independentTag?.ChangeTypeId(elementId_TagType);
 #else
                 Reference reference = new Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, elementId_TagType, view.Id, reference, addLeader, tagOrientation, xyz);

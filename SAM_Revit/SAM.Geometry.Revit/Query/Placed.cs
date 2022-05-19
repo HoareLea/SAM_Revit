@@ -48,8 +48,12 @@ namespace SAM.Geometry.Revit
             {
                 return false;
             }
-
+#if Revit2017
+            IList<ElementId> elementIds = null;
+#else
             IList<ElementId> elementIds = element.GetDependentElements(new LogicalAndFilter(new ElementCategoryFilter(builtInCategory.Value), new ElementOwnerViewFilter(view.Id)));
+#endif
+
             if (elementIds == null || elementIds.Count == 0)
             {
                 return false;

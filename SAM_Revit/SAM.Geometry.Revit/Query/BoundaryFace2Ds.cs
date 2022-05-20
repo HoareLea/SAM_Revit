@@ -56,7 +56,7 @@ namespace SAM.Geometry.Revit
                 polygon2Ds.Add(polygon2D);
             }
 
-            return Planar.Create.Face2Ds(polygon2Ds);
+            return Planar.Create.Face2Ds(polygon2Ds, EdgeOrientationMethod.Undefined);
         }
     }
 }

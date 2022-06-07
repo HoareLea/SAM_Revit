@@ -90,7 +90,7 @@ namespace SAM.Geometry.Revit
                 }
 
                 List<ISegmentable2D> segmentable2Ds = planarIntersectionResult.GetGeometry2Ds<ISegmentable2D>();
-                if (segmentable2Ds != null && segmentable2Ds.Count != 0)
+                if (segmentable2Ds != null && segmentable2Ds.Count > 2)
                 {
                     Rectangle2D rectangle2D = Planar.Create.Rectangle2D(segmentable2Ds);
                     if (rectangle2D != null)

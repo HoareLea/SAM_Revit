@@ -151,7 +151,11 @@ namespace SAM.Analytical.Revit
                 }
 
                 if (plane_Host != null)
+                {
+                    face3Ds = face3Ds?.ConvertAll(x => plane_Host.Project(x));
                     point3D_Location = plane_Host.Project(point3D_Location);
+                }
+
 
                 HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
                 if (hostObjAttributes != null)
@@ -161,7 +165,8 @@ namespace SAM.Analytical.Revit
                     panelType_Host = hostObject.PanelType();
 
                 List<Face3D> face3Ds_Profiles = hostObject.Profiles(familyInstance.Id);
-                if(face3Ds_Profiles != null)
+                face3Ds_Profiles?.RemoveAll(x => x == null || !x.IsValid());
+                if (face3Ds_Profiles != null && face3Ds_Profiles.Count > 0)
                 {
                     if(face3Ds == null || (face3Ds != null && face3Ds_Profiles.ConvertAll(x => x.GetArea()).Sum() <= face3Ds.ConvertAll(x => x.GetArea()).Sum() ))
                     {

@@ -92,13 +92,22 @@ namespace SAM.Geometry.Revit
                 List<ISegmentable2D> segmentable2Ds = planarIntersectionResult.GetGeometry2Ds<ISegmentable2D>();
                 if (segmentable2Ds != null && segmentable2Ds.Count > 2)
                 {
-                    Rectangle2D rectangle2D = Planar.Create.Rectangle2D(segmentable2Ds);
-                    if (rectangle2D != null)
+                    List<Point2D> point2Ds = new List<Point2D>();
+                    segmentable2Ds.ForEach(x => point2Ds.AddRange(x.GetPoints()));
+                    point2Ds =  Planar.Query.ConvexHull(point2Ds);
+                    if(point2Ds != null && point2Ds.Count > 2)
                     {
-                        result.Add(new Face3D(planarIntersectionResult.Plane.Convert(rectangle2D)));
+                        Polygon2D polygon2D = new Polygon2D(point2Ds);
+                        if(segmentable2Ds.ConvertAll(x => x.GetLength()).Sum() / polygon2D.GetLength() > 0.51)
+                        {
+                            Rectangle2D rectangle2D = Planar.Create.Rectangle2D(point2Ds);
+                            if (rectangle2D != null)
+                            {
+                                result.Add(new Face3D(planarIntersectionResult.Plane.Convert(rectangle2D)));
+                            }
+                        }
                     }
                 }
-
             }
 
             return result;

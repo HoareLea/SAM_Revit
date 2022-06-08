@@ -6,18 +6,23 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Convert
     {
-        public static List<T> ToSAM_Geometries<T>(this Element element, bool includeNonVisibleObjects = false) where T: ISAMGeometry
+        public static List<T> ToSAM_Geometries<T>(this Element element, Options options) where T : ISAMGeometry
         {
             Transform transform = null;
             if (element is FamilyInstance)
                 transform = ((FamilyInstance)element).GetTotalTransform();
 
+            return ToSAM<T>(element.get_Geometry(options), transform);
+        }
+
+        public static List<T> ToSAM_Geometries<T>(this Element element, bool includeNonVisibleObjects = false) where T: ISAMGeometry
+        {
             Options options = new Options();
             options.ComputeReferences = false;
             options.DetailLevel = ViewDetailLevel.Fine;
             options.IncludeNonVisibleObjects = includeNonVisibleObjects;
 
-            return ToSAM<T>(element.get_Geometry(options), transform);
+            return ToSAM_Geometries<T>(element, options);
         }
 
         public static List<T> ToSAM<T>(this GeometryElement geometryElement, Transform transform = null) where T : ISAMGeometry

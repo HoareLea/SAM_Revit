@@ -4,6 +4,7 @@ using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Revit
 {
@@ -47,147 +48,44 @@ namespace SAM.Analytical.Revit
 
             List<Face3D> face3Ds = null;
 
+
             PanelType panelType_Host = PanelType.Undefined;
             BuiltInCategory builtInCategory_Host = BuiltInCategory.INVALID;
+            HostObject hostObject = null;
+
             if (familyInstance.Host != null)
             {
-                HostObject hostObject = familyInstance.Host as HostObject;
+                hostObject = familyInstance.Host as HostObject;
+
                 if (hostObject != null)
                 {
                     builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
-
-                    Geometry.Spatial.Plane plane_Host = null;
-                    if (hostObject is CurtainSystem && familyInstance is Autodesk.Revit.DB.Panel)
-                    {
-                        Autodesk.Revit.DB.Panel panel = (Autodesk.Revit.DB.Panel)familyInstance;
-                        ElementId uGridLineElementId = null;
-                        ElementId vGridLineElementId = null;
-
-                        panel.GetRefGridLines(ref uGridLineElementId, ref vGridLineElementId);
-
-                        CurtainSystem curtainSystem = (CurtainSystem)hostObject;
-
-                        List<Polygon3D> polygon3Ds = curtainSystem.CurtainCell(uGridLineElementId, vGridLineElementId)?.Polygon3Ds();
-                        if (polygon3Ds != null && polygon3Ds.Count != 0)
-                        {
-                            polygon3Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
-                            plane_Host = polygon3Ds[0].GetPlane();
-                        }
-                    }
-                    else
-                    {
-                        List<Face3D> face3Ds_Temp = hostObject.Profiles();
-                        if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
-                        {
-                            plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
-                        }
-                    }
-
-                    if (plane_Host != null)
-                        point3D_Location = plane_Host.Project(point3D_Location);
-
-                    HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
-                    if (hostObjAttributes != null)
-                        panelType_Host = hostObjAttributes.PanelType();
-
-                    if (panelType_Host == PanelType.Undefined)
-                        panelType_Host = hostObject.PanelType();
-
-                    //Method 1 of extracting Geometry
-                    face3Ds = hostObject.Profiles(familyInstance.Id);
                 }
             }
 
-            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
-            if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
-                apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
-
-            Vector3D axisX = null;
-            Vector3D normal = null;
-            Vector3D axisY = null;
-            if (builtInCategory_Host == BuiltInCategory.OST_Roofs)
-            {
-                axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
-                axisY = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
-                normal = Geometry.Spatial.Query.AxisY(axisY, axisX);
-            }
-            else
-            {
-                axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
-                normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
-                axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
-            }
-
-
-            Geometry.Spatial.Plane plane = Geometry.Spatial.Create.Plane(point3D_Location, axisX, axisY);
-            if (!plane.Normal.SameHalf(normal))
-                plane.FlipZ(false);
-
-            //Method 2 of extracting Geometry
-            //if (face3Ds == null || face3Ds.Count == 0)
-            //{
-            //    List<Point2D> point2Ds = null;
-
-            //    List<ISegmentable3D> segmentable3Ds = Geometry.Revit.Convert.ToSAM_Geometries<ISegmentable3D>(familyInstance, true);
-            //    if ((segmentable3Ds == null || segmentable3Ds.Count == 0) && familyInstance is Autodesk.Revit.DB.Panel)
-            //    {
-            //        List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance, true);
-            //        if (shells != null && shells.Count > 0)
-            //        {
-            //            foreach (Shell shell in shells)
-            //            {
-            //                List<ISegmentable3D> segmentable3Ds_Temp = shell?.GetEdge3Ds()?.ConvertAll(x => x as ISegmentable3D);
-            //                if (segmentable3Ds_Temp != null)
-            //                {
-            //                    segmentable3Ds_Temp.ForEach(x => segmentable3Ds.AddRange(x.GetSegments()));
-            //                }
-            //            }
-            //        }
-            //    }
-
-            //    if (segmentable3Ds != null)
-            //    {
-            //        point2Ds = new List<Point2D>();
-            //        List<ISegmentable2D> segmentable2Ds = new List<ISegmentable2D>();
-            //        foreach (ISegmentable3D segmentable3D in segmentable3Ds)
-            //        {
-            //            ICurve3D curve3D = plane.Project(segmentable3D as ICurve3D);
-            //            if (curve3D == null)
-            //            {
-            //                continue;
-            //            }
-
-            //            ISegmentable2D segmentable2D = plane.Convert(curve3D) as ISegmentable2D;
-            //            if (segmentable2D == null)
-            //            {
-            //                continue;
-            //            }
-
-
-            //            List<Point2D> point2Ds_Temp = segmentable2D?.GetPoints();
-            //            if (point2Ds_Temp != null && point2Ds_Temp.Count > 0)
-            //            {
-            //                point2Ds_Temp.ForEach(x => point2Ds.Add(x));
-            //            }
-            //        }
-            //    }
-
-            //    if (point2Ds == null || point2Ds.Count < 3)
-            //    {
-            //        return result;
-            //    }
-
-            //    Face3D face3D = new Face3D(plane, Geometry.Planar.Create.Rectangle2D(point2Ds));
-            //    if (face3D != null && face3D.IsValid() && face3D.GetArea() > Core.Tolerance.MacroDistance)
-            //    {
-            //        face3Ds = new List<Face3D>() { face3D };
-            //    }
-
-            //}
-
-            //Method 3 of extracting Geometry
+            //Method 1 of extracting Geometry
             if (face3Ds == null || face3Ds.Count == 0)
             {
+                Vector3D axisX = null;
+                Vector3D normal = null;
+                Vector3D axisY = null;
+                if (builtInCategory_Host == BuiltInCategory.OST_Roofs)
+                {
+                    axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                    axisY = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                    normal = Geometry.Spatial.Query.AxisY(axisY, axisX);
+                }
+                else
+                {
+                    axisX = familyInstance.HandOrientation.ToSAM_Vector3D(false);
+                    normal = familyInstance.FacingOrientation.ToSAM_Vector3D(false);
+                    axisY = Geometry.Spatial.Query.AxisY(normal, axisX);
+                }
+
+                Geometry.Spatial.Plane plane = Geometry.Spatial.Create.Plane(point3D_Location, axisX, axisY);
+                if (!plane.Normal.SameHalf(normal))
+                    plane.FlipZ(false);
+
                 List<Shell> shells = Geometry.Revit.Convert.ToSAM_Geometries<Shell>(familyInstance);
                 if (shells == null || shells.Count == 0)
                     return null;
@@ -220,7 +118,63 @@ namespace SAM.Analytical.Revit
                 }
             }
 
-            if(face3Ds == null || face3Ds.Count == 0)
+            //Method 2 of extracting Geometry
+            if (hostObject != null)
+            {
+                builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
+
+                Geometry.Spatial.Plane plane_Host = null;
+                if (hostObject is CurtainSystem && familyInstance is Autodesk.Revit.DB.Panel)
+                {
+                    Autodesk.Revit.DB.Panel panel = (Autodesk.Revit.DB.Panel)familyInstance;
+                    ElementId uGridLineElementId = null;
+                    ElementId vGridLineElementId = null;
+
+                    panel.GetRefGridLines(ref uGridLineElementId, ref vGridLineElementId);
+
+                    CurtainSystem curtainSystem = (CurtainSystem)hostObject;
+
+                    List<Polygon3D> polygon3Ds = curtainSystem.CurtainCell(uGridLineElementId, vGridLineElementId)?.Polygon3Ds();
+                    if (polygon3Ds != null && polygon3Ds.Count != 0)
+                    {
+                        polygon3Ds.Sort((x, y) => y.GetArea().CompareTo(x.GetArea()));
+                        plane_Host = polygon3Ds[0].GetPlane();
+                    }
+                }
+                else
+                {
+                    List<Face3D> face3Ds_Temp = hostObject.Profiles();
+                    if (face3Ds_Temp != null && face3Ds_Temp.Count != 0)
+                    {
+                        plane_Host = face3Ds_Temp.Closest(point3D_Location)?.GetPlane();
+                    }
+                }
+
+                if (plane_Host != null)
+                    point3D_Location = plane_Host.Project(point3D_Location);
+
+                HostObjAttributes hostObjAttributes = familyInstance.Document.GetElement(hostObject.GetTypeId()) as HostObjAttributes;
+                if (hostObjAttributes != null)
+                    panelType_Host = hostObjAttributes.PanelType();
+
+                if (panelType_Host == PanelType.Undefined)
+                    panelType_Host = hostObject.PanelType();
+
+                List<Face3D> face3Ds_Profiles = hostObject.Profiles(familyInstance.Id);
+                if(face3Ds_Profiles != null)
+                {
+                    if(face3Ds == null || (face3Ds != null && face3Ds_Profiles.ConvertAll(x => x.GetArea()).Sum() <= face3Ds.ConvertAll(x => x.GetArea()).Sum() ))
+                    {
+                        face3Ds = face3Ds_Profiles;
+                    }
+                }
+            }
+
+            ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction(familyInstance, convertSettings);
+            if (apertureConstruction == null && panelType_Host != PanelType.Undefined)
+                apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Host, familyInstance.ApertureType()); //Default Aperture Construction
+
+            if (face3Ds == null || face3Ds.Count == 0)
             {
                 return result;
             }
@@ -246,10 +200,10 @@ namespace SAM.Analytical.Revit
             }
 
             result = new List<Aperture>();
-            foreach(Face3D face3D_Temp in face3Ds)
+            foreach (Face3D face3D_Temp in face3Ds)
             {
                 Aperture aperture = Analytical.Create.Aperture(apertureConstruction, face3D_Temp);
-                if(aperture == null)
+                if (aperture == null)
                 {
                     continue;
                 }

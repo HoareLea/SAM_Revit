@@ -13,32 +13,52 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            Options options = hostObject.Document.Application.Create.NewGeometryOptions();
-            if(options == null)
-            {
-                return null;
-            }
-
-            GeometryElement geometryElement = hostObject.get_Geometry(options);
-            if(geometryElement == null)
+            List<Autodesk.Revit.DB.Face> faces = Faces(hostObject);
+            if(faces == null)
             {
                 return null;
             }
 
             List<Autodesk.Revit.DB.Face> result = new List<Autodesk.Revit.DB.Face>();
+            foreach (Autodesk.Revit.DB.Face face in faces)
+            {
+                if (hostObject.GetGeneratingElementIds(face).Any(x => x == generatingElementId))
+                {
+                    result.Add(face);
+                }
+            }
 
-            List<Solid> solids = new List<Solid>();
-            foreach(GeometryObject geometryObject in geometryElement)
+            return result;
+        }
+
+        public static List<Autodesk.Revit.DB.Face> Faces(this Element element)
+        {
+            if (element == null)
+            {
+                return null;
+            }
+
+            Options options = element.Document.Application.Create.NewGeometryOptions();
+            if (options == null)
+            {
+                return null;
+            }
+
+            GeometryElement geometryElement = element.get_Geometry(options);
+            if (geometryElement == null)
+            {
+                return null;
+            }
+
+            List<Autodesk.Revit.DB.Face> result = new List<Autodesk.Revit.DB.Face>();
+            foreach (GeometryObject geometryObject in geometryElement)
             {
                 List<Autodesk.Revit.DB.Face> faces = new List<Autodesk.Revit.DB.Face>();
                 if (geometryObject is Solid)
                 {
-                    foreach(Autodesk.Revit.DB.Face face in ((Solid)geometryObject).Faces)
+                    foreach (Autodesk.Revit.DB.Face face in ((Solid)geometryObject).Faces)
                     {
-                        if (hostObject.GetGeneratingElementIds(face).Any(x => x == generatingElementId))
-                        {
-                            result.Add(face);
-                        }
+                        result.Add(face);
                     }
                 }
             }

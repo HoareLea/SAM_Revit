@@ -14,7 +14,7 @@ namespace SAM.Analytical.Revit
 
             if (type == typeof(Panel))
             {
-                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_Walls, Autodesk.Revit.DB.BuiltInCategory.OST_Floors, Autodesk.Revit.DB.BuiltInCategory.OST_Roofs };
+                List<BuiltInCategory> builtInCategories = new List<BuiltInCategory> { Autodesk.Revit.DB.BuiltInCategory.OST_Walls, Autodesk.Revit.DB.BuiltInCategory.OST_Floors, Autodesk.Revit.DB.BuiltInCategory.OST_Roofs, Autodesk.Revit.DB.BuiltInCategory.OST_MEPSpaceSeparationLines, Autodesk.Revit.DB.BuiltInCategory.OST_RoomSeparationLines };
                 LogicalOrFilter logicalOrFilter = new LogicalOrFilter(builtInCategories.ConvertAll(x => new ElementCategoryFilter(x) as ElementFilter));
                 return new FilteredElementCollector(document).WherePasses(logicalOrFilter).WhereElementIsNotElementType();
             }

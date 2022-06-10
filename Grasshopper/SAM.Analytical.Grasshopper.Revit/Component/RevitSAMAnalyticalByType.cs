@@ -169,7 +169,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 
-            IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform);
+            IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform, phase);
 
 
             index = Params.IndexOfOutputParam("analyticalObjects");

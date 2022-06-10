@@ -6,6 +6,7 @@ using SAM.Core.Grasshopper;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
@@ -47,6 +48,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 result.Add(new GH_SAMParam(param_String, ParamVisibility.Binding));
                 
                 result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "revitLinkInstance_", NickName = "revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
+
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "phase_", NickName = "phase_", Description = "Revit Phase", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
@@ -142,6 +145,27 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
             }
 
+            Phase phase = null;
+
+            index = Params.IndexOfInputParam("phase_");
+            if (index != -1)
+            {
+                dataAccess.GetData(index, ref objectWrapper);
+                if(objectWrapper != null && document != null)
+                {
+                    if(objectWrapper.Value is string)
+                    {
+                        string name = (string)objectWrapper.Value;
+                        phase = document.Phases.Cast<Phase>().ToList().Find(x => x.Name == name);
+                    }
+                    else
+                    {
+                        Core.Grasshopper.Revit.Query.TryGetElement(objectWrapper, out phase, document);
+                    }
+
+
+                }
+            }
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 

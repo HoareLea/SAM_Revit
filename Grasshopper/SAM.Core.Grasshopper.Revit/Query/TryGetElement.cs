@@ -37,6 +37,11 @@ namespace SAM.Core.Grasshopper.Revit
                     }
                 }
             }
+            else if(obj is int)
+            {
+                ElementId elementId = new ElementId((int)obj);
+                element = (obj.Document as Document).GetElement(elementId) as T;
+            }
             else
             {
                 ElementId elementId = obj.Id as ElementId;

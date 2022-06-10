@@ -101,7 +101,7 @@ namespace SAM.Analytical.Revit
             return ToSAM(document, type, convertSettings, transform);
         }
     
-        public static IEnumerable<Core.SAMObject> ToSAM(this Document document, System.Type type, Core.Revit.ConvertSettings convertSettings, Transform transform = null)
+        public static IEnumerable<Core.SAMObject> ToSAM(this Document document, System.Type type, Core.Revit.ConvertSettings convertSettings, Transform transform = null, Phase phase = null)
         {
             if (document == null || type == null)
                 return null;
@@ -109,9 +109,23 @@ namespace SAM.Analytical.Revit
             if (transform == null)
                 transform = Transform.Identity;
 
-            List<Element> elements = Query.FilteredElementCollector(document, type)?.ToList();
+            FilteredElementCollector filteredElementCollector = Query.FilteredElementCollector(document, type);
+
+            List<Element> elements = filteredElementCollector?.ToList();
             if (elements == null)
                 return null;
+
+            if(phase != null)
+            {
+                for (int i = elements.Count - 1; i >= 0; i--)
+                {
+                    ElementOnPhaseStatus elementOnPhaseStatus = elements[i].GetPhaseStatus(phase.Id);
+                    if(elementOnPhaseStatus == ElementOnPhaseStatus.Past || elementOnPhaseStatus == ElementOnPhaseStatus.Demolished || elementOnPhaseStatus == ElementOnPhaseStatus.Future)
+                    {
+                        elements.RemoveAt(i);
+                    }
+                }
+            }
 
             List<Core.SAMObject> result = new List<Core.SAMObject>();
             for (int i = 0; i < elements.Count; i++)

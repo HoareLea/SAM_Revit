@@ -6,19 +6,18 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static List<Face3D> Face3Ds(this HostObject hostObject, ElementId generatingElementId)
+        public static List<Face3D> Face3Ds(this IEnumerable<Autodesk.Revit.DB.Face> faces)
         {
-            List<Autodesk.Revit.DB.Face> faces = Faces(hostObject, generatingElementId);
             if(faces == null)
             {
                 return null;
             }
 
             List<Face3D> result = new List<Face3D>();
-            foreach(Autodesk.Revit.DB.Face face in faces)
+            foreach (Autodesk.Revit.DB.Face face in faces)
             {
                 List<Face3D> face3Ds = face?.ToSAM();
-                if(face3Ds == null)
+                if (face3Ds == null)
                 {
                     continue;
                 }
@@ -27,6 +26,28 @@ namespace SAM.Geometry.Revit
             }
 
             return result;
+        }
+
+        public static List<Face3D> Face3Ds(this HostObject hostObject, ElementId generatingElementId)
+        {
+            List<Autodesk.Revit.DB.Face> faces = Faces(hostObject, generatingElementId);
+            if(faces == null)
+            {
+                return null;
+            }
+
+            return Face3Ds(faces);
+        }
+
+        public static List<Face3D> Face3Ds(this Element element)
+        {
+            List<Autodesk.Revit.DB.Face> faces = Faces(element);
+            if (faces == null)
+            {
+                return null;
+            }
+
+            return Face3Ds(faces);
         }
 
         public static List<Face3D> Face3Ds(this Autodesk.Revit.DB.FilledRegion filledRegion, double tolerance = Core.Tolerance.Distance)

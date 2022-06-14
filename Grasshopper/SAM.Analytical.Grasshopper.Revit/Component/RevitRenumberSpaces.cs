@@ -44,7 +44,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_spaces_", NickName = "_spaces_", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_spaces_", NickName = "_spaces_", Description = "Revit Spaces", Access = GH_ParamAccess.list, Optional = true }, ParamRelevance.Binding));
 
                 global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
@@ -62,7 +62,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces", NickName = "spaces", Description = "Revit Spaces", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
-                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "numbers", NickName = "numbers", Description = "Numbers", Access = GH_ParamAccess.list}, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "numbers", NickName = "numbers", Description = "Numbers", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
@@ -84,10 +84,9 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Autodesk.Revit.DB.Mechanical.Space> spaces = new List<Autodesk.Revit.DB.Mechanical.Space>();
             index = Params.IndexOfInputParam("_spaces_");
-            if (index == -1 || !dataAccess.GetDataList(index, spaces))
+            if (index != -1)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                return;
+                dataAccess.GetDataList(index, spaces);
             }
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
@@ -108,8 +107,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 dataAccess.SetDataList(index, dictionary?.Values);
 
             index = Params.IndexOfOutputParam("numbers");
-            if(index != -1)
-            dataAccess.SetDataList(index, dictionary?.Keys);
+            if (index != -1)
+                dataAccess.SetDataList(index, dictionary?.Keys);
 
             if (index_Successful != -1)
                 dataAccess.SetData(index_Successful, dictionary != null && dictionary.Count != 0);

@@ -17,7 +17,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -45,7 +45,11 @@ namespace SAM.Core.Grasshopper.Revit
                 result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() {Name = "_revitLinkInstance", NickName = "_revitLinkInstance", Description = "Revit Link Instance", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 result.Add(new ParamDefinition(new GooTextMapParam() { Name = "_textMap_", NickName = "_textMap_", Description = "SAM Core TextMap", Optional = true, Access = GH_ParamAccess.item }, ParamRelevance.Occasional));
 
-                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_rename_", NickName = "_rename", Description = "Rename", Access = GH_ParamAccess.item };
+                param_Boolean.SetPersistentData(false);
+                result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
                 result.Add(new ParamDefinition(param_Boolean, ParamRelevance.Binding));
                 return result.ToArray();
@@ -110,10 +114,13 @@ namespace SAM.Core.Grasshopper.Revit
             if (index != -1)
                 dataAccess.GetData(index, ref textMap);
 
+            bool rename = false;
+            index = Params.IndexOfInputParam("_rename");
+            if (index == -1 || !dataAccess.GetData(index, ref rename))
+                rename = false;
 
             Transform transform = revitLinkInstance.GetTotalTransform();
             Document document_Linked = revitLinkInstance.GetLinkDocument();
-
 
             List<Autodesk.Revit.DB.Mechanical.Space> result = new List<Autodesk.Revit.DB.Mechanical.Space>();
 
@@ -151,6 +158,21 @@ namespace SAM.Core.Grasshopper.Revit
 
                     if (textMap != null)
                         Core.Revit.Modify.CopyValues(room, space, textMap);
+
+                    if(rename)
+                    {
+                        string name = room.get_Parameter(BuiltInParameter.ROOM_NAME)?.AsString();
+                        if(!string.IsNullOrEmpty(name))
+                        {
+                            space.get_Parameter(BuiltInParameter.ROOM_NAME).Set(name);
+                        }
+
+                        string number = room.get_Parameter(BuiltInParameter.ROOM_NUMBER)?.AsString();
+                        if (!string.IsNullOrEmpty(number))
+                        {
+                            space.get_Parameter(BuiltInParameter.ROOM_NUMBER).Set(number);
+                        }
+                    }
 
                     result.Add(space);
                 }

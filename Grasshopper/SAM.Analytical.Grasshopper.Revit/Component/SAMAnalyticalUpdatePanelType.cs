@@ -30,7 +30,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdatePanelType()
           : base("SAMAnalytical.UpdatePanelType", "SAManalytical.UpdatePanelType",
-              "Modify Update Analytical Construction from csv file heading column: \nPrefix, Name, Width, Function,SAM_BuildingElementType, template Family. New Name Family,SAM Types \n  in Template ",
+              "Revit got limitation and in order to create some element change in type is required\nExample..tilted wall or floor need to be change to Roof etc\nThis node just recognize by normal orientation and modifies PanelType but keeps original construction ",
               "SAM", "Revit")
         {
         }
@@ -57,7 +57,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analytical", NickName = "analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
-                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType that already exist in Revit and match by name", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }

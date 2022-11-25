@@ -16,7 +16,17 @@ namespace SAM.Analytical.Revit
             HostObjAttributes result = null;
             if(panelType != PanelType.Shade)
             {
-                result = convertSettings?.GetObject<HostObjAttributes>(construction.Guid);
+                List<HostObjAttributes> hostObjAttributes_Temp = convertSettings?.GetObjects<HostObjAttributes>(construction.Guid);
+                if(hostObjAttributes_Temp != null && hostObjAttributes_Temp.Count > 0)
+                {
+                    foreach(HostObjAttributes hostObjAttributes in hostObjAttributes_Temp)
+                    {
+                        if(panelType.PanelGroup() ==  Query.PanelGroup(hostObjAttributes))
+                        {
+                            return hostObjAttributes;
+                        }
+                    }
+                }
             }
             else
             {

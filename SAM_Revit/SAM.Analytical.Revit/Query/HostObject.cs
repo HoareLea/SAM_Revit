@@ -13,7 +13,7 @@ namespace SAM.Analytical.Revit
             PanelGroup panelGroup = Analytical.Query.PanelGroup(Analytical.Query.PanelType(aperture.Plane.Normal));
             switch (panelGroup)
             {
-                case PanelGroup.Wall:
+                case Analytical.PanelGroup.Wall:
                     IEnumerable<Autodesk.Revit.DB.Wall> walls = Geometry.Revit.Query.Elements<Autodesk.Revit.DB.Wall>(document, aperture.GetBoundingBox());
                     
                     if (walls != null && walls.Count() != 0)
@@ -42,12 +42,12 @@ namespace SAM.Analytical.Revit
                     }
                     
                     break;
-                case PanelGroup.Floor:
+                case Analytical.PanelGroup.Floor:
                     IEnumerable<Element> elements_Floor = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), Autodesk.Revit.DB.BuiltInCategory.OST_Floors);
                     if (elements_Floor != null && elements_Floor.Count() != 0)
                         result = elements_Floor.First() as HostObject;
                     break;
-                case PanelGroup.Roof:
+                case Analytical.PanelGroup.Roof:
                     IEnumerable<Element> elements_Roof = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), Autodesk.Revit.DB.BuiltInCategory.OST_Roofs);
                     if (elements_Roof != null && elements_Roof.Count() != 0)
                         result = elements_Roof.First() as HostObject;
@@ -58,12 +58,12 @@ namespace SAM.Analytical.Revit
             {
                 switch (panelGroup)
                 {
-                    case PanelGroup.Roof:
+                    case Analytical.PanelGroup.Roof:
                         IEnumerable<Element> elements_Floor = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), Autodesk.Revit.DB.BuiltInCategory.OST_Floors);
                         if (elements_Floor != null && elements_Floor.Count() != 0)
                             result = elements_Floor.First() as HostObject;
                         break;
-                    case PanelGroup.Floor:
+                    case Analytical.PanelGroup.Floor:
                         IEnumerable<Element> elements_Roof = Geometry.Revit.Query.Elements(document, aperture.GetBoundingBox(), Autodesk.Revit.DB.BuiltInCategory.OST_Roofs);
                         if (elements_Roof != null && elements_Roof.Count() != 0)
                             result = elements_Roof.First() as HostObject;

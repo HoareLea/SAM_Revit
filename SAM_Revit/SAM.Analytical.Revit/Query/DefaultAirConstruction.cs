@@ -11,9 +11,9 @@ namespace SAM.Analytical.Revit
                 return null;
 
             Construction result = constructionLibrary.GetConstructions(panelGroup)?.FirstOrDefault();
-            if(result == null || panelGroup == PanelGroup.Roof)
+            if(result == null || panelGroup == Analytical.PanelGroup.Roof)
             {
-                result = constructionLibrary.GetConstructions(PanelGroup.Floor)?.FirstOrDefault();
+                result = constructionLibrary.GetConstructions(Analytical.PanelGroup.Floor)?.FirstOrDefault();
             }
 
             return result;

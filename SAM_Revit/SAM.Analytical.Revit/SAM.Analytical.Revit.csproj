@@ -248,6 +248,8 @@
     <Compile Include="Modify\TrimOrExtendWall.cs" />
     <Compile Include="Modify\DuplicateByName.cs" />
     <Compile Include="Modify\DuplicateByType.cs" />
+    <Compile Include="Query\PanelGroup.cs" />
+    <Compile Include="Query\UpdatePanelType.cs" />
     <Compile Include="Query\DefaultToolsParameterMapPath.cs" />
     <Compile Include="Query\DefaultToolsParameterMap.cs" />
     <Compile Include="Query\New\FilteredElementCollector.cs" />

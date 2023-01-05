@@ -5,6 +5,8 @@ using SAM.Core.Grasshopper.Revit.Properties;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace SAM.Core.Grasshopper.Revit
 {
@@ -112,6 +114,20 @@ namespace SAM.Core.Grasshopper.Revit
         protected override GH_GetterResult Prompt_Singular(ref GooConvertSettings value)
         {
             throw new NotImplementedException();
+        }
+
+        public override void AppendAdditionalMenuItems(ToolStripDropDown menu)
+        {
+            Menu_AppendItem(menu, "Save As...", Menu_SaveAs, VolatileData.AllData(true).Any());
+
+            //Menu_AppendSeparator(menu);
+
+            base.AppendAdditionalMenuItems(menu);
+        }
+
+        private void Menu_SaveAs(object sender, EventArgs e)
+        {
+            Core.Grasshopper.Query.SaveAs(VolatileData);
         }
     }
 }

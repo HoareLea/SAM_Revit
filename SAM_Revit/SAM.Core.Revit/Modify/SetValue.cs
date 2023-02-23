@@ -99,7 +99,11 @@ namespace SAM.Core.Revit
                 }
 
                 //YesNo Type parameter
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
                 if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.YesNo)
+#else
+                if (parameter.Definition.GetDataType() == SpecTypeId.Boolean.YesNo)
+#endif
                 {
                     value_Temp = value_Temp.ToUpper().Trim();
 
@@ -181,7 +185,11 @@ namespace SAM.Core.Revit
             if (double.IsNaN(value_Temp))
                 return false;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
             if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.Invalid)
+#else
+            if (parameter.Definition.GetDataType() == SpecTypeId.Custom)
+#endif
                 return parameter.Set(value_Temp);
 
 #if Revit2017 || Revit2018 || Revit2019 || Revit2020

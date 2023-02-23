@@ -80,13 +80,21 @@ namespace SAM.Geometry.Revit
                 UV elbow = tag.Elbow?.ToRevit();
                 if (elbow != null)
                 {
+#if Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
                     result.LeaderElbow = new XYZ(elbow.U, elbow.V, 0);
+#else
+                    result.SetLeaderElbow(new Reference(familySymbol), new XYZ(elbow.U, elbow.V, 0));
+#endif
                 }
 
                 UV end = tag.End?.ToRevit();
                 if (end != null)
                 {
+#if Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
                     result.LeaderEnd = new XYZ(end.U, end.V, 0);
+#else
+                    result.SetLeaderEnd(new Reference(familySymbol), new XYZ(elbow.U, elbow.V, 0));
+#endif
                 }
             }
 

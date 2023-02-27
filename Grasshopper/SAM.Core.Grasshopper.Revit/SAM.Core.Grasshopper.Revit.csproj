@@ -320,37 +320,49 @@
       if "$(ConfigurationName)" == "Debug2020" (
       set Version=Revit 2020
       set DirectoryName=Libraries-Inside-Revit-2020
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2020
       )
 
       if "$(ConfigurationName)" == "Debug2021" (
       set Version=Revit 2021
       set DirectoryName=Libraries-Inside-Revit-2021
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2021
       )
 
       if "$(ConfigurationName)" == "Debug2022" (
       set Version=Revit 2022
       set DirectoryName=Libraries-Inside-Revit-2022
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2022
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2022
       )
 
-      if "$(ConfigurationName)" == "Release2020" (
-      set Version=Revit 2020
-      set DirectoryName=Libraries-Inside-Revit-2020
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2020
+      if "$(ConfigurationName)" == "Debug2022" (
+      set Version=Revit 2022
+      set DirectoryName=Libraries-Inside-Revit-2022
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2022
+      )
+
+      if "$(ConfigurationName)" == "Release2023" (
+      set Version=Revit 2023
+      set DirectoryName=Libraries-Inside-Revit-2023
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2023
       )
 
       if "$(ConfigurationName)" == "Release2021" (
       set Version=Revit 2021
       set DirectoryName=Libraries-Inside-Revit-2021
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2021
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2021
       )
 
       if "$(ConfigurationName)" == "Release2022" (
       set Version=Revit 2022
       set DirectoryName=Libraries-Inside-Revit-2022
-      set SAM_REVIT_DIR=%APPDATA%\SAM\Revit 2022
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2022
+      )
+
+      if "$(ConfigurationName)" == "Release2023" (
+      set Version=Revit 2023
+      set DirectoryName=Libraries-Inside-Revit-2023
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2023
       )
 
       copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"

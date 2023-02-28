@@ -335,16 +335,16 @@
       set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2022
       )
 
-      if "$(ConfigurationName)" == "Debug2022" (
-      set Version=Revit 2022
-      set DirectoryName=Libraries-Inside-Revit-2022
-      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2022
-      )
-
-      if "$(ConfigurationName)" == "Release2023" (
+      if "$(ConfigurationName)" == "Debug2023" (
       set Version=Revit 2023
       set DirectoryName=Libraries-Inside-Revit-2023
       set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2023
+      )
+
+      if "$(ConfigurationName)" == "Release2020" (
+      set Version=Revit 2020
+      set DirectoryName=Libraries-Inside-Revit-2020
+      set SAM_REVIT_DIR=%25APPDATA%25\SAM\Revit 2020
       )
 
       if "$(ConfigurationName)" == "Release2021" (

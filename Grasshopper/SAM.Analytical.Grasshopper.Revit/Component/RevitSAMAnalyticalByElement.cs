@@ -135,15 +135,22 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
             else
             {
-                try
+                if(element is Level)
                 {
-                    sAMObjects = Analytical.Revit.Convert.ToSAM(element, convertSettings);
+                    sAMObjects = new List<Core.ISAMObject>() { Architectural.Revit.Convert.ToSAM((Level)element, convertSettings) };
                 }
-                catch (Exception exception)
+                else
                 {
-                    message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                    dataAccess.SetData(1, message);
+                    try
+                    {
+                        sAMObjects = Analytical.Revit.Convert.ToSAM(element, convertSettings);
+                    }
+                    catch (Exception exception)
+                    {
+                        message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
+                        AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
+                        dataAccess.SetData(1, message);
+                    }
                 }
             }
 

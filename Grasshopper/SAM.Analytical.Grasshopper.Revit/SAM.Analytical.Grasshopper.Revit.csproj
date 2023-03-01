@@ -226,6 +226,10 @@
     <Reference Include="SAM.Analytical.Grasshopper">
       <HintPath>..\..\..\SAM\build\SAM.Analytical.Grasshopper.dll</HintPath>
     </Reference>
+    <Reference Include="SAM.Architectural, Version=1.0.8458.22273, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SAM\build\SAM.Architectural.dll</HintPath>
+    </Reference>
     <Reference Include="SAM.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Core.dll</HintPath>
@@ -300,6 +304,10 @@
     <ProjectReference Include="..\..\SAM_Revit\SAM.Analytical.Revit\SAM.Analytical.Revit.csproj">
       <Project>{7a976ee2-6c1e-4165-8b29-afd946220556}</Project>
       <Name>SAM.Analytical.Revit</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SAM_Revit\SAM.Architectural.Revit\SAM.Architectural.Revit.csproj">
+      <Project>{dce3c7bc-9efe-449c-b6ff-375886082a4c}</Project>
+      <Name>SAM.Architectural.Revit</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj">
       <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>

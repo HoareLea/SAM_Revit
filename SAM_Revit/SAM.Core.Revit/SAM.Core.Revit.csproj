@@ -358,8 +358,8 @@
     <Compile Include="Query\ExistingElement.cs" />
     <Compile Include="Query\HighLevel.cs" />
     <Compile Include="Query\IntegerId.cs" />
-    <Compile Include="Query\GetConnectorManagers.cs" />
-    <Compile Include="Query\GetBranches.cs" />
+    <Compile Include="Query\ConnectorManagers.cs" />
+    <Compile Include="Query\Branches.cs" />
     <Compile Include="Query\IJSAMObject.cs" />
     <Compile Include="Query\JObject.cs" />
     <Compile Include="Query\Json.cs" />

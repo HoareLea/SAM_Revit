@@ -5,12 +5,12 @@ namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static List<List<ConnectorManager>> GetBranches(ConnectorManager connectorManager)
+        public static List<List<ConnectorManager>> Branches(ConnectorManager connectorManager)
         {
-            return GetBranches(connectorManager, null, null);
+            return Branches(connectorManager, null, null);
         }
 
-        private static List<List<ConnectorManager>> GetBranches(this ConnectorManager connectorManager, ConnectorManager previousConnectorManager = null, List<ElementId> elementIds = null)
+        private static List<List<ConnectorManager>> Branches(this ConnectorManager connectorManager, ConnectorManager previousConnectorManager = null, List<ElementId> elementIds = null)
         {
             if (connectorManager == null)
                 return null;
@@ -29,7 +29,7 @@ namespace SAM.Core.Revit
 
             elementIds.Add(connectorManager.Owner.Id);
 
-            List<ConnectorManager> connectorManagerList = GetConnectorManagers(connectorManager);
+            List<ConnectorManager> connectorManagerList = ConnectorManagers(connectorManager);
             if (connectorManagerList == null || connectorManagerList.Count == 0)
             {
                 result.Add(new List<ConnectorManager> { connectorManager });
@@ -54,7 +54,7 @@ namespace SAM.Core.Revit
 
             foreach (ConnectorManager connectorManager_Temp in connectorManagerList)
             {
-                List<List<ConnectorManager>> connectorManagers = GetBranches(connectorManager_Temp, connectorManager, elementIds);
+                List<List<ConnectorManager>> connectorManagers = Branches(connectorManager_Temp, connectorManager, elementIds);
                 if (connectorManagers == null || connectorManagers.Count == 0)
                 {
                     result.Add(new List<ConnectorManager> { connectorManager });

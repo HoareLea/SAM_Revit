@@ -5,7 +5,7 @@ namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static List<ConnectorManager> GetConnectorManagers(this ConnectorManager connectorManager)
+        public static List<ConnectorManager> ConnectorManagers(this ConnectorManager connectorManager)
         {
             if (connectorManager == null)
                 return null;

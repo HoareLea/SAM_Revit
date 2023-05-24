@@ -20,7 +20,12 @@ namespace SAM.Analytical.Revit
             {
                 List<Panel> panels = ToSAM((HostObject)element, convertSettings);
                 if (panels != null)
+                {
+                    Transform transform = element.Document.ActiveProjectLocation.GetTotalTransform().Inverse;
+                    panels = panels.ConvertAll(x => Query.Transform(transform, x));
                     result = panels.Cast<Core.SAMObject>();
+                }
+                    
             }
             else if (element is HostObjAttributes)
             {

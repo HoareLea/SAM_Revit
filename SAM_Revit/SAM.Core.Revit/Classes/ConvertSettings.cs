@@ -10,12 +10,13 @@ namespace SAM.Core.Revit
         private bool convertGeometry;
         private bool convertParameters;
         private bool removeExisting;
+        private bool useProjectLocation;
 
         private Dictionary<string, List<object>> objects;
 
         private Dictionary<string, object> parameters;
 
-        public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting)
+        public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting, bool useProjectLocation = true)
         {
             objects = new Dictionary<string, List<object>>();
             parameters = null;
@@ -23,6 +24,7 @@ namespace SAM.Core.Revit
             this.convertGeometry = convertGeometry;
             this.convertParameters = convertParameters;
             this.removeExisting = removeExisting;
+            this.useProjectLocation = useProjectLocation;
         }
 
         public ConvertSettings(ConvertSettings convertSettings)
@@ -30,6 +32,7 @@ namespace SAM.Core.Revit
             convertGeometry = convertSettings.convertGeometry;
             convertParameters = convertSettings.convertParameters;
             removeExisting = convertSettings.removeExisting;
+            useProjectLocation = convertSettings.useProjectLocation;
 
             if(convertSettings.parameters != null)
             {
@@ -70,6 +73,14 @@ namespace SAM.Core.Revit
             }
         }
 
+        public bool UseProjectLocation
+        {
+            get
+            {
+                return useProjectLocation;
+            }
+        }
+
         public Dictionary<string, object> GetParameters()
         {
             if (parameters == null)
@@ -102,6 +113,7 @@ namespace SAM.Core.Revit
             convertGeometry = jObject.Value<bool>("ConvertGeometry");
             convertParameters = jObject.Value<bool>("ConvertParameters");
             removeExisting = jObject.Value<bool>("RemoveExisting");
+            useProjectLocation = jObject.Value<bool>("UseProjectLocation");
             return true;
         }
 
@@ -112,6 +124,7 @@ namespace SAM.Core.Revit
             jObject.Add("ConvertGeometry", convertGeometry);
             jObject.Add("ConvertParameters", convertParameters);
             jObject.Add("RemoveExisting", removeExisting);
+            jObject.Add("UseProjectLocation", useProjectLocation);
 
             return jObject;
         }

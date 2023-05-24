@@ -18,6 +18,15 @@ namespace SAM.Architectural.Revit
 
             double elevation = Query.Elevation(level);
 
+            if (convertSettings.UseProjectLocation)
+            {
+                Transform transform = Core.Revit.Query.ProjectTransform(level.Document);
+                if (transform != null)
+                {
+                    elevation = Geometry.Revit.Query.Transform(transform, new Geometry.Spatial.Point3D(0,0, elevation), false).Z;
+                }
+            }
+
             result = new Level(level.Name, elevation);
             result.UpdateParameterSets(level, ActiveSetting.Setting.GetValue<Core.TypeMap>(ActiveSetting.Name.ParameterMap));
             //result.Add(Core.Revit.Query.ParameterSet(level));

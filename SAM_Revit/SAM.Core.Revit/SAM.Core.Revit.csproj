@@ -331,6 +331,7 @@
     <Compile Include="Modify\SetValues.cs" />
     <Compile Include="Query\ForgeTypeId.cs" />
     <Compile Include="Query\BuiltInCategory.cs" />
+    <Compile Include="Query\ProjectTransform.cs" />
     <Compile Include="Query\IntersectingElements.cs" />
     <Compile Include="Query\ReferenceConnectors.cs" />
     <Compile Include="Query\Connector.cs" />

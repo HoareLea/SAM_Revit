@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Analysis;
 using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
@@ -218,6 +219,15 @@ namespace SAM.Analytical.Revit
             }
 
             convertSettings?.Add(familyInstance.Id, result);
+
+            if (convertSettings.UseProjectLocation)
+            {
+                Transform transform = Core.Revit.Query.ProjectTransform(familyInstance.Document);
+                if (transform != null)
+                {
+                    result = result.ConvertAll(x => Query.Transform(transform, x));
+                }
+            }
 
             return result;
         }

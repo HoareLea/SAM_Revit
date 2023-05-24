@@ -79,6 +79,15 @@ namespace SAM.Analytical.Revit
 
             convertSettings?.Add(energyAnalysisSurface.Id, result);
 
+            if (convertSettings.UseProjectLocation)
+            {
+                Transform transform = Core.Revit.Query.ProjectTransform(energyAnalysisSurface.Document);
+                if (transform != null)
+                {
+                    result = Query.Transform(transform, result);
+                }
+            }
+
             return result;
         }
     }

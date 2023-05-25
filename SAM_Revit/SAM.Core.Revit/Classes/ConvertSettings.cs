@@ -16,7 +16,7 @@ namespace SAM.Core.Revit
 
         private Dictionary<string, object> parameters;
 
-        public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting, bool useProjectLocation = true)
+        public ConvertSettings(bool convertGeometry, bool convertParameters, bool removeExisting, bool useProjectLocation = false)
         {
             objects = new Dictionary<string, List<object>>();
             parameters = null;

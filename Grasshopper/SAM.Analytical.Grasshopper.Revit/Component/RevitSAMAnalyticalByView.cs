@@ -1,5 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
@@ -20,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,10 +38,16 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_view", NickName = "_view", Description = "Revit View", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "revitLinkInstance_", NickName = "revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
+                result.Add(new GH_SAMParam(new Param_GenericObject() { Name = "_view", NickName = "_view", Description = "Revit View", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new Param_GenericObject() { Name = "revitLinkInstance_", NickName = "revitLinkInstance_", Description = "Revit Link Instance", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
 
-                global::Grasshopper.Kernel.Parameters.Param_Boolean boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                Param_Boolean boolean = null;
+
+                boolean = new Param_Boolean() { Name = "_useProjectLocation_", NickName = "_useProjectLocation_", Description = "Transform geometry using Revit Project Location", Access = GH_ParamAccess.item };
+                boolean.SetPersistentData(false);
+                result.Add(new GH_SAMParam(boolean, ParamVisibility.Voluntary));
+
+                boolean = new Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 boolean.SetPersistentData(false);
                 result.Add(new GH_SAMParam(boolean, ParamVisibility.Binding));
 
@@ -56,7 +63,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<GH_SAMParam> result = new List<GH_SAMParam>();
-                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analyticalObjects", NickName = "analyticalObjects", Description = "SAM Analytical Objects", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new Param_GenericObject() { Name = "analyticalObjects", NickName = "analyticalObjects", Description = "SAM Analytical Objects", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
                 return result.ToArray();
             }
         }
@@ -97,6 +104,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             if (index != -1)
             {
                 dataAccess.GetData(index, ref objectWrapper);
+            }
+
+            bool useProjectLocation = false;
+            index = Params.IndexOfInputParam("_useProjectLocation_");
+            if (index == -1 || !dataAccess.GetData(index, ref useProjectLocation))
+            {
+                useProjectLocation = false;
             }
 
             Transform tranform = null;
@@ -155,7 +169,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }    
 
-            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true, useProjectLocation);
             IEnumerable<Core.ISAMObject> sAMObjects = null;
 
             List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels(document, elementIds, convertSettings);

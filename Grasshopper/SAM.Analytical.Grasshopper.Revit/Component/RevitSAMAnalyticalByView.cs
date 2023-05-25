@@ -140,11 +140,12 @@ namespace SAM.Analytical.Grasshopper.Revit
                 Outline outline = Core.Revit.Query.Outline(viewPlan, tranform);
                 if (outline != null)
                 {
-                    //LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline), new BoundingBoxIntersectsFilter(outline));
-                    //elementIds = new FilteredElementCollector(document_Linked).WherePasses(logicalOrFilter)?.ToElementIds();
+                    LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance), new BoundingBoxIntersectsFilter(outline, Core.Tolerance.MacroDistance));
+                    elementIds = new FilteredElementCollector(document).WherePasses(logicalOrFilter)?.ToElementIds();
 
-                    BoundingBoxIsInsideFilter boundingBoxIsInsideFilter = new BoundingBoxIsInsideFilter(outline, Core.Tolerance.MacroDistance);
-                    elementIds = new FilteredElementCollector(document).WherePasses(boundingBoxIsInsideFilter).ToElementIds();
+
+                    //BoundingBoxIntersectsFilter boundingBoxIntersectsFilter = new BoundingBoxIntersectsFilter(outline, Core.Tolerance.MacroDistance);
+                    //elementIds = new FilteredElementCollector(document).WherePasses(boundingBoxIntersectsFilter).ToElementIds();
                 }
             }
 

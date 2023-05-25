@@ -55,6 +55,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_useProjectLocation_", NickName = "_useProjectLocation_", Description = "Transform geometry using Revit Project Location", Access = GH_ParamAccess.item};
                 param_Boolean.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Boolean, ParamVisibility.Voluntary));
 
                 param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);

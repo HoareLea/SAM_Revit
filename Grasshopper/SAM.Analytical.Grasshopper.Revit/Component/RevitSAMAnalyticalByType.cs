@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -51,7 +51,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "phase_", NickName = "phase_", Description = "Revit Phase", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Voluntary));
 
-                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Boolean;
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_useProjectLocation_", NickName = "_useProjectLocation_", Description = "Transform geometry using Revit Project Location", Access = GH_ParamAccess.item};
+                param_Boolean.SetPersistentData(false);
+
+                param_Boolean = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
                 param_Boolean.SetPersistentData(false);
                 result.Add(new GH_SAMParam(param_Boolean, ParamVisibility.Binding));
 
@@ -91,6 +96,13 @@ namespace SAM.Analytical.Grasshopper.Revit
             string typeName = null;
             index = Params.IndexOfInputParam("_type_");
             if (index == -1 || !dataAccess.GetData(index, ref typeName) || string.IsNullOrWhiteSpace(typeName))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            bool useProjectLocation = false;
+            if (index == -1 || !dataAccess.GetData(index, ref useProjectLocation))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -167,7 +179,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
             }
 
-            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true, useProjectLocation);
 
             IEnumerable<Core.SAMObject> result = Analytical.Revit.Convert.ToSAM(document, type, convertSettings, transform, phase);
 

@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -44,6 +44,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
             inputParamManager.AddGenericParameter("_revitElement", "_revitElement", "Revit Element instance", GH_ParamAccess.item);
+            inputParamManager.AddBooleanParameter("_useProjectLocation_", "_useProjectLocation_", "Transform geometry using Revit Project Location", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
         }
 
@@ -52,8 +53,8 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
         {
-            outputParamManager.AddGenericParameter("AnalyticalObject", "AnalyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
-            outputParamManager.AddTextParameter("Report", "Report", "Report", GH_ParamAccess.item);
+            outputParamManager.AddGenericParameter("analyticalObject", "analyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
+            outputParamManager.AddTextParameter("report", "report", "Report", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            if (!dataAccess.GetData(2, ref run) || !run)
                 return;
 
             GH_ObjectWrapper objectWrapper = null;
@@ -76,7 +77,14 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            ConvertSettings convertSettings = new ConvertSettings(true, true, true);
+            bool useProjectLocation = false;
+            if (!dataAccess.GetData(1, ref useProjectLocation))
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
+                return;
+            }
+
+            ConvertSettings convertSettings = new ConvertSettings(true, true, true, useProjectLocation);
             IEnumerable<Core.ISAMObject> sAMObjects = null;
             string message = null;
 

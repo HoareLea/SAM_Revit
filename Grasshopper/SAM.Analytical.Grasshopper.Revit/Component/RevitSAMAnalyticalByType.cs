@@ -103,6 +103,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             }
 
             bool useProjectLocation = false;
+            index = Params.IndexOfInputParam("_useProjectLocation_");
             if (index == -1 || !dataAccess.GetData(index, ref useProjectLocation))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");

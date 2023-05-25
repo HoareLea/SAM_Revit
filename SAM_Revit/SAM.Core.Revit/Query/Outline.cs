@@ -42,11 +42,15 @@ namespace SAM.Core.Revit
             }
 
 
-            
-            if (transform != null)
-                boundingBoxXYZ.Transform = transform.Inverse;
 
-            return new Outline(boundingBoxXYZ.Min, boundingBoxXYZ.Max);
+            if (transform != null && transform != Transform.Identity)
+            {
+                return new Outline(transform.Inverse.OfPoint(boundingBoxXYZ.Min), transform.Inverse.OfPoint(boundingBoxXYZ.Max));
+            }
+            else
+            {
+                return new Outline(boundingBoxXYZ.Min, boundingBoxXYZ.Max);
+            }
         }
     }
 }

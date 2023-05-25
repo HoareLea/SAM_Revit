@@ -174,7 +174,14 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels(document, elementIds, convertSettings);
             if (panels != null)
+            {
+                if(tranform != null && tranform != Transform.Identity)
+                {
+                    panels = panels.ConvertAll(x => Analytical.Revit.Query.Transform(tranform.Inverse, x));
+                }
+
                 sAMObjects = panels.Cast<Core.ISAMObject>();
+            }
 
             dataAccess.SetDataList(0, sAMObjects);
         }

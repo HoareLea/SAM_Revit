@@ -373,7 +373,7 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-                List<Core.ParameterSet> parameterSets = revitType3D.GetParamaterSets();
+                List<Core.ParameterSet> parameterSets = revitType3D.GetParameterSets();
                 if (parameterSets != null)
                 {
                     foreach (Core.ParameterSet parameterSet in parameterSets)

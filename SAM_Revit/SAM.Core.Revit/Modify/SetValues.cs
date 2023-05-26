@@ -178,7 +178,7 @@ namespace SAM.Core.Revit
             if (sAMObject == null || element == null)
                 return false;
 
-            List<ParameterSet> parameterSets = sAMObject.GetParamaterSets();
+            List<ParameterSet> parameterSets = sAMObject.GetParameterSets();
             if(parameterSets != null && parameterSets.Count != 0)
             {
                 foreach (ParameterSet parameterSet in parameterSets)

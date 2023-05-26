@@ -110,7 +110,7 @@ namespace SAM.Analytical.Revit
 
             Construction result = new Construction(revitType3D.Guid, revitType3D.Name);
 
-            List<Core.ParameterSet> parameterSets = revitType3D.GetParamaterSets();
+            List<Core.ParameterSet> parameterSets = revitType3D.GetParameterSets();
             if(parameterSets != null)
             {
                 foreach(Core.ParameterSet parameterSet in parameterSets)

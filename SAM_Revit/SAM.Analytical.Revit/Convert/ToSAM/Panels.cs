@@ -251,7 +251,7 @@ namespace SAM.Analytical.Revit
                 double elevation_Min = (document.GetElement(modelCurve.LevelId) as Level).Elevation;
 
                 //Level level_Max = Core.Revit.Query.HighLevel(document, UnitUtils.ConvertToInternalUnits(elevation_Min, DisplayUnitType.DUT_METERS));
-                Level level_Max = Core.Revit.Query.HighLevel(document, elevation_Min);
+                Level level_Max = Core.Revit.Query.HighLevel(document, elevation_Min + Core.Tolerance.MacroDistance);
                 if (level_Max == null)
                 {
                     continue;

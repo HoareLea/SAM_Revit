@@ -9,7 +9,7 @@ namespace SAM.Geometry.Revit
         {
             if (convertUnits)
 
-                return new Vector3D(XYZ.X * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Y * Units.Revit.Query.Factor_FromFeetToMeter, XYZ.Z * Units.Revit.Query.Factor_FromFeetToMeter);
+                return new Vector3D(XYZ.X * Units.Revit.ConversionFactor.FromFeetToMeter, XYZ.Y * Units.Revit.ConversionFactor.FromFeetToMeter, XYZ.Z * Units.Revit.ConversionFactor.FromFeetToMeter);
             else
                 return new Vector3D(XYZ.X, XYZ.Y, XYZ.Z);
         }

@@ -340,6 +340,7 @@
     <Compile Include="Convert\ToSAM\Point2D.cs" />
     <Compile Include="Convert\ToSAM\Point3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Variables\ConversionFactor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj">

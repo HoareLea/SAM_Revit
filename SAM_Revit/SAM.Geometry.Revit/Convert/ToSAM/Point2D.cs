@@ -7,7 +7,7 @@ namespace SAM.Geometry.Revit
     {
         public static Point2D ToSAM(this UV uV)
         {
-            return new Point2D(uV.U * Units.Revit.Query.Factor_FromFeetToMeter, uV.V * Units.Revit.Query.Factor_FromFeetToMeter);
+            return new Point2D(uV.U * Units.Revit.ConversionFactor.FromFeetToMeter, uV.V * Units.Revit.ConversionFactor.FromFeetToMeter);
         }
     }
 }

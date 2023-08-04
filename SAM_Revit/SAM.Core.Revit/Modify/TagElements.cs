@@ -110,11 +110,11 @@ namespace SAM.Core.Revit
                 IndependentTag independentTag = document.Create.NewTag(view, element, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
                 independentTag?.ChangeTypeId(elementId_TagType);
 #elif Revit2018
-                Reference reference = new Reference(element);
+                Autodesk.Revit.DB.Reference reference = new Autodesk.Revit.DB.Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, view.Id, reference, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
                 independentTag?.ChangeTypeId(elementId_TagType);
 #else
-                Reference reference = new Reference(element);
+                Autodesk.Revit.DB.Reference reference = new Autodesk.Revit.DB.Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, elementId_TagType, view.Id, reference, addLeader, tagOrientation, xyz);
 #endif
 

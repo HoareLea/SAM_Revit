@@ -138,7 +138,7 @@ namespace SAM.Geometry.Revit
 #elif Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
             IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
 #else
-            Reference reference = independentTag.GetTaggedReferences().FirstOrDefault();
+            Autodesk.Revit.DB.Reference reference = independentTag.GetTaggedReferences().FirstOrDefault();
             if(reference == null)
             {
                 return null;

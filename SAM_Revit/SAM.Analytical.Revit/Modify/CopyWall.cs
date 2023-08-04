@@ -32,7 +32,7 @@ namespace SAM.Analytical.Revit
             if (view == null || view.GenLevel == null)
                 return null;
 
-            Reference reference = null;
+            Autodesk.Revit.DB.Reference reference = null;
             try
             {
                 reference = uIDocument.Selection.PickObject(ObjectType.LinkedElement, new RevitLinkInstanceSelectionFilter(uIDocument.Document, BuiltInCategory.OST_Walls), "Select Wall");
@@ -56,10 +56,10 @@ namespace SAM.Analytical.Revit
 
             List<FamilyInstance> familyInstances_Grid = new FilteredElementCollector(uIDocument.Document).OfClass(typeof(FamilyInstance)).OfCategory(BuiltInCategory.OST_DetailComponents).Cast<FamilyInstance>().ToList().FindAll(x => x.Name == "Snapping Region");
 
-            return CopyWall(uIDocument.Document, new Reference[] { reference }, level_Bottom, level_Top);
+            return CopyWall(uIDocument.Document, new Autodesk.Revit.DB.Reference[] { reference }, level_Bottom, level_Top);
         }
 
-        public static Autodesk.Revit.DB.Wall CopyWall(this Document document, IEnumerable<Reference> references, Level level_Bottom, Level level_Top)
+        public static Autodesk.Revit.DB.Wall CopyWall(this Document document, IEnumerable<Autodesk.Revit.DB.Reference> references, Level level_Bottom, Level level_Top)
         {
             if (document == null || references == null || references.Count() < 1 || level_Bottom == null || level_Top == null)
                 return null;
@@ -74,7 +74,7 @@ namespace SAM.Analytical.Revit
             using (Transaction transaction = new Transaction(document, "Copy Wall"))
             {
                 transaction.Start();
-                foreach (Reference reference in references)
+                foreach (Autodesk.Revit.DB.Reference reference in references)
                 {
                     if (reference.ElementId == null || reference.ElementId == ElementId.InvalidElementId)
                         continue;

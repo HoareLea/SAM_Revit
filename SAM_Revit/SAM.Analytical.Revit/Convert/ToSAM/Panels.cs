@@ -1,9 +1,11 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using SAM.Core.Revit;
+using SAM.Geometry;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +13,114 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
+        public static List<Panel> ToSAM(this Autodesk.Revit.DB.Panel panel, bool includeNonVisibleObjects, ConvertSettings convertSettings)
+        {
+            if (panel == null || !panel.IsValidObject)
+            {
+                return null;
+            }
+
+            List<Panel> result = convertSettings?.GetObjects<Panel>(panel.Id);
+            if (result != null)
+            {
+                return result;
+            }
+
+            HostObject hostObject = panel.Host as HostObject;
+            if(hostObject == null)
+            {
+                return null;
+            }
+
+            List<Face3D> face3Ds_HostObject = hostObject.Profiles();
+            if (face3Ds_HostObject == null || face3Ds_HostObject.Count == 0)
+            {
+                return null;
+            }
+
+            List<Shell> shells = panel.ToSAM_Geometries<Shell>(includeNonVisibleObjects);
+            if(shells == null || shells.Count == 0)
+            {
+                return null;
+            }
+
+            List<Face3D> face3Ds = new List<Face3D>();
+            foreach(Shell shell in shells)
+            {
+                foreach(Face3D face3D in face3Ds_HostObject)
+                {
+                    PlanarIntersectionResult planarIntersectionResult = Geometry.Spatial.Create.PlanarIntersectionResult(face3D, shell);
+                    if(planarIntersectionResult == null || !planarIntersectionResult.Intersecting)
+                    {
+                        continue;
+                    }
+
+
+                    List<Face2D> face2Ds = Geometry.Planar.Create.Face2Ds(planarIntersectionResult.GetGeometry2Ds<ISegmentable2D>());
+                    if(face2Ds == null || face2Ds.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    Geometry.Spatial.Plane plane = planarIntersectionResult.Plane;
+                    face3Ds.AddRange(face2Ds.ConvertAll(x => plane.Convert(x)));
+                    break;
+
+                }
+            }
+
+
+            if(face3Ds != null)
+            {
+                face3Ds.RemoveAll(x => x == null);
+            }
+
+            if(face3Ds == null || face3Ds.Count == 0)
+            {
+                return null;
+            }
+
+            PanelType panelType = Query.PanelType(hostObject);
+
+            Construction construction = panel.PanelType.ToSAM_Construction(convertSettings);
+            if (construction == null)
+            {
+                construction = Analytical.Query.DefaultConstruction(panelType); //Default Construction
+            }
+
+            foreach(Face3D face3D_Temp in face3Ds)
+            {
+                Panel panel_Temp = Analytical.Create.Panel(construction, panelType, face3D_Temp);
+                if(panel_Temp == null)
+                {
+                    continue;
+                }
+                
+                panel_Temp.UpdateParameterSets(panel, ActiveSetting.Setting.GetValue<Core.TypeMap>(Core.Revit.ActiveSetting.Name.ParameterMap));
+
+                result.Add(panel_Temp);
+            }
+
+            convertSettings?.Add(panel.Id, result);
+
+            if (convertSettings.UseProjectLocation)
+            {
+                Transform transform = Core.Revit.Query.ProjectTransform(panel.Document);
+                if (transform != null)
+                {
+                    result = result.ConvertAll(x => Query.Transform(transform, x));
+                }
+            }
+
+            return result;
+        }
+
         public static List<Panel> ToSAM(this HostObject hostObject, ConvertSettings convertSettings)
         {
             if (hostObject == null || !hostObject.IsValidObject)
+            {
                 return null;
+            }
 
             if(hostObject is WallSweep)
             {

@@ -88,6 +88,11 @@ namespace SAM.Analytical.Revit
                 construction = Analytical.Query.DefaultConstruction(panelType); //Default Construction
             }
 
+            if(result == null)
+            {
+                result = new List<Panel>();
+            }
+
             foreach(Face3D face3D_Temp in face3Ds)
             {
                 Panel panel_Temp = Analytical.Create.Panel(construction, panelType, face3D_Temp);

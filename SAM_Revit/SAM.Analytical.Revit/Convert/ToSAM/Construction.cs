@@ -74,7 +74,7 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            if((BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_Cornices)
+            if((BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_Cornices && (BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_CurtainWallPanels)
             {
                 return null;
             }

@@ -32,7 +32,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public RevitSAMPanelsByCurtainWall()
           : base("Revit.PanelsByCurtainWall", "Revit.PanelsByCurtainWall",
-              "Convert Revit Curtain Wall To SAM Analytical Panels",
+              "Convert Revit Curtain Wall To SAM Analytical Panels \n*optional input ActiveDocument to get all curtain walls from project",
               "SAM", "Revit")
         {
      
@@ -43,7 +43,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
         {
-            inputParamManager.AddGenericParameter("_curtainWall", "_curtainWall", "Revit Curtain Wall", GH_ParamAccess.item);
+            inputParamManager.AddGenericParameter("_curtainWall", "_curtainWall", "Revit Curtain Wall\n*or ActiveDocument to get all curtain walls from project", GH_ParamAccess.item);
             inputParamManager.AddBooleanParameter("_includeNonVisibleObjects_", "_includeNonVisibleObjects_", "Include Non Visible Objects", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("_useProjectLocation_", "_useProjectLocation_", "Transform geometry using Revit Project Location", GH_ParamAccess.item, false);
             inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
@@ -100,7 +100,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 Document document = ((RhinoInside.Revit.GH.Types.ProjectDocument)@object).Value;
 
-                walls = new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_Walls).Cast<Autodesk.Revit.DB.Wall>().ToList();
+                walls = new FilteredElementCollector(document).OfClass(typeof(Autodesk.Revit.DB.Wall)).Cast<Autodesk.Revit.DB.Wall>().ToList();
             }
             else
             {

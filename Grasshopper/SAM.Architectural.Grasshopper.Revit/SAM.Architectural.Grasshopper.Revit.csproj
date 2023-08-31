@@ -356,10 +356,12 @@
       if "$(ConfigurationName)" == "Debug2021" set Version=Revit 2021
       if "$(ConfigurationName)" == "Debug2022" set Version=Revit 2022
       if "$(ConfigurationName)" == "Debug2023" set Version=Revit 2023
+      if "$(ConfigurationName)" == "Debug2024" set Version=Revit 2024
       if "$(ConfigurationName)" == "Release2020" set Version=Revit 2020
       if "$(ConfigurationName)" == "Release2021" set Version=Revit 2021
       if "$(ConfigurationName)" == "Release2022" set Version=Revit 2022
       if "$(ConfigurationName)" == "Release2023" set Version=Revit 2023
+      if "$(ConfigurationName)" == "Release2024" set Version=Revit 2024
 
       copy "$(TargetPath)" "$(TargetDir)\$(ProjectName).gha"
 

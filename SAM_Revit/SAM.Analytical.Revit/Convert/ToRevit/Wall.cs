@@ -30,6 +30,9 @@ namespace SAM.Analytical.Revit
 
             Geometry.Spatial.Plane plane = face3D.GetPlane();
 
+            face3D = face3D.SimplifyByNTS_TopologyPreservingSimplifier();
+            face3D = face3D.SimplifyByAngle();
+
             Vector3D normal = plane.Normal;
             if (normal == null)
             {
@@ -65,19 +68,19 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            Face3D face3D_Temp = face3D;
+            //Face3D face3D_Temp = face3D;
 
-            if (normal.Z.AlmostEqual(0, Tolerance.MacroDistance))
-            {
-                normal = new Vector3D(normal.X, normal.Y, 0).Unit;
-                plane = new Geometry.Spatial.Plane(plane.Origin, normal);
+            //if (normal.Z.AlmostEqual(0, Tolerance.MacroDistance))
+            //{
+            //    normal = new Vector3D(normal.X, normal.Y, 0).Unit;
+            //    plane = new Geometry.Spatial.Plane(plane.Origin, normal);
 
-                face3D_Temp = plane.Project(face3D);
-            }
+            //    face3D_Temp = plane.Project(face3D);
+            //}
 
             XYZ xyz_Normal = Geometry.Revit.Convert.ToRevit(normal, false);
 
-            List<CurveLoop> curveLoops = Geometry.Revit.Convert.ToRevit(face3D_Temp);
+            List<CurveLoop> curveLoops = Geometry.Revit.Convert.ToRevit(face3D);
             curveLoops?.RemoveAll(x => x == null);
             if (curveLoops == null || curveLoops.Count == 0)
             {

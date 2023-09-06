@@ -1,4 +1,6 @@
 ﻿using Autodesk.Revit.DB;
+using SAM.Core;
+using SAM.Geometry.Spatial;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,14 +19,22 @@ namespace SAM.Analytical.Revit
         public static Autodesk.Revit.DB.Wall ToRevit_Wall(this Geometry.Spatial.Face3D face3D, Document document, Autodesk.Revit.DB.WallType wallType = null, Level level = null)
         {
             if (face3D == null || document == null)
+            {
                 return null;
+            }
 
-            if (face3D.GetArea() < Core.Tolerance.MacroDistance)
+            if (face3D.GetArea() < Tolerance.MacroDistance)
+            {
                 return null;
+            }
 
-            Geometry.Spatial.Vector3D normal = face3D.GetPlane().Normal;
+            Geometry.Spatial.Plane plane = face3D.GetPlane();
+
+            Vector3D normal = plane.Normal;
             if (normal == null)
+            {
                 return null;
+            }
 
             if (wallType == null)
             {
@@ -33,12 +43,16 @@ namespace SAM.Analytical.Revit
                 {
                     elementId = document.GetDefaultFamilyTypeId(elementId);
                     if (elementId != null && elementId != ElementId.InvalidElementId)
+                    {
                         wallType = document.GetElement(elementId) as Autodesk.Revit.DB.WallType;
+                    }
                 }
             }
 
             if (wallType == null)
+            {
                 return null;
+            }
 
             if (level == null)
             {
@@ -47,23 +61,41 @@ namespace SAM.Analytical.Revit
             }
 
             if (level == null)
+            {
                 return null;
+            }
 
-            List<CurveLoop> curveLoops = Geometry.Revit.Convert.ToRevit(face3D);
-            curveLoops?.RemoveAll(x => x == null);
-            if (curveLoops == null || curveLoops.Count == 0)
-                return null;
+            Face3D face3D_Temp = face3D;
+
+            if (normal.Z.AlmostEqual(0, Tolerance.MacroDistance))
+            {
+                normal = new Vector3D(normal.X, normal.Y, 0).Unit;
+                plane = new Geometry.Spatial.Plane(plane.Origin, normal);
+
+                face3D_Temp = plane.Project(face3D);
+            }
 
             XYZ xyz_Normal = Geometry.Revit.Convert.ToRevit(normal, false);
 
+            List<CurveLoop> curveLoops = Geometry.Revit.Convert.ToRevit(face3D_Temp);
+            curveLoops?.RemoveAll(x => x == null);
+            if (curveLoops == null || curveLoops.Count == 0)
+            {
+                return null;
+            }
+
             if (curveLoops.Count == 1)
+            {
                 return Autodesk.Revit.DB.Wall.Create(document, curveLoops[0].ToList(), wallType.Id, level.Id, false, xyz_Normal);
+            }
 
             //The Wall.Create method requires the curveLoops to be in either all counter-clockwise direction or all clockwise direction.
             for (int i = 0; i < curveLoops.Count; i++)
             {
                 if (curveLoops[i].IsCounterclockwise(xyz_Normal))
+                {
                     curveLoops[i].Flip();
+                }
             }
 
             List<Curve> curves = new List<Curve>();
@@ -76,7 +108,9 @@ namespace SAM.Analytical.Revit
             {
                 List<Curve> curves_Temp = curveLoop?.ToList();
                 if (curveLoop == null)
+                {
                     continue;
+                }
 
                 List<Curve> curves_Postponed = new List<Curve>();
 
@@ -106,11 +140,15 @@ namespace SAM.Analytical.Revit
                 }
 
                 if (curves_Postponed.Count > 0)
+                {
                     curves.AddRange(curves_Postponed);
+                }
             }
 
             if (curves == null || curves.Count == 0)
+            {
                 return null;
+            }
 
             return Autodesk.Revit.DB.Wall.Create(document, curves, wallType.Id, level.Id, false, xyz_Normal);
 

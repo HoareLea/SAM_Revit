@@ -15,10 +15,10 @@ namespace SAM.Analytical.Revit
             if (familySymbol == null)
                 return null;
 
-            return ToSAM_ApertureConstruction(familySymbol, convertSettings);
+            return ToSAM_ApertureConstruction(familySymbol, convertSettings, Query.PanelType((HostObject)familyInstance.Host));
         }
 
-        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilySymbol familySymbol, ConvertSettings convertSettings)
+        public static ApertureConstruction ToSAM_ApertureConstruction(this FamilySymbol familySymbol, ConvertSettings convertSettings, PanelType panelType = PanelType.Undefined)
         {
             if (familySymbol == null)
                 return null;
@@ -33,7 +33,21 @@ namespace SAM.Analytical.Revit
 
             List<ApertureConstruction> apertureConstructions = Analytical.ActiveSetting.Setting.GetValue<ApertureConstructionLibrary>(AnalyticalSettingParameter.DefaultApertureConstructionLibrary).GetApertureConstructions(apertureType);
             if (apertureConstructions != null)
-                result = apertureConstructions.Find(x => name.Equals(x.UniqueName()) || name.Equals(x.Name));
+            {
+                apertureConstructions = apertureConstructions.FindAll(x => name.Equals(x.UniqueName()) || name.Equals(x.Name) || x.FullName().Equals(name));
+                if(apertureConstructions != null && apertureConstructions.Count != 0)
+                {
+                    if(apertureConstructions.Count > 1 && panelType != PanelType.Undefined)
+                    {
+                        result = apertureConstructions.Find(x => x.PanelType() == panelType);
+                    }
+
+                    if(result == null)
+                    {
+                        result = apertureConstructions[0];
+                    }
+                }
+            }
 
             if (result == null)
                 result = new ApertureConstruction(name, apertureType);

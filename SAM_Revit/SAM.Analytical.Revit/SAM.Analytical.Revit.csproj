@@ -325,6 +325,7 @@
     <Compile Include="Query\FilteredElementCollector.cs" />
     <Compile Include="Query\DefaultAirConstruction.cs" />
     <Compile Include="Query\ZoneId.cs" />
+    <Compile Include="Query\FullName.cs" />
     <Compile Include="Query\ZoneParameterName.cs" />
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\ApertureType.cs" />

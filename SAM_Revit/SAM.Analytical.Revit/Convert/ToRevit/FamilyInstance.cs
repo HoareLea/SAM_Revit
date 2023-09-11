@@ -162,7 +162,7 @@ namespace SAM.Analytical.Revit
                         //TODO: Implement code for Tilted Walls
                         Vector3D vector3D_Z = Vector3D.WorldZ;
                         
-                        if (!widthDirection.AlmostSimilar(vector3D_Z) && !heightDirection.AlmostSimilar(vector3D_Z))
+                        if (!widthDirection.AlmostSimilar(vector3D_Z, 1E-05) && !heightDirection.AlmostSimilar(vector3D_Z, 1E-05))
                             simplified = true;
                     }
                 }

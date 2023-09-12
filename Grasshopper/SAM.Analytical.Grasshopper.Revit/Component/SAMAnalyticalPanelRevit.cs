@@ -47,7 +47,11 @@ namespace SAM.Analytical.Grasshopper.Revit
         {
         }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021|| Revit2022|| Revit2023
         public override void OnStarted(Document document)
+#else
+        protected override void OnStarted(Document document)
+#endif
         {
             base.OnStarted(document);
 
@@ -84,7 +88,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             //}
         }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021|| Revit2022|| Revit2023
         public override void OnPrepare(IReadOnlyCollection<Document> documents)
+#else
+        protected override void OnPrepare(IReadOnlyCollection<Document> documents)
+#endif
         {
             if (!run)
                 return;
@@ -101,7 +109,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             walls = new List<Autodesk.Revit.DB.Wall>();
         }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021|| Revit2022|| Revit2023
         public override void OnDone(TransactionStatus status)
+#else
+        protected override void OnDone(TransactionStatus status)
+#endif
         {
             if (!run)
                 return;

@@ -179,21 +179,29 @@ namespace SAM.Analytical.Grasshopper.Revit
                     {
                         foreach (Aperture aperture in apertures)
                         {
-                            string name = aperture?.ApertureConstruction?.FullName();
+                            ApertureConstruction apertureConstruction = aperture?.ApertureConstruction;
+                            if(apertureConstruction == null)
+                            {
+                                continue;
+                            }
+
+                            string name = apertureConstruction.FullName();
                             if(string.IsNullOrWhiteSpace(name))
                             {
                                 continue;
                             }
 
-                            ApertureType apertureType = aperture.ApertureConstruction.ApertureType;
-                            if(apertureType == ApertureType.Door)
-                            {
-                                continue;
-                            }
+                            FamilySymbol familySymbol = Analytical.Revit.Create.FamilySymbol(apertureConstruction, document, PanelGroup.Roof);
 
-                            names.Add(name);
+                            //ApertureType apertureType = aperture.ApertureConstruction.ApertureType;
+                            //if(apertureType == ApertureType.Door)
+                            //{
+                            //    continue;
+                            //}
 
-                            ApertureConstruction apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Normal, apertureType);
+                            //names.Add(name);
+
+                            //ApertureConstruction apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Normal, apertureType);
 
 
                         }

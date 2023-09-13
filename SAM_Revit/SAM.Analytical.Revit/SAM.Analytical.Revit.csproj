@@ -292,6 +292,7 @@
     <Compile Include="Convert\ToSAM\New\OpeningType.cs" />
     <Compile Include="Convert\ToSAM\Panel.cs" />
     <Compile Include="Convert\ToSAM\InternalCondition.cs" />
+    <Compile Include="Create\FamilySymbol.cs" />
     <Compile Include="Create\Shells.cs" />
     <Compile Include="Create\Panels.cs" />
     <Compile Include="Enums\Parameter\RevitMaterialParameter.cs" />
@@ -326,6 +327,7 @@
     <Compile Include="Query\DefaultAirConstruction.cs" />
     <Compile Include="Query\ZoneId.cs" />
     <Compile Include="Query\FullName.cs" />
+    <Compile Include="Query\FamilyHostingBehavior.cs" />
     <Compile Include="Query\ZoneParameterName.cs" />
     <Compile Include="Query\HighElevation.cs" />
     <Compile Include="Query\ApertureType.cs" />

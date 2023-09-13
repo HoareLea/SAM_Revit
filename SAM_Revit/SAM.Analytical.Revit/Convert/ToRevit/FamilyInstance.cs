@@ -8,31 +8,50 @@ namespace SAM.Analytical.Revit
     {
         public static FamilyInstance ToRevit(this Aperture aperture, Document document, HostObject hostObject, Core.Revit.ConvertSettings convertSettings)
         {
-            if (aperture == null || document == null)
+            if (aperture == null || document == null || hostObject == null)
+            {
                 return null;
+            }
 
             FamilyInstance result = convertSettings?.GetObject<FamilyInstance>(aperture.Guid);
             if (result != null)
+            {
                 return result;
+            }
 
             ApertureConstruction apertureConstruction = aperture.ApertureConstruction;
             if (apertureConstruction == null)
+            {
                 return null;
+            }
 
             FamilySymbol familySymbol = apertureConstruction.ToRevit(document, convertSettings);
             if (familySymbol == null)
+            {
                 familySymbol = Analytical.Query.DefaultApertureConstruction(hostObject.PanelType(), apertureConstruction.ApertureType).ToRevit(document, convertSettings); //Default Aperture Construction
+            }
 
             if (familySymbol == null)
+            {
+                familySymbol = Create.FamilySymbol(apertureConstruction, document, hostObject.PanelType().PanelGroup());
+            }
+
+            if(familySymbol == null)
+            {
                 return null;
+            }
 
             Point3D point3D_Location = aperture.PlanarBoundary3D?.Plane?.Origin;
             if (point3D_Location == null)
+            {
                 return null;
+            }
 
             Level level = Geometry.Revit.Query.LowLevel(document, point3D_Location.Z);
             if (level == null)
+            {
                 return null;
+            }
 
             XYZ referenceDirection = new XYZ(0, 0, 0);
 
@@ -50,7 +69,9 @@ namespace SAM.Analytical.Revit
 
                 result = document.Create.NewFamilyInstance(point3D_Location.ToRevit(), familySymbol, referenceDirection, hostObject, Autodesk.Revit.DB.Structure.StructuralType.NonStructural);
                 if (result == null)
+                {
                     return null;
+                }
 
                 //List<Geometry.Planar.Point2D> point2Ds = new List<Geometry.Planar.Point2D>();
                 //IClosedPlanar3D closedPlanar3D = face3D.GetExternalEdge3D();
@@ -67,7 +88,9 @@ namespace SAM.Analytical.Revit
                 //Geometry.Planar.Rectangle2D rectangle2D = Geometry.Planar.Create.Rectangle2D(point2Ds);
                 Geometry.Planar.Rectangle2D rectangle2D = Analytical.Create.Rectangle2D(aperture.PlanarBoundary3D);
                 if (rectangle2D == null)
+                {
                     return null;
+                }
 
                 document.Regenerate();
                 result = document.GetElement(result.Id) as FamilyInstance;
@@ -79,7 +102,9 @@ namespace SAM.Analytical.Revit
                 double factor = 0;
                 Geometry.Planar.Vector2D direction = rectangle2D.WidthDirection;
                 if (!coplanar && Core.Query.Round(direction.Y) < 0)
+                {
                     factor = System.Math.PI / 2;
+                }
 
                 Vector3D handOrienation_Aperture = plane.Convert(direction);
 
@@ -119,14 +144,18 @@ namespace SAM.Analytical.Revit
                 
 
             if (result == null)
+            {
                 return null;
+            }
 
             if (result.CanFlipHand)
             {
                 document.Regenerate(); //This is needed to get flip correctly pushed to revit
                 Vector3D axisX = result.HandOrientation.ToSAM_Vector3D(false);
                 if (!axisX.SameHalf(aperture.Plane.AxisX))
+                {
                     result.flipHand();
+                }
             }
 
             if (result.CanFlipFacing)
@@ -134,7 +163,9 @@ namespace SAM.Analytical.Revit
                 document.Regenerate(); //This is needed to get flip correctly pushed to revit
                 Vector3D normal = result.FacingOrientation.ToSAM_Vector3D(false);
                 if (!normal.SameHalf(aperture.Plane.Normal))
+                {
                     result.flipFacing();
+                }
             }
 
             if (convertSettings.ConvertParameters)
@@ -146,7 +177,9 @@ namespace SAM.Analytical.Revit
 
                 //Check if geometry is simplified
                 if (!Geometry.Planar.Query.Rectangular(aperture.PlanarBoundary3D?.ExternalEdge2DLoop?.GetClosed2D(), Core.Tolerance.MacroDistance))
+                {
                     simplified = true;
+                }
 
                 if (!simplified && result.Host is Autodesk.Revit.DB.Wall)
                 {
@@ -163,7 +196,9 @@ namespace SAM.Analytical.Revit
                         Vector3D vector3D_Z = Vector3D.WorldZ;
                         
                         if (!widthDirection.AlmostSimilar(vector3D_Z, 1E-05) && !heightDirection.AlmostSimilar(vector3D_Z, 1E-05))
+                        {
                             simplified = true;
+                        }
                     }
                 }
 

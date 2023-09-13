@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
+using SAM.Analytical.Revit;
 using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
@@ -105,6 +106,8 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             List<ElementType> elementTypes = new List<ElementType>();
 
+            Core.Revit.ConvertSettings convertSettings = new Core.Revit.ConvertSettings(true, true, false, false);
+
             for(int i=0; i < panels.Count; i++)
             {
                 Panel panel = panels[i];
@@ -165,6 +168,38 @@ namespace SAM.Analytical.Grasshopper.Revit
                 }
 
                 panels[i] = Create.Panel(panel, panelType_Normal);
+
+                //TEMP START
+                if(panelType_Normal == PanelType.Roof)
+                {
+                    HashSet<string> names = new HashSet<string>();
+
+                    List<Aperture> apertures = panels[i].Apertures;
+                    if(apertures != null && apertures.Count != 0)
+                    {
+                        foreach (Aperture aperture in apertures)
+                        {
+                            string name = aperture?.ApertureConstruction?.FullName();
+                            if(string.IsNullOrWhiteSpace(name))
+                            {
+                                continue;
+                            }
+
+                            ApertureType apertureType = aperture.ApertureConstruction.ApertureType;
+                            if(apertureType == ApertureType.Door)
+                            {
+                                continue;
+                            }
+
+                            names.Add(name);
+
+                            ApertureConstruction apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Normal, apertureType);
+
+
+                        }
+                    }
+                }
+                //TEMP END
 
                 if (elementTypes.Find(x => x.Id == hostObjAttributes.Id) == null)
                     elementTypes.Add(hostObjAttributes);

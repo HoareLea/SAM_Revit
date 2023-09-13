@@ -152,6 +152,7 @@ namespace SAM.Analytical.Revit
             parameterMap_General.Add(PanelParameter.DirectSolarEnergyReflectance, typeof(HostObject), "SAM_SrfDirectSolarEnergyReflectance");
             parameterMap_General.Add(PanelParameter.DirectSolarEnergyAbsorptance, typeof(HostObject), "SAM_SrfDirectSolarEnergyAbsorptance");
             parameterMap_General.Add(PanelParameter.TotalSolarEnergyTransmittance, typeof(HostObject), "SAM_SrfgValue");
+            parameterMap_General.Add(PanelParameter.Adiabatic, typeof(HostObject), "SAM_SrfAdiabatic"); //2023.09.10
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_NorthAngle"); //double
 
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double

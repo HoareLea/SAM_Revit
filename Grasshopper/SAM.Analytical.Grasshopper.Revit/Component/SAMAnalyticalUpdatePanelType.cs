@@ -2,6 +2,7 @@
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
+using SAM.Core;
 using SAM.Core.Grasshopper.Revit;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.2";
+        public override string LatestComponentVersion => "1.0.3";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -58,7 +59,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analytical", NickName = "analytical", Description = "SAM Analytical Object", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
-                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.HostObjectType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType that already exist in Revit and match by name", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.ElementType() { Name = "elementType", NickName = "elementType", Description = "Revit ElementType that already exist in Revit and match by name", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
                 return result.ToArray();
             }
         }
@@ -160,7 +161,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                 }
 
-                HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, panelType_Normal, panel.Construction) as HostObjAttributes;
+                Construction construction = panel.Construction;
+                if (construction != null)
+                {
+                    construction.SetValue(ConstructionParameter.DefaultPanelType, panelType_Normal);
+                }
+
+                HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, construction) as HostObjAttributes;
                 if (hostObjAttributes == null)
                 {
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for {0} panel (Guid: {1}).", panel.Name, panel.Guid));
@@ -169,7 +176,6 @@ namespace SAM.Analytical.Grasshopper.Revit
 
                 panels[i] = Create.Panel(panel, panelType_Normal);
 
-                //TEMP START
                 if(panelType_Normal == PanelType.Roof)
                 {
                     HashSet<string> names = new HashSet<string>();
@@ -192,22 +198,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                             }
 
                             FamilySymbol familySymbol = Analytical.Revit.Create.FamilySymbol(apertureConstruction, document, PanelGroup.Roof);
-
-                            //ApertureType apertureType = aperture.ApertureConstruction.ApertureType;
-                            //if(apertureType == ApertureType.Door)
-                            //{
-                            //    continue;
-                            //}
-
-                            //names.Add(name);
-
-                            //ApertureConstruction apertureConstruction = Analytical.Query.DefaultApertureConstruction(panelType_Normal, apertureType);
-
-
+                            if(familySymbol != null && elementTypes.Find(x => x.Id == familySymbol.Id) == null)
+                            {
+                                elementTypes.Add(familySymbol);
+                            }
                         }
                     }
                 }
-                //TEMP END
 
                 if (elementTypes.Find(x => x.Id == hostObjAttributes.Id) == null)
                     elementTypes.Add(hostObjAttributes);

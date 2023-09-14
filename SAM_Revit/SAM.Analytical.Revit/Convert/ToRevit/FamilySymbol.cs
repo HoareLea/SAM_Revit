@@ -48,7 +48,7 @@ namespace SAM.Analytical.Revit
                 HashSet<FamilyHostingBehavior> familyHostingBehaviors = Query.FamilyHostingBehaviors(panelGroup);
                 if(familyHostingBehaviors != null && familyHostingBehaviors.Count != 0)
                 {
-                    for(int i = familySymbols.Count; i >= 0; i--)
+                    for(int i = familySymbols.Count - 1; i >= 0; i--)
                     {
                         Parameter parameter = familySymbols[i]?.Family?.get_Parameter(BuiltInParameter.FAMILY_HOSTING_BEHAVIOR);
                         if (parameter != null && parameter.HasValue)

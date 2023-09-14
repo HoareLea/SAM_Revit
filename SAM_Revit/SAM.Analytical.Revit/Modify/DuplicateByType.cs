@@ -38,10 +38,12 @@ namespace SAM.Analytical.Revit
             return elementType;
         }
 
-        public static ElementType DuplicateByType(this Document document, PanelType panelType_New, Construction construction_New)
+        public static ElementType DuplicateByType(this Document document, Construction construction_New)
         {
             if (construction_New == null || document == null)
                 return null;
+
+            PanelType panelType_New = construction_New.PanelType();
 
             FilteredElementCollector filteredElementCollector = Query.FilteredElementCollector(document, panelType_New);
             if (filteredElementCollector == null)

@@ -249,7 +249,7 @@ namespace SAM.Analytical.Revit
                             apertureConstructionLibrary_Result.Add(apertureConstruction_New);
                         }
 
-                        FamilySymbol familySymbol = Convert.ToRevit(apertureConstruction_New, document, convertSettings);
+                        FamilySymbol familySymbol = Convert.ToRevit(apertureConstruction_New, document, convertSettings, panelType.PanelGroup());
                         if (familySymbol == null)
                         {
                             if (string.IsNullOrWhiteSpace(name_Template))

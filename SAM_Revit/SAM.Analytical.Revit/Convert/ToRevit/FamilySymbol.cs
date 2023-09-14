@@ -6,7 +6,7 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Convert
     {
-        public static FamilySymbol ToRevit(this ApertureConstruction apertureConstruction, Document document, Core.Revit.ConvertSettings convertSettings)
+        public static FamilySymbol ToRevit(this ApertureConstruction apertureConstruction, Document document, Core.Revit.ConvertSettings convertSettings, PanelGroup panelGroup = PanelGroup.Undefined)
         {
             if (apertureConstruction == null)
                 return null;
@@ -43,6 +43,26 @@ namespace SAM.Analytical.Revit
             }
 
             familySymbols.RemoveAll(x => string.IsNullOrWhiteSpace(x.Name) || !x.Name.Equals(familyTypeName));
+            if(panelGroup != PanelGroup.Undefined)
+            {
+                HashSet<FamilyHostingBehavior> familyHostingBehaviors = Query.FamilyHostingBehaviors(panelGroup);
+                if(familyHostingBehaviors != null && familyHostingBehaviors.Count != 0)
+                {
+                    for(int i = familySymbols.Count; i >= 0; i--)
+                    {
+                        Parameter parameter = familySymbols[i]?.Family?.get_Parameter(BuiltInParameter.FAMILY_HOSTING_BEHAVIOR);
+                        if (parameter != null && parameter.HasValue)
+                        {
+                            FamilyHostingBehavior familyHostingBehavior = (FamilyHostingBehavior)parameter.AsInteger();
+                            if (!familyHostingBehaviors.Contains(familyHostingBehavior))
+                            {
+                                familySymbols.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+            }
+
             if (!string.IsNullOrWhiteSpace(familyName))
             {
                 familySymbols.RemoveAll(x => string.IsNullOrWhiteSpace(x.FamilyName) || !x.FamilyName.Equals(familyName));

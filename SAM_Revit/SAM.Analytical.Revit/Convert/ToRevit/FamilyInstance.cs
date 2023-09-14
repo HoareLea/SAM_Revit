@@ -25,15 +25,17 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            FamilySymbol familySymbol = apertureConstruction.ToRevit(document, convertSettings);
+            PanelGroup panelGroup = hostObject.PanelType().PanelGroup();
+
+            FamilySymbol familySymbol = apertureConstruction.ToRevit(document, convertSettings, panelGroup);
             if (familySymbol == null)
             {
-                familySymbol = Analytical.Query.DefaultApertureConstruction(hostObject.PanelType(), apertureConstruction.ApertureType).ToRevit(document, convertSettings); //Default Aperture Construction
+                familySymbol = Analytical.Query.DefaultApertureConstruction(hostObject.PanelType(), apertureConstruction.ApertureType).ToRevit(document, convertSettings, panelGroup); //Default Aperture Construction
             }
 
             if (familySymbol == null)
             {
-                familySymbol = Create.FamilySymbol(apertureConstruction, document, hostObject.PanelType().PanelGroup());
+                familySymbol = Create.FamilySymbol(apertureConstruction, document, panelGroup);
             }
 
             if(familySymbol == null)

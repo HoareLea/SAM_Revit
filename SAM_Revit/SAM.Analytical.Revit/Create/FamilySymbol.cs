@@ -32,8 +32,6 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
-            HashSet<FamilyHostingBehavior> familyHostingBehaviors = Query.FamilyHostingBehaviors(panelGroup);
-
             List<Family> families_Filtered = new List<Family>();
             foreach (Family family in families)
             {
@@ -56,16 +54,11 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-                if(familyHostingBehaviors != null && familyHostingBehaviors.Count != 0)
+                if(panelGroup != PanelGroup.Undefined)
                 {
-                    Parameter parameter = family.get_Parameter(BuiltInParameter.FAMILY_HOSTING_BEHAVIOR);
-                    if (parameter != null && parameter.HasValue)
+                    if(!Query.IsValidFamilyHostingBehavior(family, panelGroup))
                     {
-                        FamilyHostingBehavior familyHostingBehavior = (FamilyHostingBehavior)parameter.AsInteger();
-                        if(!familyHostingBehaviors.Contains(familyHostingBehavior))
-                        {
-                            continue;
-                        }
+                        continue;
                     }
                 }
 

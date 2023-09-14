@@ -11,9 +11,18 @@ namespace SAM.Analytical.Revit
             if (apertureConstruction == null)
                 return null;
 
-            FamilySymbol result = convertSettings?.GetObject<FamilySymbol>(apertureConstruction.Guid);
+            FamilySymbol result = null;
+
+            List<FamilySymbol> familySymbols_Converted = convertSettings?.GetObjects<FamilySymbol>(apertureConstruction.Guid);
+            if(familySymbols_Converted != null && familySymbols_Converted.Count != 0)
+            {
+                result = panelGroup == PanelGroup.Undefined ? familySymbols_Converted[0] : familySymbols_Converted.Find(x => Query.IsValidFamilyHostingBehavior(x, panelGroup));
+            }
+
             if (result != null)
+            {
                 return result;
+            }
 
             string fullName = apertureConstruction.Name;
 
@@ -50,14 +59,9 @@ namespace SAM.Analytical.Revit
                 {
                     for(int i = familySymbols.Count - 1; i >= 0; i--)
                     {
-                        Parameter parameter = familySymbols[i]?.Family?.get_Parameter(BuiltInParameter.FAMILY_HOSTING_BEHAVIOR);
-                        if (parameter != null && parameter.HasValue)
+                        if(!Query.IsValidFamilyHostingBehavior(familySymbols[i], panelGroup))
                         {
-                            FamilyHostingBehavior familyHostingBehavior = (FamilyHostingBehavior)parameter.AsInteger();
-                            if (!familyHostingBehaviors.Contains(familyHostingBehavior))
-                            {
-                                familySymbols.RemoveAt(i);
-                            }
+                            familySymbols.RemoveAt(i);
                         }
                     }
                 }
@@ -86,7 +90,14 @@ namespace SAM.Analytical.Revit
                 result.Activate();
             }
 
-            convertSettings?.Add(apertureConstruction.Guid, result);
+            if(familySymbols_Converted == null)
+            {
+                familySymbols_Converted = new List<FamilySymbol>();
+            }
+
+            familySymbols_Converted.Add(result);
+
+            convertSettings?.Add(apertureConstruction.Guid, familySymbols_Converted);
 
             return result;
         }

@@ -20,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.3";
+        public override string LatestComponentVersion => "1.0.4";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -32,7 +32,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </summary>
         public SAMAnalyticalUpdatePanelType()
           : base("SAMAnalytical.UpdatePanelType", "SAManalytical.UpdatePanelType",
-              "Revit got limitation and in order to create some element change in type is required\nExample..tilted wall or floor need to be change to Roof etc\nThis node just recognize by normal orientation and modifies PanelType but keeps original construction ",
+              "Revit got limitation and in order to create some element change in type is required\nExample..tilted wall or floor need to be change to Roof or Fllor etc\nThis node just recognize by normal orientation and modifies PanelType but keeps original construction.\nHosted windows on tilted wall if normal up will become skylight in roof.\nTilted wall normal down will become Floor",
               "SAM", "Revit")
         {
         }

@@ -6,24 +6,18 @@ namespace SAM.Analytical.Revit
 {
     public static partial class Modify
     {
-        public static List<ElementType> UpdatePanelTypes(this Document document, IEnumerable<Panel> panels)
+        public static List<ElementType> UpdatePanelTypes(this Document document, List<Panel> panels)
         {
             if(document == null || panels == null)
             {
                 return null;
             }
 
-            List<Panel> panels_Temp = new List<Panel>(panels);
-            if(panels_Temp == null)
-            {
-                return null;
-            }
-
             List<ElementType> result = new List<ElementType>();
 
-            for (int i = 0; i < panels_Temp.Count; i++)
+            for (int i = 0; i < panels.Count; i++)
             {
-                Panel panel = panels_Temp[i];
+                Panel panel = panels[i];
                 if (panel == null)
                 {
                     continue;
@@ -34,7 +28,7 @@ namespace SAM.Analytical.Revit
 
                 if (panelType == PanelType.Air || panelType == PanelType.Undefined)
                 {
-                    panels_Temp[i] = Analytical.Create.Panel(panel);
+                    panels[i] = Analytical.Create.Panel(panel);
                     ElementType elementType = Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
                     if (elementType != null && result.Find(x => x.Id == elementType.Id) == null)
                     {
@@ -47,7 +41,7 @@ namespace SAM.Analytical.Revit
                 PanelType panelType_Normal = Query.PanelType(normal);
                 if (panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
                 {
-                    panels_Temp[i] = Analytical.Create.Panel(panel);
+                    panels[i] = Analytical.Create.Panel(panel);
                     ElementType elementType = Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
                     if (elementType != null && result.Find(x => x.Id == elementType.Id) == null)
                     {
@@ -62,7 +56,7 @@ namespace SAM.Analytical.Revit
                     double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
                     if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
                     {
-                        panels_Temp[i] = Analytical.Create.Panel(panel);
+                        panels[i] = Analytical.Create.Panel(panel);
                         ElementType elementType = Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
                         if (elementType != null && result.Find(x => x.Id == elementType.Id) == null)
                         {
@@ -85,13 +79,13 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-                panels_Temp[i] = Analytical.Create.Panel(panel, panelType_Normal);
+                panels[i] = Analytical.Create.Panel(panel, panelType_Normal);
 
                 if (panelType_Normal == PanelType.Roof)
                 {
                     HashSet<string> names = new HashSet<string>();
 
-                    List<Aperture> apertures = panels_Temp[i].Apertures;
+                    List<Aperture> apertures = panels[i].Apertures;
                     if (apertures != null && apertures.Count != 0)
                     {
                         foreach (Aperture aperture in apertures)

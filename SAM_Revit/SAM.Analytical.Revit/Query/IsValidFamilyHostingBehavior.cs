@@ -13,7 +13,7 @@ namespace SAM.Analytical.Revit
             }
 
             HashSet<FamilyHostingBehavior> familyHostingBehaviors = FamilyHostingBehaviors(panelGroup);
-            if (familyHostingBehaviors != null && familyHostingBehaviors.Count != 0)
+            if (familyHostingBehaviors == null || familyHostingBehaviors.Count == 0)
             {
                 return false;
             }

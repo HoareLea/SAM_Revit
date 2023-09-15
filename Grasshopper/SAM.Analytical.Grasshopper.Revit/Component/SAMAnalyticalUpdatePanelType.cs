@@ -75,7 +75,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-            Core.SAMObject sAMObject = null;
+            SAMObject sAMObject = null;
             index = Params.IndexOfInputParam("_analytical");
             if (index == -1 || !dataAccess.GetData(index, ref sAMObject))
             {
@@ -105,111 +105,7 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             StartTransaction(document);
 
-            List<ElementType> elementTypes = new List<ElementType>();
-
-            Core.Revit.ConvertSettings convertSettings = new Core.Revit.ConvertSettings(true, true, false, false);
-
-            for(int i=0; i < panels.Count; i++)
-            {
-                Panel panel = panels[i];
-                if(panel == null)
-                {
-                    continue;
-                }
-
-                Geometry.Spatial.Vector3D normal = panel.Normal;
-                PanelType panelType = panel.PanelType;
-
-                if (panelType == PanelType.Air || panelType == PanelType.Undefined)
-                {
-                    panels[i] = Create.Panel(panel);
-                    ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
-                    if(elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
-                    {
-                        elementTypes.Add(elementType);
-                    }
-
-                    continue;
-                }
-
-                PanelType panelType_Normal = Analytical.Revit.Query.PanelType(normal);
-                if (panelType_Normal == PanelType.Undefined || panelType.PanelGroup() == panelType_Normal.PanelGroup())
-                {
-                    panels[i] = Create.Panel(panel);
-                    ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
-                    if (elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
-                    {
-                        elementTypes.Add(elementType);
-                    }
-
-                    continue;
-                }
-
-                if (panelType.PanelGroup() == PanelGroup.Floor || panelType.PanelGroup() == PanelGroup.Roof)
-                {
-                    double value = normal.Unit.DotProduct(Geometry.Spatial.Vector3D.WorldY);
-                    if (Math.Abs(value) <= Core.Revit.Tolerance.Tilt)
-                    {
-                        panels[i] = Create.Panel(panel);
-                        ElementType elementType = Analytical.Revit.Convert.ToRevit_HostObjAttributes(panel, document, new Core.Revit.ConvertSettings(false, true, false));
-                        if (elementType != null && elementTypes.Find(x => x.Id == elementType.Id) == null)
-                        {
-                            elementTypes.Add(elementType);
-                        }
-
-                        continue;
-                    }
-                }
-
-                Construction construction = panel.Construction;
-                if (construction != null)
-                {
-                    construction.SetValue(ConstructionParameter.DefaultPanelType, panelType_Normal);
-                }
-
-                HostObjAttributes hostObjAttributes = Analytical.Revit.Modify.DuplicateByType(document, construction) as HostObjAttributes;
-                if (hostObjAttributes == null)
-                {
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, string.Format("Skipped - Could not duplicate construction for {0} panel (Guid: {1}).", panel.Name, panel.Guid));
-                    continue;
-                }
-
-                panels[i] = Create.Panel(panel, panelType_Normal);
-
-                if(panelType_Normal == PanelType.Roof)
-                {
-                    HashSet<string> names = new HashSet<string>();
-
-                    List<Aperture> apertures = panels[i].Apertures;
-                    if(apertures != null && apertures.Count != 0)
-                    {
-                        foreach (Aperture aperture in apertures)
-                        {
-                            ApertureConstruction apertureConstruction = aperture?.ApertureConstruction;
-                            if(apertureConstruction == null)
-                            {
-                                continue;
-                            }
-
-                            string name = apertureConstruction.FullName();
-                            if(string.IsNullOrWhiteSpace(name))
-                            {
-                                continue;
-                            }
-
-                            FamilySymbol familySymbol = Analytical.Revit.Create.FamilySymbol(apertureConstruction, document, PanelGroup.Roof);
-                            if(familySymbol != null && elementTypes.Find(x => x.Id == familySymbol.Id) == null)
-                            {
-                                elementTypes.Add(familySymbol);
-                            }
-                        }
-                    }
-                }
-
-                if (elementTypes.Find(x => x.Id == hostObjAttributes.Id) == null)
-                    elementTypes.Add(hostObjAttributes);
-            }
-
+            List<ElementType> elementTypes = Analytical.Revit.Modify.UpdatePanelTypes(document, panels);
 
             int index_Analytical = Params.IndexOfOutputParam("analytical");
             if(index_Analytical != -1)

@@ -302,6 +302,7 @@
     <Compile Include="Manager\ActiveSetting.cs" />
     <Compile Include="Modify\CopySpatialElementParameters.cs" />
     <Compile Include="Modify\CopyWall.cs" />
+    <Compile Include="Modify\UpdatePanelTypes.cs" />
     <Compile Include="Modify\UpdateWallType.cs" />
     <Compile Include="Modify\New\UpdateParameterSets.cs" />
     <Compile Include="Modify\UpdateNumbers.cs" />

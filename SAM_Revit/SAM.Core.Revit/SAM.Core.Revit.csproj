@@ -311,7 +311,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accuracy\Tolerance.cs" />
+    <Compile Include="Variables\Tolerance.cs" />
     <Compile Include="Classes\ElementBindingData.cs" />
     <Compile Include="Classes\PurgeMaterialsWrapper.cs" />
     <Compile Include="Classes\RevitFilePreview.cs" />

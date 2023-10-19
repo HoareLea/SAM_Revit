@@ -10,7 +10,7 @@ namespace SAM.Core.Revit
             internalDefinition = null;
             elementBinding = null;
 
-            if (document == null || document.ParameterBindings == null)
+            if (document == null || document.ParameterBindings == null || document.IsFamilyDocument)
                 return false;
 
             DefinitionBindingMapIterator definitionBindingMapIterator = document.ParameterBindings.ForwardIterator();

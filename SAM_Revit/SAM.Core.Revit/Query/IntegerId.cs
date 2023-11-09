@@ -19,7 +19,7 @@ namespace SAM.Core.Revit
                 integerId.SetValue(RevitIdParameter.FullName, fullName);
             }
 
-            Category category = element is Family ? ((Family)element).FamilyCategory : element.Category;
+            Autodesk.Revit.DB.Category category = element is Family ? ((Family)element).FamilyCategory : element.Category;
             if(category != null)
             {
                 integerId.SetValue(RevitIdParameter.CategoryName, category.Name);

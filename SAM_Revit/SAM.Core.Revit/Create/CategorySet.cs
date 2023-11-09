@@ -15,7 +15,7 @@ namespace SAM.Core.Revit
             CategorySet result = new CategorySet();
             foreach(BuiltInCategory builtInCategory in builtInCategories)
             {
-                Category category = document.Settings.Categories.get_Item(builtInCategory);
+                Autodesk.Revit.DB.Category category = document.Settings.Categories.get_Item(builtInCategory);
                 if(category == null)
                 {
                     continue;

@@ -115,7 +115,8 @@ namespace SAM.Analytical.Grasshopper.Revit
             string parameterName_LightTransmittance = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.LightTransmittance);
             string parameterName_IsBlind = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), TransparentMaterialParameter.IsBlind);
             string parameterName_HeatTransferCoefficient = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), GasMaterialParameter.HeatTransferCoefficient);
-            
+            string parameterName_DynamicViscosity = typeMap.GetName(typeof(Material), typeof(Autodesk.Revit.DB.FamilyInstance), "DynamicViscosity");
+
             MaterialLibrary result = Create.MaterialLibrary(
                 path,
                 parameterName_Type,
@@ -137,6 +138,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 parameterName_LightTransmittance,
                 parameterName_IsBlind,
                 parameterName_HeatTransferCoefficient,
+                parameterName_DynamicViscosity,
                 name,
                 namesIndex);
 

@@ -4,6 +4,7 @@ using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
 using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
+using SAM.Geometry.Object.Spatial;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;

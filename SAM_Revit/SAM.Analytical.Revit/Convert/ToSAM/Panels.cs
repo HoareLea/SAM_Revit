@@ -1,11 +1,8 @@
 ﻿using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Analysis;
 using SAM.Core.Revit;
-using SAM.Geometry;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 

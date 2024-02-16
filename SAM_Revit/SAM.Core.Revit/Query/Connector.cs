@@ -1,5 +1,4 @@
 ﻿using Autodesk.Revit.DB;
-using System.Collections.Generic;
 
 namespace SAM.Core.Revit
 {

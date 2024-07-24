@@ -1,77 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2737CD6F-43FE-478D-9DBF-C3A57EF68398}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM.Core.Pdf.Revit</RootNamespace>
-    <AssemblyName>SAM.Core.Pdf.Revit</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <AssemblyTitle>SAM.Core.Pdf.Revit</AssemblyTitle>
+    <Product>SAM.Core.Pdf.Revit</Product>
+    <Copyright>Copyright ©  2021</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Configurations>Debug;Release;Debug2020;Debug2017;Debug2018;Debug2019;Debug2021;Debug2022;Debug2023;Debug2024;Release2020;Release2021;Release2022;Release2023;Release2024</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
@@ -79,11 +30,6 @@
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2021</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
@@ -91,11 +37,6 @@
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2022</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
@@ -104,119 +45,126 @@
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2023</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2023</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2024</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Convert\ToPdf\Pdf.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PdfSharp">
-      <Version>1.50.5147</Version>
+      <Version>6.1.1</Version>
     </PackageReference>
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+	<ItemGroup>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
+			<HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+	</ItemGroup>
 </Project>

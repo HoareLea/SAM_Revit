@@ -294,7 +294,6 @@
     <Compile Include="Classes\SAMReconstructElementComponent.cs" />
     <Compile Include="Classes\SAMTransactionalComponent.cs" />
     <Compile Include="Component\RevitSAMCoreDesignOption.cs" />
-    <Compile Include="Component\RevitFilePreview.cs" />
     <Compile Include="Component\SAMCoreIsPlaced.cs" />
     <Compile Include="Component\RevitCopyRooms.cs" />
     <Compile Include="Component\SAMCoreCreateSheets.cs" />
@@ -348,7 +347,7 @@
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.2</Version>
+      <Version>13.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

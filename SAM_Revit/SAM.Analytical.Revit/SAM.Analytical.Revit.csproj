@@ -9,6 +9,8 @@
     <Copyright>Copyright ©  2020</Copyright>
     <AssemblyVersion>1.0.%2a</AssemblyVersion>
     <FileVersion>1.0.%2a</FileVersion>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <Configurations>Debug;Release;Debug2017;Debug2018;Debug2019;Debug2020;Debug2021;Debug2022;Debug2023;Debug2024;Release2024;Release2020;Release2021;Release2022;Release2023</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

@@ -1,45 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{33206E35-BC18-4EA3-9FB4-3473EF99F3BE}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SAM.Geometry.Revit</RootNamespace>
-    <AssemblyName>SAM.Geometry.Revit</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyTitle>SAM_Revit</AssemblyTitle>
+    <Product>SAM_Revit</Product>
+    <Copyright>Copyright ©  2020</Copyright>
+    <AssemblyVersion>1.0.%2a</AssemblyVersion>
+    <FileVersion>1.0.%2a</FileVersion>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Configurations>Debug;Release;Debug2017;Debug2018;Debug2019;Debug2020;Debug2021;Debug2022;Debug2023;Debug2024;Release2020;Release2021;Release2022;Release2023;Release2024</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2024|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2023|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2022|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2021|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2020|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2019|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2018|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2017|AnyCPU'">
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2020</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <StartAction>Program</StartAction>
     <DebugEngines>{351668CC-8477-4fbf-BFE3-5F1006E4DB1F}</DebugEngines>
@@ -51,54 +55,31 @@
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2021</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2021</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2017</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2018</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
   </PropertyGroup>
@@ -106,10 +87,6 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2019</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
   </PropertyGroup>
@@ -118,46 +95,26 @@
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2021</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2022</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2023</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2023</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
@@ -165,37 +122,27 @@
     <OutputPath>bin\Debug2024\</OutputPath>
     <DefineConstants>TRACE;DEBUG;Revit2023</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Geometry.Revit.xml</DocumentationFile>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2024</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIIFC.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
+	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
+		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
+		  <Private>False</Private>
+	  </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
       <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -295,104 +242,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\SAM\build\SAM.Units.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\FilledRegion.cs" />
-    <Compile Include="Classes\FilledRegionType.cs" />
-    <Compile Include="Classes\RevitInstance2D.cs" />
-    <Compile Include="Classes\RevitType2D.cs" />
-    <Compile Include="Classes\RevitType3D.cs" />
-    <Compile Include="Classes\RevitInstance3D.cs" />
-    <Compile Include="Classes\Tag.cs" />
-    <Compile Include="Classes\TagType.cs" />
-    <Compile Include="Convert\ToRevit\FamilySymbol.cs" />
-    <Compile Include="Convert\ToRevit\SpaceTag.cs" />
-    <Compile Include="Convert\ToRevit\Lines.cs" />
-    <Compile Include="Convert\ToRevit\CurveLoops.cs" />
-    <Compile Include="Convert\ToRevit\IndependentTag.cs" />
-    <Compile Include="Convert\ToSAM\FilledRegion.cs" />
-    <Compile Include="Convert\ToSAM\Mesh3D.cs" />
-    <Compile Include="Convert\ToSAM\RevitInstance3D.cs" />
-    <Compile Include="Convert\ToSAM\RevitInstance.cs" />
-    <Compile Include="Convert\ToSAM\FilledRegionType.cs" />
-    <Compile Include="Convert\ToSAM\RevitType.cs" />
-    <Compile Include="Convert\ToSAM\Segment3Ds.cs" />
-    <Compile Include="Convert\ToSAM\ISAMGeometries.cs" />
-    <Compile Include="Convert\ToSAM\Shell.cs" />
-    <Compile Include="Convert\ToSAM\Tag.cs" />
-    <Compile Include="Convert\ToSAM\TagType.cs" />
-    <Compile Include="Convert\ToSAM\Vector3D.cs" />
-    <Compile Include="Enums\Parameter\TagParameter.cs" />
-    <Compile Include="Enums\Parameter\RevitIdParameter.cs" />
-    <Compile Include="Manager\ActiveSetting.cs" />
-    <Compile Include="Query\Placed.cs" />
-    <Compile Include="Query\Find.cs" />
-    <Compile Include="Query\Face3Ds.cs" />
-    <Compile Include="Query\Faces.cs" />
-    <Compile Include="Query\IntegerId.cs" />
-    <Compile Include="Query\Location.cs" />
-    <Compile Include="Query\MaterialElementIdsDictionary.cs" />
-    <Compile Include="Query\GeneratingElementIdsDictionary.cs" />
-    <Compile Include="Query\BoundaryFace2Ds.cs" />
-    <Compile Include="Query\BoundingBox3D.cs" />
-    <Compile Include="Query\Elements.cs" />
-    <Compile Include="Query\LocationPoint3D.cs" />
-    <Compile Include="Query\BottomProfiles.cs" />
-    <Compile Include="Query\LowLevel.cs" />
-    <Compile Include="Query\HighLevel.cs" />
-    <Compile Include="Query\ConnectorProfileType.cs" />
-    <Compile Include="Query\Plane.cs" />
-    <Compile Include="Query\TryGetAdaptiveComponentPoint3Ds.cs" />
-    <Compile Include="Query\Profile.cs" />
-    <Compile Include="Query\Segmentable3D.cs" />
-    <Compile Include="Query\Segment3Ds.cs" />
-    <Compile Include="Query\ExtremeSegmentable3Ds.cs" />
-    <Compile Include="Query\Transform.cs" />
-    <Compile Include="Query\TopProfiles.cs" />
-    <Compile Include="Query\Profiles.cs" />
-    <Compile Include="Convert\ToRevit\Line.cs" />
-    <Compile Include="Convert\ToRevit\XYZ.cs" />
-    <Compile Include="Convert\ToRevit\UV.cs" />
-    <Compile Include="Convert\ToSAM\Face3D.cs" />
-    <Compile Include="Convert\ToSAM\IClosed3Ds.cs" />
-    <Compile Include="Convert\ToSAM\Face3Ds.cs" />
-    <Compile Include="Convert\ToSAM\Polygon3D.cs" />
-    <Compile Include="Convert\ToSAM\Polygon3Ds.cs" />
-    <Compile Include="Convert\ToSAM\PolycurveLoop3Ds.cs" />
-    <Compile Include="Convert\ToSAM\PolycurveLoop3D.cs" />
-    <Compile Include="Convert\ToSAM\ICurve3D.cs" />
-    <Compile Include="Convert\ToSAM\Polyline3D.cs" />
-    <Compile Include="Convert\ToSAM\Triangle3Ds.cs" />
-    <Compile Include="Convert\ToSAM\Triangle3D.cs" />
-    <Compile Include="Convert\ToSAM\Segment3D.cs" />
-    <Compile Include="Convert\ToSAM\Point2D.cs" />
-    <Compile Include="Convert\ToSAM\Point3D.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Variables\ConversionFactor.cs" />
+    <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj" />
+    <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SAM.Core.Revit\SAM.Core.Revit.csproj">
-      <Project>{7875201b-420b-42d1-9f8f-0f7bdedb8da2}</Project>
-      <Name>SAM.Core.Revit</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SAM.Units.Revit\SAM.Units.Revit.csproj">
-      <Project>{44356aa4-67fe-4c4f-bf7d-8404ca7bcee1}</Project>
-      <Name>SAM.Units.Revit</Name>
-    </ProjectReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.2</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

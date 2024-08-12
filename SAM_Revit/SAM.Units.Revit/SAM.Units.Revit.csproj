@@ -15,6 +15,8 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\build\</OutputPath>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2024|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
@@ -47,14 +49,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <StartAction>Program</StartAction>
     <DebugEngines>{351668CC-8477-4fbf-BFE3-5F1006E4DB1F}</DebugEngines>
-    <StartProgram>C:\Program Files\Autodesk\Revit 2020\Revit.exe</StartProgram>
+    <StartProgram>$(SolutionDir)\references\Revit 2020\Revit.exe</StartProgram>
     <DocumentationFile>..\..\build\SAM.Units.Revit.xml</DocumentationFile>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2017|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2017</DefineConstants>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -62,30 +68,40 @@
     <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Units.Revit.xml</DocumentationFile>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2020</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2021</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2018|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug2018\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2018</DefineConstants>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2019|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug2019\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2019</DefineConstants>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -93,12 +109,16 @@
     <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Units.Revit.xml</DocumentationFile>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2022</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -106,12 +126,16 @@
     <DefineConstants>DEBUG;TRACE;Revit2023</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Units.Revit.xml</DocumentationFile>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2023</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -119,12 +143,20 @@
     <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Units.Revit.xml</DocumentationFile>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2024</DefineConstants>
     <Optimize>true</Optimize>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+    <NoWarn />
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -133,99 +165,99 @@
   </ItemGroup>
   <ItemGroup>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2024\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2024\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2024\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2023\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2023\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2023\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2022\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2022\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2022\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2021\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2021\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2021\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2020\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2020\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2020\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2019\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2019\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2019\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2018\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2018\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2018\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2018\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2017\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIIFC.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2017\RevitAPIIFC.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
 	  <Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">
-		  <HintPath>C:\Program Files\Autodesk\Revit 2017\RevitAPIUI.dll</HintPath>
+		  <HintPath>$(SolutionDir)\references\Revit 2017\RevitAPIUI.dll</HintPath>
 		  <Private>False</Private>
 	  </Reference>
   </ItemGroup>

@@ -1,6 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2017' Or '$(Configuration)' == 'Release2017'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2018' Or '$(Configuration)' == 'Release2018'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2019' Or '$(Configuration)' == 'Release2019'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">netstandard2.0</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DebugSymbols>true</DebugSymbols>
@@ -11,30 +19,36 @@
     <FileVersion>1.0.0.0</FileVersion>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <Configurations>Debug;Release;Debug2020;Debug2017;Debug2018;Debug2019;Debug2021;Debug2022;Debug2023;Debug2024;Release2020;Release2021;Release2022;Release2023;Release2024</Configurations>
+    <Configurations>Debug;Release;Debug2020;Debug2017;Debug2018;Debug2019;Debug2021;Debug2022;Debug2023;Debug2024;Debug2025;Release2020;Release2021;Release2022;Release2023;Release2024</Configurations>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <Platforms>x64</Platforms>
   </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>TRACE;Revit2020</DefineConstants>
+		<Optimize>true</Optimize>
+		<DocumentationFile>
+		</DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>DEBUG;TRACE;Revit2020</DefineConstants>
+		<DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2020</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2021</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>TRACE;Revit2021</DefineConstants>
+		<Optimize>true</Optimize>
+		<DocumentationFile>
+		</DocumentationFile>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2022</DefineConstants>
@@ -42,6 +56,12 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
+		<DebugSymbols>true</DebugSymbols>
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
+		<DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
@@ -59,11 +79,22 @@
     <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>TRACE;Revit2024</DefineConstants>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2024</DefineConstants>
-    <Optimize>true</Optimize>
+    <DefineConstants>DEBUG;TRACE;Revit2025</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2025|AnyCPU'">
+		<OutputPath>..\..\build\</OutputPath>
+		<DefineConstants>TRACE;Revit2025</DefineConstants>
+		<Optimize>true</Optimize>
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PdfSharp">
@@ -72,6 +103,18 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 	<ItemGroup>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
+			<HintPath>$(SolutionDir)\references\Revit 2025\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
+			<HintPath>$(SolutionDir)\references\Revit 2025\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
+			<HintPath>$(SolutionDir)\references\Revit 2025\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
 			<HintPath>$(SolutionDir)\references\Revit 2024\RevitAPI.dll</HintPath>
 			<Private>False</Private>

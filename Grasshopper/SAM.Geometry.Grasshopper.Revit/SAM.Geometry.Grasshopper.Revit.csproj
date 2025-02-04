@@ -472,6 +472,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Classes\**" />
+    <EmbeddedResource Remove="Classes\**" />
+    <None Remove="Classes\**" />
+  </ItemGroup>
+  <ItemGroup>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
 		  <HintPath>$(SolutionDir)\references\Revit 2025\RevitAPI.dll</HintPath>
 		  <Private>False</Private>
@@ -605,9 +610,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\SAM_Revit\SAM.Core.Revit\SAM.Core.Revit.csproj" />
     <ProjectReference Include="..\..\SAM_Revit\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj" />
     <ProjectReference Include="..\SAM.Core.Grasshopper.Revit\SAM.Core.Grasshopper.Revit.csproj" />
@@ -733,6 +735,6 @@
     <StartAction>Program</StartAction>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if &quot;$(ConfigurationName)&quot; == &quot;Debug2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2024&quot; set Version=Revit 2024&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(TargetDir)\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;set SAM_DIR=$(APPDATA)\SAM\%25Version%25&#xD;&#xA;if not exist &quot;%25SAM_DIR%25&quot; mkdir &quot;%25SAM_DIR%25&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)*.dll&quot; &quot;%25SAM_DIR%25&quot;&#xD;&#xA;copy &quot;%25SAM_DIR%25\$(ProjectName).dll&quot; &quot;%25SAM_DIR%25\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;::erase &quot;%25SAM_DIR%25$(ProjectName).dll&quot;&#xD;&#xA;::erase &quot;$(TargetPath)&quot;" />
+    <Exec Command="if &quot;$(ConfigurationName)&quot; == &quot;Debug2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2025&quot; set Version=Revit 2025&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2025&quot; set Version=Revit 2025&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(TargetDir)\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;set SAM_DIR=$(APPDATA)\SAM\%25Version%25&#xD;&#xA;if not exist &quot;%25SAM_DIR%25&quot; mkdir &quot;%25SAM_DIR%25&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)*.dll&quot; &quot;%25SAM_DIR%25&quot;&#xD;&#xA;copy &quot;%25SAM_DIR%25\$(ProjectName).dll&quot; &quot;%25SAM_DIR%25\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;::erase &quot;%25SAM_DIR%25$(ProjectName).dll&quot;&#xD;&#xA;::erase &quot;$(TargetPath)&quot;" />
   </Target>
 </Project>

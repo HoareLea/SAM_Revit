@@ -21,7 +21,7 @@
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <Configurations>Debug;Release;Debug2020;Debug2017;Debug2018;Debug2019;Debug2021;Debug2022;Debug2023;Debug2024;Debug2025;Release2020;Release2021;Release2022;Release2023;Release2024;Release2025</Configurations>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <Platforms>x64</Platforms>
+    <Platforms>x64;AnyCPU</Platforms>
   </PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
 		<OutputPath>..\..\build\</OutputPath>
@@ -86,7 +86,7 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|AnyCPU'">
 	  <OutputPath>..\..\build\</OutputPath>
-	  <DefineConstants>TRACE;Revit2024</DefineConstants>
+	  <DefineConstants>TRACE;Revit2025</DefineConstants>
 	  <Optimize>true</Optimize>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|AnyCPU'">
@@ -95,11 +95,78 @@
     <DefineConstants>DEBUG;TRACE;Revit2025</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2025|AnyCPU'">
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>TRACE;Revit2025</DefineConstants>
-		<Optimize>true</Optimize>
-	</PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2020</DefineConstants>
+    <Optimize>true</Optimize>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2020</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2021</DefineConstants>
+    <Optimize>true</Optimize>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2022</DefineConstants>
+    <Optimize>true</Optimize>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2023</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2023</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2024</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2025</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2025</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PdfSharp">

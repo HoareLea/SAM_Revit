@@ -110,46 +110,46 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2020|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2021|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2022|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2023|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2024|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|AnyCPU'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2020|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2021|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2022|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2023|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2024|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|x64'">
-    <OutputPath>..\build\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -717,6 +717,6 @@
     <StartAction>Program</StartAction>
   </PropertyGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if &quot;$(ConfigurationName)&quot; == &quot;Debug2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2024&quot; set Version=Revit 2024&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(TargetDir)\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;set SAM_DIR=$(APPDATA)\SAM\%25Version%25&#xD;&#xA;if not exist &quot;%25SAM_DIR%25&quot; mkdir &quot;%25SAM_DIR%25&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)*.dll&quot; &quot;%25SAM_DIR%25&quot;&#xD;&#xA;copy &quot;%25SAM_DIR%25\$(ProjectName).dll&quot; &quot;%25SAM_DIR%25\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;::erase &quot;%25SAM_DIR%25$(ProjectName).dll&quot;&#xD;&#xA;::erase &quot;$(TargetPath)&quot;" />
+    <Exec Command="if &quot;$(ConfigurationName)&quot; == &quot;Debug2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Debug2025&quot; set Version=Revit 2025&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2020&quot; set Version=Revit 2020&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2021&quot; set Version=Revit 2021&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2022&quot; set Version=Revit 2022&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2023&quot; set Version=Revit 2023&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2024&quot; set Version=Revit 2024&#xD;&#xA;if &quot;$(ConfigurationName)&quot; == &quot;Release2025&quot; set Version=Revit 2025&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetPath)&quot; &quot;$(TargetDir)\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;set SAM_DIR=$(APPDATA)\SAM\%25Version%25&#xD;&#xA;if not exist &quot;%25SAM_DIR%25&quot; mkdir &quot;%25SAM_DIR%25&quot;&#xD;&#xA;&#xD;&#xA;copy &quot;$(TargetDir)*.dll&quot; &quot;%25SAM_DIR%25&quot;&#xD;&#xA;copy &quot;%25SAM_DIR%25\$(ProjectName).dll&quot; &quot;%25SAM_DIR%25\$(ProjectName).gha&quot;&#xD;&#xA;&#xD;&#xA;::erase &quot;%25SAM_DIR%25$(ProjectName).dll&quot;&#xD;&#xA;::erase &quot;$(TargetPath)&quot;" />
   </Target>
 </Project>

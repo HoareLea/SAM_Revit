@@ -408,6 +408,11 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Classes\**" />
+    <EmbeddedResource Remove="Classes\**" />
+    <None Remove="Classes\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
       <HintPath>$(SolutionDir)\references\Revit 2025\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -561,9 +566,6 @@
     <ProjectReference Include="..\..\SAM_Revit\SAM.Geometry.Revit\SAM.Geometry.Revit.csproj" />
     <ProjectReference Include="..\..\SAM_Revit\SAM.Units.Revit\SAM.Units.Revit.csproj" />
     <ProjectReference Include="..\SAM.Core.Grasshopper.Revit\SAM.Core.Grasshopper.Revit.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
 	  <PackageReference Include="Grasshopper">

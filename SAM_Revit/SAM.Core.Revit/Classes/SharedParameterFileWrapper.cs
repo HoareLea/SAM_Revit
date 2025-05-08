@@ -317,10 +317,6 @@ namespace SAM.Core.Revit
         }
 #endif
 
-
-
-
-
         public void Close()
         {
             if (application != null)

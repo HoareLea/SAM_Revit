@@ -23,7 +23,12 @@ namespace SAM.Core.Revit
             if(category != null)
             {
                 integerId.SetValue(RevitIdParameter.CategoryName, category.Name);
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 integerId.SetValue(RevitIdParameter.CategoryId, category.Id.IntegerValue);
+#else
+                integerId.SetValue(RevitIdParameter.CategoryId, category.Id.Value);
+#endif
+
             }
 
             integerId.SetValue(RevitIdParameter.UniqueId, element.UniqueId);

@@ -66,8 +66,15 @@ namespace SAM.Core.Revit
 
                 foreach (Parameter parameter in parameters)
                 {
+
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     if (Ids != null && Ids.Contains(parameter.Id.IntegerValue))
                         continue;
+#else
+                    if (Ids != null && Ids.Contains(System.Convert.ToInt32(parameter.Id.Value)))
+                        continue;
+#endif
 
                     SetValue(parameter, parameterSet.ToObject(name));
                 }

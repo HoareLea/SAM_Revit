@@ -123,7 +123,14 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             index = Params.IndexOfOutputParam("ids");
             if (index != -1)
+            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 dataAccess.SetDataList(index, elementIds?.ConvertAll(x => x.IntegerValue));
+#else
+                dataAccess.SetDataList(index, elementIds?.ConvertAll(x => x.Value));
+#endif
+            }
+
         }
     }
 }

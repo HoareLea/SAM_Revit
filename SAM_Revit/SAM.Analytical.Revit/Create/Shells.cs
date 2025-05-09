@@ -20,7 +20,11 @@ namespace SAM.Analytical.Revit
                 List<Autodesk.Revit.DB.Mechanical.Space> spaces_New = new List<Autodesk.Revit.DB.Mechanical.Space>();
                 foreach (Autodesk.Revit.DB.Mechanical.Space space in spaces)
                 {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     int index = spaces_Temp.FindIndex(x => x.Id.IntegerValue == space.Id.IntegerValue);
+#else
+                    int index = spaces_Temp.FindIndex(x => x.Id.Value == space.Id.Value);
+#endif
                     if (index != -1)
                         spaces_New.Add(spaces_Temp[index]);
                 }

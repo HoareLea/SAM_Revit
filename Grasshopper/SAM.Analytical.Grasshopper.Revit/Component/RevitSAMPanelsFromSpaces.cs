@@ -97,14 +97,24 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if (space.Location == null)
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 message = string.Format("Cannot generate Panels. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
+#else
+                message = string.Format("Cannot generate Panels. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.Value);
+#endif
+
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }
 
             if (space.Volume < Core.Tolerance.MacroDistance)
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 message = string.Format("Space cannot be converted because it has no volume. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.IntegerValue);
+#else
+                message = string.Format("Space cannot be converted because it has no volume. Space {0} [ElementId: {1}] not enclosed", space.Name, space.Id.Value);
+#endif
+
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 return;
             }

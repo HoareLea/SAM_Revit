@@ -127,7 +127,11 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if (element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue);
+#else
+                message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.Value);
+#endif
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 dataAccess.SetData(1, message);
 
@@ -155,7 +159,11 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                     catch (Exception exception)
                     {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                         message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
+#else
+                        message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.Value, element.Category.Name, exception.Message);
+#endif
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                         dataAccess.SetData(1, message);
                     }
@@ -164,7 +172,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             if (sAMObjects == null || sAMObjects.Count() == 0)
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
+#else
+                message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.Value, element.Category.Name);
+#endif
+
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
                 dataAccess.SetData(1, message);
 
@@ -173,7 +186,12 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             dataAccess.SetDataList(0, sAMObjects);
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
+#else
+            message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.Value, element.Category.Name);
+#endif
+
             dataAccess.SetData(1, message);
         }
     }

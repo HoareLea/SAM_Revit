@@ -69,7 +69,12 @@ namespace SAM.Core.Revit
             if (value is int)
             {
                 //Check if parameter is Workset parameter -> If Workset parameter then change only if Workset with Id exists
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 if (parameter.Id.IntegerValue == (int)BuiltInParameter.ELEM_PARTITION_PARAM)
+#else
+                if (parameter.Id.Value == (long)BuiltInParameter.ELEM_PARTITION_PARAM)
+#endif
                 {
                     WorksetTable worksetTable = parameter.Element?.Document?.GetWorksetTable();
                     if (worksetTable == null)

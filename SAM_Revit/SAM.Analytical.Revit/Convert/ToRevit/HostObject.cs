@@ -185,7 +185,13 @@ namespace SAM.Analytical.Revit
                 {
                     document.Regenerate();
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
+#else
+                    SlabShapeEditor slabShapeEditor = floor.GetSlabShapeEditor();
+#endif
+
+
                     if (slabShapeEditor != null)
                     {
                         slabShapeEditor.ResetSlabShape();
@@ -193,7 +199,12 @@ namespace SAM.Analytical.Revit
                         foreach (Curve curve in curveArray_Sloped)
                         {
                             XYZ xYZ = curve.GetEndPoint(0);
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                             slabShapeEditor.DrawPoint(xYZ);
+#else
+                            slabShapeEditor.AddPoint(xYZ);
+#endif
+
                         }
                     }
                 }
@@ -223,8 +234,14 @@ namespace SAM.Analytical.Revit
                 if (parameter != null)
                     parameter.Set(ElementId.InvalidElementId);
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 SlabShapeEditor slabShapeEditor = roofBase.SlabShapeEditor;
-                if(slabShapeEditor != null)
+#else
+                SlabShapeEditor slabShapeEditor = roofBase.GetSlabShapeEditor();
+#endif
+
+
+                if (slabShapeEditor != null)
                 {
                     slabShapeEditor.ResetSlabShape();
 
@@ -232,7 +249,12 @@ namespace SAM.Analytical.Revit
                     {
                         XYZ xYZ = curve.GetEndPoint(0);
                         //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                         slabShapeEditor.DrawPoint(xYZ);
+#else
+                        slabShapeEditor.AddPoint(xYZ);
+#endif
+
                     }
                 }
 

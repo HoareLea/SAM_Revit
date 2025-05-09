@@ -18,7 +18,12 @@ namespace SAM.Analytical.Revit
             if (result != null)
                 return result;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             Polygon3D polygon3D = energyAnalysisOpening.GetPolyloop().ToSAM();
+#else
+            Polygon3D polygon3D = energyAnalysisOpening.GetPolyloops()?.FirstOrDefault().ToSAM();
+#endif
+
             if (polygon3D == null)
                 return null;
 

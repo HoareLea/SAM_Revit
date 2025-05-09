@@ -59,7 +59,12 @@ namespace SAM.Analytical.Revit
 
                 if (hostObject != null)
                 {
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
+#else
+                    builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.Value;
+#endif
                 }
             }
 
@@ -121,7 +126,11 @@ namespace SAM.Analytical.Revit
             //Method 2 of extracting Geometry
             if (hostObject != null)
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
+#else
+                builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.Value;
+#endif
 
                 Geometry.Spatial.Plane plane_Host = null;
                 if (hostObject is CurtainSystem && familyInstance is Autodesk.Revit.DB.Panel)

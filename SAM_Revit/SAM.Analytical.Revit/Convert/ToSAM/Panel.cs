@@ -21,7 +21,12 @@ namespace SAM.Analytical.Revit
 
             Document document = energyAnalysisSurface.Document;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             Polygon3D polygon3D = energyAnalysisSurface.GetPolyloop().ToSAM();
+#else
+            Polygon3D polygon3D = energyAnalysisSurface.GetPolyloops()?.FirstOrDefault()?.ToSAM();
+#endif
+
             if (polygon3D == null)
                 return null;
 

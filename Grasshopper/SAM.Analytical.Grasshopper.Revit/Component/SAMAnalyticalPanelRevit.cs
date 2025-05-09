@@ -162,7 +162,12 @@ namespace SAM.Analytical.Grasshopper.Revit
             Construction construction = panel.Construction;
             if (construction != null && !string.IsNullOrWhiteSpace(construction.Name) && (!(construction.Name.Equals(hostObject_New.FullName()) || construction.Name.Equals(hostObject_New.Name))))
             {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 string message = string.Format("Revit Element Type is missing - Panel Guid: {0} Construction Name: {1}, Revit Element Id: {2}", panel.Guid, construction.Name, hostObject_New.Id.IntegerValue);
+#else
+                string message = string.Format("Revit Element Type is missing - Panel Guid: {0} Construction Name: {1}, Revit Element Id: {2}", panel.Guid, construction.Name, hostObject_New.Id.Value);
+#endif
+
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
             }
 

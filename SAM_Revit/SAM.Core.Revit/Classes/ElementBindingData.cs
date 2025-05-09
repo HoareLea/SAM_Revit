@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace SAM.Core.Revit
 {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023
     public class ElementBindingData : IJSAMObject
     {
         private string name;
@@ -19,13 +20,13 @@ namespace SAM.Core.Revit
 
         public ElementBindingData(ElementBindingData elementBindingData)
         {
-            if(elementBindingData != null)
+            if (elementBindingData != null)
             {
                 name = elementBindingData.name;
-                if(elementBindingData.builtInCategories != null)
+                if (elementBindingData.builtInCategories != null)
                 {
                     builtInCategories = new HashSet<BuiltInCategory>();
-                    foreach(BuiltInCategory builtInCategory in elementBindingData.builtInCategories)
+                    foreach (BuiltInCategory builtInCategory in elementBindingData.builtInCategories)
                     {
                         builtInCategories.Add(builtInCategory);
                     }
@@ -39,7 +40,7 @@ namespace SAM.Core.Revit
         public ElementBindingData(string name, IEnumerable<BuiltInCategory> builtInCategories, BuiltInParameterGroup builtInParameterGroup, bool instance)
         {
             this.name = name;
-            if(builtInCategories != null)
+            if (builtInCategories != null)
             {
                 this.builtInCategories = new HashSet<BuiltInCategory>();
                 foreach (BuiltInCategory builtInCategory in builtInCategories)
@@ -64,13 +65,13 @@ namespace SAM.Core.Revit
         {
             get
             {
-                if(builtInCategories == null)
+                if (builtInCategories == null)
                 {
                     return null;
                 }
 
                 HashSet<BuiltInCategory> result = new HashSet<BuiltInCategory>();
-                foreach(BuiltInCategory builtInCategory in builtInCategories)
+                foreach (BuiltInCategory builtInCategory in builtInCategories)
                 {
                     result.Add(builtInCategory);
                 }
@@ -97,25 +98,25 @@ namespace SAM.Core.Revit
 
         public bool FromJObject(JObject jObject)
         {
-            if(jObject == null)
+            if (jObject == null)
             {
                 return false;
             }
 
-            if(jObject.ContainsKey("Name"))
+            if (jObject.ContainsKey("Name"))
             {
                 name = jObject.Value<string>("Name");
             }
 
-            if(jObject.ContainsKey("BuiltInCategories"))
+            if (jObject.ContainsKey("BuiltInCategories"))
             {
                 JArray jArray = jObject.Value<JArray>("BuiltInCategories");
-                if(jArray != null)
+                if (jArray != null)
                 {
                     builtInCategories = new HashSet<BuiltInCategory>();
-                    foreach(string value in jArray)
+                    foreach (string value in jArray)
                     {
-                        if(!Enum.TryParse(value, out BuiltInCategory builtInCategory))
+                        if (!Enum.TryParse(value, out BuiltInCategory builtInCategory))
                         {
                             continue;
                         }
@@ -125,16 +126,16 @@ namespace SAM.Core.Revit
                 }
             }
 
-            if(jObject.ContainsKey("BuiltInParameterGroup"))
+            if (jObject.ContainsKey("BuiltInParameterGroup"))
             {
                 string value = jObject.Value<string>("BuiltInParameterGroup");
-                if(!string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, out BuiltInParameterGroup builtInParameterGroup_Temp))
+                if (!string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, out BuiltInParameterGroup builtInParameterGroup_Temp))
                 {
                     builtInParameterGroup = builtInParameterGroup_Temp;
                 }
             }
 
-            if(jObject.ContainsKey("Instance"))
+            if (jObject.ContainsKey("Instance"))
             {
                 instance = jObject.Value<bool>("Instance");
             }
@@ -152,10 +153,10 @@ namespace SAM.Core.Revit
                 result.Add("Name", name);
             }
 
-            if(builtInCategories != null)
+            if (builtInCategories != null)
             {
                 JArray jArray = new JArray();
-                foreach(BuiltInCategory builtInCategory in builtInCategories)
+                foreach (BuiltInCategory builtInCategory in builtInCategories)
                 {
                     jArray.Add(builtInCategory.ToString());
                 }
@@ -165,9 +166,180 @@ namespace SAM.Core.Revit
             result.Add("BuiltInParameterGroup", builtInParameterGroup.ToString());
 
             result.Add("Instance", instance);
-            
+
             return result;
         }
 
     }
+#else
+    public class ElementBindingData : IJSAMObject
+    {
+        private string name;
+        private HashSet<BuiltInCategory> builtInCategories;
+        private ForgeTypeId groupTypeId;
+        private bool instance;
+
+        public ElementBindingData(JObject jObject)
+        {
+            FromJObject(jObject);
+        }
+
+        public ElementBindingData(ElementBindingData elementBindingData)
+        {
+            if (elementBindingData != null)
+            {
+                name = elementBindingData.name;
+                if (elementBindingData.builtInCategories != null)
+                {
+                    builtInCategories = new HashSet<BuiltInCategory>();
+                    foreach (BuiltInCategory builtInCategory in elementBindingData.builtInCategories)
+                    {
+                        builtInCategories.Add(builtInCategory);
+                    }
+                }
+
+                groupTypeId = elementBindingData.groupTypeId;
+                instance = elementBindingData.instance;
+            }
+        }
+
+        public ElementBindingData(string name, IEnumerable<BuiltInCategory> builtInCategories, ForgeTypeId groupTypeId, bool instance)
+        {
+            this.name = name;
+            if (builtInCategories != null)
+            {
+                this.builtInCategories = new HashSet<BuiltInCategory>();
+                foreach (BuiltInCategory builtInCategory in builtInCategories)
+                {
+                    this.builtInCategories.Add(builtInCategory);
+                }
+            }
+
+            this.groupTypeId = groupTypeId;
+            this.instance = instance;
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        public HashSet<BuiltInCategory> BuiltInCategories
+        {
+            get
+            {
+                if (builtInCategories == null)
+                {
+                    return null;
+                }
+
+                HashSet<BuiltInCategory> result = new HashSet<BuiltInCategory>();
+                foreach (BuiltInCategory builtInCategory in builtInCategories)
+                {
+                    result.Add(builtInCategory);
+                }
+
+                return result;
+            }
+        }
+
+        public ForgeTypeId GroupTypeId
+        {
+            get
+            {
+                return groupTypeId;
+            }
+        }
+
+        public bool Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        public bool FromJObject(JObject jObject)
+        {
+            if (jObject == null)
+            {
+                return false;
+            }
+
+            if (jObject.ContainsKey("Name"))
+            {
+                name = jObject.Value<string>("Name");
+            }
+
+            if (jObject.ContainsKey("BuiltInCategories"))
+            {
+                JArray jArray = jObject.Value<JArray>("BuiltInCategories");
+                if (jArray != null)
+                {
+                    builtInCategories = new HashSet<BuiltInCategory>();
+                    foreach (string value in jArray)
+                    {
+                        if (!Enum.TryParse(value, out BuiltInCategory builtInCategory))
+                        {
+                            continue;
+                        }
+
+                        builtInCategories.Add(builtInCategory);
+                    }
+                }
+            }
+
+            if (jObject.ContainsKey("GroupTypeName"))
+            {
+                groupTypeId = Query.GroupTypeId(jObject.Value<string>("GroupTypeName"));
+            }
+
+            if (jObject.ContainsKey("Instance"))
+            {
+                instance = jObject.Value<bool>("Instance");
+            }
+
+            return true;
+        }
+
+        public JObject ToJObject()
+        {
+            JObject result = new JObject();
+            result.Add("_type", Core.Query.FullTypeName(this));
+
+            if (name != null)
+            {
+                result.Add("Name", name);
+            }
+
+            if (builtInCategories != null)
+            {
+                JArray jArray = new JArray();
+                foreach (BuiltInCategory builtInCategory in builtInCategories)
+                {
+                    jArray.Add(builtInCategory.ToString());
+                }
+                result.Add("BuiltInCategories", jArray);
+            }
+
+            if(groupTypeId != null)
+            {
+                result.Add("GroupTypeName", LabelUtils.GetLabelForGroup(groupTypeId));
+            }
+
+            result.Add("Instance", instance);
+
+            return result;
+        }
+
+    }
+#endif
+
+
+
+
+
 }

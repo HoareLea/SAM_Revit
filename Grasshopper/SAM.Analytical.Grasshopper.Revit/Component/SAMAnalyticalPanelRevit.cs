@@ -5,7 +5,6 @@ using SAM.Core.Grasshopper.Revit;
 using SAM.Core.Revit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {

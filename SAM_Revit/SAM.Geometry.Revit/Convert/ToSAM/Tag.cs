@@ -2,7 +2,6 @@
 using Autodesk.Revit.DB.Mechanical;
 using SAM.Core;
 using SAM.Core.Revit;
-using System.Linq;
 
 namespace SAM.Geometry.Revit
 {

@@ -45,8 +45,8 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            IntegerId viewId = Query.IntegerId(view);
-            IntegerId referenceId = Query.IntegerId(spaceTag.Space);
+            LongId viewId = Query.LongId(view);
+            LongId referenceId = Query.LongId(spaceTag.Space);
 
             Spatial.Point3D location = ToSAM(spaceTag.TagHeadPosition);
             if (location == null)
@@ -81,7 +81,7 @@ namespace SAM.Geometry.Revit
             result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, end, referenceId);
             if (result != null)
             {
-                result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTag));
+                result.SetValue(ElementParameter.RevitId, Query.LongId(spaceTag));
                 result.SetValue(TagParameter.Leader, spaceTag.HasLeader);
                 result.SetValue(TagParameter.Orientation, spaceTag.TagOrientation.ToString());
 
@@ -130,13 +130,13 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            IntegerId viewId = Query.IntegerId(view);
+            LongId viewId = Query.LongId(view);
 
 #if Revit2017
-            IntegerId referenceId = null;
+            LongId referenceId = null;
             throw new System.NotImplementedException();
 #elif Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-            IntegerId referenceId = Query.IntegerId(document.GetElement(independentTag.GetTaggedReference()));
+            LongId referenceId = Query.LongId(document.GetElement(independentTag.GetTaggedReference()));
 #else
             Autodesk.Revit.DB.Reference reference = independentTag.GetTaggedReferences().FirstOrDefault();
             if(reference == null)
@@ -144,7 +144,7 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            IntegerId referenceId = Query.IntegerId(document.GetElement(reference));
+            LongId referenceId = Query.LongId(document.GetElement(reference));
 #endif
 
             if (referenceId == null)
@@ -210,7 +210,7 @@ namespace SAM.Geometry.Revit
             result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, end, referenceId);
             if (result != null)
             {
-                result.SetValue(ElementParameter.RevitId, Query.IntegerId(independentTag));
+                result.SetValue(ElementParameter.RevitId, Query.LongId(independentTag));
                 result.SetValue(TagParameter.Leader, independentTag.HasLeader);
                 result.SetValue(TagParameter.Orientation, independentTag.TagOrientation.ToString());
 

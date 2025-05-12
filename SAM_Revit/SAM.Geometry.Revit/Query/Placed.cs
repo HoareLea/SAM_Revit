@@ -25,25 +25,25 @@ namespace SAM.Geometry.Revit
                 return false;
             }
 
-            Core.IntegerId integerId_View = tag.ViewId;
-            if (integerId_View == null)
+            Core.LongId longId_View = tag.ViewId;
+            if (longId_View == null)
             {
                 return false;
             }
 
-            View view = Core.Revit.Query.Element<View>(document, integerId_View, true);
+            View view = Core.Revit.Query.Element<View>(document, longId_View, true);
             if (view == null)
             {
                 return false;
             }
 
-            Core.IntegerId integerId_Reference = tag.ReferenceId;
-            if (integerId_Reference == null)
+            Core.LongId longId_Reference = tag.ReferenceId;
+            if (longId_Reference == null)
             {
                 return false;
             }
 
-            Element element = Find<Element>(document, integerId_Reference);
+            Element element = Find<Element>(document, longId_Reference);
             if (element == null)
             {
                 return false;

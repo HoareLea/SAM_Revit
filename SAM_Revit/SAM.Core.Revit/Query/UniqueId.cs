@@ -9,22 +9,22 @@
                 return null;
             }
 
-            if (!sAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) || integerId == null)
+            if (!sAMObject.TryGetValue(ElementParameter.RevitId, out LongId longId) || longId == null)
             {
                 return null;
             }
 
-            return UniqueId(integerId);
+            return UniqueId(longId);
         }
 
-        public static string UniqueId(this IntegerId integerId)
+        public static string UniqueId(this LongId longId)
         {
-            if (integerId == null)
+            if (longId == null)
             {
                 return null;
             }
 
-            if (!integerId.TryGetValue(RevitIdParameter.UniqueId, out string result))
+            if (!longId.TryGetValue(RevitIdParameter.UniqueId, out string result))
             {
                 return null;
             }

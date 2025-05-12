@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace SAM.Core.Revit
 {
-    [AssociatedTypes(typeof(IntegerId)), Description("Revit Id Parameter")]
+    [AssociatedTypes(typeof(LongId)), Description("Revit Id Parameter")]
     public enum RevitIdParameter
     {
         [ParameterProperties("Full Name", "Revit Full Name"), ParameterValue(ParameterType.String)] FullName,

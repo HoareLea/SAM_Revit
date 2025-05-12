@@ -13,8 +13,8 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            Core.IntegerId integerId_Reference = tag.ReferenceId;
-            if (integerId_Reference == null)
+            Core.LongId longId_Reference = tag.ReferenceId;
+            if (longId_Reference == null)
             {
                 return null;
             }
@@ -30,19 +30,19 @@ namespace SAM.Geometry.Revit
                 return null;
             }
 
-            Core.IntegerId integerId_View = tag.ViewId;
-            if (integerId_View == null)
+            Core.LongId longId_View = tag.ViewId;
+            if (longId_View == null)
             {
                 return null;
             }
 
-            View view = Core.Revit.Query.Element<View>(document, integerId_View, true);
+            View view = Core.Revit.Query.Element<View>(document, longId_View, true);
             if(view == null)
             {
                 return null;
             }
 
-            Element element = Query.Find<Element>(document, integerId_Reference);
+            Element element = Query.Find<Element>(document, longId_Reference);
             if(element == null)
             {
                 return null;

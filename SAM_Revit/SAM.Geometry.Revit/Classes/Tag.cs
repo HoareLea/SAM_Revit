@@ -6,7 +6,7 @@ namespace SAM.Geometry.Revit
 {
     public class Tag : ViewSpecificRevitInstance<TagType>
     {
-        private IntegerId referenceId;
+        private LongId referenceId;
         private Planar.Point2D location;
         private Planar.Point2D elbow;
         private Planar.Point2D end;
@@ -22,18 +22,18 @@ namespace SAM.Geometry.Revit
 
         }
 
-        public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, IntegerId referenceId)
-            :base(tagType, viewId)
+        public Tag(TagType tagType, LongId viewId, Planar.Point2D location, LongId referenceId)
+            : base(tagType, viewId)
         {
             this.location = location == null ? null : new Planar.Point2D(location);
-            this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
+            this.referenceId = referenceId == null ? null : new LongId(referenceId);
         }
 
-        public Tag(TagType tagType, IntegerId viewId, Planar.Point2D location, Planar.Point2D elbow, Planar.Point2D end, IntegerId referenceId)
-    : base(tagType, viewId)
+        public Tag(TagType tagType, LongId viewId, Planar.Point2D location, Planar.Point2D elbow, Planar.Point2D end, LongId referenceId)
+            : base(tagType, viewId)
         {
             this.location = location == null ? null : new Planar.Point2D(location);
-            this.referenceId = referenceId == null ? null : new IntegerId(referenceId);
+            this.referenceId = referenceId == null ? null : new LongId(referenceId);
             this.elbow = elbow == null ? null : new Planar.Point2D(elbow);
             this.end = end == null ? null : new Planar.Point2D(end);
         }
@@ -62,7 +62,7 @@ namespace SAM.Geometry.Revit
 
             if (jObject.ContainsKey("ReferenceId"))
             {
-                referenceId = new IntegerId(jObject.Value<JObject>("ReferenceId"));
+                referenceId = new LongId(jObject.Value<JObject>("ReferenceId"));
             }
 
             return true;
@@ -99,11 +99,11 @@ namespace SAM.Geometry.Revit
             return result;
         }
 
-        public IntegerId ReferenceId
+        public LongId ReferenceId
         {
             get
             {
-                return referenceId == null ? null : new IntegerId(referenceId);
+                return referenceId == null ? null : new LongId(referenceId);
             }
         }
 

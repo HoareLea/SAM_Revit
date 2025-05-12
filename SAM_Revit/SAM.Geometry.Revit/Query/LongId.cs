@@ -5,12 +5,12 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static IntegerId IntegerId(this Element element)
+        public static LongId LongId(this Element element)
         {
             if (element == null)
                 return null;
 
-            IntegerId result = Core.Revit.Query.IntegerId(element);
+            LongId result = Core.Revit.Query.LongId(element);
             if(result == null)
             {
                 return result;

@@ -141,6 +141,11 @@ namespace SAM.Core.Revit
                 parameter.Set(((IntegerId)value).Id);
                 return true;
             }
+            else if (value is LongId)
+            {
+                parameter.Set(((LongId)value).Id);
+                return true;
+            }
 
             return false;
         }
@@ -157,7 +162,14 @@ namespace SAM.Core.Revit
             }
             else if (value is IntegerId)
             {
-                parameter.Set(((IntegerId)value).ToRevit());
+                LongId longId = new LongId(System.Convert.ToInt64(((IntegerId)value).Id));
+
+                parameter.Set(((LongId)value).ToRevit());
+                return true;
+            }
+            else if (value is LongId)
+            {
+                parameter.Set(((LongId)value).ToRevit());
                 return true;
             }
             else if (value is int)

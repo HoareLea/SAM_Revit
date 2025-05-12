@@ -11,10 +11,10 @@ namespace SAM.Geometry.Revit
     {
         private List<Face2D> face2Ds;
         
-        public FilledRegion(FilledRegionType filledRegionType, IntegerId viewId, IEnumerable<Face2D> face2Ds)
+        public FilledRegion(FilledRegionType filledRegionType, LongId viewId, IEnumerable<Face2D> face2Ds)
             : base(filledRegionType, viewId)
         {
-            this.viewId = viewId == null ? null : new IntegerId(viewId);
+            this.viewId = viewId == null ? null : new LongId(viewId);
             face2Ds = face2Ds?.ToList().FindAll(x => x != null).ConvertAll(x => new Face2D(x));
         }
         

@@ -56,8 +56,15 @@ namespace SAM.Core.Revit
                 
                 foreach(Parameter parameter in viewPlan.ParametersMap)
                 {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     if (parameter.Id.IntegerValue == (int)BuiltInParameter.VIEW_NAME)
                         continue;
+#else
+                    if (parameter.Id.Value == (long)BuiltInParameter.VIEW_NAME)
+                        continue;
+#endif
+
+
 
                     Definition definition = parameter?.Definition;
                     if (definition == null)
@@ -128,8 +135,13 @@ namespace SAM.Core.Revit
 
                         foreach (Parameter parameter in viewPlan_Dependent.ParametersMap)
                         {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                             if (parameter.Id.IntegerValue == (int)BuiltInParameter.VIEW_NAME)
                                 continue;
+#else
+                            if (parameter.Id.Value == (long)BuiltInParameter.VIEW_NAME)
+                                continue;
+#endif
 
                             Definition definition = parameter?.Definition;
                             if (definition == null)

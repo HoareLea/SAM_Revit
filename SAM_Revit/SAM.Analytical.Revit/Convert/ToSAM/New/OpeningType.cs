@@ -24,7 +24,12 @@ namespace SAM.Analytical.Revit
 
             string name = familySymbol.Name;
 
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             switch ((BuiltInCategory)familySymbol.Category.Id.IntegerValue)
+#else
+            switch ((BuiltInCategory)familySymbol.Category.Id.Value)
+#endif
             {
                 case BuiltInCategory.OST_Windows:
                 case BuiltInCategory.OST_CurtainWallPanels:

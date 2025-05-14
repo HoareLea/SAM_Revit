@@ -17,7 +17,13 @@ namespace SAM.Core.Revit
             if (familySymbol == null)
                 return null;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.IntegerValue;
+#else
+            BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.Value;
+#endif
+
+
             if (!builtInCategory_Tag.IsValidTagCategory(builtInCategory))
                 return null;
 
@@ -39,7 +45,12 @@ namespace SAM.Core.Revit
             if (familySymbol == null)
                 return null;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.IntegerValue;
+#else
+            BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.Value;
+#endif
+
 
             IEnumerable<ElementId> elementIds_View = new FilteredElementCollector(document, view.Id).ToElementIds();
             if (elementIds_View == null)
@@ -79,8 +90,15 @@ namespace SAM.Core.Revit
                     }
                 }
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 if (!builtInCategory_Tag.IsValidTagCategory((BuiltInCategory)element.Category.Id.IntegerValue))
                     continue;
+#else
+                if (!builtInCategory_Tag.IsValidTagCategory((BuiltInCategory)element.Category.Id.Value))
+                    continue;
+#endif
+
+
 
                 Autodesk.Revit.DB.Location location = element.Location;
                 if (location == null)

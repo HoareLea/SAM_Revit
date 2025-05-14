@@ -66,7 +66,11 @@ namespace SAM.Analytical.Grasshopper.Revit
             get
             {
                 List<ParamDefinition> result = new List<ParamDefinition>();
-                result.Add(new ParamDefinition(new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamRelevance.Binding));
+
+                RhinoInside.Revit.GH.Parameters.Element element = new RhinoInside.Revit.GH.Parameters.Element() { Name = "elements", NickName = "elements", Description = "Revit Elements", Access = GH_ParamAccess.list };
+                element.Simplify = true;
+
+                result.Add(new ParamDefinition(element, ParamRelevance.Binding));
                 result.Add(new ParamDefinition(new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "successful", NickName = "successful", Description = "Parameters Updated", Access = GH_ParamAccess.item }, ParamRelevance.Binding));
                 return result.ToArray();
             }
@@ -83,13 +87,17 @@ namespace SAM.Analytical.Grasshopper.Revit
                 dataAccess.SetData(index_Successful, false);
 
             index_Elements = Params.IndexOfOutputParam("elements");
-            if(index_Elements != -1)
-                dataAccess.SetData(index_Elements, null);
 
             bool run = false;
             index = Params.IndexOfInputParam("_run");
             if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
+            {
+                if (index_Elements != -1)
+                    dataAccess.SetDataList(index_Elements, null);
+
                 return;
+            }
+
 
             ConvertSettings convertSettings = null;
             index = Params.IndexOfInputParam("_convertSettings_");
@@ -101,14 +109,24 @@ namespace SAM.Analytical.Grasshopper.Revit
             SAMObject sAMObject = null;
             index = Params.IndexOfInputParam("_analytical");
             if (index == -1 || !dataAccess.GetData(index, ref sAMObject))
+            {
+                if (index_Elements != -1)
+                    dataAccess.SetDataList(index_Elements, null);
+
                 return;
+            }
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
             StartTransaction(document);
 
             if (!(sAMObject is Panel) && !(sAMObject is Aperture) && !(sAMObject is Space) && !(sAMObject is AdjacencyCluster) && !(sAMObject is AnalyticalModel))
+            {
+                if (index_Elements != -1)
+                    dataAccess.SetDataList(index_Elements, null);
+
                 return;
+            }
 
             AdjacencyCluster adjacencyCluster = null;
             if (sAMObject is AdjacencyCluster)

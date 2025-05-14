@@ -72,7 +72,12 @@ namespace SAM.Core.Grasshopper.Revit
                 return;
             }
 
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             if (((BuiltInCategory)element.Category.Id.IntegerValue) != BuiltInCategory.OST_VolumeOfInterest)
+#else
+            if (((BuiltInCategory)element.Category.Id.Value) != BuiltInCategory.OST_VolumeOfInterest)
+#endif
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;

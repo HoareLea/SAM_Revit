@@ -6,6 +6,6 @@ namespace SAM.Core.Revit
     [AssociatedTypes(typeof(SAMObject)), Description("Revit Element Parameter")]
     public enum ElementParameter
     {
-        [ParameterProperties("Revit Id", "Revit Id"), SAMObjectParameterValue(typeof(IntegerId))] RevitId,
+        [ParameterProperties("Revit Id", "Revit Id"), SAMObjectParameterValue(typeof(LongId))] RevitId,
     }
 }

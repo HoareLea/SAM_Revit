@@ -138,7 +138,7 @@ namespace SAM.Analytical.Revit
                 Autodesk.Revit.DB.Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as Autodesk.Revit.DB.FloorType, level, false);
 #else
                 CurveLoop curveLoop = new CurveLoop();
-                foreach(Curve curve in curveArray_Plane)
+                foreach (Curve curve in curveArray_Plane)
                 {
                     curveLoop.Append(curve);
                 }
@@ -185,16 +185,39 @@ namespace SAM.Analytical.Revit
                 {
                     document.Regenerate();
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                     SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
+#else
+                    SlabShapeEditor slabShapeEditor = floor.GetSlabShapeEditor();
+#endif
+
+
                     if (slabShapeEditor != null)
                     {
                         slabShapeEditor.ResetSlabShape();
 
+                        if (!slabShapeEditor.IsEnabled)
+                        {
+                            slabShapeEditor.Enable();
+                        }
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                         foreach (Curve curve in curveArray_Sloped)
                         {
                             XYZ xYZ = curve.GetEndPoint(0);
                             slabShapeEditor.DrawPoint(xYZ);
                         }
+
+#else
+                        document.Regenerate();
+
+                        List<XYZ> xYZs = new List<XYZ>();
+                        foreach (Curve curve in curveArray_Sloped)
+                        {
+                            xYZs.Add(curve.GetEndPoint(0));
+                        }
+                        slabShapeEditor.AddPoints(xYZs);
+#endif
                     }
                 }
 
@@ -223,17 +246,39 @@ namespace SAM.Analytical.Revit
                 if (parameter != null)
                     parameter.Set(ElementId.InvalidElementId);
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 SlabShapeEditor slabShapeEditor = roofBase.SlabShapeEditor;
-                if(slabShapeEditor != null)
+#else
+                SlabShapeEditor slabShapeEditor = roofBase.GetSlabShapeEditor();
+#endif
+
+
+                if (slabShapeEditor != null)
                 {
                     slabShapeEditor.ResetSlabShape();
 
+                    if (!slabShapeEditor.IsEnabled)
+                    {
+                        slabShapeEditor.Enable();
+                    }
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
+                        foreach (Curve curve in curveArray)
+                        {
+                            XYZ xYZ = curve.GetEndPoint(0);
+                            slabShapeEditor.DrawPoint(xYZ);
+                        }
+
+#else
+                    document.Regenerate();
+
+                    List<XYZ> xYZs = new List<XYZ>();
                     foreach (Curve curve in curveArray)
                     {
-                        XYZ xYZ = curve.GetEndPoint(0);
-                        //if (Math.Abs(xYZ.Z - levelElevation) > Core.Tolerance.MicroDistance)
-                        slabShapeEditor.DrawPoint(xYZ);
+                        xYZs.Add(curve.GetEndPoint(0));
                     }
+                    slabShapeEditor.AddPoints(xYZs);
+#endif
                 }
 
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM, BuiltInParameter.ROOF_BASE_LEVEL_PARAM, BuiltInParameter.ROOF_UPTO_LEVEL_PARAM };
@@ -246,7 +291,7 @@ namespace SAM.Analytical.Revit
             List<Aperture> apertures = panel.Apertures;
             if (apertures != null)
             {
-                if(result is Autodesk.Revit.DB.Wall && ((Autodesk.Revit.DB.Wall)result).WallType.Kind == WallKind.Curtain)
+                if (result is Autodesk.Revit.DB.Wall && ((Autodesk.Revit.DB.Wall)result).WallType.Kind == WallKind.Curtain)
                 {
 
                 }

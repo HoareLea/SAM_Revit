@@ -9,27 +9,27 @@ namespace SAM.Geometry.Revit
 {
     public static partial class Query
     {
-        public static T Find<T>(Document document, IntegerId integerId, double min = Tolerance.Distance, double max = Tolerance.MacroDistance) where T : Element
+        public static T Find<T>(Document document, LongId longId, double min = Tolerance.Distance, double max = Tolerance.MacroDistance) where T : Element
         {
-            if(document == null || integerId == null)
+            if(document == null || longId == null)
             {
                 return null;
             }
 
-            T result = Core.Revit.Query.Element<T>(document, integerId);
+            T result = Core.Revit.Query.Element<T>(document, longId);
             if (result != null)
             {
                 return result;
             }
 
-            if (!integerId.TryGetValue(RevitIdParameter.Location, out ISAMGeometry3D sAMGeometry))
+            if (!longId.TryGetValue(RevitIdParameter.Location, out ISAMGeometry3D sAMGeometry))
             {
                 return null;
             }
 
             List<Element> elements = null;
 
-            if (integerId.TryGetValue(Core.Revit.RevitIdParameter.CategoryId, out int categoryId) && categoryId != -1)
+            if (longId.TryGetValue(Core.Revit.RevitIdParameter.CategoryId, out int categoryId) && categoryId != -1)
             {
                 BuiltInCategory builtInCategory = (BuiltInCategory)categoryId;
 

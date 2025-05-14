@@ -9,12 +9,12 @@ namespace SAM.Core.Revit
             if (parameterizedSAMObject == null)
                 return null;
 
-            if(!parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId))
+            if(!parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out LongId longId))
             {
                 return null;
             }
 
-            if(!integerId.TryGetValue(RevitIdParameter.CategoryId, out int id))
+            if(!longId.TryGetValue(RevitIdParameter.CategoryId, out int id))
             {
                 return null;
             }

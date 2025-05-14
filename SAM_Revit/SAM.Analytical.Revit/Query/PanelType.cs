@@ -38,7 +38,12 @@ namespace SAM.Analytical.Revit
             if (panelType != Analytical.PanelType.Undefined)
                 return panelType;
 
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             return PanelType((BuiltInCategory)hostObject.Category.Id.IntegerValue);
+#else
+            return PanelType((BuiltInCategory)hostObject.Category.Id.Value);
+#endif
+
         }
 
         public static PanelType PanelType(this HostObjAttributes hostObjAttributes)

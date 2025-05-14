@@ -9,8 +9,8 @@ namespace SAM.Units.Revit
         public static double FromFeetToMeter { get; } = UnitUtils.ConvertFromInternalUnits(1, Autodesk.Revit.DB.DisplayUnitType.DUT_METERS);
         public static double FromMeterToFeet { get; } = UnitUtils.ConvertToInternalUnits(1, Autodesk.Revit.DB.DisplayUnitType.DUT_METERS);
 #else
-        public static double FromFeetToMeter { get; } = UnitUtils.ConvertFromInternalUnits(1, Autodesk.Revit.DB.UnitTypeId.Meters);
-        public static double FromMeterToFeet { get; } = UnitUtils.ConvertToInternalUnits(1, Autodesk.Revit.DB.UnitTypeId.Meters);
+        public static double FromFeetToMeter { get; } = UnitUtils.ConvertFromInternalUnits(1, UnitTypeId.Meters);
+        public static double FromMeterToFeet { get; } = UnitUtils.ConvertToInternalUnits(1, UnitTypeId.Meters);
 #endif
     }
 }

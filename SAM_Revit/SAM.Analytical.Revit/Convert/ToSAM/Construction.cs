@@ -20,7 +20,13 @@ namespace SAM.Analytical.Revit
             string name = hostObjAttributes.Name;
             PanelType panelType = hostObjAttributes.PanelType();
             if (panelType == PanelType.Undefined)
+            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                 panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.IntegerValue);
+#else
+                panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.Value);
+#endif
+            }
 
             Construction construction = Analytical.Query.DefaultConstruction(panelType);
             if(construction != null && (name.Equals(construction.Name) || name.Equals(construction.UniqueName())))
@@ -74,7 +80,12 @@ namespace SAM.Analytical.Revit
                 return null;
             }
 
+
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
             if((BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_Cornices && (BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_CurtainWallPanels)
+#else
+            if ((BuiltInCategory)elementType.Category.Id.Value != BuiltInCategory.OST_Cornices && (BuiltInCategory)elementType.Category.Id.Value != BuiltInCategory.OST_CurtainWallPanels)
+#endif
             {
                 return null;
             }

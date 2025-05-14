@@ -78,9 +78,9 @@ namespace SAM.Core.Revit
             }
 
             T result = null;
-            if (parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out IntegerId integerId) && integerId != null)
+            if (parameterizedSAMObject.TryGetValue(ElementParameter.RevitId, out LongId longId) && longId != null)
             {
-                result = Element<T>(document, integerId, includeName);
+                result = Element<T>(document, longId, includeName);
             }
 
             if(result == null && includeName)
@@ -91,31 +91,31 @@ namespace SAM.Core.Revit
             return result;
         }
 
-        public static T Element<T>(this Document document, IntegerId integerId, bool includeName = false) where T : Element
+        public static T Element<T>(this Document document, LongId longId, bool includeName = false) where T : Element
         {
-            if (integerId == null || document == null)
+            if (longId == null || document == null)
             {
                 return null;
             }
 
             T result = null;
 
-            ElementId elementId = integerId.ElementId();
+            ElementId elementId = longId.ElementId();
             if (elementId != null && elementId != Autodesk.Revit.DB.ElementId.InvalidElementId)
                 result = document.GetElement(elementId) as T;
 
             if (result == null)
             {
-                string uniqueId = integerId.UniqueId();
+                string uniqueId = longId.UniqueId();
                 if (!string.IsNullOrWhiteSpace(uniqueId))
                     result = document.GetElement(uniqueId) as T;
             }
 
             if (result == null && includeName)
             {
-                if (integerId.TryGetValue(RevitIdParameter.FullName, out string fullName) && !string.IsNullOrWhiteSpace(fullName))
+                if (longId.TryGetValue(RevitIdParameter.FullName, out string fullName) && !string.IsNullOrWhiteSpace(fullName))
                 {
-                    BuiltInCategory? builtInCategory = integerId.BuiltInCategory();
+                    BuiltInCategory? builtInCategory = longId.BuiltInCategory();
                     if (builtInCategory != null && builtInCategory.HasValue && builtInCategory.Value != Autodesk.Revit.DB.BuiltInCategory.INVALID)
                     {
                         List<Element> elements = new FilteredElementCollector(document).OfCategory(builtInCategory.Value).ToList();

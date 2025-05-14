@@ -19,7 +19,7 @@ namespace SAM.Geometry.Revit
             if (result != null)
             {
                 Modify.SetValues(spaceTagType, result);
-                result.SetValue(ElementParameter.RevitId, Query.IntegerId(spaceTagType));
+                result.SetValue(ElementParameter.RevitId, Query.LongId(spaceTagType));
                 convertSettings?.Add(spaceTagType.Id, result);
             }
 
@@ -39,7 +39,7 @@ namespace SAM.Geometry.Revit
             if (result != null)
             {
                 Modify.SetValues(familySymbol, result);
-                result.SetValue(ElementParameter.RevitId, Query.IntegerId(familySymbol));
+                result.SetValue(ElementParameter.RevitId, Query.LongId(familySymbol));
                 convertSettings?.Add(familySymbol.Id, result);
             }
 

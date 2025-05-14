@@ -12,7 +12,7 @@ namespace SAM.Core.Revit
             }
 
 #if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            return System.Diagnostics.Process.Start(path);
+            return Process.Start(path);
 #else
             return Core.Query.StartProcess(path);
 #endif

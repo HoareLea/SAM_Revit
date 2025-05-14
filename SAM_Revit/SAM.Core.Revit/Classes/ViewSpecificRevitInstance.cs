@@ -4,7 +4,7 @@ namespace SAM.Core.Revit
 {
     public class ViewSpecificRevitInstance<T>: RevitInstance<T> where T: RevitType
     {
-        public IntegerId viewId;
+        public LongId viewId;
 
         public ViewSpecificRevitInstance(ViewSpecificRevitInstance<T> viewSpecificRevitInstance)
             :base(viewSpecificRevitInstance)
@@ -12,10 +12,10 @@ namespace SAM.Core.Revit
 
         }
 
-        public ViewSpecificRevitInstance(T revitType, IntegerId viewId)
+        public ViewSpecificRevitInstance(T revitType, LongId viewId)
             : base(revitType)
         {
-            this.viewId = viewId == null ? null : new IntegerId(viewId);
+            this.viewId = viewId == null ? null : new LongId(viewId);
         }
 
         public ViewSpecificRevitInstance(JObject jObject)
@@ -31,7 +31,7 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("ViewId"))
             {
-                viewId = new IntegerId(jObject.Value<JObject>("ViewId"));
+                viewId = new LongId(jObject.Value<JObject>("ViewId"));
             }
 
             return true;
@@ -51,7 +51,7 @@ namespace SAM.Core.Revit
             return result;
         }
 
-        public IntegerId ViewId
+        public LongId ViewId
         {
             get
             {
@@ -60,7 +60,7 @@ namespace SAM.Core.Revit
                     return null;
                 }
 
-                return new IntegerId(viewId);
+                return new LongId(viewId);
             }
         }
 

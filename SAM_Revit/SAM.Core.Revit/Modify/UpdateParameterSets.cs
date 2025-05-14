@@ -52,7 +52,6 @@ namespace SAM.Core.Revit
 #else
                         value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.GetDataType());
 #endif
-
                         break;
 
                     case StorageType.Integer:
@@ -96,8 +95,8 @@ namespace SAM.Core.Revit
                         switch (parameter.StorageType)
                         {
                             case StorageType.ElementId:
-                                IntegerId integerId = null;
-                                parameterSet.Add(parameterName_Element, integerId);
+                                LongId longId = null;
+                                parameterSet.Add(parameterName_Element, longId);
                                 continue;
                             default:
                                 string @string = null;
@@ -134,7 +133,7 @@ namespace SAM.Core.Revit
 
             UpdateParameterSets(sAMObject, element.GetType(), parameters, typeMap, includeGenericParameters);
 
-            sAMObject.SetValue(ElementParameter.RevitId, Query.IntegerId(element));
+            sAMObject.SetValue(ElementParameter.RevitId, Query.LongId(element));
         }
     
         public static void UpdateParameterSets(this IRevitInstance revitInstance, Element element, TypeMap typeMap)

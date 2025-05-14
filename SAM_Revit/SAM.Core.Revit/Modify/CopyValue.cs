@@ -24,7 +24,15 @@ namespace SAM.Core.Revit
                         case StorageType.ElementId:
                             ElementId elementId = parameter_Source.AsElementId();
                             if (elementId != null)
+                            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                                 return parameter_Destination.Set(System.Convert.ToDouble(elementId.IntegerValue));
+#else
+                                return parameter_Destination.Set(System.Convert.ToDouble(elementId.Value));
+#endif
+
+                            }
+
                             return false;
 
                         case StorageType.String:
@@ -49,7 +57,13 @@ namespace SAM.Core.Revit
                         case StorageType.ElementId:
                             ElementId elementId = parameter_Source.AsElementId();
                             if (elementId != null)
+                            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
                                 return parameter_Destination.Set(elementId.IntegerValue);
+#else
+                                return parameter_Destination.Set(elementId.Value);
+#endif
+                            }
                             return false;
 
                         case StorageType.String:
@@ -90,7 +104,14 @@ namespace SAM.Core.Revit
                             return parameter_Destination.Set(parameter_Source.AsInteger().ToString());
 
                         case StorageType.ElementId:
-                            return parameter_Destination.Set(parameter_Source.AsElementId()?.IntegerValue.ToString());
+                            {
+#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
+                                return parameter_Destination.Set(parameter_Source.AsElementId()?.IntegerValue.ToString());
+#else
+                                return parameter_Destination.Set(parameter_Source.AsElementId()?.Value.ToString());
+#endif
+                            }
+
 
                         case StorageType.String:
                             return parameter_Destination.Set(parameter_Source.AsString());

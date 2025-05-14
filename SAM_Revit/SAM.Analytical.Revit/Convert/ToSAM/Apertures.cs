@@ -161,8 +161,14 @@ namespace SAM.Analytical.Revit
 
                 if (plane_Host != null)
                 {
-                    face3Ds = face3Ds?.ConvertAll(x => plane_Host.Project(x));
+                    //NEW code 2025.05.14
                     point3D_Location = plane_Host.Project(point3D_Location);
+                    plane_Host = new Geometry.Spatial.Plane(plane_Host, point3D_Location);
+                    face3Ds = face3Ds?.ConvertAll(x => plane_Host.Project(x));
+
+                    //OLD
+                    //face3Ds = face3Ds?.ConvertAll(x => plane_Host.Project(x));
+                    //point3D_Location = plane_Host.Project(point3D_Location);
                 }
 
 
@@ -180,6 +186,17 @@ namespace SAM.Analytical.Revit
                     if(face3Ds == null || (face3Ds != null && face3Ds_Profiles.ConvertAll(x => x.GetArea()).Sum() <= face3Ds.ConvertAll(x => x.GetArea()).Sum() ))
                     {
                         face3Ds = face3Ds_Profiles;
+
+                        //NEW code 2025.05.14
+                        if (face3Ds != null && face3Ds.Count != 0)
+                        {
+                            for (int i = 0; i < face3Ds.Count; i++)
+                            {
+                                Geometry.Spatial.Plane plane = face3Ds[i].GetPlane();
+                                plane = new Geometry.Spatial.Plane(plane, point3D_Location);
+                                face3Ds[i] = plane.Project(face3Ds[i]);
+                            }
+                        }
                     }
                 }
             }

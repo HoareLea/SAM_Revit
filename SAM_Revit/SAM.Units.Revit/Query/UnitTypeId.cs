@@ -1,4 +1,8 @@
-﻿namespace SAM.Units.Revit
+﻿using Autodesk.Revit.DB;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace SAM.Units.Revit
 {
     public static partial class Query
     {

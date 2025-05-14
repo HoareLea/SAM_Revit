@@ -1,4 +1,6 @@
-﻿namespace SAM.Core.Revit
+﻿using Autodesk.Revit.DB;
+
+namespace SAM.Core.Revit
 {
     public static partial class Query
     {

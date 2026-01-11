@@ -40,10 +40,10 @@ jobs:
       - name: Clone dependency repos (siblings)
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
-          $org = 'SAM-BIM'
+          $org  = 'SAM-BIM'
           $repo = 'SAM_Revit'
 
           $publicRepos = @(

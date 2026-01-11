@@ -41,41 +41,47 @@ jobs:
 
       - name: Clone dependency repos (siblings)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
+          ORG_NAME: ${{ env.ORG_NAME }}
+          REPO_NAME: ${{ env.REPO_NAME }}
         run: |
           $ErrorActionPreference = 'Stop'
 
-          $org  = '${{ env.ORG_NAME }}'
-          $repo = '${{ env.REPO_NAME }}'
+          if (-not $env:GH_TOKEN) {
+            throw "Missing secret ORG_REPO_TOKEN. Add it in repo Settings → Secrets and variables → Actions."
+          }
 
-          # Keep this list aligned with your BuildAll_Release order,
-          # but ONLY include what Revit actually needs.
-          $deps = @(
+          $org  = $env:ORG_NAME
+          $repo = $env:REPO_NAME
+
+          $buildOrder = @(
             'SAM'
+            'SAM_Solver'          # private
             'SAM_Systems'
-            'SAM_Psychrometrics'
-            'SAM_Mollier'
             'SAM_Windows'
-            'SAM_IFC'
-            'SAM_Topologic'
-            'SAM_BHom'
+            'SAM_Mollier'
             'SAM_gbXML'
-            'SAM_GEM'
-            'SAM_LadybugTools'
-            'SAM_Solver'
             'SAM_SolarCalculator'
             'SAM_Tas'
             'SAM_Excel'
-            'SAM_SQLite'
-            'SAM_OpenStudio'
+            'SAM_GEM'
+            'SAM_LadybugTools'
             'SAM_UI'
-            'SAM_Revit_UI'
+            $repo                 # current repo LAST
           )
 
-          foreach ($r in $deps) {
-            if ($r -eq $repo) { continue }
-            if (Test-Path $r) { continue }
-            Write-Host "Cloning https://github.com/$org/$r.git"
-            git clone --depth 1 "https://github.com/$org/$r.git" $r
+          foreach ($r in $buildOrder) {
+            if (Test-Path $r) {
+              Write-Host "Skipping $r (already exists)"
+              continue
+            }
+
+            Write-Host "Cloning $r"
+
+            git clone `
+              https://x-access-token:$env:GH_TOKEN@github.com/$org/$r.git `
+              $r
           }
 
           # Ensure these exist (some projects reference them)
@@ -133,7 +139,6 @@ jobs:
           Write-Host "ReferencePath=$env:ReferencePath"
 
           # Build order (core + modules + UI) BEFORE Revit configs
-          # Keep this as small as possible but enough to satisfy SAM_UI + Revit.
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
@@ -155,8 +160,6 @@ jobs:
             'SAM_UI'
           ) | Select-Object -Unique
 
-          # Per-repo MSBuild Platform overrides (ONLY when needed)
-          # IMPORTANT: if you set Platform here, it MUST exist in that .sln config manager.
           $platformByRepo = @{
             'SAM_OpenStudio' = 'x64'
           }
@@ -168,8 +171,6 @@ jobs:
             return @("/p:Platform=$p")
           }
 
-          # Build a repo's solution with specified Configuration, optional Platform,
-          # with RunPostBuildEvent=Never to prevent writing into AppData on CI.
           function Build-RepoSln([string]$repoName, [string]$configuration) {
             $sln = Find-Solution $repoName
             $platArgs = Get-PlatformArgs $repoName
@@ -197,10 +198,8 @@ jobs:
             & msbuild $sln /t:Rebuild @common @platArgs
             if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($configuration)" }
 
-            # Push outputs into shared refs for downstream compiles
             Add-OutputsToRefs $repoName $refs
 
-            # Light diagnostics (helps debugging missing namespaces)
             $dllCount = (Get-ChildItem -Path $refs -Filter *.dll -File -ErrorAction SilentlyContinue | Measure-Object).Count
             Write-Host "DIAG: _refs DLL count now: $dllCount"
           }
@@ -224,9 +223,7 @@ jobs:
             }
           }
 
-          # 3) Finally, build THIS repo's solution (if it’s distinct from SAM_Revit folder)
-          # In your case, the checked-out repo folder IS SAM_Revit, so this is redundant.
-          # Left here as a safety net if you ever rename REPO_NAME.
+          # 3) Finally, build THIS repo's solution (if distinct)
           $thisRepo = '${{ env.REPO_NAME }}'
           if ($thisRepo -ne 'SAM_Revit') {
             Build-RepoSln $thisRepo 'Release2026'

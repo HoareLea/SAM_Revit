@@ -18,7 +18,6 @@ jobs:
       MSBUILDDISABLENODEREUSE: "1"
       ORG_NAME: "SAM-BIM"
       REPO_NAME: "SAM_Revit"
-      CONFIGURATION: "Release"
 
     steps:
       - name: Checkout this repo
@@ -48,41 +47,51 @@ jobs:
           $org  = '${{ env.ORG_NAME }}'
           $repo = '${{ env.REPO_NAME }}'
 
-          # Build order: deps first, current repo LAST.
-          # Keep this list as SMALL as possible; add only when compiler asks for it.
-          $buildOrder = @(
+          # Keep this list aligned with your BuildAll_Release order,
+          # but ONLY include what Revit actually needs.
+          $deps = @(
             'SAM'
             'SAM_Systems'
+            'SAM_Psychrometrics'
+            'SAM_Mollier'
             'SAM_Windows'
+            'SAM_IFC'
+            'SAM_Topologic'
+            'SAM_BHom'
+            'SAM_gbXML'
+            'SAM_GEM'
+            'SAM_LadybugTools'
+            'SAM_Solver'
+            'SAM_SolarCalculator'
+            'SAM_Tas'
+            'SAM_Excel'
+            'SAM_SQLite'
+            'SAM_OpenStudio'
             'SAM_UI'
-            $repo
+            'SAM_Revit_UI'
           )
 
-          foreach ($r in $buildOrder) {
-            if ($r -eq $repo) { continue } # already checked out
+          foreach ($r in $deps) {
+            if ($r -eq $repo) { continue }
             if (Test-Path $r) { continue }
-
             Write-Host "Cloning https://github.com/$org/$r.git"
             git clone --depth 1 "https://github.com/$org/$r.git" $r
           }
 
-          # Ensure reference folders exist even before builds
+          # Ensure these exist (some projects reference them)
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
           New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
 
-      - name: Restore + Rebuild in order (safe ReferencePath)
+      - name: Restore + Rebuild in order (shared _refs + Revit 2025/2026)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $cfg  = '${{ env.CONFIGURATION }}'
-          $repo = '${{ env.REPO_NAME }}'
 
           function Find-Solution([string]$repoName) {
             $expected = Join-Path $repoName "$repoName.sln"
             if (Test-Path $expected) { return (Resolve-Path $expected).Path }
 
-            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue |
-                       Select-Object -First 1
+            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue | Select-Object -First 1
             if ($rootSln) { return $rootSln.FullName }
 
             $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
@@ -93,53 +102,141 @@ jobs:
             throw "No .sln found under: $repoName"
           }
 
-          # Match the clone step build order
+          function Add-OutputsToRefs([string]$repoName, [string]$refsDir) {
+            $candidates = @(
+              Join-Path $repoName "build",
+              Join-Path $repoName "bin\Release",
+              Join-Path $repoName "bin\x64\Release",
+              Join-Path $repoName "bin\Any CPU\Release"
+            )
+
+            foreach ($d in $candidates) {
+              if (Test-Path $d) {
+                Copy-Item (Join-Path $d "*") $refsDir -Recurse -Force -ErrorAction SilentlyContinue
+              }
+            }
+
+            $binRelease = Get-ChildItem -Path $repoName -Recurse -Directory -ErrorAction SilentlyContinue |
+                          Where-Object { $_.FullName -match '\\bin\\(x64\\)?Release' } |
+                          Select-Object -First 10
+            foreach ($d in $binRelease) {
+              Copy-Item (Join-Path $d.FullName "*") $refsDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          # Shared refs folder to avoid "missing namespace" errors across repos
+          $refs = Join-Path (Get-Location) "_refs"
+          New-Item -ItemType Directory -Force -Path $refs | Out-Null
+
+          # SAFE ReferencePath: use environment variable (no quoting issues, avoids winmd path problems)
+          $env:ReferencePath = $refs
+          Write-Host "ReferencePath=$env:ReferencePath"
+
+          # Build order (core + modules + UI) BEFORE Revit configs
+          # Keep this as small as possible but enough to satisfy SAM_UI + Revit.
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
+            'SAM_Psychrometrics'
+            'SAM_Mollier'
             'SAM_Windows'
+            'SAM_IFC'
+            'SAM_Topologic'
+            'SAM_BHom'
+            'SAM_gbXML'
+            'SAM_GEM'
+            'SAM_LadybugTools'
+            'SAM_Solver'
+            'SAM_SolarCalculator'
+            'SAM_Tas'
+            'SAM_Excel'
+            'SAM_SQLite'
+            'SAM_OpenStudio'
             'SAM_UI'
-            $repo
           ) | Select-Object -Unique
 
-          $solutionItems = foreach ($r in $buildOrder) {
-            $slnPath = Find-Solution $r
-            [pscustomobject]@{ Repo = $r; Sln = $slnPath }
+          # Per-repo MSBuild Platform overrides (ONLY when needed)
+          # IMPORTANT: if you set Platform here, it MUST exist in that .sln config manager.
+          $platformByRepo = @{
+            'SAM_OpenStudio' = 'x64'
           }
 
-          # SAFE ReferencePath: environment variable, no quoting issues with WinMD
-          $winBuild = (Resolve-Path 'SAM_Windows\build').Path
-          $uiBuild  = (Resolve-Path 'SAM_UI\build').Path
-          $env:ReferencePath = "$winBuild;$uiBuild"
-          Write-Host "ReferencePath=$env:ReferencePath"
+          function Get-PlatformArgs([string]$repoName) {
+            if (-not $platformByRepo.ContainsKey($repoName)) { return @() }
+            $p = $platformByRepo[$repoName]
+            if ($p -match '\s') { return @("/p:Platform=`"$p`"") }
+            return @("/p:Platform=$p")
+          }
 
-          $msbuildCommon = @(
-            '/m:1'
-            '/nr:false'
-            '/v:m'
-            "/p:Configuration=$cfg"
-            '/p:UseSharedCompilation=false'
-            '/p:RunPostBuildEvent=Never'
-          )
+          # Build a repo's solution with specified Configuration, optional Platform,
+          # with RunPostBuildEvent=Never to prevent writing into AppData on CI.
+          function Build-RepoSln([string]$repoName, [string]$configuration) {
+            $sln = Find-Solution $repoName
+            $platArgs = Get-PlatformArgs $repoName
 
-          foreach ($it in $solutionItems) {
             Write-Host ""
-            Write-Host "=== $($it.Repo) ==="
-            Write-Host "Solution: $($it.Sln)"
+            Write-Host "=== $repoName ==="
+            Write-Host "Solution: $sln"
+            Write-Host "Config:   $configuration"
+            if ($platArgs.Count -gt 0) { Write-Host "Platform: $($platArgs -join ' ')" } else { Write-Host "Platform: (default)" }
 
             Write-Host "-> NuGet restore"
-            & nuget restore $it.Sln -Verbosity detailed
-            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $($it.Repo)" }
+            & nuget restore $sln -Verbosity detailed
+            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $repoName" }
 
-            Write-Host "-> MSBuild rebuild ($cfg)"
-            & msbuild $it.Sln /t:Rebuild @msbuildCommon
-            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $($it.Repo)" }
+            $common = @(
+              '/m:1'
+              '/nr:false'
+              '/v:m'
+              "/p:Configuration=$configuration"
+              '/p:UseSharedCompilation=false'
+              '/p:RunPostBuildEvent=Never'
+            )
+
+            Write-Host "-> MSBuild rebuild"
+            & msbuild $sln /t:Rebuild @common @platArgs
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($configuration)" }
+
+            # Push outputs into shared refs for downstream compiles
+            Add-OutputsToRefs $repoName $refs
+
+            # Light diagnostics (helps debugging missing namespaces)
+            $dllCount = (Get-ChildItem -Path $refs -Filter *.dll -File -ErrorAction SilentlyContinue | Measure-Object).Count
+            Write-Host "DIAG: _refs DLL count now: $dllCount"
           }
 
-      - name: Upload build folders (optional)
+          # 1) Build deps/modules/UI first (Release)
+          foreach ($r in $buildOrder) {
+            if (-not (Test-Path $r)) { throw "Missing repo folder: $r" }
+            Build-RepoSln $r 'Release'
+          }
+
+          # 2) Build Revit + Revit_UI twice (Release2025 & Release2026)
+          $revitPairs = @(
+            @{ Repo = 'SAM_Revit';    Configs = @('Release2025','Release2026') },
+            @{ Repo = 'SAM_Revit_UI'; Configs = @('Release2025','Release2026') }
+          )
+
+          foreach ($p in $revitPairs) {
+            foreach ($cfg in $p.Configs) {
+              if (-not (Test-Path $p.Repo)) { throw "Missing repo folder: $($p.Repo)" }
+              Build-RepoSln $p.Repo $cfg
+            }
+          }
+
+          # 3) Finally, build THIS repo's solution (if it’s distinct from SAM_Revit folder)
+          # In your case, the checked-out repo folder IS SAM_Revit, so this is redundant.
+          # Left here as a safety net if you ever rename REPO_NAME.
+          $thisRepo = '${{ env.REPO_NAME }}'
+          if ($thisRepo -ne 'SAM_Revit') {
+            Build-RepoSln $thisRepo 'Release2026'
+          }
+
+      - name: Upload build outputs (optional)
         uses: actions/upload-artifact@v4
         with:
-          name: SAM_Revit-build-folders
+          name: SAM_Revit-build-outputs
           path: |
             **\build\*
+            _refs\*
           if-no-files-found: warn

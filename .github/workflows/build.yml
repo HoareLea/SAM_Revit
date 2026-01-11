@@ -202,7 +202,7 @@ jobs:
           foreach ($y in $years) {
             $hits = @(Get-ChildItem -Path $repo -Recurse -File -ErrorAction SilentlyContinue |
                       Where-Object { $_.Name -match '^SAM\..*Revit.*\.dll$' -and $_.FullName -match $y })
-            Write-Host "DIAG: $repo outputs mentioning $y: $($hits.Count) Revit DLL(s)"
+            Write-Host ("DIAG: {0} outputs mentioning {1}: {2} Revit DLL(s)" -f $repo, $y, $hits.Count)
           }
 
       - name: Upload build folders (optional)

@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-    # Guard: if this ever gets merged upstream, it will "skip" there.
+    # Guard: if this ever gets merged upstream (e.g. HoareLea),
+    # it will be "skipped" there and won't break their CI.
     if: github.repository_owner == 'SAM-BIM'
     runs-on: windows-2022
 
@@ -34,7 +35,6 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      # Use modern NuGet (avoid NuGet 4.x + MSBuild 17 parsing issues)
       - name: Setup NuGet
         uses: nuget/setup-nuget@v2
         with:
@@ -48,40 +48,34 @@ jobs:
           $org  = '${{ env.ORG_NAME }}'
           $repo = '${{ env.REPO_NAME }}'
 
-          # Build order: deps first, current repo LAST
-          # (Adjust if you discover more deps.)
+          # Build order: deps first, current repo LAST.
+          # Keep this list as SMALL as possible; add only when compiler asks for it.
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
             'SAM_Windows'
-            'SAM_Psychrometrics'
-            'SAM_Mollier'
-            'SAM_gbXML'
-            'SAM_SolarCalculator'
-            'SAM_Tas'
-            'SAM_Excel'
-            'SAM_GEM'
-            'SAM_LadybugTools'
             'SAM_UI'
-            'SAM_Revit'
-            'SAM_Revit_UI'
             $repo
-          ) | Select-Object -Unique
+          )
 
           foreach ($r in $buildOrder) {
-            if ($r -eq $repo) { continue }   # already checked out by Actions
+            if ($r -eq $repo) { continue } # already checked out
             if (Test-Path $r) { continue }
 
             Write-Host "Cloning https://github.com/$org/$r.git"
             git clone --depth 1 "https://github.com/$org/$r.git" $r
           }
 
-      - name: Restore + Rebuild in order (NuGet restore + MSBuild) — safe ReferencePath
+          # Ensure reference folders exist even before builds
+          New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
+          New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
+
+      - name: Restore + Rebuild in order (safe ReferencePath)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-
           $cfg  = '${{ env.CONFIGURATION }}'
+          $repo = '${{ env.REPO_NAME }}'
 
           function Find-Solution([string]$repoName) {
             $expected = Join-Path $repoName "$repoName.sln"
@@ -99,19 +93,11 @@ jobs:
             throw "No .sln found under: $repoName"
           }
 
-          # Your expanded build order (keep repo LAST)
-          $repo = '${{ env.REPO_NAME }}'
+          # Match the clone step build order
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
             'SAM_Windows'
-            'SAM_Mollier'
-            'SAM_gbXML'
-            'SAM_SolarCalculator'
-            'SAM_Tas'
-            'SAM_Excel'
-            'SAM_GEM'
-            'SAM_LadybugTools'
             'SAM_UI'
             $repo
           ) | Select-Object -Unique
@@ -121,15 +107,9 @@ jobs:
             [pscustomobject]@{ Repo = $r; Sln = $slnPath }
           }
 
-          # Ensure reference folders exist
-          $winBuild = Join-Path (Get-Location) 'SAM_Windows\build'
-          $uiBuild  = Join-Path (Get-Location) 'SAM_UI\build'
-          New-Item -ItemType Directory -Force -Path $winBuild | Out-Null
-          New-Item -ItemType Directory -Force -Path $uiBuild  | Out-Null
-
-          # IMPORTANT:
-          # Instead of /p:ReferencePath=..., set an env var.
-          # Use semicolon-separated list with NO extra quotes.
+          # SAFE ReferencePath: environment variable, no quoting issues with WinMD
+          $winBuild = (Resolve-Path 'SAM_Windows\build').Path
+          $uiBuild  = (Resolve-Path 'SAM_UI\build').Path
           $env:ReferencePath = "$winBuild;$uiBuild"
           Write-Host "ReferencePath=$env:ReferencePath"
 
@@ -146,92 +126,12 @@ jobs:
             Write-Host ""
             Write-Host "=== $($it.Repo) ==="
             Write-Host "Solution: $($it.Sln)"
+
             Write-Host "-> NuGet restore"
             & nuget restore $it.Sln -Verbosity detailed
             if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $($it.Repo)" }
 
-            Write-Host "-> MSBuild Rebuild ($cfg)"
-            & msbuild $it.Sln /t:Rebuild @msbuildCommon
-            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $($it.Repo)" }
-          }
-
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-
-          $cfg  = '${{ env.CONFIGURATION }}'
-
-          function Find-Solution([string]$repoName) {
-            $expected = Join-Path $repoName "$repoName.sln"
-            if (Test-Path $expected) { return (Resolve-Path $expected).Path }
-
-            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue |
-                       Select-Object -First 1
-            if ($rootSln) { return $rootSln.FullName }
-
-            $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
-                      Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
-                      Select-Object -First 1
-            if ($anySln) { return $anySln.FullName }
-
-            throw "No .sln found under: $repoName"
-          }
-
-          # Build order: deps first, current repo LAST
-          $buildOrder = @(
-            'SAM'
-            'SAM_Systems'
-            'SAM_Windows'
-            'SAM_Psychrometrics'
-            'SAM_Mollier'
-            'SAM_gbXML'
-            'SAM_SolarCalculator'
-            'SAM_Tas'
-            'SAM_Excel'
-            'SAM_GEM'
-            'SAM_LadybugTools'
-            'SAM_UI'
-            'SAM_Revit'
-            'SAM_Revit_UI'
-            '${{ env.REPO_NAME }}'
-          ) | Select-Object -Unique
-
-          # Resolve solution paths
-          $solutionItems = foreach ($r in $buildOrder) {
-            $slnPath = Find-Solution $r
-            [pscustomobject]@{ Repo = $r; Sln = $slnPath }
-          }
-
-          # ReferencePath: must be a SINGLE msbuild argument (avoid MSB1006)
-          $winBuild = Join-Path (Get-Location) 'SAM_Windows\build'
-          $uiBuild  = Join-Path (Get-Location) 'SAM_UI\build'
-
-          New-Item -ItemType Directory -Force -Path $winBuild | Out-Null
-          New-Item -ItemType Directory -Force -Path $uiBuild  | Out-Null
-
-          # One property with both folders separated by semicolon:
-          $refPathArg = "/p:ReferencePath=`"$winBuild;$uiBuild`""
-
-          # Common MSBuild args (ARRAY — do not join into one string)
-          $msbuildCommon = @(
-            '/m:1'
-            '/nr:false'
-            '/v:m'
-            "/p:Configuration=$cfg"
-            '/p:UseSharedCompilation=false'
-            '/p:RunPostBuildEvent=OnOutputUpdated'
-            $refPathArg
-          )
-
-          foreach ($it in $solutionItems) {
-            Write-Host ""
-            Write-Host "=== $($it.Repo) ==="
-            Write-Host "Solution: $($it.Sln)"
-            Write-Host "-> NuGet restore"
-            & nuget restore $it.Sln -Verbosity detailed
-            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $($it.Repo)" }
-
-            Write-Host "-> MSBuild Rebuild ($cfg)"
+            Write-Host "-> MSBuild rebuild ($cfg)"
             & msbuild $it.Sln /t:Rebuild @msbuildCommon
             if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $($it.Repo)" }
           }

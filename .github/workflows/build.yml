@@ -76,7 +76,85 @@ jobs:
             git clone --depth 1 "https://github.com/$org/$r.git" $r
           }
 
-      - name: Restore + Rebuild in order (NuGet restore + MSBuild)
+      - name: Restore + Rebuild in order (NuGet restore + MSBuild) — safe ReferencePath
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $cfg  = '${{ env.CONFIGURATION }}'
+
+          function Find-Solution([string]$repoName) {
+            $expected = Join-Path $repoName "$repoName.sln"
+            if (Test-Path $expected) { return (Resolve-Path $expected).Path }
+
+            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue |
+                       Select-Object -First 1
+            if ($rootSln) { return $rootSln.FullName }
+
+            $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
+                      Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
+                      Select-Object -First 1
+            if ($anySln) { return $anySln.FullName }
+
+            throw "No .sln found under: $repoName"
+          }
+
+          # Your expanded build order (keep repo LAST)
+          $repo = '${{ env.REPO_NAME }}'
+          $buildOrder = @(
+            'SAM'
+            'SAM_Systems'
+            'SAM_Windows'
+            'SAM_Mollier'
+            'SAM_gbXML'
+            'SAM_SolarCalculator'
+            'SAM_Tas'
+            'SAM_Excel'
+            'SAM_GEM'
+            'SAM_LadybugTools'
+            'SAM_UI'
+            $repo
+          ) | Select-Object -Unique
+
+          $solutionItems = foreach ($r in $buildOrder) {
+            $slnPath = Find-Solution $r
+            [pscustomobject]@{ Repo = $r; Sln = $slnPath }
+          }
+
+          # Ensure reference folders exist
+          $winBuild = Join-Path (Get-Location) 'SAM_Windows\build'
+          $uiBuild  = Join-Path (Get-Location) 'SAM_UI\build'
+          New-Item -ItemType Directory -Force -Path $winBuild | Out-Null
+          New-Item -ItemType Directory -Force -Path $uiBuild  | Out-Null
+
+          # IMPORTANT:
+          # Instead of /p:ReferencePath=..., set an env var.
+          # Use semicolon-separated list with NO extra quotes.
+          $env:ReferencePath = "$winBuild;$uiBuild"
+          Write-Host "ReferencePath=$env:ReferencePath"
+
+          $msbuildCommon = @(
+            '/m:1'
+            '/nr:false'
+            '/v:m'
+            "/p:Configuration=$cfg"
+            '/p:UseSharedCompilation=false'
+            '/p:RunPostBuildEvent=OnOutputUpdated'
+          )
+
+          foreach ($it in $solutionItems) {
+            Write-Host ""
+            Write-Host "=== $($it.Repo) ==="
+            Write-Host "Solution: $($it.Sln)"
+            Write-Host "-> NuGet restore"
+            & nuget restore $it.Sln -Verbosity detailed
+            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $($it.Repo)" }
+
+            Write-Host "-> MSBuild Rebuild ($cfg)"
+            & msbuild $it.Sln /t:Rebuild @msbuildCommon
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $($it.Repo)" }
+          }
+
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'

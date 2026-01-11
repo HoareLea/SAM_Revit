@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    # Guard: if this ever gets merged upstream (e.g. HoareLea), it will skip there.
+    # Guard: if this ever gets merged upstream, it will "skip" there.
     if: github.repository_owner == 'SAM-BIM'
     runs-on: windows-2022
 
@@ -17,6 +17,7 @@ jobs:
       MSBUILDDISABLENODEREUSE: "1"
       ORG_NAME: "SAM-BIM"
       REPO_NAME: "SAM_Revit"
+      CONFIGURATION: "Release"
 
     steps:
       - name: Checkout this repo
@@ -33,6 +34,12 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      # Use modern NuGet (avoid NuGet 4.x + MSBuild 17 parsing issues)
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+        with:
+          nuget-version: "6.x"
+
       - name: Clone dependency repos (siblings)
         shell: pwsh
         run: |
@@ -41,43 +48,41 @@ jobs:
           $org  = '${{ env.ORG_NAME }}'
           $repo = '${{ env.REPO_NAME }}'
 
-          # Build order: deps first, current repo + UI last
-          # (Adjust later only if you find a missing reference.)
+          # Build order: deps first, current repo LAST
+          # (Adjust if you discover more deps.)
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
             'SAM_Psychrometrics'
             'SAM_Mollier'
             'SAM_Windows'
-            'SAM_gbXML'
-            'SAM_SolarCalculator'
             'SAM_UI'
-            $repo
+            'SAM_Revit'
             'SAM_Revit_UI'
-          )
+            $repo
+          ) | Select-Object -Unique
 
           foreach ($r in $buildOrder) {
-            if ($r -eq $repo) { continue } # already checked out by Actions
+            if ($r -eq $repo) { continue }   # already checked out by Actions
             if (Test-Path $r) { continue }
 
             Write-Host "Cloning https://github.com/$org/$r.git"
             git clone --depth 1 "https://github.com/$org/$r.git" $r
           }
 
-          # Ensure build folders exist early (ReferencePath uses these)
-          New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
-          New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
-
-      - name: Restore + Rebuild in order (Revit-safe restore)
+      - name: Restore + Rebuild in order (NuGet restore + MSBuild)
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
 
-          function Find-Solution([string]$repoName) {
-            $expected1 = Join-Path $repoName "$repoName.sln"
-            if (Test-Path $expected1) { return (Resolve-Path $expected1).Path }
+          $cfg  = '${{ env.CONFIGURATION }}'
 
-            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue | Select-Object -First 1
+          function Find-Solution([string]$repoName) {
+            $expected = Join-Path $repoName "$repoName.sln"
+            if (Test-Path $expected) { return (Resolve-Path $expected).Path }
+
+            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue |
+                       Select-Object -First 1
             if ($rootSln) { return $rootSln.FullName }
 
             $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
@@ -88,152 +93,57 @@ jobs:
             throw "No .sln found under: $repoName"
           }
 
-          function Get-SlnConfigPairs([string]$slnPath) {
-            $pairs = @()
-            $in = $false
-
-            foreach ($l in Get-Content -Path $slnPath) {
-              if ($l -match 'GlobalSection\(SolutionConfigurationPlatforms\)') { $in = $true; continue }
-              if ($in -and $l -match 'EndGlobalSection') { break }
-              if (-not $in) { continue }
-
-              if ($l -match '^\s*([^=]+)\s*=\s*') {
-                $left = $matches[1].Trim()
-                $parts = $left.Split('|')
-                if ($parts.Count -eq 2) {
-                  $pairs += [pscustomobject]@{
-                    Configuration = $parts[0].Trim()
-                    Platform      = $parts[1].Trim()
-                  }
-                }
-              }
-            }
-
-            return $pairs
-          }
-
-          function Format-PlatformArg([string]$platform) {
-            if (-not $platform) { return $null }
-            if ($platform -match '\s') { return "/p:Platform=`"$platform`"" }
-            return "/p:Platform=$platform"
-          }
-
-          function Restore-OnlyCsprojInSolution([string]$slnPath, [string]$configuration, [string]$platformArg, [string[]]$common) {
-            $slnDir = Split-Path -Parent $slnPath
-
-            # Extract *.csproj paths from the .sln "Project(...)= ..., "path\file.csproj", ..."
-            $csprojs = @()
-            foreach ($m in (Select-String -Path $slnPath -Pattern '\.csproj"' -AllMatches)) {
-              foreach ($mm in $m.Matches) {
-                # Example token:  ... "Some\Path\Proj.csproj"
-                $line = $m.Line
-                if ($line -match '",\s*"([^"]+\.csproj)"') {
-                  $rel = $matches[1]
-                  $full = Join-Path $slnDir $rel
-                  if (Test-Path $full) { $csprojs += (Resolve-Path $full).Path }
-                }
-              }
-            }
-            $csprojs = $csprojs | Select-Object -Unique
-
-            if ($csprojs.Count -eq 0) {
-              throw "No .csproj entries found in solution for restore: $slnPath"
-            }
-
-            foreach ($p in $csprojs) {
-              Write-Host "   -> Restore csproj: $p"
-              $args = @('/t:Restore') + $common + @("/p:Configuration=$configuration")
-              if ($platformArg) { $args += $platformArg }
-              & msbuild $p @args
-              if ($LASTEXITCODE -ne 0) { throw "Restore failed for csproj: $p" }
-            }
-          }
-
-          $repo = '${{ env.REPO_NAME }}'
-
-          $windowsRef = (Resolve-Path 'SAM_Windows\build').Path
-          $uiRef      = (Resolve-Path 'SAM_UI\build').Path
-          $refPaths   = "$windowsRef;$uiRef"
-
-          $common = @(
-            '/m:1'
-            '/nr:false'
-            '/v:m'
-            '/p:UseSharedCompilation=false'
-            '/p:RunPostBuildEvent=OnOutputUpdated'
-            "/p:ReferencePath=$refPaths"
-          )
-
+          # Build order: deps first, current repo LAST
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
             'SAM_Psychrometrics'
             'SAM_Mollier'
             'SAM_Windows'
-            'SAM_gbXML'
-            'SAM_SolarCalculator'
             'SAM_UI'
-            $repo
+            'SAM_Revit'
             'SAM_Revit_UI'
+            '${{ env.REPO_NAME }}'
+          ) | Select-Object -Unique
+
+          # Resolve solution paths
+          $solutionItems = foreach ($r in $buildOrder) {
+            $slnPath = Find-Solution $r
+            [pscustomobject]@{ Repo = $r; Sln = $slnPath }
+          }
+
+          # ReferencePath: must be a SINGLE msbuild argument (avoid MSB1006)
+          $winBuild = Join-Path (Get-Location) 'SAM_Windows\build'
+          $uiBuild  = Join-Path (Get-Location) 'SAM_UI\build'
+
+          New-Item -ItemType Directory -Force -Path $winBuild | Out-Null
+          New-Item -ItemType Directory -Force -Path $uiBuild  | Out-Null
+
+          # One property with both folders separated by semicolon:
+          $refPathArg = "/p:ReferencePath=`"$winBuild;$uiBuild`""
+
+          # Common MSBuild args (ARRAY — do not join into one string)
+          $msbuildCommon = @(
+            '/m:1'
+            '/nr:false'
+            '/v:m'
+            "/p:Configuration=$cfg"
+            '/p:UseSharedCompilation=false'
+            '/p:RunPostBuildEvent=OnOutputUpdated'
+            $refPathArg
           )
 
-          foreach ($r in $buildOrder) {
-            $sln = Find-Solution $r
+          foreach ($it in $solutionItems) {
             Write-Host ""
-            Write-Host "=== $r ==="
-            Write-Host "Solution: $sln"
+            Write-Host "=== $($it.Repo) ==="
+            Write-Host "Solution: $($it.Sln)"
+            Write-Host "-> NuGet restore"
+            & nuget restore $it.Sln -Verbosity detailed
+            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $($it.Repo)" }
 
-            $pairsAll = Get-SlnConfigPairs $sln
-
-            # For most deps: pick ONE Release-ish pair to keep CI fast.
-            # For SAM_Revit + SAM_Revit_UI: build ALL Release* pairs (often includes 2025/2026).
-            if ($r -in @($repo, 'SAM_Revit_UI')) {
-              $pairs = $pairsAll | Where-Object { $_.Configuration -like 'Release*' }
-              if (-not $pairs -or $pairs.Count -eq 0) {
-                # fallback: any pair containing 'Release'
-                $pairs = $pairsAll | Where-Object { $_.Configuration -match 'Release' }
-              }
-              if (-not $pairs -or $pairs.Count -eq 0) {
-                $pairs = @($pairsAll | Select-Object -First 1)
-              }
-            } else {
-              $pairs = @(
-                ($pairsAll | Where-Object { $_.Configuration -eq 'Release' -and $_.Platform -eq 'Any CPU' } | Select-Object -First 1),
-                ($pairsAll | Where-Object { $_.Configuration -eq 'Release' } | Select-Object -First 1),
-                ($pairsAll | Where-Object { $_.Configuration -like 'Release*' } | Select-Object -First 1),
-                ($pairsAll | Select-Object -First 1)
-              ) | Where-Object { $_ } | Select-Object -First 1
-              $pairs = @($pairs)
-            }
-
-            foreach ($cp in $pairs) {
-              $cfg = $cp.Configuration
-              $platArg = Format-PlatformArg $cp.Platform
-
-              Write-Host "-> Restore: $cfg|$($cp.Platform)"
-
-              # Revit solutions: restore only csproj entries (avoids "Invalid framework identifier ''")
-              if ($r -in @($repo, 'SAM_Revit_UI')) {
-                Restore-OnlyCsprojInSolution -slnPath $sln -configuration $cfg -platformArg $platArg -common $common
-              } else {
-                $args = @('/t:Restore') + $common + @("/p:Configuration=$cfg")
-                if ($platArg) { $args += $platArg }
-                & msbuild $sln @args
-                if ($LASTEXITCODE -ne 0) { throw "Restore failed: $r ($cfg|$($cp.Platform))" }
-              }
-            }
-
-            foreach ($cp in $pairs) {
-              $cfg = $cp.Configuration
-              $platArg = Format-PlatformArg $cp.Platform
-
-              Write-Host "-> Rebuild: $cfg|$($cp.Platform)"
-              $args = @('/t:Rebuild') + $common + @("/p:Configuration=$cfg")
-              if ($platArg) { $args += $platArg }
-
-              & msbuild $sln @args
-              if ($LASTEXITCODE -ne 0) { throw "Rebuild failed: $r ($cfg|$($cp.Platform))" }
-            }
+            Write-Host "-> MSBuild Rebuild ($cfg)"
+            & msbuild $it.Sln /t:Rebuild @msbuildCommon
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $($it.Repo)" }
           }
 
       - name: Upload build folders (optional)

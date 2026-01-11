@@ -119,7 +119,7 @@ jobs:
             '/v:m'
             "/p:Configuration=$cfg"
             '/p:UseSharedCompilation=false'
-            '/p:RunPostBuildEvent=OnOutputUpdated'
+            '/p:RunPostBuildEvent=Never'
           )
 
           foreach ($it in $solutionItems) {

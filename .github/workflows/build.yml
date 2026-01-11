@@ -1,0 +1,214 @@
+name: Build (Windows)
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Run only in SAM-BIM org; skip fork PRs because secrets aren't available there
+    if: |
+      github.repository_owner == 'SAM-BIM' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+
+    runs-on: windows-2022
+
+    env:
+      MSBUILDDISABLENODEREUSE: "1"
+      ORG_NAME: "SAM-BIM"
+      REPO_NAME: "SAM_Revit"
+
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: ${{ env.REPO_NAME }}
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Clone dependency repos (siblings)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $org  = '${{ env.ORG_NAME }}'
+          $repo = '${{ env.REPO_NAME }}'
+
+          # Build order: deps first, current repo LAST
+          # (Adjust if SAM_Revit turns out to need extra deps.)
+          $buildOrder = @(
+            'SAM'
+            'SAM_Systems'
+            'SAM_Windows'
+            'SAM_Mollier'
+            'SAM_gbXML'
+            'SAM_SolarCalculator'
+            'SAM_Tas'
+            'SAM_Excel'
+            'SAM_GEM'
+            'SAM_LadybugTools'
+            'SAM_UI'
+            $repo
+          )
+
+          # Clone everything except the last one (already checked out by Actions)
+          $deps = $buildOrder[0..($buildOrder.Count-2)]
+          foreach ($r in $deps) {
+            if (Test-Path $r) { continue }
+
+            # Use token URL if provided (needed for private deps); otherwise plain https is fine for public repos
+            $url = "https://github.com/$org/$r.git"
+            if ($env:GH_TOKEN) {
+              $url = "https://x-access-token:$($env:GH_TOKEN)@github.com/$org/$r.git"
+            }
+
+            Write-Host "Cloning $org/$r"
+            git clone --depth 1 $url $r
+
+            if ($LASTEXITCODE -ne 0 -or -not (Test-Path $r)) {
+              throw "Failed to clone $org/$r. If it's private, add ORG_REPO_TOKEN secret (Contents: Read) to this repo."
+            }
+          }
+
+          # Ensure ReferencePath exists even before SAM_Windows builds
+          New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
+
+      - name: Restore + Rebuild in order (Release + year-specific configs)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $repo = '${{ env.REPO_NAME }}'
+          $windowsRef = (Resolve-Path 'SAM_Windows\build').Path
+
+          # Base args (ARRAY — do not join into one string)
+          $base = @(
+            '/m:1'
+            '/nr:false'
+            '/v:m'
+            '/p:UseSharedCompilation=false'
+            '/p:RunPostBuildEvent=OnOutputUpdated'
+            "/p:ReferencePath=$windowsRef"
+          )
+
+          function Get-Solutions([string]$repoName) {
+            $expected = Join-Path $repoName "$repoName.sln"
+            if (Test-Path $expected) { return @((Resolve-Path $expected).Path) }
+
+            $all = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
+                   Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
+                   Sort-Object FullName
+
+            if ($all -and $all.Count -gt 0) { return @($all.FullName) }
+
+            throw "No .sln found under: $repoName"
+          }
+
+          function Get-ReleaseConfigs([string]$slnPath) {
+            $lines = Get-Content -Path $slnPath -ErrorAction Stop
+
+            $start = ($lines | Select-String -Pattern 'GlobalSection(SolutionConfigurationPlatforms)' -SimpleMatch | Select-Object -First 1).LineNumber
+            if (-not $start) { return @() }
+
+            $end = ($lines | Select-String -Pattern 'EndGlobalSection' -SimpleMatch | Where-Object { $_.LineNumber -gt $start } | Select-Object -First 1).LineNumber
+            if (-not $end) { return @() }
+
+            $items = @()
+            for ($i = ($start - 1); $i -le ($end - 2); $i++) {
+              $line = $lines[$i].Trim()
+              if (-not $line) { continue }
+
+              # Example: Release|Any CPU = Release|Any CPU
+              if ($line -match '^(.+?)\s*=\s*(.+)$') {
+                $left = $Matches[1].Trim()
+                if ($left -match '^(.+?)\|(.+)$') {
+                  $cfg  = $Matches[1].Trim()
+                  $plat = $Matches[2].Trim()
+                  if ($cfg -match '^Release') {
+                    $items += [pscustomobject]@{ Configuration = $cfg; Platform = $plat }
+                  }
+                }
+              }
+            }
+
+            $items | Sort-Object Configuration,Platform -Unique
+          }
+
+          # Build order: deps first, current repo LAST
+          $buildOrder = @(
+            'SAM'
+            'SAM_Systems'
+            'SAM_Windows'
+            'SAM_Mollier'
+            'SAM_gbXML'
+            'SAM_SolarCalculator'
+            'SAM_Tas'
+            'SAM_Excel'
+            'SAM_GEM'
+            'SAM_LadybugTools'
+            'SAM_UI'
+            $repo
+          )
+
+          foreach ($r in $buildOrder) {
+            Write-Host ""
+            Write-Host "=== $r ==="
+
+            $solutions = Get-Solutions $r
+            foreach ($sln in $solutions) {
+              Write-Host "Solution: $sln"
+
+              $releaseConfigs = Get-ReleaseConfigs $sln
+              if (-not $releaseConfigs -or $releaseConfigs.Count -eq 0) {
+                Write-Warning "No Release* configs found in $sln. Falling back to /p:Configuration=Release (no Platform)."
+                $releaseConfigs = @([pscustomobject]@{ Configuration = 'Release'; Platform = '' })
+              }
+
+              foreach ($cp in $releaseConfigs) {
+                $argsRestore = @('/t:Restore') + $base + @("/p:Configuration=$($cp.Configuration)")
+                $argsBuild   = @('/t:Rebuild') + $base + @("/p:Configuration=$($cp.Configuration)")
+
+                if ($cp.Platform) {
+                  $argsRestore += "/p:Platform=$($cp.Platform)"
+                  $argsBuild   += "/p:Platform=$($cp.Platform)"
+                }
+
+                Write-Host "-> Restore: $($cp.Configuration)|$($cp.Platform)"
+                & msbuild $sln @argsRestore
+                if ($LASTEXITCODE -ne 0) { throw "Restore failed: $r ($($cp.Configuration)|$($cp.Platform))" }
+
+                Write-Host "-> Rebuild: $($cp.Configuration)|$($cp.Platform)"
+                & msbuild $sln @argsBuild
+                if ($LASTEXITCODE -ne 0) { throw "Build failed: $r ($($cp.Configuration)|$($cp.Platform))" }
+              }
+            }
+          }
+
+          # Diagnostics: installer stages Revit 2025/2026 folders, so try to spot those outputs
+          # (This is informational; it doesn't fail the build.)
+          $years = @('2025','2026')
+          foreach ($y in $years) {
+            $hits = @(Get-ChildItem -Path $repo -Recurse -File -ErrorAction SilentlyContinue |
+                      Where-Object { $_.Name -match '^SAM\..*Revit.*\.dll$' -and $_.FullName -match $y })
+            Write-Host "DIAG: $repo outputs mentioning $y: $($hits.Count) Revit DLL(s)"
+          }
+
+      - name: Upload build folders (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SAM_Revit-build-folders
+          path: |
+            **\build\*
+          if-no-files-found: warn

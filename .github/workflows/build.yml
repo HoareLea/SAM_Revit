@@ -9,8 +9,6 @@ on:
 
 jobs:
   build:
-    # Guard: if this ever gets merged upstream (e.g. HoareLea),
-    # it will be "skipped" there and won't break their CI.
     if: github.repository_owner == 'SAM-BIM'
     runs-on: windows-2022
 
@@ -43,21 +41,13 @@ jobs:
         shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.ORG_REPO_TOKEN }}
-          ORG_NAME: ${{ env.ORG_NAME }}
-          REPO_NAME: ${{ env.REPO_NAME }}
         run: |
           $ErrorActionPreference = 'Stop'
+          $org = 'SAM-BIM'
+          $repo = 'SAM_Revit'
 
-          if (-not $env:GH_TOKEN) {
-            throw "Missing secret ORG_REPO_TOKEN. Add it in repo Settings → Secrets and variables → Actions."
-          }
-
-          $org  = $env:ORG_NAME
-          $repo = $env:REPO_NAME
-
-          $buildOrder = @(
+          $publicRepos = @(
             'SAM'
-            'SAM_Solver'          # private
             'SAM_Systems'
             'SAM_Windows'
             'SAM_Mollier'
@@ -68,23 +58,19 @@ jobs:
             'SAM_GEM'
             'SAM_LadybugTools'
             'SAM_UI'
-            $repo                 # current repo LAST
+            $repo
           )
 
-          foreach ($r in $buildOrder) {
-            if (Test-Path $r) {
-              Write-Host "Skipping $r (already exists)"
-              continue
+          foreach ($r in $publicRepos) {
+            if (-not (Test-Path $r)) {
+              git clone https://github.com/$org/$r.git $r
             }
-
-            Write-Host "Cloning $r"
-
-            git clone `
-              https://x-access-token:$env:GH_TOKEN@github.com/$org/$r.git `
-              $r
           }
 
-          # Ensure these exist (some projects reference them)
+          if (-not (Test-Path 'SAM_Solver')) {
+            git clone https://x-access-token:$env:GH_TOKEN@github.com/$org/SAM_Solver.git SAM_Solver
+          }
+
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
           New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
 
@@ -97,48 +83,26 @@ jobs:
             $expected = Join-Path $repoName "$repoName.sln"
             if (Test-Path $expected) { return (Resolve-Path $expected).Path }
 
-            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($rootSln) { return $rootSln.FullName }
-
-            $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
-                      Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
-                      Select-Object -First 1
-            if ($anySln) { return $anySln.FullName }
+            $sln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File |
+                   Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
+                   Select-Object -First 1
+            if ($sln) { return $sln.FullName }
 
             throw "No .sln found under: $repoName"
           }
 
-          function Add-OutputsToRefs([string]$repoName, [string]$refsDir) {
-            $candidates = @(
-              Join-Path $repoName "build",
-              Join-Path $repoName "bin\Release",
-              Join-Path $repoName "bin\x64\Release",
-              Join-Path $repoName "bin\Any CPU\Release"
-            )
-
-            foreach ($d in $candidates) {
-              if (Test-Path $d) {
-                Copy-Item (Join-Path $d "*") $refsDir -Recurse -Force -ErrorAction SilentlyContinue
+          function Add-OutputsToRefs($repoName, $refsDir) {
+            Get-ChildItem -Path $repoName -Recurse -Directory |
+              Where-Object { $_.FullName -match '\\bin\\(x64\\)?Release' -or $_.Name -eq 'build' } |
+              ForEach-Object {
+                Copy-Item (Join-Path $_.FullName '*') $refsDir -Recurse -Force -ErrorAction SilentlyContinue
               }
-            }
-
-            $binRelease = Get-ChildItem -Path $repoName -Recurse -Directory -ErrorAction SilentlyContinue |
-                          Where-Object { $_.FullName -match '\\bin\\(x64\\)?Release' } |
-                          Select-Object -First 10
-            foreach ($d in $binRelease) {
-              Copy-Item (Join-Path $d.FullName "*") $refsDir -Recurse -Force -ErrorAction SilentlyContinue
-            }
           }
 
-          # Shared refs folder to avoid "missing namespace" errors across repos
           $refs = Join-Path (Get-Location) "_refs"
           New-Item -ItemType Directory -Force -Path $refs | Out-Null
-
-          # SAFE ReferencePath: use environment variable (no quoting issues, avoids winmd path problems)
           $env:ReferencePath = $refs
-          Write-Host "ReferencePath=$env:ReferencePath"
 
-          # Build order (core + modules + UI) BEFORE Revit configs
           $buildOrder = @(
             'SAM'
             'SAM_Systems'
@@ -160,76 +124,34 @@ jobs:
             'SAM_UI'
           ) | Select-Object -Unique
 
-          $platformByRepo = @{
-            'SAM_OpenStudio' = 'x64'
-          }
+          $platformByRepo = @{ 'SAM_OpenStudio' = 'x64' }
 
-          function Get-PlatformArgs([string]$repoName) {
-            if (-not $platformByRepo.ContainsKey($repoName)) { return @() }
-            $p = $platformByRepo[$repoName]
-            if ($p -match '\s') { return @("/p:Platform=`"$p`"") }
-            return @("/p:Platform=$p")
-          }
-
-          function Build-RepoSln([string]$repoName, [string]$configuration) {
+          function Build-RepoSln($repoName, $config) {
             $sln = Find-Solution $repoName
-            $platArgs = Get-PlatformArgs $repoName
-
-            Write-Host ""
-            Write-Host "=== $repoName ==="
-            Write-Host "Solution: $sln"
-            Write-Host "Config:   $configuration"
-            if ($platArgs.Count -gt 0) { Write-Host "Platform: $($platArgs -join ' ')" } else { Write-Host "Platform: (default)" }
-
-            Write-Host "-> NuGet restore"
-            & nuget restore $sln -Verbosity detailed
-            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $repoName" }
-
-            $common = @(
+            nuget restore $sln
+            $args = @(
               '/m:1'
               '/nr:false'
-              '/v:m'
-              "/p:Configuration=$configuration"
-              '/p:UseSharedCompilation=false'
+              "/p:Configuration=$config"
               '/p:RunPostBuildEvent=Never'
             )
-
-            Write-Host "-> MSBuild rebuild"
-            & msbuild $sln /t:Rebuild @common @platArgs
-            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($configuration)" }
-
+            if ($platformByRepo.ContainsKey($repoName)) {
+              $args += "/p:Platform=$($platformByRepo[$repoName])"
+            }
+            msbuild $sln /t:Rebuild @args
             Add-OutputsToRefs $repoName $refs
-
-            $dllCount = (Get-ChildItem -Path $refs -Filter *.dll -File -ErrorAction SilentlyContinue | Measure-Object).Count
-            Write-Host "DIAG: _refs DLL count now: $dllCount"
           }
 
-          # 1) Build deps/modules/UI first (Release)
           foreach ($r in $buildOrder) {
-            if (-not (Test-Path $r)) { throw "Missing repo folder: $r" }
             Build-RepoSln $r 'Release'
           }
 
-          # 2) Build Revit + Revit_UI twice (Release2025 & Release2026)
-          $revitPairs = @(
-            @{ Repo = 'SAM_Revit';    Configs = @('Release2025','Release2026') },
-            @{ Repo = 'SAM_Revit_UI'; Configs = @('Release2025','Release2026') }
-          )
-
-          foreach ($p in $revitPairs) {
-            foreach ($cfg in $p.Configs) {
-              if (-not (Test-Path $p.Repo)) { throw "Missing repo folder: $($p.Repo)" }
-              Build-RepoSln $p.Repo $cfg
-            }
+          foreach ($cfg in @('Release2025','Release2026')) {
+            Build-RepoSln 'SAM_Revit' $cfg
+            Build-RepoSln 'SAM_Revit_UI' $cfg
           }
 
-          # 3) Finally, build THIS repo's solution (if distinct)
-          $thisRepo = '${{ env.REPO_NAME }}'
-          if ($thisRepo -ne 'SAM_Revit') {
-            Build-RepoSln $thisRepo 'Release2026'
-          }
-
-      - name: Upload build outputs (optional)
+      - name: Upload build outputs
         uses: actions/upload-artifact@v4
         with:
           name: SAM_Revit-build-outputs

@@ -34,7 +34,7 @@ Welcome — and let’s keep the open-source journey going. 🤝
 ## Installing
 
 To install **SAM**, download and run the  
-[latest Windows installer](https://github.com/HoareLea/SAM_Deploy/releases).
+[latest Windows installer](https://github.com/SAM-BIM/SAM_Deploy/releases/latest).
 
 Once installed, ensure that **Rhino.Inside.Revit** is available
 and that you are running a supported version of Revit (2025+).
@@ -53,7 +53,7 @@ and workflow examples related to Revit integration:
 ## Resources
 - 🧠 **SAM Core:** https://github.com/SAM-BIM/SAM  
 - 🦏 **Rhino.Inside.Revit:** https://www.rhino3d.com/inside/revit/  
-- 🧰 **SAM Installer:** https://github.com/HoareLea/SAM_Deploy/releases  
+- 🧰 **SAM Installer:** https://github.com/SAM-BIM/SAM_Deploy/releases/latest  
 
 ---
 

@@ -42,7 +42,7 @@ jobs:
           nuget-version: "6.x"
 
       - name: Clone dependency repos (siblings) + build order
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
 
@@ -91,7 +91,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
 
       - name: Restore + Rebuild (ordered) + Revit 2025/2026
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
 
@@ -164,9 +164,7 @@ jobs:
 
           function Msbuild-ConfigPlatform([string]$cfg, [string]$plat) {
             $args = @("/p:Configuration=$cfg")
-            if ($plat) {
-              if ($plat -match '\s') { $args += "/p:Platform=`"$plat`"" } else { $args += "/p:Platform=$plat" }
-            }
+            if ($plat) { $args += "/p:Platform=$plat" }   # <-- no quoting
             return $args
           }
 

@@ -164,7 +164,7 @@ jobs:
 
           function Msbuild-ConfigPlatform([string]$cfg, [string]$plat) {
             $args = @("/p:Configuration=$cfg")
-            if ($plat) { $args += "/p:Platform=$plat" }   # <-- no quoting
+            if ($plat) { $args += "/p:Platform=$plat" }   # no quotes
             return $args
           }
 
@@ -173,11 +173,13 @@ jobs:
             Write-Host ""
             Write-Host "=== $repoName ==="
             Write-Host "Solution: $sln"
-            Write-Host "-> nuget restore"
-            & nuget restore $sln -Verbosity quiet
-            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed: $repoName" }
 
             $cfgArgs = Msbuild-ConfigPlatform $cfg $plat
+
+            Write-Host "-> msbuild restore ($cfg | $plat)"
+            & msbuild $sln /t:Restore @msbuildBase @cfgArgs
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild restore failed: $repoName ($cfg | $plat)" }
+
             Write-Host "-> msbuild rebuild ($cfg | $plat)"
             & msbuild $sln /t:Rebuild @msbuildBase @cfgArgs
             if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($cfg | $plat)" }

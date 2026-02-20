@@ -9,7 +9,7 @@ namespace SAM.Geometry.Revit
         {
         }
 
-        private static Setting setting = Load();
+        private static Setting setting = null;
 
         private static Setting Load()
         {
@@ -24,6 +24,11 @@ namespace SAM.Geometry.Revit
         {
             get
             {
+                if(setting == null)
+                {
+                    setting = Load();
+                }
+
                 return setting;
             }
         }

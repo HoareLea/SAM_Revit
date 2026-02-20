@@ -18,13 +18,15 @@ namespace SAM.Analytical.Revit
             public const string ParameterMap_Tools = "Parameter Map Tools";
         }
 
-        private static Setting setting = Load();
+        private static Setting setting = null;
 
         private static Setting Load()
         {
             Setting setting = ActiveManager.GetSetting(Assembly.GetExecutingAssembly());
             if (setting == null)
+            {
                 setting = GetDefault();
+            }
 
             return setting;
         }
@@ -33,6 +35,11 @@ namespace SAM.Analytical.Revit
         {
             get
             {
+                if(setting == null)
+                {
+                    setting = Load();
+                }
+
                 return setting;
             }
         }

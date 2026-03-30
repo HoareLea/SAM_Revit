@@ -53,33 +53,33 @@ namespace SAM.Analytical.Revit
             TypeMap parameterMap_General = Core.Create.TypeMap();
 
             //AnalyticalModel
-            parameterMap_General.Add(AnalyticalModelParameter.NorthAngle, typeof(ProjectInfo), "SAM_NorthAngle");
-            parameterMap_General.Add(AnalyticalModelParameter.CoolingSizingFactor, typeof(ProjectInfo), "SAM_SizingFactorCooling");
-            parameterMap_General.Add(AnalyticalModelParameter.HeatingSizingFactor, typeof(ProjectInfo), "SAM_SizingFactorHeating");
+            parameterMap_General.Add(AnalyticalModelParameter.NorthAngle, typeof(Autodesk.Revit.DB.ProjectInfo), "SAM_NorthAngle");
+            parameterMap_General.Add(AnalyticalModelParameter.CoolingSizingFactor, typeof(Autodesk.Revit.DB.ProjectInfo), "SAM_SizingFactorCooling");
+            parameterMap_General.Add(AnalyticalModelParameter.HeatingSizingFactor, typeof(Autodesk.Revit.DB.ProjectInfo), "SAM_SizingFactorHeating");
 
             //Aperture
-            parameterMap_General.Add(typeof(Aperture), typeof(FamilyInstance), "GetWidth", "SAM_BuildingElementWidth");
-            parameterMap_General.Add(typeof(Aperture), typeof(FamilyInstance), "GetHeight", "SAM_BuildingElementHeight");
-            parameterMap_General.Add(typeof(Aperture), typeof(FamilyInstance), "Guid", "SAM_GUID");
+            parameterMap_General.Add(typeof(Aperture), typeof(Autodesk.Revit.DB.FamilyInstance), "GetWidth", "SAM_BuildingElementWidth");
+            parameterMap_General.Add(typeof(Aperture), typeof(Autodesk.Revit.DB.FamilyInstance), "GetHeight", "SAM_BuildingElementHeight");
+            parameterMap_General.Add(typeof(Aperture), typeof(Autodesk.Revit.DB.FamilyInstance), "Guid", "SAM_GUID");
 
             //ApertureConstruction
-            parameterMap_General.Add(ApertureConstructionParameter.Color, typeof(FamilySymbol), "SAM_BuildingElementColor");
-            parameterMap_General.Add(ApertureConstructionParameter.Transparent, typeof(FamilySymbol), "SAM_BuildingElementTransparent");
-            parameterMap_General.Add(ApertureConstructionParameter.Description, typeof(FamilySymbol), "SAM_BuildingElementDescription");
-            parameterMap_General.Add(ApertureConstructionParameter.DefaultFrameWidth, typeof(FamilySymbol), "SAM_BuildingElementFrameWidth");
-            parameterMap_General.Add(ApertureConstructionParameter.IsInternalShadow, typeof(FamilySymbol), "SAM_BuildingElementInternalShadows");
+            parameterMap_General.Add(ApertureConstructionParameter.Color, typeof(Autodesk.Revit.DB.FamilySymbol), "SAM_BuildingElementColor");
+            parameterMap_General.Add(ApertureConstructionParameter.Transparent, typeof(Autodesk.Revit.DB.FamilySymbol), "SAM_BuildingElementTransparent");
+            parameterMap_General.Add(ApertureConstructionParameter.Description, typeof(Autodesk.Revit.DB.FamilySymbol), "SAM_BuildingElementDescription");
+            parameterMap_General.Add(ApertureConstructionParameter.DefaultFrameWidth, typeof(Autodesk.Revit.DB.FamilySymbol), "SAM_BuildingElementFrameWidth");
+            parameterMap_General.Add(ApertureConstructionParameter.IsInternalShadow, typeof(Autodesk.Revit.DB.FamilySymbol), "SAM_BuildingElementInternalShadows");
             //MD 2021-02-25 this property will duplicate from default type
             //parameterMap_General.Add(typeof(ApertureConstruction), typeof(FamilySymbol), "ApertureType", "SAM_BuildingElementType");
 
             //Construction
-            parameterMap_General.Add(ConstructionParameter.Color, typeof(HostObjAttributes), "SAM_BuildingElementColor");
-            parameterMap_General.Add(ConstructionParameter.DefaultPanelType, typeof(HostObjAttributes), "SAM_BuildingElementType");
-            parameterMap_General.Add(ConstructionParameter.Description, typeof(HostObjAttributes), "SAM_BuildingElementDescription");
-            parameterMap_General.Add(ConstructionParameter.IsAir, typeof(HostObjAttributes), "SAM_BuildingElementAir");
-            parameterMap_General.Add(ConstructionParameter.IsInternalShadow, typeof(HostObjAttributes), "SAM_BuildingElementInternalShadows");
-            parameterMap_General.Add(ConstructionParameter.IsGround, typeof(HostObjAttributes), "SAM_BuildingElementGround");
-            parameterMap_General.Add(ConstructionParameter.Transparent, typeof(HostObjAttributes), "SAM_BuildingElementTransparent");
-            parameterMap_General.Add(ConstructionParameter.DefaultThickness, typeof(HostObjAttributes), "SAM_BuildingElementThickness");
+            parameterMap_General.Add(ConstructionParameter.Color, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementColor");
+            parameterMap_General.Add(ConstructionParameter.DefaultPanelType, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementType");
+            parameterMap_General.Add(ConstructionParameter.Description, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementDescription");
+            parameterMap_General.Add(ConstructionParameter.IsAir, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementAir");
+            parameterMap_General.Add(ConstructionParameter.IsInternalShadow, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementInternalShadows");
+            parameterMap_General.Add(ConstructionParameter.IsGround, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementGround");
+            parameterMap_General.Add(ConstructionParameter.Transparent, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementTransparent");
+            parameterMap_General.Add(ConstructionParameter.DefaultThickness, typeof(Autodesk.Revit.DB.HostObjAttributes), "SAM_BuildingElementThickness");
 
             //InternalCondition
             parameterMap_General.Add(typeof(InternalCondition), typeof(Autodesk.Revit.DB.Mechanical.Space), "Name", "SAM_IC_ThermalTemplate");
@@ -153,61 +153,61 @@ namespace SAM.Analytical.Revit
             parameterMap_General.Add(typeof(SpaceSimulationResult), typeof(Autodesk.Revit.DB.Mechanical.Space), "Reference", "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_SpaceGUID'");
 
             //Panel
-            parameterMap_General.Add(PanelParameter.Transparent, typeof(HostObject), "SAM_BuildingElementTransparent");
-            parameterMap_General.Add(PanelParameter.ThermalTransmittance, typeof(HostObject), "SAM_SrfUValue");
-            parameterMap_General.Add(PanelParameter.LightTransmittance, typeof(HostObject), "SAM_SrfLightTransmittance");
-            parameterMap_General.Add(PanelParameter.LightReflectance, typeof(HostObject), "SAM_SrfLightReflectance");
-            parameterMap_General.Add(PanelParameter.DirectSolarEnergyTransmittance, typeof(HostObject), "SAM_SrfDirectSolarEnergyTransmittance");
-            parameterMap_General.Add(PanelParameter.DirectSolarEnergyReflectance, typeof(HostObject), "SAM_SrfDirectSolarEnergyReflectance");
-            parameterMap_General.Add(PanelParameter.DirectSolarEnergyAbsorptance, typeof(HostObject), "SAM_SrfDirectSolarEnergyAbsorptance");
-            parameterMap_General.Add(PanelParameter.TotalSolarEnergyTransmittance, typeof(HostObject), "SAM_SrfgValue");
-            parameterMap_General.Add(PanelParameter.Adiabatic, typeof(HostObject), "SAM_SrfAdiabatic"); //2023.09.10
+            parameterMap_General.Add(PanelParameter.Transparent, typeof(Autodesk.Revit.DB.HostObject), "SAM_BuildingElementTransparent");
+            parameterMap_General.Add(PanelParameter.ThermalTransmittance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfUValue");
+            parameterMap_General.Add(PanelParameter.LightTransmittance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfLightTransmittance");
+            parameterMap_General.Add(PanelParameter.LightReflectance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfLightReflectance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyTransmittance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfDirectSolarEnergyTransmittance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyReflectance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfDirectSolarEnergyReflectance");
+            parameterMap_General.Add(PanelParameter.DirectSolarEnergyAbsorptance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfDirectSolarEnergyAbsorptance");
+            parameterMap_General.Add(PanelParameter.TotalSolarEnergyTransmittance, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfgValue");
+            parameterMap_General.Add(PanelParameter.Adiabatic, typeof(Autodesk.Revit.DB.HostObject), "SAM_SrfAdiabatic"); //2023.09.10
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_NorthAngle"); //double
 
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternal"); //double
             //mapCluster.Add(typeof(Panel), typeof(HostObject), null, "SAM_FacingExternalGlazing"); //double
 
             //Aperture
-            parameterMap_General.Add(ApertureParameter.ThermalTransmittance, typeof(FamilyInstance), "SAM_SrfUValue");
-            parameterMap_General.Add(ApertureParameter.LightTransmittance, typeof(FamilyInstance), "SAM_SrfLightTransmittance");
-            parameterMap_General.Add(ApertureParameter.LightReflectance, typeof(FamilyInstance), "SAM_SrfLightReflectance");
-            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyTransmittance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyTransmittance");
-            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyReflectance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyReflectance");
-            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyAbsorptance, typeof(FamilyInstance), "SAM_SrfDirectSolarEnergyAbsorptance");
-            parameterMap_General.Add(ApertureParameter.TotalSolarEnergyTransmittance, typeof(FamilyInstance), "SAM_SrfgValue");
+            parameterMap_General.Add(ApertureParameter.ThermalTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfUValue");
+            parameterMap_General.Add(ApertureParameter.LightTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfLightTransmittance");
+            parameterMap_General.Add(ApertureParameter.LightReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfLightReflectance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfDirectSolarEnergyTransmittance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfDirectSolarEnergyReflectance");
+            parameterMap_General.Add(ApertureParameter.DirectSolarEnergyAbsorptance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfDirectSolarEnergyAbsorptance");
+            parameterMap_General.Add(ApertureParameter.TotalSolarEnergyTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_SrfgValue");
 
             //Material
-            parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "ThermalConductivity", "SAM_Material_Conductivity");
-            parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "SpecificHeatCapacity", "SAM_Material_SpecificHeat");
-            parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Density", "SAM_Material_Density");
-            parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Description", "SAM_Material_Description");
-            parameterMap_General.Add(typeof(Core.Material), typeof(FamilyInstance), "Name", "SAM_Material_Name");
-            parameterMap_General.Add(RevitMaterialParameter.TypeName, typeof(FamilyInstance), "SAM_Material_Type");
-            parameterMap_General.Add(Core.MaterialParameter.DefaultThickness, typeof(FamilyInstance), "SAM_Material_Width");
-            parameterMap_General.Add(MaterialParameter.VapourDiffusionFactor, typeof(FamilyInstance), "SAM_Material_VapourDiffusionFactor");
+            parameterMap_General.Add(typeof(Core.Material), typeof(Autodesk.Revit.DB.FamilyInstance), "ThermalConductivity", "SAM_Material_Conductivity");
+            parameterMap_General.Add(typeof(Core.Material), typeof(Autodesk.Revit.DB.FamilyInstance), "SpecificHeatCapacity", "SAM_Material_SpecificHeat");
+            parameterMap_General.Add(typeof(Core.Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Density", "SAM_Material_Density");
+            parameterMap_General.Add(typeof(Core.Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Description", "SAM_Material_Description");
+            parameterMap_General.Add(typeof(Core.Material), typeof(Autodesk.Revit.DB.FamilyInstance), "Name", "SAM_Material_Name");
+            parameterMap_General.Add(RevitMaterialParameter.TypeName, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_Type");
+            parameterMap_General.Add(Core.MaterialParameter.DefaultThickness, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_Width");
+            parameterMap_General.Add(MaterialParameter.VapourDiffusionFactor, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_VapourDiffusionFactor");
 
             //GasMaterial
-            parameterMap_General.Add(GasMaterialParameter.HeatTransferCoefficient, typeof(FamilyInstance), "SAM_Material_ConvectionCoefficient");
+            parameterMap_General.Add(GasMaterialParameter.HeatTransferCoefficient, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ConvectionCoefficient");
 
             //TransparentMaterial
-            parameterMap_General.Add(TransparentMaterialParameter.ExternalEmissivity, typeof(FamilyInstance), "SAM_Material_ExternalEmissivity");
-            parameterMap_General.Add(TransparentMaterialParameter.ExternalLightReflectance, typeof(FamilyInstance), "SAM_Material_ExternalLightReflectance");
-            parameterMap_General.Add(TransparentMaterialParameter.ExternalSolarReflectance, typeof(FamilyInstance), "SAM_Material_ExternalSolarReflectance");
-            parameterMap_General.Add(TransparentMaterialParameter.InternalEmissivity, typeof(FamilyInstance), "SAM_Material_InternalEmissivity");
-            parameterMap_General.Add(TransparentMaterialParameter.InternalLightReflectance, typeof(FamilyInstance), "SAM_Material_InternalLightReflectance");
-            parameterMap_General.Add(TransparentMaterialParameter.InternalSolarReflectance, typeof(FamilyInstance), "SAM_Material_InternalSolarReflectance");
-            parameterMap_General.Add(TransparentMaterialParameter.IsBlind, typeof(FamilyInstance), "SAM_Material_IsBlind");
-            parameterMap_General.Add(TransparentMaterialParameter.LightTransmittance, typeof(FamilyInstance), "SAM_Material_LightTransmittance");
-            parameterMap_General.Add(TransparentMaterialParameter.SolarTransmittance, typeof(FamilyInstance), "SAM_Material_SolarTransmittance");
+            parameterMap_General.Add(TransparentMaterialParameter.ExternalEmissivity, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalEmissivity");
+            parameterMap_General.Add(TransparentMaterialParameter.ExternalLightReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalLightReflectance");
+            parameterMap_General.Add(TransparentMaterialParameter.ExternalSolarReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalSolarReflectance");
+            parameterMap_General.Add(TransparentMaterialParameter.InternalEmissivity, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalEmissivity");
+            parameterMap_General.Add(TransparentMaterialParameter.InternalLightReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalLightReflectance");
+            parameterMap_General.Add(TransparentMaterialParameter.InternalSolarReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalSolarReflectance");
+            parameterMap_General.Add(TransparentMaterialParameter.IsBlind, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_IsBlind");
+            parameterMap_General.Add(TransparentMaterialParameter.LightTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_LightTransmittance");
+            parameterMap_General.Add(TransparentMaterialParameter.SolarTransmittance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_SolarTransmittance");
 
             //OpaqueMaterial
-            parameterMap_General.Add(OpaqueMaterialParameter.ExternalEmissivity, typeof(FamilyInstance), "SAM_Material_ExternalEmissivity");
-            parameterMap_General.Add(OpaqueMaterialParameter.ExternalLightReflectance, typeof(FamilyInstance), "SAM_Material_ExternalLightReflectance");
-            parameterMap_General.Add(OpaqueMaterialParameter.ExternalSolarReflectance, typeof(FamilyInstance), "SAM_Material_ExternalSolarReflectance");
-            parameterMap_General.Add(OpaqueMaterialParameter.IgnoreThermalTransmittanceCalculations, typeof(FamilyInstance), "SAM_Material_IngnoreInUvalue");
-            parameterMap_General.Add(OpaqueMaterialParameter.InternalEmissivity, typeof(FamilyInstance), "SAM_Material_InternalEmissivity");
-            parameterMap_General.Add(OpaqueMaterialParameter.InternalLightReflectance, typeof(FamilyInstance), "SAM_Material_InternalLightReflectance");
-            parameterMap_General.Add(OpaqueMaterialParameter.InternalSolarReflectance, typeof(FamilyInstance), "SAM_Material_InternalSolarReflectance");
+            parameterMap_General.Add(OpaqueMaterialParameter.ExternalEmissivity, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalEmissivity");
+            parameterMap_General.Add(OpaqueMaterialParameter.ExternalLightReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalLightReflectance");
+            parameterMap_General.Add(OpaqueMaterialParameter.ExternalSolarReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_ExternalSolarReflectance");
+            parameterMap_General.Add(OpaqueMaterialParameter.IgnoreThermalTransmittanceCalculations, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_IngnoreInUvalue");
+            parameterMap_General.Add(OpaqueMaterialParameter.InternalEmissivity, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalEmissivity");
+            parameterMap_General.Add(OpaqueMaterialParameter.InternalLightReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalLightReflectance");
+            parameterMap_General.Add(OpaqueMaterialParameter.InternalSolarReflectance, typeof(Autodesk.Revit.DB.FamilyInstance), "SAM_Material_InternalSolarReflectance");
 
 
             result.Add(Core.Revit.ActiveSetting.Name.ParameterMap, parameterMap_General);
@@ -246,7 +246,7 @@ namespace SAM.Analytical.Revit
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.Pollutant, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_SpacePollutant'");
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.DesignLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_DesSpecSensCoolLoad'", null, "[SAM.Analytical.Query.SpecificDesignLoad(Object_1)]");
             parameterMap_Cooling.Add(SpaceSimulationResultParameter.DesignLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_DesSensCoolingLoad'");// "[SAM.Analytical.Query.SpecificLoad(Object_1)]");
-            parameterMap_Cooling.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(ProjectInfo), "SAM_BuildingUnmetHoursCooling");
+            parameterMap_Cooling.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(Autodesk.Revit.DB.ProjectInfo), "SAM_BuildingUnmetHoursCooling");
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneCLGTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirFlow(AdjacencyCluster, Object_1)]");
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneCLGSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirFlow(AdjacencyCluster, Object_1)]");
             parameterMap_Cooling.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneCLGSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirFlow(AdjacencyCluster, Object_1)]");
@@ -273,7 +273,7 @@ namespace SAM.Analytical.Revit
             parameterMap_Heating.Add(SpaceSimulationResultParameter.BuildingHeatTransfer, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_HDD_BuildingHeatTransfer'");
             parameterMap_Heating.Add(SpaceSimulationResultParameter.DesignLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_DesSpecSensHeatLoad'", null, "[SAM.Analytical.Query.SpecificDesignLoad(Object_1)]");
             parameterMap_Heating.Add(SpaceSimulationResultParameter.DesignLoad, typeof(Autodesk.Revit.DB.Mechanical.Space), "='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_DesignSensHeatingLoad'");//"='SAM' + [SAM.Core.Revit.Query.ParameterNamePrefix(Object_1)] + '_Height'", null, "[SAM.Analytical.Query.Height(Object_1)]");
-            parameterMap_Heating.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(ProjectInfo), "SAM_BuildingUnmetHoursHeating");
+            parameterMap_Heating.Add(AdjacencyClusterSimulationResultParameter.UnmetHours, typeof(Autodesk.Revit.DB.ProjectInfo), "SAM_BuildingUnmetHoursHeating");
             parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneOutsideSupplyAirFlow", "SAM_ZoneHTGTotalOutsideSupplyAirFlow", null, "[SAM.Analytical.Query.CalculatedOutsideSupplyAirFlow(AdjacencyCluster, Object_1)]");
             parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneSupplyAirFlow", "SAM_ZoneHTGSpecifiedSupplyAirflow", null, "[SAM.Analytical.Query.CalculatedSupplyAirFlow(AdjacencyCluster, Object_1)]");
             parameterMap_Heating.Add(typeof(Zone), typeof(Autodesk.Revit.DB.Mechanical.Space), "ZoneExhaustAirFlow", "SAM_ZoneHTGSpecifiedExhaustAirflow", null, "[SAM.Analytical.Query.CalculatedExhaustAirFlow(AdjacencyCluster, Object_1)]");

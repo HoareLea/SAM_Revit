@@ -21,7 +21,6 @@ jobs:
       NUGET_XMLDOC_MODE: "skip"
 
     steps:
-      # Checkout THIS repo into its own folder
       - name: Checkout SAM_Revit
         uses: actions/checkout@v4
         with:
@@ -55,12 +54,14 @@ jobs:
             $url = if ($token) { "https://$token@github.com/$org/$name.git" } else { "https://github.com/$org/$name.git" }
             Write-Host "Cloning $name"
             git clone --depth 1 $url $name
+            if ($LASTEXITCODE -ne 0) { throw "Failed to clone $name" }
           }
 
           # Practical CI order:
           #  - build modules first
-          #  - build SAM_UI before SAM_Revit (Revit often depends on UI build outputs)
-          #  - then build Revit 2025 + 2026 configs
+          #  - build SAM_UI before Revit bits
+          #  - build SAM_Revit_UI with year-specific configs
+          #  - then snapshot SAM_Revit year outputs separately
           $deps = @(
             'SAM'
             'SAM_Systems'
@@ -90,7 +91,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null
           New-Item -ItemType Directory -Force -Path "SAM_UI\build"      | Out-Null
 
-      - name: Restore + Rebuild (ordered) + Revit 2025/2026
+      - name: Restore + Rebuild shared deps (ordered)
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
@@ -110,9 +111,6 @@ jobs:
             throw "No .sln found under: $repoName"
           }
 
-          $repo = '${{ env.REPO_NAME }}'
-
-          # Build order up to SAM_UI
           $orderedRepos = @(
             'SAM'
             'SAM_Systems'
@@ -135,20 +133,10 @@ jobs:
             'SAM_UI'
           )
 
-          # Revit configs (build both configs for SAM_Revit + SAM_Revit_UI)
-          $revitItems = @(
-            @{ Repo='SAM_Revit';    Configuration='Release2025'; Platform='Any CPU' },
-            @{ Repo='SAM_Revit_UI'; Configuration='Release2025'; Platform='Any CPU' },
-            @{ Repo='SAM_Revit';    Configuration='Release2026'; Platform='Any CPU' },
-            @{ Repo='SAM_Revit_UI'; Configuration='Release2026'; Platform='Any CPU' }
-          )
-
-          # Platform overrides for specific solutions that actually have x64 configs
           $platformOverride = @{
             'SAM_OpenStudio' = 'x64'
           }
 
-          # ReferencePath: keep it simple and consistent
           $winBuild = (Resolve-Path 'SAM_Windows\build').Path
           $uiBuild  = (Resolve-Path 'SAM_UI\build').Path
           $env:ReferencePath = "$winBuild;$uiBuild"
@@ -164,7 +152,7 @@ jobs:
 
           function Msbuild-ConfigPlatform([string]$cfg, [string]$plat) {
             $args = @("/p:Configuration=$cfg")
-            if ($plat) { $args += "/p:Platform=$plat" }   # no quotes
+            if ($plat) { $args += "/p:Platform=$plat" }
             return $args
           }
 
@@ -185,22 +173,164 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($cfg | $plat)" }
           }
 
-          # Build non-Revit repos (Release)
           foreach ($r in $orderedRepos) {
             $plat = 'Any CPU'
             if ($platformOverride.ContainsKey($r)) { $plat = $platformOverride[$r] }
             Restore-Build $r 'Release' $plat
           }
 
-          # Build Revit (Release2025/Release2026)
-          foreach ($it in $revitItems) {
-            Restore-Build $it.Repo $it.Configuration $it.Platform
+      - name: Build + snapshot Revit 2025
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          function Find-Solution([string]$repoName) {
+            $expected = Join-Path $repoName "$repoName.sln"
+            if (Test-Path $expected) { return (Resolve-Path $expected).Path }
+
+            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($rootSln) { return $rootSln.FullName }
+
+            $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
+                      Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
+                      Select-Object -First 1
+            if ($anySln) { return $anySln.FullName }
+
+            throw "No .sln found under: $repoName"
           }
 
-      - name: Upload build folders (optional)
+          function Copy-FolderContents([string]$src, [string]$dst) {
+            if (-not (Test-Path $src)) {
+              throw "Source folder not found: $src"
+            }
+            New-Item -ItemType Directory -Force -Path $dst | Out-Null
+            Copy-Item (Join-Path $src '*') $dst -Recurse -Force
+          }
+
+          function Build-RevitConfig([string]$repoName, [string]$cfg) {
+            $sln = Find-Solution $repoName
+            $args = @(
+              '/m:1'
+              '/nr:false'
+              '/v:m'
+              '/p:UseSharedCompilation=false'
+              '/p:RunPostBuildEvent=OnOutputUpdated'
+              "/p:Configuration=$cfg"
+              '/p:Platform=Any CPU'
+            )
+
+            Write-Host "=== $repoName ($cfg) ==="
+            & msbuild $sln /t:Restore @args
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild restore failed: $repoName ($cfg)" }
+
+            & msbuild $sln /t:Rebuild @args
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($cfg)" }
+          }
+
+          Build-RevitConfig 'SAM_Revit_UI' 'Release2025'
+          Build-RevitConfig 'SAM_Revit'    'Release2025'
+
+          $out = "_ci_artifacts\Revit 2025"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+          $dstRevit = Join-Path $out "SAM_Revit"
+          $dstRevitUi = Join-Path $out "SAM_Revit_UI"
+          Copy-FolderContents "SAM_Revit\build"    $dstRevit
+          Copy-FolderContents "SAM_Revit_UI\build" $dstRevitUi
+
+          if (-not (Test-Path (Join-Path $dstRevit "SAM.Core.Revit.dll"))) {
+            throw "Missing SAM.Core.Revit.dll in Revit 2025 snapshot"
+          }
+          if (-not (Test-Path (Join-Path $dstRevitUi "SAM.Revit.UI.dll"))) {
+            throw "Missing SAM.Revit.UI.dll in Revit 2025 snapshot"
+          }
+
+      - name: Clean Revit build folders before 2026
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $paths = @(
+            'SAM_Revit\build',
+            'SAM_Revit_UI\build'
+          )
+          foreach ($p in $paths) {
+            if (Test-Path $p) {
+              Remove-Item $p -Recurse -Force
+            }
+            New-Item -ItemType Directory -Force -Path $p | Out-Null
+          }
+
+      - name: Build + snapshot Revit 2026
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          function Find-Solution([string]$repoName) {
+            $expected = Join-Path $repoName "$repoName.sln"
+            if (Test-Path $expected) { return (Resolve-Path $expected).Path }
+
+            $rootSln = Get-ChildItem -Path $repoName -Filter *.sln -File -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($rootSln) { return $rootSln.FullName }
+
+            $anySln = Get-ChildItem -Path $repoName -Recurse -Filter *.sln -File -ErrorAction SilentlyContinue |
+                      Where-Object { $_.FullName -notmatch '\\(bin|obj|packages)\\' } |
+                      Select-Object -First 1
+            if ($anySln) { return $anySln.FullName }
+
+            throw "No .sln found under: $repoName"
+          }
+
+          function Copy-FolderContents([string]$src, [string]$dst) {
+            if (-not (Test-Path $src)) {
+              throw "Source folder not found: $src"
+            }
+            New-Item -ItemType Directory -Force -Path $dst | Out-Null
+            Copy-Item (Join-Path $src '*') $dst -Recurse -Force
+          }
+
+          function Build-RevitConfig([string]$repoName, [string]$cfg) {
+            $sln = Find-Solution $repoName
+            $args = @(
+              '/m:1'
+              '/nr:false'
+              '/v:m'
+              '/p:UseSharedCompilation=false'
+              '/p:RunPostBuildEvent=OnOutputUpdated'
+              "/p:Configuration=$cfg"
+              '/p:Platform=Any CPU'
+            )
+
+            Write-Host "=== $repoName ($cfg) ==="
+            & msbuild $sln /t:Restore @args
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild restore failed: $repoName ($cfg)" }
+
+            & msbuild $sln /t:Rebuild @args
+            if ($LASTEXITCODE -ne 0) { throw "MSBuild rebuild failed: $repoName ($cfg)" }
+          }
+
+          Build-RevitConfig 'SAM_Revit_UI' 'Release2026'
+          Build-RevitConfig 'SAM_Revit'    'Release2026'
+
+          $out = "_ci_artifacts\Revit 2026"
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+
+          $dstRevit = Join-Path $out "SAM_Revit"
+          $dstRevitUi = Join-Path $out "SAM_Revit_UI"
+          Copy-FolderContents "SAM_Revit\build"    $dstRevit
+          Copy-FolderContents "SAM_Revit_UI\build" $dstRevitUi
+
+          if (-not (Test-Path (Join-Path $dstRevit "SAM.Core.Revit.dll"))) {
+            throw "Missing SAM.Core.Revit.dll in Revit 2026 snapshot"
+          }
+          if (-not (Test-Path (Join-Path $dstRevitUi "SAM.Revit.UI.dll"))) {
+            throw "Missing SAM.Revit.UI.dll in Revit 2026 snapshot"
+          }
+
+      - name: Upload isolated Revit artifacts
         uses: actions/upload-artifact@v4
         with:
           name: SAM_Revit-build-folders
           path: |
-            **\build\*
-          if-no-files-found: warn
+            _ci_artifacts\Revit 2025\*
+            _ci_artifacts\Revit 2026\*
+          if-no-files-found: error

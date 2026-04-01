@@ -209,6 +209,12 @@ jobs:
 
           function Build-RevitConfig([string]$repoName, [string]$cfg) {
             $sln = Find-Solution $repoName
+
+            $winBuild = (Resolve-Path 'SAM_Windows\build').Path
+            $uiBuild  = (Resolve-Path 'SAM_UI\build').Path
+            $env:ReferencePath = "$winBuild;$uiBuild"
+            Write-Host "ReferencePath=$env:ReferencePath"
+
             $args = @(
               '/m:1'
               '/nr:false'
@@ -290,6 +296,12 @@ jobs:
 
           function Build-RevitConfig([string]$repoName, [string]$cfg) {
             $sln = Find-Solution $repoName
+
+            $winBuild = (Resolve-Path 'SAM_Windows\build').Path
+            $uiBuild  = (Resolve-Path 'SAM_UI\build').Path
+            $env:ReferencePath = "$winBuild;$uiBuild"
+            Write-Host "ReferencePath=$env:ReferencePath"
+
             $args = @(
               '/m:1'
               '/nr:false'

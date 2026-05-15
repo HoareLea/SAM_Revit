@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB.ExtensibleStorage;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB.ExtensibleStorage;
 using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;

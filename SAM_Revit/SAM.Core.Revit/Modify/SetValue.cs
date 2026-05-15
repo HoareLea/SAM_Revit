@@ -46,7 +46,7 @@ namespace SAM.Core.Revit
             }
             else if(value is IJSAMObject)
             {
-                parameter.Set(((IJSAMObject)value).ToJObject()?.ToString());
+                parameter.Set(((IJSAMObject)value).ToJsonObject()?.ToString());
             }
             else
             {

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
+﻿using System.Text.Json.Nodes;
 namespace SAM.Geometry.Revit
 {
     public class FilledRegionType : Core.Revit.RevitType
@@ -9,7 +8,7 @@ namespace SAM.Geometry.Revit
         {
         }
 
-        public FilledRegionType(JObject jObject)
+        public FilledRegionType(JsonObject jObject)
             : base(jObject)
         {
         }

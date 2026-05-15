@@ -1,11 +1,10 @@
 ﻿using Autodesk.Revit.DB;
-using Newtonsoft.Json.Linq;
-
+using System.Text.Json.Nodes;
 namespace SAM.Core.Revit
 {
     public static partial class Query
     {
-        public static JToken JToken(this Element element)
+        public static JsonNode JsonNode(this Element element)
         {
             if (element == null)
                 return null;
@@ -14,7 +13,7 @@ namespace SAM.Core.Revit
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            return Newtonsoft.Json.Linq.JToken.Parse(json);
+            return System.Text.Json.Nodes.JsonNode.Parse(json);
         }
     }
 }

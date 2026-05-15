@@ -38,7 +38,7 @@ namespace SAM.Core.Grasshopper.Revit
             if (Value == null)
                 return false;
 
-            writer.SetString(typeof(ConvertSettings).FullName, Value.ToJObject().ToString());
+            writer.SetString(typeof(ConvertSettings).FullName, Value.ToJsonObject().ToString());
             return true;
         }
 

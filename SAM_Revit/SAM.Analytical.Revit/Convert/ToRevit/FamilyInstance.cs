@@ -205,7 +205,7 @@ namespace SAM.Analytical.Revit
                 }
 
                 Core.Revit.Modify.SetSimplified(result, simplified);
-                Core.Revit.Modify.SetJson(result, aperture.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, aperture.ToJsonObject()?.ToString());
             }
 
             convertSettings?.Add(aperture.Guid, result);

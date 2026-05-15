@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using System.Collections.Generic;
 
 namespace SAM.Core.Revit
@@ -11,22 +11,22 @@ namespace SAM.Core.Revit
             if (element == null)
                 return default;
 
-            JToken jToken = element.JToken();
+            JsonNode jToken = element.JsonNode();
             if (jToken == null)
                 return default;
 
-            switch(jToken.Type)
+            switch(jToken.GetValueKind())
             {
-                case JTokenType.Object:
-                    T t = Core.Create.IJSAMObject<T>(jToken as JObject);
+                case System.Text.Json.JsonValueKind.Object:
+                    T t = Core.Create.IJSAMObject<T>(jToken as JsonObject);
                     if(t != null)
                     {
                         return new List<T>() { t };
                     }
                     break;
 
-                case JTokenType.Array:
-                    return Core.Create.IJSAMObjects<T>(jToken as JArray);
+                case System.Text.Json.JsonValueKind.Array:
+                    return Core.Create.IJSAMObjects<T>(jToken as JsonArray);
             }
 
             return null;

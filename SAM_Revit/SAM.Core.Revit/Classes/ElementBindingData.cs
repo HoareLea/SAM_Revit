@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +13,9 @@ namespace SAM.Core.Revit
         private BuiltInParameterGroup builtInParameterGroup;
         private bool instance;
 
-        public ElementBindingData(JObject jObject)
+        public ElementBindingData(JsonObject jObject)
         {
-            FromJObject(jObject);
+            FromJsonObject(jObject);
         }
 
         public ElementBindingData(ElementBindingData elementBindingData)
@@ -96,7 +96,7 @@ namespace SAM.Core.Revit
             }
         }
 
-        public bool FromJObject(JObject jObject)
+        public bool FromJsonObject(JsonObject jObject)
         {
             if (jObject == null)
             {
@@ -105,12 +105,12 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("Name"))
             {
-                name = jObject.Value<string>("Name");
+                name = jObject["Name"]?.GetValue<string>() ?? null;
             }
 
             if (jObject.ContainsKey("BuiltInCategories"))
             {
-                JArray jArray = jObject.Value<JArray>("BuiltInCategories");
+                JsonArray jArray = jObject["BuiltInCategories"] as JsonArray;
                 if (jArray != null)
                 {
                     builtInCategories = new HashSet<BuiltInCategory>();
@@ -128,7 +128,7 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("BuiltInParameterGroup"))
             {
-                string value = jObject.Value<string>("BuiltInParameterGroup");
+                string value = jObject["BuiltInParameterGroup"]?.GetValue<string>() ?? null;
                 if (!string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, out BuiltInParameterGroup builtInParameterGroup_Temp))
                 {
                     builtInParameterGroup = builtInParameterGroup_Temp;
@@ -137,15 +137,15 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("Instance"))
             {
-                instance = jObject.Value<bool>("Instance");
+                instance = jObject["Instance"]?.GetValue<bool>() ?? default(bool);
             }
 
             return true;
         }
 
-        public JObject ToJObject()
+        public JsonObject ToJsonObject()
         {
-            JObject result = new JObject();
+            JsonObject result = new JsonObject();
             result.Add("_type", Core.Query.FullTypeName(this));
 
             if (name != null)
@@ -155,7 +155,7 @@ namespace SAM.Core.Revit
 
             if (builtInCategories != null)
             {
-                JArray jArray = new JArray();
+                JsonArray jArray = new JsonArray();
                 foreach (BuiltInCategory builtInCategory in builtInCategories)
                 {
                     jArray.Add(builtInCategory.ToString());
@@ -179,9 +179,9 @@ namespace SAM.Core.Revit
         private ForgeTypeId groupTypeId;
         private bool instance;
 
-        public ElementBindingData(JObject jObject)
+        public ElementBindingData(JsonObject jObject)
         {
-            FromJObject(jObject);
+            FromJsonObject(jObject);
         }
 
         public ElementBindingData(ElementBindingData elementBindingData)
@@ -262,7 +262,7 @@ namespace SAM.Core.Revit
             }
         }
 
-        public bool FromJObject(JObject jObject)
+        public bool FromJsonObject(JsonObject jObject)
         {
             if (jObject == null)
             {
@@ -271,12 +271,12 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("Name"))
             {
-                name = jObject.Value<string>("Name");
+                name = jObject["Name"]?.GetValue<string>() ?? null;
             }
 
             if (jObject.ContainsKey("BuiltInCategories"))
             {
-                JArray jArray = jObject.Value<JArray>("BuiltInCategories");
+                JsonArray jArray = jObject["BuiltInCategories"] as JsonArray;
                 if (jArray != null)
                 {
                     builtInCategories = new HashSet<BuiltInCategory>();
@@ -294,20 +294,20 @@ namespace SAM.Core.Revit
 
             if (jObject.ContainsKey("GroupTypeName"))
             {
-                groupTypeId = Query.GroupTypeId(jObject.Value<string>("GroupTypeName"));
+                groupTypeId = Query.GroupTypeId(jObject["GroupTypeName"]?.GetValue<string>() ?? null);
             }
 
             if (jObject.ContainsKey("Instance"))
             {
-                instance = jObject.Value<bool>("Instance");
+                instance = jObject["Instance"]?.GetValue<bool>() ?? default(bool);
             }
 
             return true;
         }
 
-        public JObject ToJObject()
+        public JsonObject ToJsonObject()
         {
-            JObject result = new JObject();
+            JsonObject result = new JsonObject();
             result.Add("_type", Core.Query.FullTypeName(this));
 
             if (name != null)
@@ -317,7 +317,7 @@ namespace SAM.Core.Revit
 
             if (builtInCategories != null)
             {
-                JArray jArray = new JArray();
+                JsonArray jArray = new JsonArray();
                 foreach (BuiltInCategory builtInCategory in builtInCategories)
                 {
                     jArray.Add(builtInCategory.ToString());

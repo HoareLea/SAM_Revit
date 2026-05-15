@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -50,9 +50,9 @@ namespace SAM.Core.Revit
             objects = new Dictionary<string, List<object>>();
         }
 
-        public ConvertSettings(JObject jObject)
+        public ConvertSettings(JsonObject jObject)
         {
-            FromJObject(jObject);
+            FromJsonObject(jObject);
         }
 
         public bool ConvertGeometry
@@ -111,21 +111,21 @@ namespace SAM.Core.Revit
             return true;
         }
 
-        public bool FromJObject(JObject jObject)
+        public bool FromJsonObject(JsonObject jObject)
         {
             if (jObject == null)
                 return false;
 
-            convertGeometry = jObject.Value<bool>("ConvertGeometry");
-            convertParameters = jObject.Value<bool>("ConvertParameters");
-            removeExisting = jObject.Value<bool>("RemoveExisting");
-            useProjectLocation = jObject.Value<bool>("UseProjectLocation");
+            convertGeometry = jObject["ConvertGeometry"]?.GetValue<bool>() ?? default(bool);
+            convertParameters = jObject["ConvertParameters"]?.GetValue<bool>() ?? default(bool);
+            removeExisting = jObject["RemoveExisting"]?.GetValue<bool>() ?? default(bool);
+            useProjectLocation = jObject["UseProjectLocation"]?.GetValue<bool>() ?? default(bool);
             return true;
         }
 
-        public JObject ToJObject()
+        public JsonObject ToJsonObject()
         {
-            JObject jObject = new JObject();
+            JsonObject jObject = new JsonObject();
             jObject.Add("_type", Core.Query.FullTypeName(this));
             jObject.Add("ConvertGeometry", convertGeometry);
             jObject.Add("ConvertParameters", convertParameters);

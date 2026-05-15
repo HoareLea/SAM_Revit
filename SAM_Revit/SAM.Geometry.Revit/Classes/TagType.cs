@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using SAM.Core.Revit;
 
 namespace SAM.Geometry.Revit
@@ -10,7 +10,7 @@ namespace SAM.Geometry.Revit
         {
         }
 
-        public TagType(JObject jObject)
+        public TagType(JsonObject jObject)
             : base(jObject)
         {
         }

@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using SAM.Core;
 using SAM.Core.Revit;
 
@@ -16,7 +16,7 @@ namespace SAM.Geometry.Revit
         {
         }
 
-        public Tag(JObject jObject)
+        public Tag(JsonObject jObject)
             : base(jObject)
         {
 
@@ -38,39 +38,39 @@ namespace SAM.Geometry.Revit
             this.end = end == null ? null : new Planar.Point2D(end);
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if(!base.FromJObject(jObject))
+            if(!base.FromJsonObject(jObject))
             {
                 return false;
             }
 
             if (jObject.ContainsKey("Location"))
             {
-                location = new Planar.Point2D(jObject.Value<JObject>("Location"));
+                location = new Planar.Point2D(jObject["Location"] as JsonObject);
             }
 
             if (jObject.ContainsKey("Elbow"))
             {
-                elbow = new Planar.Point2D(jObject.Value<JObject>("Elbow"));
+                elbow = new Planar.Point2D(jObject["Elbow"] as JsonObject);
             }
 
             if (jObject.ContainsKey("End"))
             {
-                end = new Planar.Point2D(jObject.Value<JObject>("End"));
+                end = new Planar.Point2D(jObject["End"] as JsonObject);
             }
 
             if (jObject.ContainsKey("ReferenceId"))
             {
-                referenceId = new LongId(jObject.Value<JObject>("ReferenceId"));
+                referenceId = new LongId(jObject["ReferenceId"] as JsonObject);
             }
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject result = base.ToJObject();
+            JsonObject result = base.ToJsonObject();
             if(result == null)
             {
                 return null;
@@ -78,22 +78,22 @@ namespace SAM.Geometry.Revit
 
             if(location != null)
             {
-                result.Add("Location", location.ToJObject());
+                result.Add("Location", location.ToJsonObject());
             }
 
             if (elbow != null)
             {
-                result.Add("Elbow", elbow.ToJObject());
+                result.Add("Elbow", elbow.ToJsonObject());
             }
 
             if (end != null)
             {
-                result.Add("End", end.ToJObject());
+                result.Add("End", end.ToJsonObject());
             }
 
             if (referenceId != null)
             {
-                result.Add("ReferenceId", referenceId.ToJObject());
+                result.Add("ReferenceId", referenceId.ToJsonObject());
             }
 
             return result;

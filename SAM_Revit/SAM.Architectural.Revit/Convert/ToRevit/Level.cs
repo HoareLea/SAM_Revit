@@ -71,7 +71,7 @@ namespace SAM.Architectural.Revit
                 Core.Revit.Modify.SetValues(result, level);
                 Core.Revit.Modify.SetValues(result, level, ActiveSetting.Setting);
 
-                Core.Revit.Modify.SetJson(result, level.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, level.ToJsonObject()?.ToString());
             }
 
             convertSettings?.Add(level.Guid, result);

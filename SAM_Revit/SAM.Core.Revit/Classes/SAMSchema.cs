@@ -1,5 +1,5 @@
 ﻿using Autodesk.Revit.DB.ExtensibleStorage;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +37,10 @@ namespace SAM.Core.Revit
         }
 
 
-        public SAMSchema(JObject jObject)
+        public SAMSchema(JsonObject jObject)
             : base(jObject)
         {
-            FromJObject(jObject);
+            FromJsonObject(jObject);
         }
 
         public string VendorId
@@ -108,32 +108,32 @@ namespace SAM.Core.Revit
             return schemaBuilder.Finish();
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if (!base.FromJObject(jObject))
+            if (!base.FromJsonObject(jObject))
                 return false;
 
             if (jObject.ContainsKey("VendorId"))
-                vendorId = jObject.Value<string>("VendorId");
+                vendorId = jObject["VendorId"]?.GetValue<string>() ?? null;
 
             if (jObject.ContainsKey("ReadAccessLevel"))
-                readAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), jObject.Value<string>("ReadAccessLevel"));
+                readAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), jObject["ReadAccessLevel"]?.GetValue<string>() ?? null);
 
             if (jObject.ContainsKey("WriteAccessLevel"))
-                writeAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), jObject.Value<string>("WriteAccessLevel"));
+                writeAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), jObject["WriteAccessLevel"]?.GetValue<string>() ?? null);
 
             if (jObject.ContainsKey("FieldName"))
-                fieldName = jObject.Value<string>("FieldName");
+                fieldName = jObject["FieldName"]?.GetValue<string>() ?? null;
 
             if (jObject.ContainsKey("FieldDocumentation"))
-                fieldDocumentation = jObject.Value<string>("FieldDocumentation");
+                fieldDocumentation = jObject["FieldDocumentation"]?.GetValue<string>() ?? null;
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject jObject = base.ToJObject();
+            JsonObject jObject = base.ToJsonObject();
             if (jObject == null)
                 return jObject;
 
@@ -170,7 +170,7 @@ namespace SAM.Core.Revit
             if (string.IsNullOrWhiteSpace(json))
                 return null;
 
-            JArray jArray = Core.Query.JArray(json);
+            JsonArray jArray = JsonNode.Parse(json) as JsonArray;
             if (jArray == null)
                 return null;
 
@@ -191,11 +191,11 @@ namespace SAM.Core.Revit
             if (element == null || jSAMObject == null || string.IsNullOrEmpty(fieldName))
                 return false;
 
-            JObject jObject = jSAMObject.ToJObject();
+            JsonObject jObject = jSAMObject.ToJsonObject();
             if (jObject == null)
                 return false;
 
-            return Modify.SetJObject(this, element, jObject);
+            return Modify.SetJsonObject(this, element, jObject);
         }
 
         public List<bool> SetIJSAMObjects(Autodesk.Revit.DB.Element element, IEnumerable<IJSAMObject> jSAMObjects)
@@ -204,7 +204,7 @@ namespace SAM.Core.Revit
                 return null;
 
             List<bool> result = new List<bool>();
-            JArray jArray = new JArray();
+            JsonArray jArray = new JsonArray();
             foreach(IJSAMObject iJSAMObject in jSAMObjects)
             {
                 if (iJSAMObject == null)
@@ -213,7 +213,7 @@ namespace SAM.Core.Revit
                     continue;
                 }
 
-                JObject jObject = iJSAMObject.ToJObject();
+                JsonObject jObject = iJSAMObject.ToJsonObject();
                 if (jObject == null)
                 {
                     result.Add(false);
@@ -224,7 +224,7 @@ namespace SAM.Core.Revit
                 result.Add(true);
             }
 
-            if (!Modify.SetJArray(this, element, jArray))
+            if (!Modify.SetJsonArray(this, element, jArray))
                 return new List<bool>();
 
             return result;

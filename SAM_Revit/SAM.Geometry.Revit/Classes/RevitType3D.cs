@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using SAM.Core.Revit;
 
 namespace SAM.Geometry.Revit
@@ -17,23 +17,23 @@ namespace SAM.Geometry.Revit
 
         }
 
-        public RevitType3D(JObject jObject)
+        public RevitType3D(JsonObject jObject)
             : base(jObject)
         {
 
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if (!base.FromJObject(jObject))
+            if (!base.FromJsonObject(jObject))
                 return false;
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject jObject = base.ToJObject();
+            JsonObject jObject = base.ToJsonObject();
             if (jObject == null)
                 return jObject;
 

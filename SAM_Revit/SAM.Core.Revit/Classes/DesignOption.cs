@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
+﻿using System.Text.Json.Nodes;
 namespace SAM.Core.Revit
 {
     public class DesignOption: SAMObject
@@ -18,7 +17,7 @@ namespace SAM.Core.Revit
             this.isPrimary = isPrimary;
         }
 
-        public DesignOption(JObject jObject)
+        public DesignOption(JsonObject jObject)
             : base(jObject)
         {
 
@@ -32,17 +31,17 @@ namespace SAM.Core.Revit
             }
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if (!base.FromJObject(jObject))
+            if (!base.FromJsonObject(jObject))
                 return false;
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject jObject = base.ToJObject();
+            JsonObject jObject = base.ToJsonObject();
             if (jObject == null)
                 return jObject;
 

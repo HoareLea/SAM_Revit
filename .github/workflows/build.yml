@@ -2,9 +2,9 @@ name: Build (Windows) - SAM_Revit (2025/2026)
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/2026-Q2" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master", "main", "sow/2026-Q2" ]
   workflow_dispatch:
 
 jobs:
@@ -85,7 +85,32 @@ jobs:
             'SAM_Revit_UI'
           )
 
-          foreach ($r in $deps) { Clone-Repo $r }
+          foreach ($r in $deps) {
+            if (Test-Path $r) { continue }
+            $headRef = '${{ github.head_ref }}'
+            $candidates = @()
+            if ($headRef) { $candidates += $headRef }
+            $candidates += 'sow/2026-Q2'
+            # Use the auth-token form so private deps (e.g. SAM_Solver) don't prompt
+            $url = if ($token) { "https://$token@github.com/$org/$r.git" } else { "https://github.com/$org/$r.git" }
+            $cloned = $false
+            foreach ($cand in $candidates) {
+              $has = (git ls-remote --heads $url $cand 2>$null | Out-String).Trim()
+              if ($has) {
+                Write-Host "Cloning $org/$r @ $cand"
+                git clone --depth 1 --branch $cand $url $r
+                if ($LASTEXITCODE -ne 0) { throw "Failed to clone $r @ $cand" }
+                $cloned = $true
+                break
+              }
+            }
+            if (-not $cloned) {
+              Write-Host "Cloning $org/$r @ default branch"
+              git clone --depth 1 $url $r
+              if ($LASTEXITCODE -ne 0) { throw "Failed to clone $r" }
+            }
+          }
+
 
           # Ensure build folders exist (some projects expect these paths)
           New-Item -ItemType Directory -Force -Path "SAM_Windows\build" | Out-Null

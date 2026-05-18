@@ -1,12 +1,13 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
-using Newtonsoft.Json.Linq;
-
+using System.Text.Json.Nodes;
 namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool SetJObject(this SAMSchema sAMSchema, Element element, JObject jObject)
+        public static bool SetJsonObject(this SAMSchema sAMSchema, Element element, JsonObject jObject)
         {
             if (sAMSchema == null || element == null || jObject == null)
                 return false;
@@ -15,10 +16,10 @@ namespace SAM.Core.Revit
             if (string.IsNullOrWhiteSpace(fieldName))
                 return false;
 
-            return SetJObject(sAMSchema.GetSchema(), element, jObject, fieldName);
+            return SetJsonObject(sAMSchema.GetSchema(), element, jObject, fieldName);
         }
 
-        public static bool SetJObject(this Schema schema, Element element, JObject jObject, string fieldName)
+        public static bool SetJsonObject(this Schema schema, Element element, JsonObject jObject, string fieldName)
         {
             if (schema == null || element == null || jObject == null)
                 return false;

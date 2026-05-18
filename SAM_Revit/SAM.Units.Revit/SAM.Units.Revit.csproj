@@ -179,7 +179,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Text.Json" Version="10.0.8" />
+    <PackageReference Include="System.Text.Json" Version="10.0.8" />
   </ItemGroup>
   <ItemGroup>
 	  <Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2026' Or '$(Configuration)' == 'Release2026'">

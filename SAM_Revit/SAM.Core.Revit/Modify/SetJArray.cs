@@ -1,12 +1,13 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
-using Newtonsoft.Json.Linq;
-
+using System.Text.Json.Nodes;
 namespace SAM.Core.Revit
 {
     public static partial class Modify
     {
-        public static bool SetJArray(this SAMSchema sAMSchema, Element element, JArray jArray)
+        public static bool SetJsonArray(this SAMSchema sAMSchema, Element element, JsonArray jArray)
         {
             if (sAMSchema == null || element == null || jArray == null)
                 return false;
@@ -15,10 +16,10 @@ namespace SAM.Core.Revit
             if (string.IsNullOrWhiteSpace(fieldName))
                 return false;
 
-            return SetJArray(sAMSchema.GetSchema(), element, jArray, fieldName);
+            return SetJsonArray(sAMSchema.GetSchema(), element, jArray, fieldName);
         }
 
-        public static bool SetJArray(this Schema schema, Element element, JArray jArray, string fieldName)
+        public static bool SetJsonArray(this Schema schema, Element element, JsonArray jArray, string fieldName)
         {
             if (schema == null || element == null || jArray == null)
                 return false;

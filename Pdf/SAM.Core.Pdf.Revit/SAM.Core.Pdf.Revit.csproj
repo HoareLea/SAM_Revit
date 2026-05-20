@@ -9,6 +9,7 @@
 	  <TargetFramework Condition="'$(Configuration)' == 'Debug2026' Or '$(Configuration)' == 'Release2026'">net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
     <DebugSymbols>true</DebugSymbols>
     <AssemblyTitle>SAM.Core.Pdf.Revit</AssemblyTitle>
     <Product>SAM.Core.Pdf.Revit</Product>

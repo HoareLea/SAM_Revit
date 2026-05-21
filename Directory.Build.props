@@ -12,6 +12,14 @@
       that and don't overwrite. Local dev builds leave both empty -> no SHA attribute emitted.
     -->
     <InformationalVersion Condition="'$(InformationalVersion)' == '' AND '$(SAMSourceRevision)' != ''">$(SAMVersion)+$(SAMSourceRevision)</InformationalVersion>
+    <!--
+      Suppress the SDK's SourceLink auto-append behaviour. By default, when SourceLink is
+      configured on a project (via NuGet or repo settings), the SDK appends the project's
+      OWN commit SHA to InformationalVersion (e.g. '2026.2.164.0+998af06.dd02a4c2...').
+      We set InformationalVersion explicitly to SAM_Deploy's SHA (which encodes all 22
+      submodule pointers), so the SDK's extra append is noise. False = keep our value clean.
+    -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
 

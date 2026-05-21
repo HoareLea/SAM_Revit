@@ -1,10 +1,17 @@
 <Project>
 
   <PropertyGroup>
-    <!-- Local dev builds default to 1.0.0.0. CI passes /p:SAMVersion=YYYY.Q.<run_number>. -->
+    <!-- Local dev builds default to 1.0.0.0. CI passes /p:SAMVersion=YYYY.Q.<run_number>.0. -->
     <SAMVersion Condition="'$(SAMVersion)' == ''">1.0.0.0</SAMVersion>
     <AssemblyVersion>$(SAMVersion)</AssemblyVersion>
     <FileVersion>$(SAMVersion)</FileVersion>
+    <!--
+      InformationalVersion: the content-identity stamp (SemVer +build metadata).
+      Composed from SAMVersion + SAMSourceRevision when CI sets the latter. If CI already
+      set InformationalVersion directly (e.g. SAM_Deploy installer.yml does this), respect
+      that and don't overwrite. Local dev builds leave both empty -> no SHA attribute emitted.
+    -->
+    <InformationalVersion Condition="'$(InformationalVersion)' == '' AND '$(SAMSourceRevision)' != ''">$(SAMVersion)+$(SAMSourceRevision)</InformationalVersion>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
 
@@ -23,6 +30,9 @@
       <_SAMVersionLine Include="// &lt;auto-generated /&gt;" />
       <_SAMVersionLine Include="[assembly: System.Reflection.AssemblyVersionAttribute(&quot;$(SAMVersion)&quot;)]" />
       <_SAMVersionLine Include="[assembly: System.Reflection.AssemblyFileVersionAttribute(&quot;$(SAMVersion)&quot;)]" />
+      <!-- Only emit InformationalVersion attribute when CI provided a value (SDK projects
+           would otherwise get it via PropertyGroup -> SDK auto-gen). -->
+      <_SAMVersionLine Include="[assembly: System.Reflection.AssemblyInformationalVersionAttribute(&quot;$(InformationalVersion)&quot;)]" Condition="'$(InformationalVersion)' != ''" />
     </ItemGroup>
     <MakeDir Directories="$(IntermediateOutputPath)" />
     <WriteLinesToFile

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using System.Collections.Generic;
 
@@ -57,7 +59,7 @@ namespace SAM.Analytical.Revit
                 Core.Revit.Modify.SetValues(result, space);
                 Core.Revit.Modify.SetValues(result, space, ActiveSetting.Setting, parameters);
 
-                Core.Revit.Modify.SetJson(result, space.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, space.ToJsonObject()?.ToString());
             }
 
             convertSettings?.Add(space.Guid, result);

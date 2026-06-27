@@ -1,4 +1,6 @@
-﻿/*
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+/*
  * This file is part of the Sustaiable Analytical Model (SAM)
  * Copyright (c) 2020, the respective contributors. All rights reserved.
  *
@@ -52,6 +54,3 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyFileVersion("1.0.*")]

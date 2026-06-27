@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using System.Text.Json.Nodes;
 namespace SAM.Core.Revit
 {
     public class ViewSpecificRevitInstance<T>: RevitInstance<T> where T: RevitType
@@ -18,34 +19,34 @@ namespace SAM.Core.Revit
             this.viewId = viewId == null ? null : new LongId(viewId);
         }
 
-        public ViewSpecificRevitInstance(JObject jObject)
+        public ViewSpecificRevitInstance(JsonObject jObject)
             : base(jObject)
         {
 
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if (!base.FromJObject(jObject))
+            if (!base.FromJsonObject(jObject))
                 return false;
 
             if (jObject.ContainsKey("ViewId"))
             {
-                viewId = new LongId(jObject.Value<JObject>("ViewId"));
+                viewId = new LongId(jObject["ViewId"] as JsonObject);
             }
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject result = base.ToJObject();
+            JsonObject result = base.ToJsonObject();
             if (result == null)
                 return result;
 
             if (viewId != null)
             {
-                result.Add("ViewId", viewId.ToJObject());
+                result.Add("ViewId", viewId.ToJsonObject());
             }
 
             return result;

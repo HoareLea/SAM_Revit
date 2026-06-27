@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using System.Text.Json.Nodes;
 using SAM.Core;
 using SAM.Geometry.Object.Planar;
 using SAM.Geometry.Planar;
@@ -23,7 +25,7 @@ namespace SAM.Geometry.Revit
         {
         }
 
-        public FilledRegion(JObject jObject)
+        public FilledRegion(JsonObject jObject)
             : base(jObject)
         {
         }
@@ -51,24 +53,24 @@ namespace SAM.Geometry.Revit
             return new BoundingBox2D(boundingBox2Ds);
         }
 
-        public override bool FromJObject(JObject jObject)
+        public override bool FromJsonObject(JsonObject jObject)
         {
-            if(!base.FromJObject(jObject))
+            if(!base.FromJsonObject(jObject))
             {
                 return false;
             }
 
             if(jObject.ContainsKey("Face2Ds"))
             {
-                face2Ds = Create.ISAMGeometries<Face2D>(jObject.Value<JArray>("Face2Ds"));
+                face2Ds = Create.ISAMGeometries<Face2D>(jObject["Face2Ds"] as JsonArray);
             }
 
             return true;
         }
 
-        public override JObject ToJObject()
+        public override JsonObject ToJsonObject()
         {
-            JObject result =  base.ToJObject();
+            JsonObject result =  base.ToJsonObject();
             if(result == null)
             {
                 return result;
@@ -76,7 +78,12 @@ namespace SAM.Geometry.Revit
 
             if(face2Ds != null)
             {
-                result.Add("Face2Ds", Create.JArray(face2Ds));
+                JsonArray jArray = new JsonArray();
+                foreach(Face2D face2D in face2Ds)
+                {
+                    jArray.Add(face2D?.ToJsonObject());
+                }
+                result.Add("Face2Ds", jArray);
             }
 
             return result;

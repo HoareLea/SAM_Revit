@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Geometry.Revit;
 using SAM.Geometry.Spatial;
 
@@ -205,7 +207,7 @@ namespace SAM.Analytical.Revit
                 }
 
                 Core.Revit.Modify.SetSimplified(result, simplified);
-                Core.Revit.Modify.SetJson(result, aperture.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, aperture.ToJsonObject()?.ToString());
             }
 
             convertSettings?.Add(aperture.Guid, result);

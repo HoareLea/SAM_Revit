@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Geometry.Revit;
 using System;
 using System.Collections.Generic;
@@ -316,7 +318,7 @@ namespace SAM.Analytical.Revit
                 Core.Revit.Modify.SetValues(result, panel, builtInParameters);
                 Core.Revit.Modify.SetValues(result, panel, ActiveSetting.Setting);
 
-                Core.Revit.Modify.SetJson(result, panel.ToJObject()?.ToString());
+                Core.Revit.Modify.SetJson(result, panel.ToJsonObject()?.ToString());
             }
             //TODO: Implement proper log
             //System.IO.File.AppendAllText(@"C:\Users\DengusiakM\Desktop\SAM\2020-04-16 floorbug\LOG.txt", string.Format("{0}\t{1}\t{2}\n", DateTime.Now.ToString(), panel.Guid, panel.Name));

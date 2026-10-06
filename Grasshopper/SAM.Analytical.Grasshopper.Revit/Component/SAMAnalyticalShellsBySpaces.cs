@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
@@ -7,7 +10,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalShellsBySpaces : GH_SAMComponent
+    public class SAMAnalyticalShellsBySpaces : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -32,58 +35,92 @@ namespace SAM.Analytical.Grasshopper.Revit
               "Gets Shells By Spaces",
               "SAM", "Revit")
         {
+            // GH_SAMVariableOutputParameterComponent.RegisterInputParams clones each Param via
+            // IGH_Param.Clone(), which silently resets NickName to Name for stock Grasshopper
+            // param types when the two differ. The original component registered "spaces_" with a
+            // different NickName ("_space_") — restore it here after base registration completes.
+            int index = Params.IndexOfInputParam("spaces_");
+            if (index != -1)
+                Params.Input[index].NickName = "_space_";
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            RhinoInside.Revit.GH.Parameters.SpatialElement spatialElement = new RhinoInside.Revit.GH.Parameters.SpatialElement() { Optional = true};
-            inputParamManager.AddParameter(spatialElement, "spaces_", "_space_", "Revit Spaces", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "spaces_", NickName = "_space_", Description = "Revit Spaces", Access = GH_ParamAccess.list, Optional = true }, ParamVisibility.Binding));
 
-            inputParamManager.AddNumberParameter("_offset_", "_offset_", "Offset from bottom of space", GH_ParamAccess.item, 0.1);
-            inputParamManager.AddNumberParameter("_snapTolerance_", "_snapTolerance_", "Snap Tolerance", GH_ParamAccess.item, Core.Tolerance.MacroDistance);
-            inputParamManager.AddNumberParameter("_tolerance_", "_tolerance_", "Tolerance", GH_ParamAccess.item, Core.Tolerance.Distance);
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Offset = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_offset_", NickName = "_offset_", Description = "Offset from bottom of space", Access = GH_ParamAccess.item };
+                param_Offset.SetPersistentData(0.1);
+                result.Add(new GH_SAMParam(param_Offset, ParamVisibility.Binding));
 
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Number param_SnapTolerance = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_snapTolerance_", NickName = "_snapTolerance_", Description = "Snap Tolerance", Access = GH_ParamAccess.item };
+                param_SnapTolerance.SetPersistentData(Core.Tolerance.MacroDistance);
+                result.Add(new GH_SAMParam(param_SnapTolerance, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Number param_Tolerance = new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "_tolerance_", NickName = "_tolerance_", Description = "Tolerance", Access = GH_ParamAccess.item };
+                param_Tolerance.SetPersistentData(Core.Tolerance.Distance);
+                result.Add(new GH_SAMParam(param_Tolerance, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Run, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new Geometry.Grasshopper.GooSAMGeometryParam(), "Shells", "Shells", "SAM Geometry Shells", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new Geometry.Grasshopper.GooSAMGeometryParam() { Name = "Shells", NickName = "Shells", Description = "SAM Geometry Shells", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_run");
             bool run = false;
-            if (!dataAccess.GetData(4, ref run) || !run)
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
+            index = Params.IndexOfInputParam("spaces_");
             List<SpatialElement> spatialElements = new List<SpatialElement>();
-            if (!dataAccess.GetDataList(0, spatialElements) || spatialElements == null || spatialElements.Count == 0)
+            if (index == -1 || !dataAccess.GetDataList(index, spatialElements) || spatialElements == null || spatialElements.Count == 0)
                 spatialElements = null;
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            index = Params.IndexOfInputParam("_offset_");
             double offset = 0.1;
-            if (!dataAccess.GetData(1, ref offset))
+            if (index == -1 || !dataAccess.GetData(index, ref offset))
                 offset = 0.1;
 
+            index = Params.IndexOfInputParam("_snapTolerance_");
             double snapTolerance = Core.Tolerance.MacroDistance;
-            if (!dataAccess.GetData(2, ref snapTolerance))
+            if (index == -1 || !dataAccess.GetData(index, ref snapTolerance))
                 snapTolerance = Core.Tolerance.MacroDistance;
 
+            index = Params.IndexOfInputParam("_tolerance_");
             double tolerance = Core.Tolerance.Distance;
-            if (!dataAccess.GetData(3, ref tolerance))
+            if (index == -1 || !dataAccess.GetData(index, ref tolerance))
                 tolerance = Core.Tolerance.Distance;
 
             List<Geometry.Spatial.Shell> result = Analytical.Revit.Create.Shells(document, spatialElements?.ConvertAll(x => x as Autodesk.Revit.DB.Mechanical.Space).FindAll(x => x != null), offset, snapTolerance, tolerance);
 
-            dataAccess.SetDataList(0, result);
+            index = Params.IndexOfOutputParam("Shells");
+            if (index != -1)
+                dataAccess.SetDataList(index, result);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -102,11 +104,7 @@ namespace SAM.Analytical.Revit
 
                         double width = double.NaN;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                        width = UnitUtils.ConvertToInternalUnits(materialLayer.Thickness, DisplayUnitType.DUT_METERS);
-#else
                         width = UnitUtils.ConvertToInternalUnits(materialLayer.Thickness, UnitTypeId.Meters);
-#endif
 
 
 

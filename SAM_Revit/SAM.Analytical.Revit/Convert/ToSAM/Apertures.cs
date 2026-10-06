@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
@@ -60,11 +62,7 @@ namespace SAM.Analytical.Revit
                 if (hostObject != null)
                 {
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                    builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
-#else
                     builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.Value;
-#endif
                 }
             }
 
@@ -126,11 +124,7 @@ namespace SAM.Analytical.Revit
             //Method 2 of extracting Geometry
             if (hostObject != null)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.IntegerValue;
-#else
                 builtInCategory_Host = (BuiltInCategory)hostObject.Category.Id.Value;
-#endif
 
                 Geometry.Spatial.Plane plane_Host = null;
                 if (hostObject is CurtainSystem && familyInstance is Autodesk.Revit.DB.Panel)
@@ -220,13 +214,8 @@ namespace SAM.Analytical.Revit
                 Parameter parameter_Width = familyInstance.LookupParameter(parameterName_Width);
                 if (parameter_Height != null && parameter_Width != null && parameter_Height.HasValue && parameter_Width.HasValue && parameter_Height.StorageType == StorageType.Double && parameter_Width.StorageType == StorageType.Double)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    double height = UnitUtils.ConvertFromInternalUnits(parameter_Height.AsDouble(), DisplayUnitType.DUT_METERS);
-                    double width = UnitUtils.ConvertFromInternalUnits(parameter_Width.AsDouble(), DisplayUnitType.DUT_METERS);
-#else
                     double height = UnitUtils.ConvertFromInternalUnits(parameter_Height.AsDouble(), UnitTypeId.Meters);
                     double width = UnitUtils.ConvertFromInternalUnits(parameter_Width.AsDouble(), UnitTypeId.Meters);
-#endif
                 }
             }
 

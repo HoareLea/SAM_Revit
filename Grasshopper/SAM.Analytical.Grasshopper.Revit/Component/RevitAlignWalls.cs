@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Analytical.Revit;
@@ -121,13 +123,8 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-            double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, DisplayUnitType.DUT_METERS);
-#else
             double elevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
             double referenceElevation = UnitUtils.ConvertFromInternalUnits(referenceLevel.Elevation, UnitTypeId.Meters);
-#endif
 
             Document document = level.Document;
 

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 
 namespace SAM.Core.Revit
 {
@@ -19,11 +21,7 @@ namespace SAM.Core.Revit
 
             double tolerance_Temp = tolerance;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            tolerance_Temp = UnitUtils.ConvertToInternalUnits(tolerance_Temp, DisplayUnitType.DUT_METERS);
-#else
             tolerance_Temp = UnitUtils.ConvertToInternalUnits(tolerance_Temp, UnitTypeId.Meters);
-#endif
 
             foreach (Connector connector in connectorSet)
             {

@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
@@ -10,7 +13,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMAnalyticalByElement : GH_SAMComponent
+    public class RevitSAMAnalyticalByElement : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.3";
+        public override string LatestComponentVersion => "1.0.4";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -35,26 +38,43 @@ namespace SAM.Analytical.Grasshopper.Revit
               "Convert Revit To SAM Analytical Object ie. Panel, Space",
               "SAM", "Revit")
         {
-     
+
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_revitElement", "_revitElement", "Revit Element instance", GH_ParamAccess.item);
-            inputParamManager.AddBooleanParameter("_useProjectLocation_", "_useProjectLocation_", "Transform geometry using Revit Project Location", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_revitElement", NickName = "_revitElement", Description = "Revit Element instance", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_UseProjectLocation = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_useProjectLocation_", NickName = "_useProjectLocation_", Description = "Transform geometry using Revit Project Location", Access = GH_ParamAccess.item };
+                param_UseProjectLocation.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_UseProjectLocation, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Run, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("analyticalObject", "analyticalObject", "SAM Analytical Object", GH_ParamAccess.list);
-            outputParamManager.AddTextParameter("report", "report", "Report", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "analyticalObject", NickName = "analyticalObject", Description = "SAM Analytical Object", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "report", NickName = "report", Description = "Report", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -65,24 +85,30 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_run");
             bool run = false;
-            if (!dataAccess.GetData(2, ref run) || !run)
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
+            index = Params.IndexOfInputParam("_revitElement");
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            index = Params.IndexOfInputParam("_useProjectLocation_");
             bool useProjectLocation = false;
-            if (!dataAccess.GetData(1, ref useProjectLocation))
+            if (index == -1 || !dataAccess.GetData(index, ref useProjectLocation))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
+
+            int index_AnalyticalObject = Params.IndexOfOutputParam("analyticalObject");
+            int index_Report = Params.IndexOfOutputParam("report");
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true, useProjectLocation);
             IEnumerable<Core.ISAMObject> sAMObjects = null;
@@ -100,15 +126,18 @@ namespace SAM.Analytical.Grasshopper.Revit
                 {
                     message = string.Format("Cannot convert Document.");
                     AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                    dataAccess.SetData(1, message);
+                    if (index_Report != -1)
+                        dataAccess.SetData(index_Report, message);
 
                     return;
                 }
 
-                dataAccess.SetDataList(0, sAMObjects);
+                if (index_AnalyticalObject != -1)
+                    dataAccess.SetDataList(index_AnalyticalObject, sAMObjects);
 
                 message = string.Format("Document converted");
-                dataAccess.SetData(1, message);
+                if (index_Report != -1)
+                    dataAccess.SetData(index_Report, message);
 
                 return;
             }
@@ -120,25 +149,23 @@ namespace SAM.Analytical.Grasshopper.Revit
             {
                 message = "Invalid Element";
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                dataAccess.SetData(1, message);
+                if (index_Report != -1)
+                    dataAccess.SetData(index_Report, message);
 
                 return;
             }
 
             if (element is FamilyInstance && ((FamilyInstance)element).Symbol.Family.IsInPlace)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.IntegerValue);
-#else
                 message = string.Format("Cannot convert In-Place family. ElementId: {0} ", element.Id.Value);
-#endif
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                dataAccess.SetData(1, message);
+                if (index_Report != -1)
+                    dataAccess.SetData(index_Report, message);
 
                 return;
             }
 
-            
+
             if (element is RevitLinkInstance)
             {
                 List<Panel> panels = Analytical.Revit.Convert.ToSAM_Panels((RevitLinkInstance)element, convertSettings);
@@ -159,40 +186,32 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                     catch (Exception exception)
                     {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                        message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.IntegerValue, element.Category.Name, exception.Message);
-#else
                         message = string.Format("Cannot convert Element. ElementId: {0} Category: {1} Exception: {2}", element.Id.Value, element.Category.Name, exception.Message);
-#endif
                         AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                        dataAccess.SetData(1, message);
+                        if (index_Report != -1)
+                            dataAccess.SetData(index_Report, message);
                     }
                 }
             }
 
             if (sAMObjects == null || sAMObjects.Count() == 0)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-#else
                 message = string.Format("Cannot convert Element. ElementId: {0} Category: {1}", element.Id.Value, element.Category.Name);
-#endif
 
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, message);
-                dataAccess.SetData(1, message);
+                if (index_Report != -1)
+                    dataAccess.SetData(index_Report, message);
 
                 return;
             }
 
-            dataAccess.SetDataList(0, sAMObjects);
+            if (index_AnalyticalObject != -1)
+                dataAccess.SetDataList(index_AnalyticalObject, sAMObjects);
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.IntegerValue, element.Category.Name);
-#else
             message = string.Format("Element converted. ElementId: {0} Category: {1}", element.Id.Value, element.Category.Name);
-#endif
 
-            dataAccess.SetData(1, message);
+            if (index_Report != -1)
+                dataAccess.SetData(index_Report, message);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using System.Collections.Generic;
@@ -25,11 +27,7 @@ namespace SAM.Analytical.Revit
             string name = familySymbol.Name;
 
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            switch ((BuiltInCategory)familySymbol.Category.Id.IntegerValue)
-#else
             switch ((BuiltInCategory)familySymbol.Category.Id.Value)
-#endif
             {
                 case BuiltInCategory.OST_Windows:
                 case BuiltInCategory.OST_CurtainWallPanels:

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using SAM.Core.Revit;
 using SAM.Geometry.Revit;
@@ -21,11 +23,7 @@ namespace SAM.Analytical.Revit
 
             Document document = energyAnalysisSurface.Document;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            Polygon3D polygon3D = energyAnalysisSurface.GetPolyloop().ToSAM();
-#else
             Polygon3D polygon3D = energyAnalysisSurface.GetPolyloops()?.FirstOrDefault()?.ToSAM();
-#endif
 
             if (polygon3D == null)
                 return null;

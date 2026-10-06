@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,11 +19,7 @@ namespace SAM.Core.Revit
             if (familySymbol == null)
                 return null;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.IntegerValue;
-#else
             BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.Value;
-#endif
 
 
             if (!builtInCategory_Tag.IsValidTagCategory(builtInCategory))
@@ -45,58 +43,55 @@ namespace SAM.Core.Revit
             if (familySymbol == null)
                 return null;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.IntegerValue;
-#else
             BuiltInCategory builtInCategory_Tag = (BuiltInCategory)familySymbol.Category.Id.Value;
-#endif
 
-
-            IEnumerable<ElementId> elementIds_View = new FilteredElementCollector(document, view.Id).ToElementIds();
-            if (elementIds_View == null)
-                return null;
 
             List<IndependentTag> result = new List<IndependentTag>();
-            if (elementIds_View.Count() == 0)
+            if (elementIds == null)
                 return result;
+
+            HashSet<ElementId> elementIds_Input = new HashSet<ElementId>(elementIds);
+            elementIds_Input.Remove(null);
+            elementIds_Input.Remove(ElementId.InvalidElementId);
+            if (elementIds_Input.Count == 0)
+                return result;
+
+            ICollection<ElementId> elementIds_View = new FilteredElementCollector(document, view.Id).WhereElementIsNotElementType().WherePasses(new ElementIdSetFilter(elementIds_Input.ToList())).ToElementIds();
+            if (elementIds_View == null || elementIds_View.Count == 0)
+                return result;
+
+            HashSet<ElementId> elementIds_Tagged = null;
+            if (!allowDuplicates)
+            {
+                elementIds_Tagged = new HashSet<ElementId>();
+                // Owner-view filtered, not view-scoped: a tag hidden in the view must still suppress a
+                // duplicate. ElementOwnerViewFilter gives that same semantics natively, so Revit does the
+                // narrowing instead of this loop walking every tag in the document once per view.
+                foreach (IndependentTag independentTag_Existing in new FilteredElementCollector(document).OfCategory(builtInCategory_Tag).OfClass(typeof(IndependentTag)).WherePasses(new ElementOwnerViewFilter(view.Id)).Cast<IndependentTag>())
+                {
+                    if (independentTag_Existing.GetTypeId() != elementId_TagType)
+                        continue;
+
+                    ICollection<ElementId> elementIds_Tagged_Temp = independentTag_Existing.GetTaggedLocalElementIds();
+                    if (elementIds_Tagged_Temp == null)
+                        continue;
+
+                    foreach (ElementId elementId_Tagged in elementIds_Tagged_Temp)
+                        elementIds_Tagged.Add(elementId_Tagged);
+                }
+            }
 
             foreach (ElementId elementId in elementIds_View)
             {
-                if (elementId == null || elementId == ElementId.InvalidElementId)
-                    continue;
-
-                if (!elementIds.Contains(elementId))
-                    continue;
-
                 Element element = document.GetElement(elementId);
                 if (element == null)
                     continue;
 
-                if(!allowDuplicates)
-                {
-#if Revit2017
-                    IList<ElementId> elementIds_Tags = null;
-#else
-                    IList<ElementId> elementIds_Tags = element.GetDependentElements(new LogicalAndFilter(new ElementClassFilter(typeof(IndependentTag)), new ElementOwnerViewFilter(view.Id)));
-#endif
-
-                    if (elementIds_Tags != null && elementIds_Tags.Count != 0)
-                    {
-                        ElementId elementId_Tag = elementIds_Tags.ToList().Find(x => document.GetElement(x).GetTypeId() == elementId_TagType);
-                        if(elementId_Tag != null)
-                        {
-                            continue;
-                        }
-                    }
-                }
-
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                if (!builtInCategory_Tag.IsValidTagCategory((BuiltInCategory)element.Category.Id.IntegerValue))
+                if (!allowDuplicates && elementIds_Tagged.Contains(elementId))
                     continue;
-#else
+
                 if (!builtInCategory_Tag.IsValidTagCategory((BuiltInCategory)element.Category.Id.Value))
                     continue;
-#endif
 
 
 
@@ -124,17 +119,8 @@ namespace SAM.Core.Revit
                 if (xyz == null)
                     continue;
 
-#if Revit2017
-                IndependentTag independentTag = document.Create.NewTag(view, element, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
-                independentTag?.ChangeTypeId(elementId_TagType);
-#elif Revit2018
-                Autodesk.Revit.DB.Reference reference = new Autodesk.Revit.DB.Reference(element);
-                IndependentTag independentTag = IndependentTag.Create(document, view.Id, reference, addLeader, TagMode.TM_ADDBY_CATEGORY, tagOrientation, xyz);
-                independentTag?.ChangeTypeId(elementId_TagType);
-#else
                 Autodesk.Revit.DB.Reference reference = new Autodesk.Revit.DB.Reference(element);
                 IndependentTag independentTag = IndependentTag.Create(document, elementId_TagType, view.Id, reference, addLeader, tagOrientation, xyz);
-#endif
 
                 if (independentTag != null)
                     result.Add(independentTag);

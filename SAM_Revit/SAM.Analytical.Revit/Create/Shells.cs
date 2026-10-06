@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Geometry.Spatial;
 using System;
 using System.Collections.Generic;
@@ -20,11 +22,7 @@ namespace SAM.Analytical.Revit
                 List<Autodesk.Revit.DB.Mechanical.Space> spaces_New = new List<Autodesk.Revit.DB.Mechanical.Space>();
                 foreach (Autodesk.Revit.DB.Mechanical.Space space in spaces)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                    int index = spaces_Temp.FindIndex(x => x.Id.IntegerValue == space.Id.IntegerValue);
-#else
                     int index = spaces_Temp.FindIndex(x => x.Id.Value == space.Id.Value);
-#endif
                     if (index != -1)
                         spaces_New.Add(spaces_Temp[index]);
                 }
@@ -58,11 +56,7 @@ namespace SAM.Analytical.Revit
                         Level level = document.GetElement(elementId) as Level;
                         if (level != null)
                         {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                            elevation_Top = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-#else
                             elevation_Top = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
-#endif
                         }
 
                     }
@@ -72,22 +66,14 @@ namespace SAM.Analytical.Revit
 
                 if (double.IsNaN(elevation_Top) && boundingBoxXYZ != null)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    elevation_Top = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
-#else
                     elevation_Top = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, UnitTypeId.Meters);
-#endif
                 }
 
                 double elevation_Bottom = double.NaN;
 
                 if (boundingBoxXYZ != null)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
-#else
                     elevation_Bottom = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, UnitTypeId.Meters);
-#endif
                 }
 
 
@@ -97,11 +83,7 @@ namespace SAM.Analytical.Revit
                     if (elementId != null && elementId != ElementId.InvalidElementId)
                     {
                         Level level = document.GetElement(elementId) as Level;
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                        elevation_Bottom = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-#else
                         elevation_Bottom = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
-#endif
                     }
                 }
 
@@ -113,11 +95,7 @@ namespace SAM.Analytical.Revit
                 if (point2D == null)
                     continue;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                cutElevations.Add(UnitUtils.ConvertToInternalUnits(elevation_Bottom + offset, DisplayUnitType.DUT_METERS));
-#else
                 cutElevations.Add(UnitUtils.ConvertToInternalUnits(elevation_Bottom + offset, UnitTypeId.Meters));
-#endif
 
                 if (!dictionary.TryGetValue(elevation_Bottom, out List<Tuple<double, Geometry.Planar.Point2D, Autodesk.Revit.DB.Mechanical.Space>> tuples))
                 {

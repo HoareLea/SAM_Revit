@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using SAM.Core;
@@ -174,11 +176,7 @@ namespace SAM.Analytical.Revit
                 parameter = result.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null && !parameter.IsReadOnly)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    parameter.Set(UnitUtils.ConvertToInternalUnits(2000, DisplayUnitType.DUT_MILLIMETERS));
-#else
                     parameter.Set(UnitUtils.ConvertToInternalUnits(2000, UnitTypeId.Millimeters));
-#endif
                 }
 
             }
@@ -186,11 +184,7 @@ namespace SAM.Analytical.Revit
             parameter = result.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
             if (parameter != null)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                parameter.Set(Wall.Id.IntegerValue.ToString());
-#else
                 parameter.Set(Wall.Id.Value.ToString());
-#endif
             }
 
             document.Regenerate();
@@ -254,13 +248,8 @@ namespace SAM.Analytical.Revit
 
             FamilySymbol familySymbol = null;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            if (!dictionary_FamilySymbol.TryGetValue((BuiltInCategory)familyInstance.Category.Id.IntegerValue, out familySymbol))
-                return;
-#else
             if (!dictionary_FamilySymbol.TryGetValue((BuiltInCategory)familyInstance.Category.Id.Value, out familySymbol))
                 return;
-#endif
 
             if (familySymbol == null)
                 return;
@@ -290,11 +279,7 @@ namespace SAM.Analytical.Revit
             parameter = familyInstance_Temp.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
             if (parameter != null)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                parameter.Set(familyInstance.Id.IntegerValue.ToString());
-#else
                 parameter.Set(familyInstance.Id.Value.ToString());
-#endif
             }
 
             parameter = familyInstance_Temp.LookupParameter("SAM_BuildingElementDescription");

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 
 namespace SAM.Architectural.Revit
 {
@@ -9,11 +11,7 @@ namespace SAM.Architectural.Revit
             if (level == null)
                 return double.NaN;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            return UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-#else
             return UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
-#endif
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,7 @@ namespace SAM.Geometry.Revit
 
             levels.Sort((x, y) => x.Elevation.CompareTo(y.Elevation));
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            double levelElevation = UnitUtils.ConvertFromInternalUnits(levels.First().Elevation, DisplayUnitType.DUT_METERS);
-#else
             double levelElevation = UnitUtils.ConvertFromInternalUnits(levels.First().Elevation, UnitTypeId.Meters);
-#endif
 
             if (elevation - Core.Tolerance.MacroDistance < levelElevation)
                 return levels.First();
@@ -34,11 +32,7 @@ namespace SAM.Geometry.Revit
             for (int i = 0; i < levels.Count; i++)
             {
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                levelElevation = UnitUtils.ConvertFromInternalUnits(levels[i].Elevation, DisplayUnitType.DUT_METERS);
-#else
                 levelElevation = UnitUtils.ConvertFromInternalUnits(levels[i].Elevation, UnitTypeId.Meters);
-#endif
                 if (System.Math.Round(elevation, 3, MidpointRounding.AwayFromZero) >= System.Math.Round(levelElevation, 3, MidpointRounding.AwayFromZero))
                 {
                     levels_Temp.Add(levels[i]);

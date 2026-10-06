@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Core.Grasshopper.Revit.Properties;
 using System;
@@ -7,7 +10,7 @@ using System.Linq;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class SAMCoreElementsByScopeBox : GH_SAMComponent
+    public class SAMCoreElementsByScopeBox : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +20,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -37,21 +40,27 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            RhinoInside.Revit.GH.Parameters.Element element = new RhinoInside.Revit.GH.Parameters.Element();
-            //element.Optional = true;
-
-            inputParamManager.AddParameter(element, "_scopeBox", "_scopeBox", "Revit ScopeBox", GH_ParamAccess.item);
-            //inputParamManager.AddGenericParameter("_elementIds", "_elementIds", "ElementIds", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "_scopeBox", NickName = "_scopeBox", Description = "Revit ScopeBox", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Element(), "Elements", "Elements", "Revit Elements", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Element() { Name = "Elements", NickName = "Elements", Description = "Revit Elements", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -65,19 +74,16 @@ namespace SAM.Core.Grasshopper.Revit
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
+            int index = Params.IndexOfInputParam("_scopeBox");
             Element element = null;
-            if (!dataAccess.GetData(0, ref element) || element == null)
+            if (index == -1 || !dataAccess.GetData(index, ref element) || element == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            if (((BuiltInCategory)element.Category.Id.IntegerValue) != BuiltInCategory.OST_VolumeOfInterest)
-#else
             if (((BuiltInCategory)element.Category.Id.Value) != BuiltInCategory.OST_VolumeOfInterest)
-#endif
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -97,7 +103,9 @@ namespace SAM.Core.Grasshopper.Revit
             List<RhinoInside.Revit.GH.Types.Element> elements_Result = elements.ConvertAll(x => RhinoInside.Revit.GH.Types.Element.FromElement(x));
             elements_Result.RemoveAll(x => x == null || !x.IsValid);
 
-           dataAccess.SetDataList(0, elements_Result);
+            index = Params.IndexOfOutputParam("Elements");
+            if (index != -1)
+                dataAccess.SetDataList(index, elements_Result);
         }
     }
 }

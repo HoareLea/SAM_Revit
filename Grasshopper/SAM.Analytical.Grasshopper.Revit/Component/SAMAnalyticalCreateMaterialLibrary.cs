@@ -1,12 +1,16 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core;
 using SAM.Core.Grasshopper;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalCreateMaterialLibrary : GH_SAMComponent
+    public class SAMAnalyticalCreateMaterialLibrary : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,7 +20,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -31,26 +35,40 @@ namespace SAM.Analytical.Grasshopper.Revit
               "Create SAM Material Library",
               "SAM", "Analytical")
         {
+            // GH_SAMVariableOutputParameterComponent.RegisterInputParams clones each Param via
+            // IGH_Param.Clone(), which silently resets NickName to Name for stock Grasshopper
+            // param types when the two differ. The original component registered "path_" with a
+            // different NickName ("_path_") — restore it here after base registration completes.
+            int index = Params.IndexOfInputParam("path_");
+            if (index != -1)
+                Params.Input[index].NickName = "_path_";
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            int index;
-
-            inputParamManager.AddTextParameter("path_", "_path_", "Path to csv file", GH_ParamAccess.item);
-            index = inputParamManager.AddTextParameter("_name_", "_name_", "SAM Material Library Name", GH_ParamAccess.item);
-            inputParamManager[index].Optional = true;
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "path_", NickName = "_path_", Description = "Path to csv file", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_String() { Name = "_name_", NickName = "_name_", Description = "SAM Material Library Name", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new GooMaterialLibraryParam(), "MaterialLibrary", "MaterialLibrary", "SAM MaterialLibrary", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooMaterialLibraryParam() { Name = "MaterialLibrary", NickName = "MaterialLibrary", Description = "SAM MaterialLibrary", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -61,8 +79,9 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("path_");
             string path = null;
-            if (!dataAccess.GetData(0, ref path) || string.IsNullOrWhiteSpace(path))
+            if (index == -1 || !dataAccess.GetData(index, ref path) || string.IsNullOrWhiteSpace(path))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -86,8 +105,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                 namesIndex = 1;
 
 
+            index = Params.IndexOfInputParam("_name_");
             string name = null;
-            dataAccess.GetData(1, ref name);
+            if (index != -1)
+                dataAccess.GetData(index, ref name);
 
             TypeMap typeMap;
             if (!ActiveSetting.Setting.TryGetValue(Core.Revit.ActiveSetting.Name.ParameterMap, out typeMap) || typeMap == null)
@@ -126,7 +147,7 @@ namespace SAM.Analytical.Grasshopper.Revit
                 parameterName_ThermalConductivity,
                 parameterName_SpecificHeatCapacity,
                 parameterName_Density,
-                parameterName_VapourDiffusionFactor, 
+                parameterName_VapourDiffusionFactor,
                 parameterName_ExternalSolarReflectance,
                 parameterName_InternalSolarReflectance,
                 parameterName_ExternalLightReflectance,
@@ -142,7 +163,9 @@ namespace SAM.Analytical.Grasshopper.Revit
                 name,
                 namesIndex);
 
-            dataAccess.SetData(0, new GooMaterialLibrary(result));
+            index = Params.IndexOfOutputParam("MaterialLibrary");
+            if (index != -1)
+                dataAccess.SetData(index, new GooMaterialLibrary(result));
         }
     }
 }

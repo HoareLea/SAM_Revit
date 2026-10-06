@@ -1,13 +1,17 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Architectural.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Architectural.Grasshopper.Revit
 {
-    public class SAMArchitecturalLevelInformation : GH_SAMComponent
+    public class SAMArchitecturalLevelInformation : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -17,7 +21,7 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.1";
+        public override string LatestComponentVersion => "1.0.2";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -32,28 +36,44 @@ namespace SAM.Architectural.Grasshopper.Revit
               "Query Revit Level Information *use Level Picker Node",
               "SAM", "Architectural")
         {
+            // GH_SAMVariableOutputParameterComponent.RegisterOutputParams clones each Param via
+            // IGH_Param.Clone(), which silently resets NickName to Name for stock Grasshopper
+            // param types when the two differ. The original component registered "HighLevel" with
+            // a different NickName ("High Level") — restore it here after base registration
+            // completes.
+            int index = Params.IndexOfOutputParam("HighLevel");
+            if (index != -1)
+                Params.Output[index].NickName = "High Level";
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_level", "_level", "Revit Level", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_level", NickName = "_level", Description = "Revit Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("HighLevel", "High Level", "Revit High Level", GH_ParamAccess.item);
-            outputParamManager.AddNumberParameter("HighElevation", "HighElevation", "High Elevation", GH_ParamAccess.item);
-
-            outputParamManager.AddNumberParameter("Elevation", "Elevation", "SAM Architectural Level Elevation", GH_ParamAccess.item);
-
-            outputParamManager.AddGenericParameter("LowLevel", "LowLevel", "Revit Low Level", GH_ParamAccess.item);
-            outputParamManager.AddNumberParameter("LowElevation", "LowElevation", "Low Elevation", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "HighLevel", NickName = "High Level", Description = "Revit High Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "HighElevation", NickName = "HighElevation", Description = "High Elevation", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "Elevation", NickName = "Elevation", Description = "SAM Architectural Level Elevation", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "LowLevel", NickName = "LowLevel", Description = "Revit Low Level", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_Number() { Name = "LowElevation", NickName = "LowElevation", Description = "Low Elevation", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -64,9 +84,10 @@ namespace SAM.Architectural.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_level");
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -122,11 +143,7 @@ namespace SAM.Architectural.Grasshopper.Revit
             double elevation_High = double.NaN;
             if (level_High != null)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, DisplayUnitType.DUT_METERS);
-#else
                 elevation_High = UnitUtils.ConvertFromInternalUnits(level_High.Elevation, UnitTypeId.Meters);
-#endif
 
             }
 
@@ -135,24 +152,31 @@ namespace SAM.Architectural.Grasshopper.Revit
             double elevation_Low = double.NaN;
             if (level_Low != null)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, DisplayUnitType.DUT_METERS);
-#else
                 elevation_Low = UnitUtils.ConvertFromInternalUnits(level_Low.Elevation, UnitTypeId.Meters);
-#endif
 
             }
 
-            dataAccess.SetData(0, level_High);
-            dataAccess.SetData(1, new GH_Number(elevation_High));
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS)));
-#else
-            dataAccess.SetData(2, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters)));
-#endif
+            index = Params.IndexOfOutputParam("HighLevel");
+            if (index != -1)
+                dataAccess.SetData(index, level_High);
 
-            dataAccess.SetData(3, level_Low);
-            dataAccess.SetData(4, new GH_Number(elevation_Low));
+            index = Params.IndexOfOutputParam("HighElevation");
+            if (index != -1)
+                dataAccess.SetData(index, new GH_Number(elevation_High));
+
+            index = Params.IndexOfOutputParam("Elevation");
+            if (index != -1)
+            {
+                dataAccess.SetData(index, new GH_Number(UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters)));
+            }
+
+            index = Params.IndexOfOutputParam("LowLevel");
+            if (index != -1)
+                dataAccess.SetData(index, level_Low);
+
+            index = Params.IndexOfOutputParam("LowElevation");
+            if (index != -1)
+                dataAccess.SetData(index, new GH_Number(elevation_Low));
         }
     }
 }

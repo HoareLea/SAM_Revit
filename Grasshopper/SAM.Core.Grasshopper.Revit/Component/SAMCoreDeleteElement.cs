@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Core;
@@ -141,11 +143,7 @@ namespace SAM.Analytical.Grasshopper.Revit
             index = Params.IndexOfOutputParam("ids");
             if(index != -1)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                dataAccess.SetDataList(index, result?.ToList().ConvertAll(x => x.IntegerValue));
-#else
                 dataAccess.SetDataList(index, result?.ToList().ConvertAll(x => x.Value));
-#endif
             }
 
         }

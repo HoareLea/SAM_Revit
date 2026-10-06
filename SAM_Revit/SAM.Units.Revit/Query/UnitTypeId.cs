@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,9 +9,6 @@ namespace SAM.Units.Revit
     public static partial class Query
     {
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-
-#else
         public static ForgeTypeId UnitTypeId(this ForgeTypeId specTypeId)
         {
             if (specTypeId == SpecTypeId.Number)
@@ -78,7 +77,6 @@ namespace SAM.Units.Revit
 
             return null;
         }
-#endif
 
     }
 }

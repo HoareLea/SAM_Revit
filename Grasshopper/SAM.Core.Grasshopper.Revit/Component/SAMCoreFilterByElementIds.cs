@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Core.Grasshopper.Revit.Properties;
 using System;
@@ -6,7 +9,7 @@ using System.Collections.Generic;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class SAMCoreFilterByElementIds : GH_SAMComponent
+    public class SAMCoreFilterByElementIds : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -16,7 +19,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -36,19 +39,29 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_sAMObjects", "_sAMObjects", "SAM Objects", GH_ParamAccess.list);
-            inputParamManager.AddGenericParameter("_elementIds", "_elementIds", "ElementIds", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_sAMObjects", NickName = "_sAMObjects", Description = "SAM Objects", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_elementIds", NickName = "_elementIds", Description = "ElementIds", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("In", "In", "Objects In", GH_ParamAccess.list);
-            outputParamManager.AddGenericParameter("Out", "Out", "Objects Out", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "In", NickName = "In", Description = "Objects In", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "Out", NickName = "Out", Description = "Objects Out", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -59,14 +72,18 @@ namespace SAM.Core.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index_Out = Params.IndexOfOutputParam("Out");
+
+            int index = Params.IndexOfInputParam("_sAMObjects");
             List<GH_ObjectWrapper> objectWrapperList;
 
             objectWrapperList = new List<GH_ObjectWrapper>();
 
-            if (!dataAccess.GetDataList(0, objectWrapperList) || objectWrapperList == null)
+            if (index == -1 || !dataAccess.GetDataList(index, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(1, false);
+                if (index_Out != -1)
+                    dataAccess.SetData(index_Out, false);
                 return;
             }
 
@@ -91,12 +108,14 @@ namespace SAM.Core.Grasshopper.Revit
                 sAMObjects.Add(sAMObject);
             }
 
+            index = Params.IndexOfInputParam("_elementIds");
             objectWrapperList = new List<GH_ObjectWrapper>();
 
-            if (!dataAccess.GetDataList(1, objectWrapperList) || objectWrapperList == null)
+            if (index == -1 || !dataAccess.GetDataList(index, objectWrapperList) || objectWrapperList == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
-                dataAccess.SetData(1, false);
+                if (index_Out != -1)
+                    dataAccess.SetData(index_Out, false);
                 return;
             }
 
@@ -142,8 +161,12 @@ namespace SAM.Core.Grasshopper.Revit
                     result_out.Add(sAMObject);
             }
 
-            dataAccess.SetDataList(0, result_in);
-            dataAccess.SetDataList(1, result_out);
+            index = Params.IndexOfOutputParam("In");
+            if (index != -1)
+                dataAccess.SetDataList(index, result_in);
+
+            if (index_Out != -1)
+                dataAccess.SetDataList(index_Out, result_out);
         }
     }
 }

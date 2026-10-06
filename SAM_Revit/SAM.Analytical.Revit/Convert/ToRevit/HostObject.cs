@@ -70,32 +70,20 @@ namespace SAM.Analytical.Revit
                 parameter = wall.get_Parameter(BuiltInParameter.WALL_USER_HEIGHT_PARAM);
                 if (parameter != null)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    double height = UnitUtils.ConvertToInternalUnits((panel.HighElevation() - lowElevation), DisplayUnitType.DUT_METERS);
-#else
                     double height = UnitUtils.ConvertToInternalUnits((panel.HighElevation() - lowElevation), UnitTypeId.Meters);
-#endif
 
 
                     parameter.Set(height);
                 }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS);
-#else
                 double levelElevation = UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters);
-#endif
 
                 if (Math.Abs(lowElevation - levelElevation) > Core.Tolerance.MacroDistance)
                 {
                     parameter = wall.get_Parameter(BuiltInParameter.WALL_BASE_OFFSET);
                     if (parameter != null)
                     {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                        parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, DisplayUnitType.DUT_METERS));
-#else
                         parameter.Set(UnitUtils.ConvertToInternalUnits(lowElevation - levelElevation, UnitTypeId.Meters));
-#endif
                     }
 
                 }
@@ -136,9 +124,6 @@ namespace SAM.Analytical.Revit
                     curveArray_Plane.Append(segment3D_Temp.ToRevit_Line());
                 }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021
-                Autodesk.Revit.DB.Floor floor = document.Create.NewFloor(curveArray_Plane, hostObjAttributes as Autodesk.Revit.DB.FloorType, level, false);
-#else
                 CurveLoop curveLoop = new CurveLoop();
                 foreach (Curve curve in curveArray_Plane)
                 {
@@ -146,7 +131,6 @@ namespace SAM.Analytical.Revit
                 }
 
                 Autodesk.Revit.DB.Floor floor = Autodesk.Revit.DB.Floor.Create(document, new CurveLoop[] { curveLoop }, hostObjAttributes.Id, level.Id);
-#endif
 
                 if (floor != null)
                 {
@@ -187,11 +171,7 @@ namespace SAM.Analytical.Revit
                 {
                     document.Regenerate();
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                    SlabShapeEditor slabShapeEditor = floor.SlabShapeEditor;
-#else
                     SlabShapeEditor slabShapeEditor = floor.GetSlabShapeEditor();
-#endif
 
 
                     if (slabShapeEditor != null)
@@ -203,14 +183,6 @@ namespace SAM.Analytical.Revit
                             slabShapeEditor.Enable();
                         }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                        foreach (Curve curve in curveArray_Sloped)
-                        {
-                            XYZ xYZ = curve.GetEndPoint(0);
-                            slabShapeEditor.DrawPoint(xYZ);
-                        }
-
-#else
                         document.Regenerate();
 
                         List<XYZ> xYZs = new List<XYZ>();
@@ -219,7 +191,6 @@ namespace SAM.Analytical.Revit
                             xYZs.Add(curve.GetEndPoint(0));
                         }
                         slabShapeEditor.AddPoints(xYZs);
-#endif
                     }
                 }
 
@@ -248,11 +219,7 @@ namespace SAM.Analytical.Revit
                 if (parameter != null)
                     parameter.Set(ElementId.InvalidElementId);
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                SlabShapeEditor slabShapeEditor = roofBase.SlabShapeEditor;
-#else
                 SlabShapeEditor slabShapeEditor = roofBase.GetSlabShapeEditor();
-#endif
 
 
                 if (slabShapeEditor != null)
@@ -264,14 +231,6 @@ namespace SAM.Analytical.Revit
                         slabShapeEditor.Enable();
                     }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                        foreach (Curve curve in curveArray)
-                        {
-                            XYZ xYZ = curve.GetEndPoint(0);
-                            slabShapeEditor.DrawPoint(xYZ);
-                        }
-
-#else
                     document.Regenerate();
 
                     List<XYZ> xYZs = new List<XYZ>();
@@ -280,7 +239,6 @@ namespace SAM.Analytical.Revit
                         xYZs.Add(curve.GetEndPoint(0));
                     }
                     slabShapeEditor.AddPoints(xYZs);
-#endif
                 }
 
                 builtInParameters = new BuiltInParameter[] { BuiltInParameter.ROOF_LEVEL_OFFSET_PARAM, BuiltInParameter.ROOF_BASE_LEVEL_PARAM, BuiltInParameter.ROOF_UPTO_LEVEL_PARAM };

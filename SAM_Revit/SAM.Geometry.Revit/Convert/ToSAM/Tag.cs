@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using SAM.Core;
 using SAM.Core.Revit;
@@ -58,9 +60,6 @@ namespace SAM.Geometry.Revit
             Planar.Point2D end = null;
             if (spaceTag.HasLeader)
             {
-#if Revit2017
-
-#else
                 if (spaceTag.HasElbow)
                 {
                     Spatial.Point3D elbow3D = ToSAM(spaceTag.LeaderElbow);
@@ -69,7 +68,6 @@ namespace SAM.Geometry.Revit
                         elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
                     }
                 }
-#endif
 
                 Spatial.Point3D end3D = ToSAM(spaceTag.LeaderEnd);
                 if (end3D != null)
@@ -132,12 +130,6 @@ namespace SAM.Geometry.Revit
 
             LongId viewId = Query.LongId(view);
 
-#if Revit2017
-            LongId referenceId = null;
-            throw new System.NotImplementedException();
-#elif Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-            LongId referenceId = Query.LongId(document.GetElement(independentTag.GetTaggedReference()));
-#else
             Autodesk.Revit.DB.Reference reference = independentTag.GetTaggedReferences().FirstOrDefault();
             if(reference == null)
             {
@@ -145,7 +137,6 @@ namespace SAM.Geometry.Revit
             }
 
             LongId referenceId = Query.LongId(document.GetElement(reference));
-#endif
 
             if (referenceId == null)
             {
@@ -162,19 +153,6 @@ namespace SAM.Geometry.Revit
             Planar.Point2D end = null;
             if (independentTag.HasLeader)
             {
-#if Revit2017
-
-#elif Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-                if (independentTag.HasElbow)
-                {
-                    Spatial.Point3D elbow3D = ToSAM(independentTag.LeaderElbow);
-                    if (elbow3D != null)
-                    {
-                        elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
-                    }
-                }
-
-#else
                 if (independentTag.HasLeaderElbow(reference))
                 {
                     Spatial.Point3D elbow3D = ToSAM(independentTag.GetLeaderElbow(reference));
@@ -183,19 +161,8 @@ namespace SAM.Geometry.Revit
                         elbow = new Planar.Point2D(elbow3D.X, elbow3D.Y);
                     }
                 }
-#endif
 
 
-#if Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-                if (independentTag.LeaderEndCondition == LeaderEndCondition.Free)
-                {
-                    Spatial.Point3D end3D = ToSAM(independentTag.LeaderEnd);
-                    if (end3D != null)
-                    {
-                        end = new Planar.Point2D(end3D.X, end3D.Y);
-                    }
-                }
-#else
                 if (independentTag.LeaderEndCondition == LeaderEndCondition.Free)
                 {
                     Spatial.Point3D end3D = ToSAM(independentTag.GetLeaderEnd(reference));
@@ -204,7 +171,6 @@ namespace SAM.Geometry.Revit
                         end = new Planar.Point2D(end3D.X, end3D.Y);
                     }
                 }
-#endif
             }
 
             result = new Tag(tagType, viewId, new Planar.Point2D(location.X, location.Y), elbow, end, referenceId);

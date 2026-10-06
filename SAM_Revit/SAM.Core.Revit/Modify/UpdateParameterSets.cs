@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,13 +47,7 @@ namespace SAM.Core.Revit
                 switch (parameter.StorageType)
                 {
                     case StorageType.Double:
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.UnitType);
-#elif Revit2021
-                        value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.GetSpecTypeId());
-#else
                         value = Units.Revit.Convert.ToSI(parameter.AsDouble(), parameter.Definition.GetDataType());
-#endif
                         break;
 
                     case StorageType.Integer:

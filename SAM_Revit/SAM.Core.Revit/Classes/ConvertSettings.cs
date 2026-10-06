@@ -5,11 +5,7 @@ using System.Text.Json.Nodes;
 using System.Collections.Generic;
 using System.Linq;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-
-#else
 using System.Runtime.InteropServices.Marshalling;
-#endif
 
 namespace SAM.Core.Revit
 {
@@ -160,11 +156,7 @@ namespace SAM.Core.Revit
             if (elementId == null || elementId == ElementId.InvalidElementId)
                 return false;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            objects[elementId.IntegerValue.ToString()] = new List<object> { sAMObject };
-#else
             objects[elementId.Value.ToString()] = new List<object> { sAMObject };
-#endif
 
             return true;
         }
@@ -174,11 +166,7 @@ namespace SAM.Core.Revit
             if (elementId == null || elementId == ElementId.InvalidElementId)
                 return false;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            objects[elementId.IntegerValue.ToString()] = sAMObjects?.Cast<object>().ToList();
-#else
             objects[elementId.Value.ToString()] = sAMObjects?.Cast<object>().ToList();
-#endif
 
             return true;
         }
@@ -201,11 +189,7 @@ namespace SAM.Core.Revit
         public T GetObject<T>(ElementId elementId) where T : ISAMObject
         {
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            List<object> objects = GetObjects(elementId.IntegerValue.ToString());
-#else
             List<object> objects = GetObjects(elementId.Value.ToString());
-#endif
             if (objects == null || objects.Count == 0)
                 return default;
 
@@ -219,11 +203,7 @@ namespace SAM.Core.Revit
 
         public List<T> GetObjects<T>(ElementId elementId) where T : ISAMObject
         {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            List<object> objects = GetObjects(elementId.IntegerValue.ToString());
-#else
             List<object> objects = GetObjects(elementId.Value.ToString());
-#endif
 
             if (objects == null)
                 return null;
@@ -255,11 +235,7 @@ namespace SAM.Core.Revit
         {
             if (elementId == null)
                 return false;
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            return objects.ContainsKey(elementId.IntegerValue.ToString());
-#else
             return objects.ContainsKey(elementId.Value.ToString());
-#endif
         }
 
         public bool ClearObjects()

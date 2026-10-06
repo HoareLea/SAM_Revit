@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -168,81 +170,6 @@ namespace SAM.Core.Revit
             return definition;
         }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023
-        public ElementBinding Add(Document document, string name, IEnumerable<BuiltInCategory> builtInCategories, BuiltInParameterGroup builtInParameterGroup, bool instance)
-        {
-            if (document == null || document.ParameterBindings == null || string.IsNullOrWhiteSpace(name) || builtInCategories == null || builtInCategories.Count() == 0)
-            {
-                return null;
-            }
-
-            ElementBinding result = null;
-
-            DefinitionBindingMapIterator definitionBindingMapIterator = document?.ParameterBindings?.ForwardIterator();
-            if(definitionBindingMapIterator != null)
-            {
-                definitionBindingMapIterator.Reset();
-
-                while (definitionBindingMapIterator.MoveNext())
-                {
-                    Definition definition_Temp = definitionBindingMapIterator.Key as Definition;
-                    if (definition_Temp == null)
-                        continue;
-
-                    //if (aExternalDefinition.GUID.Equals(pExternalDefinition.GUID))
-                    if (definition_Temp.Name.Equals(name))
-                    {
-                        result = (ElementBinding)definitionBindingMapIterator.Current;
-                        break;
-                    }
-                }
-            }
-
-            if(result != null)
-            {
-                return result;
-            }
-
-            Definition definition = Find(name);
-            if (definition == null)
-            {
-                return null;
-            }
-
-            CategorySet categorySet = Revit.Create.CategorySet(document, builtInCategories);
-            if (categorySet == null || categorySet.Size == 0)
-            {
-                return null;
-            }
-
-            if (result != null)
-            {
-
-            }
-            else
-            {
-                if (instance)
-                    result = document.Application.Create.NewInstanceBinding(categorySet);
-                else
-                    result = document.Application.Create.NewTypeBinding(categorySet);
-
-               document.ParameterBindings.Insert(definition, result, builtInParameterGroup);
-            }
-
-            return result;
-        }
-
-        public ElementBinding Add(Document document, ElementBindingData elementBindingData)
-        {
-            if(document == null || elementBindingData == null)
-            {
-                return null;
-            }
-
-            return Add(document, elementBindingData.Name, elementBindingData.BuiltInCategories, elementBindingData.BuiltInParameterGroup, elementBindingData.Instance);
-        }
-
-#else
         public ElementBinding Add(Document document, string name, IEnumerable<BuiltInCategory> builtInCategories, ForgeTypeId groupTypeId, bool instance)
         {
             if (document == null || document.ParameterBindings == null || string.IsNullOrWhiteSpace(name) || builtInCategories == null || builtInCategories.Count() == 0)
@@ -315,7 +242,6 @@ namespace SAM.Core.Revit
 
             return Add(document, elementBindingData.Name, elementBindingData.BuiltInCategories, elementBindingData.GroupTypeId, elementBindingData.Instance);
         }
-#endif
 
         public void Close()
         {

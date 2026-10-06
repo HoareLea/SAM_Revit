@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using SAM.Analytical.Grasshopper.Revit.Properties;
@@ -10,7 +13,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitSAMPanelsByCurtainWall : GH_SAMComponent
+    public class RevitSAMPanelsByCurtainWall : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -20,7 +23,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -35,26 +38,46 @@ namespace SAM.Analytical.Grasshopper.Revit
               "Convert Revit Curtain Wall To SAM Analytical Panels \n*optional input ActiveDocument to get all curtain walls from project",
               "SAM", "Revit")
         {
-     
+
         }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddGenericParameter("_curtainWall", "_curtainWall", "Revit Curtain Wall\n*or ActiveDocument to get all curtain walls from project", GH_ParamAccess.item);
-            inputParamManager.AddBooleanParameter("_includeNonVisibleObjects_", "_includeNonVisibleObjects_", "Include Non Visible Objects", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_useProjectLocation_", "_useProjectLocation_", "Transform geometry using Revit Project Location", GH_ParamAccess.item, false);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "_curtainWall", NickName = "_curtainWall", Description = "Revit Curtain Wall\n*or ActiveDocument to get all curtain walls from project", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_IncludeNonVisibleObjects = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_includeNonVisibleObjects_", NickName = "_includeNonVisibleObjects_", Description = "Include Non Visible Objects", Access = GH_ParamAccess.item };
+                param_IncludeNonVisibleObjects.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_IncludeNonVisibleObjects, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_UseProjectLocation = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_useProjectLocation_", NickName = "_useProjectLocation_", Description = "Transform geometry using Revit Project Location", Access = GH_ParamAccess.item };
+                param_UseProjectLocation.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_UseProjectLocation, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Run, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddGenericParameter("panels", "panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new global::Grasshopper.Kernel.Parameters.Param_GenericObject() { Name = "panels", NickName = "panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -65,27 +88,31 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_run");
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
+            index = Params.IndexOfInputParam("_curtainWall");
             GH_ObjectWrapper objectWrapper = null;
 
-            if (!dataAccess.GetData(0, ref objectWrapper) || objectWrapper.Value == null)
+            if (index == -1 || !dataAccess.GetData(index, ref objectWrapper) || objectWrapper.Value == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            index = Params.IndexOfInputParam("_useProjectLocation_");
             bool useProjectLocation = false;
-            if (!dataAccess.GetData(2, ref useProjectLocation))
+            if (index == -1 || !dataAccess.GetData(index, ref useProjectLocation))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            index = Params.IndexOfInputParam("_includeNonVisibleObjects_");
             bool includeNonVisibleObjects = false;
-            if (!dataAccess.GetData(1, ref includeNonVisibleObjects))
+            if (index == -1 || !dataAccess.GetData(index, ref includeNonVisibleObjects))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -145,8 +172,10 @@ namespace SAM.Analytical.Grasshopper.Revit
                     }
                 }
             }
-                
-            dataAccess.SetDataList(0, sAMObjects);
+
+            index = Params.IndexOfOutputParam("panels");
+            if (index != -1)
+                dataAccess.SetDataList(index, sAMObjects);
         }
     }
 }

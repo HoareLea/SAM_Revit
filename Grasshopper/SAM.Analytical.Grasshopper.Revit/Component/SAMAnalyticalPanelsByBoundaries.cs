@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using SAM.Analytical.Grasshopper.Revit.Properties;
 using SAM.Core.Grasshopper;
@@ -8,7 +11,7 @@ using System.Collections.Generic;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class SAMAnalyticalPanelsByBoundaries : GH_SAMComponent
+    public class SAMAnalyticalPanelsByBoundaries : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +21,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,41 +41,46 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            RhinoInside.Revit.GH.Parameters.SpatialElement spatialElement = new RhinoInside.Revit.GH.Parameters.SpatialElement();
-            inputParamManager.AddParameter(spatialElement, "_space", "_space", "Revit Space or Wall", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.SpatialElement() { Name = "_space", NickName = "_space", Description = "Revit Space or Wall", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "level_Lower_", NickName = "level_Lower_", Description = "Revit Lower Level", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Level() { Name = "level_Upper_", NickName = "level_Upper_", Description = "Revit Upper Level", Access = GH_ParamAccess.item, Optional = true }, ParamVisibility.Binding));
 
-            RhinoInside.Revit.GH.Parameters.Level level = null;
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Run, ParamVisibility.Binding));
 
-            level = new RhinoInside.Revit.GH.Parameters.Level();
-            level.Optional = true;
-            inputParamManager.AddParameter(level, "level_Lower_", "level_Lower_", "Revit Lower Level", GH_ParamAccess.item);
-
-            level = new RhinoInside.Revit.GH.Parameters.Level();
-            level.Optional = true;
-            inputParamManager.AddParameter(level, "level_Upper_", "level_Upper_", "Revit Upper Level", GH_ParamAccess.item);
-
-
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new GooPanelParam(), "Panels", "Panels", "SAM Analytical Panels", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooPanelParam() { Name = "Panels", NickName = "Panels", Description = "SAM Analytical Panels", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_run");
             bool run = false;
-            if (!dataAccess.GetData(3, ref run) || !run)
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
+            index = Params.IndexOfInputParam("_space");
             SpatialElement spatialElement = null;
-            if(!dataAccess.GetData(0, ref spatialElement) || spatialElement == null)
+            if(index == -1 || !dataAccess.GetData(index, ref spatialElement) || spatialElement == null)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
@@ -80,11 +88,15 @@ namespace SAM.Analytical.Grasshopper.Revit
 
             Document document = spatialElement.Document;
 
+            index = Params.IndexOfInputParam("level_Lower_");
             Level level_Low = null;
-            dataAccess.GetData(1, ref level_Low);
+            if (index != -1)
+                dataAccess.GetData(index, ref level_Low);
 
+            index = Params.IndexOfInputParam("level_Upper_");
             Level level_High = null;
-            dataAccess.GetData(2, ref level_High);
+            if (index != -1)
+                dataAccess.GetData(index, ref level_High);
 
             if(level_Low == null || level_High == null)
             {
@@ -105,19 +117,16 @@ namespace SAM.Analytical.Grasshopper.Revit
                 return;
             }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            double elevation_Low = Units.Revit.Convert.ToSI(level_Low.Elevation, UnitType.UT_Length);
-            double elevation_High = Units.Revit.Convert.ToSI(level_High.Elevation, UnitType.UT_Length);
-#else
             double elevation_Low = Units.Revit.Convert.ToSI(level_Low.Elevation, SpecTypeId.Length);
             double elevation_High = Units.Revit.Convert.ToSI(level_High.Elevation, SpecTypeId.Length);
-#endif
 
             ConvertSettings convertSettings = new ConvertSettings(true, true, true);
 
             List<Panel> result = Analytical.Revit.Create.Panels(spatialElement, elevation_Low, elevation_High, convertSettings);
 
-            dataAccess.SetDataList(0, result.ConvertAll(x => new GooPanel(x)));
+            index = Params.IndexOfOutputParam("Panels");
+            if (index != -1)
+                dataAccess.SetDataList(index, result.ConvertAll(x => new GooPanel(x)));
         }
     }
 }

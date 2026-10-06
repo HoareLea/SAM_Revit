@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,11 +44,7 @@ namespace SAM.Analytical.Revit
                 FamilyInstance familyInstance = (FamilyInstance)element;
 
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors)
-#else
                 if (element.Category.Id.Value == (long)BuiltInCategory.OST_Windows || element.Category.Id.Value == (long)BuiltInCategory.OST_Doors)
-#endif
                 {
                     List<Aperture> apertures = ToSAM_Apertures(familyInstance, convertSettings);
                     if (apertures != null)
@@ -59,11 +57,7 @@ namespace SAM.Analytical.Revit
             }
             else if (element is FamilySymbol)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Windows || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_Doors  || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_CurtainWallPanels)
-#else
                 if (element.Category.Id.Value == (long)BuiltInCategory.OST_Windows || element.Category.Id.Value == (long)BuiltInCategory.OST_Doors || element.Category.Id.Value == (long)BuiltInCategory.OST_CurtainWallPanels)
-#endif
                 {
                     ApertureConstruction apertureConstruction = ToSAM_ApertureConstruction((FamilySymbol)element, convertSettings);
                     if (apertureConstruction != null)
@@ -72,11 +66,7 @@ namespace SAM.Analytical.Revit
             }
             else if (element is ModelCurve)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                if (element.Category != null && (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_MEPSpaceSeparationLines || element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_RoomSeparationLines))
-#else
                 if (element.Category != null && (element.Category.Id.Value == (long)BuiltInCategory.OST_MEPSpaceSeparationLines || element.Category.Id.Value == (long)BuiltInCategory.OST_RoomSeparationLines))
-#endif
                 {
                     List<Panel> panels = ToSAM_Panels((ModelCurve)element, convertSettings);
                     if (panels != null)

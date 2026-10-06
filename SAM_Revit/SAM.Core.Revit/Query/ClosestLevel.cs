@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,11 +19,7 @@ namespace SAM.Core.Revit
             double distance = double.MaxValue;
             foreach (Level level in levels)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, DisplayUnitType.DUT_METERS) - elevation);
-#else
                 double distance_Temp = System.Math.Abs(UnitUtils.ConvertFromInternalUnits(level.Elevation, UnitTypeId.Meters) - elevation);
-#endif
 
 
                 if (distance < distance_Temp)

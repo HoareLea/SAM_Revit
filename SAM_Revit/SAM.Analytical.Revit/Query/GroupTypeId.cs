@@ -1,12 +1,11 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 
 namespace SAM.Analytical.Revit
 {
     public static partial class Query
     {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-
-#else
         public static ForgeTypeId GroupTypeId(this string builtInParameterGroupText)
         {
             if(string.IsNullOrWhiteSpace(builtInParameterGroupText))
@@ -60,6 +59,5 @@ namespace SAM.Analytical.Revit
 
             return null;
         }
-#endif
     }
 }

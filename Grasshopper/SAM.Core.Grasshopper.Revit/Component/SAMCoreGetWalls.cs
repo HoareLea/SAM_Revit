@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Parameters;
 using SAM.Core.Grasshopper.Revit.Properties;
@@ -8,7 +11,7 @@ using System.Linq;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class SAMCoreGetWalls : GH_SAMComponent
+    public class SAMCoreGetWalls : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -18,7 +21,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -38,24 +41,35 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            Param_String param_String = new Param_String() { Optional = true};
-            param_String.SetPersistentData(new string[] { WallKind.Basic.ToString() });
-            inputParamManager.AddParameter(param_String, "_wallKinds_", "_wallKinds_", "_wallKinds_  \n *Connect SAMCore.WallKind", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
 
+                Param_String param_String = new Param_String() { Name = "_wallKinds_", NickName = "_wallKinds_", Description = "_wallKinds_  \n *Connect SAMCore.WallKind", Access = GH_ParamAccess.list, Optional = true };
+                param_String.SetPersistentData(new string[] { WallKind.Basic.ToString() });
+                result.Add(new GH_SAMParam(param_String, ParamVisibility.Binding));
 
-            Param_Boolean param_Boolean = new Param_Boolean() { Optional = true};
-            param_Boolean.SetPersistentData(false);
-            inputParamManager.AddParameter(param_Boolean, "_inverted_", "_inverted_", "Inverted_", GH_ParamAccess.item);
+                Param_Boolean param_Boolean = new Param_Boolean() { Name = "_inverted_", NickName = "_inverted_", Description = "Inverted_", Access = GH_ParamAccess.item, Optional = true };
+                param_Boolean.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Boolean, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.Wall(), "Walls", "Walls", "Revit Walls", GH_ParamAccess.list);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.Wall() { Name = "Walls", NickName = "Walls", Description = "Revit Walls", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -68,8 +82,9 @@ namespace SAM.Core.Grasshopper.Revit
         {
             List<WallKind> wallKinds = null;
 
+            int index = Params.IndexOfInputParam("_wallKinds_");
             List<string> wallKindNames = new List<string>();
-            if (dataAccess.GetDataList(0, wallKindNames))
+            if (index != -1 && dataAccess.GetDataList(index, wallKindNames))
             {
                 if (wallKindNames != null && wallKindNames.Count != 0)
                 {
@@ -84,8 +99,10 @@ namespace SAM.Core.Grasshopper.Revit
                 wallKinds = new List<WallKind>() { WallKind.Basic };
             }
 
+            index = Params.IndexOfInputParam("_inverted_");
             bool inverted = false;
-            dataAccess.GetData(1, ref inverted);
+            if (index != -1)
+                dataAccess.GetData(index, ref inverted);
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
@@ -98,7 +115,9 @@ namespace SAM.Core.Grasshopper.Revit
                     walls = walls?.FindAll(x => wallKinds.Contains((WallKind)(int)x.WallType.Kind));
             }
 
-            dataAccess.SetDataList(0, walls);
+            index = Params.IndexOfOutputParam("Walls");
+            if (index != -1)
+                dataAccess.SetDataList(index, walls);
         }
     }
 }

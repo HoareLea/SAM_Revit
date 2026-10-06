@@ -1,10 +1,14 @@
-﻿using Grasshopper.Kernel;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Grasshopper.Kernel;
 using SAM.Core.Grasshopper.Revit.Properties;
 using System;
+using System.Collections.Generic;
 
 namespace SAM.Core.Grasshopper.Revit
 {
-    public class SAMCoreCreateConvertSettings : GH_SAMComponent
+    public class SAMCoreCreateConvertSettings : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -14,7 +18,7 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -34,19 +38,39 @@ namespace SAM.Core.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            inputParamManager.AddBooleanParameter("_convertGeometry_", "_convertGeometry_", "Convert Geometry", GH_ParamAccess.item, true);
-            inputParamManager.AddBooleanParameter("_convertParameters_", "_convertParameters_", "Convert Parameters", GH_ParamAccess.item, true);
-            inputParamManager.AddBooleanParameter("_removeExisting_", "_removeExisting_", "Remove existing Revit element if exists before conversion ", GH_ParamAccess.item, false);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_ConvertGeometry = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_convertGeometry_", NickName = "_convertGeometry_", Description = "Convert Geometry", Access = GH_ParamAccess.item };
+                param_ConvertGeometry.SetPersistentData(true);
+                result.Add(new GH_SAMParam(param_ConvertGeometry, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_ConvertParameters = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_convertParameters_", NickName = "_convertParameters_", Description = "Convert Parameters", Access = GH_ParamAccess.item };
+                param_ConvertParameters.SetPersistentData(true);
+                result.Add(new GH_SAMParam(param_ConvertParameters, ParamVisibility.Binding));
+
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_RemoveExisting = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_removeExisting_", NickName = "_removeExisting_", Description = "Remove existing Revit element if exists before conversion ", Access = GH_ParamAccess.item };
+                param_RemoveExisting.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_RemoveExisting, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new GooConvertSettingsParam(), "ConvertSettings", "ConvertSettings", "SAM Core Convert Settings", GH_ParamAccess.item);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new GooConvertSettingsParam() { Name = "ConvertSettings", NickName = "ConvertSettings", Description = "SAM Core Convert Settings", Access = GH_ParamAccess.item }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         /// <summary>
@@ -57,28 +81,33 @@ namespace SAM.Core.Grasshopper.Revit
         /// </param>
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_convertGeometry_");
             bool convertGeometry = true;
-            if (!dataAccess.GetData(0, ref convertGeometry))
+            if (index == -1 || !dataAccess.GetData(index, ref convertGeometry))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            index = Params.IndexOfInputParam("_convertParameters_");
             bool convertParameters = true;
-            if (!dataAccess.GetData(1, ref convertParameters))
+            if (index == -1 || !dataAccess.GetData(index, ref convertParameters))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
+            index = Params.IndexOfInputParam("_removeExisting_");
             bool removeExisting = true;
-            if (!dataAccess.GetData(2, ref removeExisting))
+            if (index == -1 || !dataAccess.GetData(index, ref removeExisting))
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Invalid data");
                 return;
             }
 
-            dataAccess.SetData(0, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters, removeExisting)));
+            index = Params.IndexOfOutputParam("ConvertSettings");
+            if (index != -1)
+                dataAccess.SetData(index, new GooConvertSettings(new Core.Revit.ConvertSettings(convertGeometry, convertParameters, removeExisting)));
         }
     }
 }

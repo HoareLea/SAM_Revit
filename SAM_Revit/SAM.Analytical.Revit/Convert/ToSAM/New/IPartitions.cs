@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using SAM.Geometry.Spatial;
 using SAM.Geometry.Revit;
@@ -38,11 +40,7 @@ namespace SAM.Analytical.Revit
 
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
 
-#if Revit2017
-            IEnumerable<ElementId> elementIds = null;
-#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
-#endif
 
             if (hostObject is Autodesk.Revit.DB.Wall || hostObject is CurtainSystem)
             {

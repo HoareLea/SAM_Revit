@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Analysis;
 using System.Collections.Generic;
 
@@ -67,6 +69,22 @@ namespace SAM.Analytical.Revit
                     }
 
 
+#if Revit2027
+                    // EnergyAnalysisDetailModelOptions is deprecated in Revit 2027 and Create(Document, options)
+                    // "will be removed in the next version". The model type now comes from Energy Settings alone,
+                    // so AnalysisType must be RoomsOrSpaces - the equivalent of the old EnergyModelType.SpatialElement.
+                    // The previous AnalysisMode.BuildingElements contradicted the options object and set_AnalysisType
+                    // now throws at runtime. ExportMullions, IncludeShadingSurfaces, SimplifyCurtainSystems and Tier
+                    // are read-only in 2027 (no API replacement) - the document's Energy Settings values apply.
+                    // ExportDefaults is deprecated.
+                    EnergyDataSettings energyDataSettings = EnergyDataSettings.GetEnergyDataSettings(document);
+                    energyDataSettings.ExportComplexity = gbXMLExportComplexity.ComplexWithMullionsAndShadingSurfaces;
+                    energyDataSettings.SliverSpaceTolerance = UnitUtils.ConvertToInternalUnits(5, UnitTypeId.Millimeters);
+                    energyDataSettings.AnalysisType = AnalysisMode.RoomsOrSpaces;
+                    energyDataSettings.EnergyModel = false;
+
+                    energyAnalysisDetailModel = EnergyAnalysisDetailModel.Create(document);
+#else
                     EnergyAnalysisDetailModelOptions energyAnalysisDetailModelOptions = new EnergyAnalysisDetailModelOptions();
                     energyAnalysisDetailModelOptions.Tier = EnergyAnalysisDetailModelTier.SecondLevelBoundaries;
                     energyAnalysisDetailModelOptions.EnergyModelType = EnergyModelType.SpatialElement;
@@ -77,19 +95,24 @@ namespace SAM.Analytical.Revit
                     EnergyDataSettings energyDataSettings = EnergyDataSettings.GetFromDocument(document);
                     energyDataSettings.ExportComplexity = gbXMLExportComplexity.ComplexWithMullionsAndShadingSurfaces;
                     energyDataSettings.ExportDefaults = false;
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    energyDataSettings.SliverSpaceTolerance = UnitUtils.ConvertToInternalUnits(5, DisplayUnitType.DUT_MILLIMETERS);
-#else
                     energyDataSettings.SliverSpaceTolerance = UnitUtils.ConvertToInternalUnits(5, UnitTypeId.Millimeters);
-#endif
 
                     energyDataSettings.AnalysisType = AnalysisMode.BuildingElements;
                     energyDataSettings.EnergyModel = false;
 
                     energyAnalysisDetailModel = EnergyAnalysisDetailModel.Create(document, energyAnalysisDetailModelOptions);
+#endif
 
                     GBXMLExportOptions gBXMLExportOptions = new GBXMLExportOptions();
+#if Revit2025 || Revit2026
+                    // GBXMLExportOptions.ExportEnergyModelType, and the ExportEnergyModelType enum it took,
+                    // were both removed from the Revit 2027 API - GBXMLExportOptions now exposes only
+                    // ExportAnalyticalSystems and ForceGbXMLExport. There is no direct replacement on the
+                    // options object; under 2027 the export follows EnergyDataSettings alone, which is
+                    // configured above. Whether that yields the same gbXML as this line did is a question for
+                    // a model comparison, not something the API can answer.
                     gBXMLExportOptions.ExportEnergyModelType = ExportEnergyModelType.SpatialElement;
+#endif
 
                     if (!document.Export(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileName(path), gBXMLExportOptions))
                     {

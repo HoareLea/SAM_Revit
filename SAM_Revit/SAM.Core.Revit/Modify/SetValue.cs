@@ -72,11 +72,7 @@ namespace SAM.Core.Revit
             {
                 //Check if parameter is Workset parameter -> If Workset parameter then change only if Workset with Id exists
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                if (parameter.Id.IntegerValue == (int)BuiltInParameter.ELEM_PARTITION_PARAM)
-#else
                 if (parameter.Id.Value == (long)BuiltInParameter.ELEM_PARTITION_PARAM)
-#endif
                 {
                     WorksetTable worksetTable = parameter.Element?.Document?.GetWorksetTable();
                     if (worksetTable == null)
@@ -106,11 +102,7 @@ namespace SAM.Core.Revit
                 }
 
                 //YesNo Type parameter
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-                if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.YesNo)
-#else
                 if (parameter.Definition.GetDataType() == SpecTypeId.Boolean.YesNo)
-#endif
                 {
                     value_Temp = value_Temp.ToUpper().Trim();
 
@@ -204,20 +196,10 @@ namespace SAM.Core.Revit
             if (double.IsNaN(value_Temp))
                 return false;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022
-            if (parameter.Definition.ParameterType == Autodesk.Revit.DB.ParameterType.Invalid)
-#else
             if (parameter.Definition.GetDataType() == SpecTypeId.Custom)
-#endif
                 return parameter.Set(value_Temp);
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.UnitType);
-#elif Revit2021
-            value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.GetSpecTypeId());
-#else
             value_Temp = Units.Revit.Convert.ToRevit(value_Temp, parameter.Definition.GetDataType());
-#endif
 
 
 

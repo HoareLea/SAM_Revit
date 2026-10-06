@@ -1,4 +1,7 @@
-﻿using Autodesk.Revit.DB;
+// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020–2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+
+using Autodesk.Revit.DB;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.Kernel.Data;
@@ -13,7 +16,7 @@ using System.Linq;
 
 namespace SAM.Analytical.Grasshopper.Revit
 {
-    public class RevitOverlapWalls : GH_SAMComponent
+    public class RevitOverlapWalls : GH_SAMVariableOutputParameterComponent
     {
         /// <summary>
         /// Gets the unique ID for this component. Do not change this ID after release.
@@ -23,7 +26,7 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// The latest version of this component
         /// </summary>
-        public override string LatestComponentVersion => "1.0.0";
+        public override string LatestComponentVersion => "1.0.1";
 
         /// <summary>
         /// Provides an Icon for the component.
@@ -43,32 +46,46 @@ namespace SAM.Analytical.Grasshopper.Revit
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_InputParamManager inputParamManager)
+        protected override GH_SAMParam[] Inputs
         {
-            RhinoInside.Revit.GH.Parameters.HostObject hostObject = new RhinoInside.Revit.GH.Parameters.HostObject();
-            hostObject.Optional = true;
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "walls_", NickName = "walls_", Description = "Revit Walls", Access = GH_ParamAccess.list, Optional = true }, ParamVisibility.Binding));
 
-            inputParamManager.AddParameter(hostObject, "walls_", "walls_", "Revit Walls", GH_ParamAccess.list);
-            inputParamManager.AddBooleanParameter("_run", "_run", "Run", GH_ParamAccess.item, false);
+                global::Grasshopper.Kernel.Parameters.Param_Boolean param_Run = new global::Grasshopper.Kernel.Parameters.Param_Boolean() { Name = "_run", NickName = "_run", Description = "Run", Access = GH_ParamAccess.item };
+                param_Run.SetPersistentData(false);
+                result.Add(new GH_SAMParam(param_Run, ParamVisibility.Binding));
+
+                return result.ToArray();
+            }
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_OutputParamManager outputParamManager)
+        protected override GH_SAMParam[] Outputs
         {
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "walls", "walls", "Revit Walls", GH_ParamAccess.list);
-            outputParamManager.AddParameter(new RhinoInside.Revit.GH.Parameters.HostObject(), "OverlapWalls", "OverlapWalls", "Revit Walls", GH_ParamAccess.tree);
+            get
+            {
+                List<GH_SAMParam> result = new List<GH_SAMParam>();
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "walls", NickName = "walls", Description = "Revit Walls", Access = GH_ParamAccess.list }, ParamVisibility.Binding));
+                result.Add(new GH_SAMParam(new RhinoInside.Revit.GH.Parameters.HostObject() { Name = "OverlapWalls", NickName = "OverlapWalls", Description = "Revit Walls", Access = GH_ParamAccess.tree }, ParamVisibility.Binding));
+                return result.ToArray();
+            }
         }
 
         protected override void SolveInstance(IGH_DataAccess dataAccess)
         {
+            int index = Params.IndexOfInputParam("_run");
             bool run = false;
-            if (!dataAccess.GetData(1, ref run) || !run)
+            if (index == -1 || !dataAccess.GetData(index, ref run) || !run)
                 return;
 
+            index = Params.IndexOfInputParam("walls_");
             List<HostObject> hostObjects = new List<HostObject>();
-            dataAccess.GetDataList(0, hostObjects);
+            if (index != -1)
+                dataAccess.GetDataList(index, hostObjects);
 
             Document document = RhinoInside.Revit.Revit.ActiveDBDocument;
 
@@ -142,8 +159,13 @@ namespace SAM.Analytical.Grasshopper.Revit
                 count++;
             }
 
-            dataAccess.SetDataList(0, walls);
-            dataAccess.SetDataTree(1, dataTree_Walls);
+            index = Params.IndexOfOutputParam("walls");
+            if (index != -1)
+                dataAccess.SetDataList(index, walls);
+
+            index = Params.IndexOfOutputParam("OverlapWalls");
+            if (index != -1)
+                dataAccess.SetDataTree(index, dataTree_Walls);
         }
     }
 }

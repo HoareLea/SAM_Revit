@@ -1,4 +1,6 @@
-﻿using Grasshopper.Kernel;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Grasshopper.Kernel;
 using System.Windows.Forms;
 
 namespace SAM.Core.Grasshopper.Revit
@@ -47,6 +49,16 @@ namespace SAM.Core.Grasshopper.Revit
         }
 
         public abstract string LatestComponentVersion { get; }
+
+        public string MinCompatibleVersion => LatestComponentVersion;
+
+        public ObsoleteSeverity ObsoleteSeverity
+        {
+            get
+            {
+                return Grasshopper.Query.GetObsoleteSeverity(this);
+            }
+        }
 
         public override void AddedToDocument(GH_Document document)
         {

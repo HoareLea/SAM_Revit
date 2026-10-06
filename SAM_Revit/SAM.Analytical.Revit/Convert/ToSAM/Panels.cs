@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Revit;
@@ -159,11 +161,7 @@ namespace SAM.Analytical.Revit
                 return null;
 
             LogicalOrFilter logicalOrFilter = new LogicalOrFilter(new List<ElementFilter>() { new ElementCategoryFilter(BuiltInCategory.OST_Windows), new ElementCategoryFilter(BuiltInCategory.OST_Doors) });
-#if Revit2017
-            IEnumerable<ElementId> elementIds = null;
-#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(logicalOrFilter);
-#endif
 
             if (hostObject is Autodesk.Revit.DB.Wall || hostObject is CurtainSystem)
             {
@@ -343,13 +341,8 @@ namespace SAM.Analytical.Revit
                 return null;
 
             PanelType panelType = PanelType.WallInternal;
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            if (modelCurve.Category.Id.IntegerValue == (int)BuiltInCategory.OST_MEPSpaceSeparationLines || modelCurve.Category.Id.IntegerValue == (int)BuiltInCategory.OST_RoomSeparationLines)
-                panelType = PanelType.Air;
-#else
             if (modelCurve.Category.Id.Value == (long)BuiltInCategory.OST_MEPSpaceSeparationLines || modelCurve.Category.Id.Value == (long)BuiltInCategory.OST_RoomSeparationLines)
                 panelType = PanelType.Air;
-#endif
 
             Construction construction = null;
             if (ActiveSetting.Setting.TryGetValue(AnalyticalSettingParameter.DefaultConstructionLibrary, out ConstructionLibrary constructionLibrary))
@@ -370,11 +363,7 @@ namespace SAM.Analytical.Revit
                     continue;
                 }
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, DisplayUnitType.DUT_METERS);
-#else
                 double height = UnitUtils.ConvertFromInternalUnits(level_Max.Elevation - elevation_Min, UnitTypeId.Meters);
-#endif
 
                 if (height == 0)
                 {

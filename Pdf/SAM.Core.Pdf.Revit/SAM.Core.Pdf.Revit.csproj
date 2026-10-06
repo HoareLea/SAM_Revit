@@ -1,12 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	  <TargetFramework Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">net48-windows</TargetFramework>
-	  <TargetFramework Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">net48-windows</TargetFramework>
-	  <TargetFramework Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">net48-windows</TargetFramework>
-	  <TargetFramework Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">net48-windows</TargetFramework>
-	  <TargetFramework Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">net48-windows</TargetFramework>
 	  <TargetFramework Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">net8.0-windows</TargetFramework>
 	  <TargetFramework Condition="'$(Configuration)' == 'Debug2026' Or '$(Configuration)' == 'Release2026'">net8.0-windows</TargetFramework>
+	  <TargetFramework Condition="'$(Configuration)' == 'Debug2027' Or '$(Configuration)' == 'Release2027'">net10.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DebugSymbols>true</DebugSymbols>
@@ -15,71 +11,10 @@
     <Copyright>Copyright ©  2021</Copyright>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <Configurations>Debug;Release;Debug2020;Debug2021;Debug2022;Debug2023;Debug2024;Debug2025;Release2020;Release2021;Release2022;Release2023;Release2024;Release2025;Debug2026;Release2026</Configurations>
+    <Configurations>Debug;Release;Debug2025;Release2025;Debug2026;Release2026;Debug2027;Release2027</Configurations>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <Platforms>x64;AnyCPU</Platforms>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|AnyCPU'">
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>TRACE;Revit2020</DefineConstants>
-		<Optimize>true</Optimize>
-		<DocumentationFile>
-		</DocumentationFile>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|AnyCPU'">
-		<DebugSymbols>true</DebugSymbols>
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>DEBUG;TRACE;Revit2020</DefineConstants>
-		<DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-	</PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|AnyCPU'">
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>TRACE;Revit2021</DefineConstants>
-		<Optimize>true</Optimize>
-		<DocumentationFile>
-		</DocumentationFile>
-	</PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|AnyCPU'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2022</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|AnyCPU'">
-		<DebugSymbols>true</DebugSymbols>
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
-		<DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-	</PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2023</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|AnyCPU'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2023</DefineConstants>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|AnyCPU'">
-		<OutputPath>..\..\build\</OutputPath>
-		<DefineConstants>TRACE;Revit2024</DefineConstants>
-		<Optimize>true</Optimize>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|AnyCPU'">
 	  <OutputPath>..\..\build\</OutputPath>
 	  <DefineConstants>TRACE;Revit2025</DefineConstants>
@@ -88,6 +23,11 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|AnyCPU'">
 	  <OutputPath>..\..\build\</OutputPath>
 	  <DefineConstants>TRACE;Revit2026</DefineConstants>
+	  <Optimize>true</Optimize>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2027|AnyCPU'">
+	  <OutputPath>..\..\build\</OutputPath>
+	  <DefineConstants>TRACE;Revit2027</DefineConstants>
 	  <Optimize>true</Optimize>
 	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|AnyCPU'">
@@ -102,66 +42,11 @@
     <DefineConstants>DEBUG;TRACE;Revit2026</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2020|x64'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2020</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2020|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2027|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2020</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;Revit2027</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2021|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2021</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2021|x64'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2021</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2022|x64'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2022</DefineConstants>
-    <Optimize>true</Optimize>
-    <DocumentationFile>
-    </DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2022|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2022</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2023|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2023</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2023|x64'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2023</DefineConstants>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug2024|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;Revit2024</DefineConstants>
-    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release2024|x64'">
-    <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;Revit2024</DefineConstants>
-    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2025|x64'">
     <OutputPath>..\..\build\</OutputPath>
@@ -171,6 +56,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2026|x64'">
     <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE;Revit2026</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release2027|x64'">
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;Revit2027</DefineConstants>
     <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2025|x64'">
@@ -185,6 +75,12 @@
     <DefineConstants>DEBUG;TRACE;Revit2026</DefineConstants>
     <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug2027|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;Revit2027</DefineConstants>
+    <DocumentationFile>..\..\build\SAM.Core.Pdf.Revit.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="PdfSharp">
@@ -196,12 +92,24 @@
 			<HintPath>$(SolutionDir)\references\Revit 2026\RevitAPI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2027' Or '$(Configuration)' == 'Release2027'">
+			<HintPath>$(SolutionDir)\references\Revit 2027\RevitAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2026' Or '$(Configuration)' == 'Release2026'">
 			<HintPath>$(SolutionDir)\references\Revit 2026\RevitAPIIFC.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2027' Or '$(Configuration)' == 'Release2027'">
+			<HintPath>$(SolutionDir)\references\Revit 2027\RevitAPIIFC.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2026' Or '$(Configuration)' == 'Release2026'">
 			<HintPath>$(SolutionDir)\references\Revit 2026\RevitAPIUI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2027' Or '$(Configuration)' == 'Release2027'">
+			<HintPath>$(SolutionDir)\references\Revit 2027\RevitAPIUI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
@@ -214,66 +122,6 @@
 		</Reference>
 		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2025' Or '$(Configuration)' == 'Release2025'">
 			<HintPath>$(SolutionDir)\references\Revit 2025\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-			<HintPath>$(SolutionDir)\references\Revit 2024\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-			<HintPath>$(SolutionDir)\references\Revit 2024\RevitAPIIFC.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2024' Or '$(Configuration)' == 'Release2024'">
-			<HintPath>$(SolutionDir)\references\Revit 2024\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-			<HintPath>$(SolutionDir)\references\Revit 2023\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-			<HintPath>$(SolutionDir)\references\Revit 2023\RevitAPIIFC.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2023' Or '$(Configuration)' == 'Release2023'">
-			<HintPath>$(SolutionDir)\references\Revit 2023\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-			<HintPath>$(SolutionDir)\references\Revit 2022\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-			<HintPath>$(SolutionDir)\references\Revit 2022\RevitAPIIFC.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2022' Or '$(Configuration)' == 'Release2022'">
-			<HintPath>$(SolutionDir)\references\Revit 2022\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-			<HintPath>$(SolutionDir)\references\Revit 2021\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-			<HintPath>$(SolutionDir)\references\Revit 2021\RevitAPIIFC.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2021' Or '$(Configuration)' == 'Release2021'">
-			<HintPath>$(SolutionDir)\references\Revit 2021\RevitAPIUI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-			<HintPath>$(SolutionDir)\references\Revit 2020\RevitAPI.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIIFC" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-			<HintPath>$(SolutionDir)\references\Revit 2020\RevitAPIIFC.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
-		<Reference Include="RevitAPIUI" Condition="'$(Configuration)' == 'Debug2020' Or '$(Configuration)' == 'Release2020'">
-			<HintPath>$(SolutionDir)\references\Revit 2020\RevitAPIUI.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 	</ItemGroup>

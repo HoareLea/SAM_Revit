@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.IFC;
 using SAM.Geometry.Planar;
 using SAM.Geometry.Spatial;
@@ -168,9 +170,6 @@ namespace SAM.Geometry.Revit
 
         private static List<Face3D> Profiles_RoofBase(this RoofBase roofBase)
         {
-#if Revit2017
-            return null;
-#else
             List<Face3D> face3Ds = TopProfiles(roofBase);
 
             IEnumerable<ElementId> elementIds = roofBase.GetDependentElements(new ElementCategoryFilter(BuiltInCategory.OST_Windows));
@@ -226,7 +225,6 @@ namespace SAM.Geometry.Revit
             }
 
             return face3Ds;
-#endif
         }
 
         private static List<Face3D> Profiles_Ceiling(this Ceiling ceiling)
@@ -410,11 +408,6 @@ namespace SAM.Geometry.Revit
         private static List<Face3D> Profiles_FromSketch(this HostObject hostObject, bool flip = false)
         {
 
-#if Revit2017
-
-            return null;
-
-#else
             IEnumerable<ElementId> elementIds = hostObject.GetDependentElements(new ElementClassFilter(typeof(Sketch)));
             if (elementIds == null || elementIds.Count() == 0)
                 return null;
@@ -456,7 +449,6 @@ namespace SAM.Geometry.Revit
             }
 
             return result;
-#endif
         }
 
         private static List<Face3D> Profiles_FromLocation(this Wall wall, double tolerance_Angle = Core.Tolerance.Angle, double tolerance_Distance = Core.Tolerance.Distance)
@@ -483,19 +475,11 @@ namespace SAM.Geometry.Revit
 
             Vector3D direction = Vector3D.WorldZ;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, DisplayUnitType.DUT_METERS);
-#else
             double max = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Max.Z, UnitTypeId.Meters);
-#endif
 
             Spatial.Plane plane_max = new Spatial.Plane(new Point3D(0, 0, max), direction);
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-            double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, DisplayUnitType.DUT_METERS);
-#else
             double min = UnitUtils.ConvertFromInternalUnits(boundingBoxXYZ.Min.Z, UnitTypeId.Meters);
-#endif
             Spatial.Plane plane_min = new Spatial.Plane(new Point3D(0, 0, min), direction);
 
             double height = max - min;

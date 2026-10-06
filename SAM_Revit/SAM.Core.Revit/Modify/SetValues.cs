@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,13 +70,8 @@ namespace SAM.Core.Revit
                 {
 
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                    if (Ids != null && Ids.Contains(parameter.Id.IntegerValue))
-                        continue;
-#else
                     if (Ids != null && Ids.Contains(System.Convert.ToInt32(parameter.Id.Value)))
                         continue;
-#endif
 
                     SetValue(parameter, parameterSet.ToObject(name));
                 }

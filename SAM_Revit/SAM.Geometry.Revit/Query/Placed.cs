@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using System.Collections.Generic;
 
@@ -48,11 +50,7 @@ namespace SAM.Geometry.Revit
             {
                 return false;
             }
-#if Revit2017
-            IList<ElementId> elementIds = null;
-#else
             IList<ElementId> elementIds = element.GetDependentElements(new LogicalAndFilter(new ElementCategoryFilter(builtInCategory.Value), new ElementOwnerViewFilter(view.Id)));
-#endif
 
             if (elementIds == null || elementIds.Count == 0)
             {

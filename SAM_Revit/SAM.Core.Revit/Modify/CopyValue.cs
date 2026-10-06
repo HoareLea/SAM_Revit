@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 
 namespace SAM.Core.Revit
 {
@@ -25,11 +27,7 @@ namespace SAM.Core.Revit
                             ElementId elementId = parameter_Source.AsElementId();
                             if (elementId != null)
                             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                                return parameter_Destination.Set(System.Convert.ToDouble(elementId.IntegerValue));
-#else
                                 return parameter_Destination.Set(System.Convert.ToDouble(elementId.Value));
-#endif
 
                             }
 
@@ -58,11 +56,7 @@ namespace SAM.Core.Revit
                             ElementId elementId = parameter_Source.AsElementId();
                             if (elementId != null)
                             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                                return parameter_Destination.Set(elementId.IntegerValue);
-#else
                                 return parameter_Destination.Set(elementId.Value);
-#endif
                             }
                             return false;
 
@@ -105,11 +99,7 @@ namespace SAM.Core.Revit
 
                         case StorageType.ElementId:
                             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                                return parameter_Destination.Set(parameter_Source.AsElementId()?.IntegerValue.ToString());
-#else
                                 return parameter_Destination.Set(parameter_Source.AsElementId()?.Value.ToString());
-#endif
                             }
 
 

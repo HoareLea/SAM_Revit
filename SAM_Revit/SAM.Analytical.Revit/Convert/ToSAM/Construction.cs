@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using SAM.Core.Revit;
 using SAM.Geometry.Revit;
 using System.Collections.Generic;
@@ -21,11 +23,7 @@ namespace SAM.Analytical.Revit
             PanelType panelType = hostObjAttributes.PanelType();
             if (panelType == PanelType.Undefined)
             {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-                panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.IntegerValue);
-#else
                 panelType = Query.PanelType((BuiltInCategory)hostObjAttributes.Category.Id.Value);
-#endif
             }
 
             Construction construction = Analytical.Query.DefaultConstruction(panelType);
@@ -60,11 +58,7 @@ namespace SAM.Analytical.Revit
                 CompoundStructure compoundStructure = hostObjAttributes.GetCompoundStructure();
                 if(compoundStructure != null)
                 {
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020
-                    double thickness = UnitUtils.ConvertFromInternalUnits(compoundStructure.GetWidth(), DisplayUnitType.DUT_METERS);
-#else
                     double thickness = UnitUtils.ConvertFromInternalUnits(compoundStructure.GetWidth(), UnitTypeId.Meters);
-#endif
                     result.SetValue(ConstructionParameter.DefaultThickness, thickness);
                 }
             }
@@ -81,11 +75,7 @@ namespace SAM.Analytical.Revit
             }
 
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            if((BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_Cornices && (BuiltInCategory)elementType.Category.Id.IntegerValue != BuiltInCategory.OST_CurtainWallPanels)
-#else
             if ((BuiltInCategory)elementType.Category.Id.Value != BuiltInCategory.OST_Cornices && (BuiltInCategory)elementType.Category.Id.Value != BuiltInCategory.OST_CurtainWallPanels)
-#endif
             {
                 return null;
             }

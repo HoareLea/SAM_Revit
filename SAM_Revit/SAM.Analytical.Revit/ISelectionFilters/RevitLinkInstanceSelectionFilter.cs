@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.UI.Selection;
 
 namespace SAM.Analytical.Revit
@@ -19,17 +21,10 @@ namespace SAM.Analytical.Revit
             if (element == null || element.Category == null)
                 return false;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            if (element.Category.Id.IntegerValue == (int)BuiltInCategory.OST_RvtLinks)
-                return true;
-            else
-                return element.Category.Id.IntegerValue == (int)builtInCategory;
-#else
             if (element.Category.Id.Value == (long)BuiltInCategory.OST_RvtLinks)
                 return true;
             else
                 return element.Category.Id.Value == (long)builtInCategory;
-#endif
 
         }
 
@@ -54,11 +49,7 @@ namespace SAM.Analytical.Revit
             if (element == null)
                 return false;
 
-#if Revit2017 || Revit2018 || Revit2019 || Revit2020 || Revit2021 || Revit2022 || Revit2023 || Revit2024
-            return element.Category.Id.IntegerValue == (int)builtInCategory;
-#else
             return element.Category.Id.Value == (long)builtInCategory;
-#endif
 
         }
     }

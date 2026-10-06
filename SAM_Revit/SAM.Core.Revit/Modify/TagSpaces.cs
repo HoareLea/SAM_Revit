@@ -1,4 +1,6 @@
-﻿using Autodesk.Revit.DB;
+﻿// SPDX-License-Identifier: LGPL-3.0-or-later
+// Copyright (c) 2020-2026 Michal Dengusiak & Jakub Ziolkowski and contributors
+using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Mechanical;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,35 +20,39 @@ namespace SAM.Core.Revit
             if (spaceTagType == null)
                 return null;
 
-            IEnumerable<Space> spaces = new FilteredElementCollector(document, view.Id).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Space>();
+            List<Space> spaces = new FilteredElementCollector(document, view.Id).OfCategory(BuiltInCategory.OST_MEPSpaces).Cast<Space>().ToList();
             if (spaces == null)
                 return null;
 
             List<SpaceTag> result = new List<SpaceTag>();
-            if (spaces.Count() == 0)
+            if (spaces.Count == 0)
                 return result;
+
+            // Precomputed once per view, rather than a GetDependentElements call plus a GetElement per
+            // dependent id for every space. ElementOwnerViewFilter keeps the same owner-based semantics
+            // the LogicalAndFilter had, so a tag hidden in the view still suppresses a duplicate.
+            HashSet<ElementId> elementIds_Tagged = null;
+            if (!allowDuplicates)
+            {
+                elementIds_Tagged = new HashSet<ElementId>();
+                foreach (SpaceTag spaceTag_Existing in new FilteredElementCollector(document).OfCategory(BuiltInCategory.OST_MEPSpaceTags).WhereElementIsNotElementType().WherePasses(new ElementOwnerViewFilter(view.Id)).Cast<SpaceTag>())
+                {
+                    if (spaceTag_Existing.GetTypeId() != elementId_SpaceTagType)
+                        continue;
+
+                    Space space_Tagged = spaceTag_Existing.Space;
+                    if (space_Tagged != null)
+                        elementIds_Tagged.Add(space_Tagged.Id);
+                }
+            }
 
             foreach (Space space in spaces)
             {
                 if (space == null || !space.IsValidObject)
                     continue;
 
-                if(!allowDuplicates)
-                {
-#if Revit2017
-                    IList<ElementId> elementIds = null;
-#else
-                    IList<ElementId> elementIds = space.GetDependentElements(new LogicalAndFilter( new ElementCategoryFilter(BuiltInCategory.OST_MEPSpaceTags), new ElementOwnerViewFilter(view.Id)));
-#endif
-                    if (elementIds != null)
-                    {
-                        ElementId elementId_Temp = elementIds.ToList().Find(x => document.GetElement(x)?.GetTypeId() == elementId_SpaceTagType);
-                        if(elementId_Temp != null)
-                        {
-                            continue;
-                        }
-                    }
-                }
+                if (!allowDuplicates && elementIds_Tagged.Contains(space.Id))
+                    continue;
 
                 Autodesk.Revit.DB.Location location = space.Location;
                 if (location == null)
